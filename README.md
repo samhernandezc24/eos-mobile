@@ -4,7 +4,7 @@
 
 ## ¿Qué es EOS Mobile?
 
-EOS Mobile es una aplicación móvil desarrollada en [Flutter](https://flutter.io), para agilizar los procesos internos de la empresa [Heavy-Lift Rigging Services & Consulting Mexico](https://heavy-lift.com.mx/). Permite centralizar tareas y otras operaciones internas de la empresa.
+EOS Mobile es una aplicación móvil desarrollada en [Flutter](https://flutter.dev/), para agilizar los procesos internos de la empresa [Heavy-Lift Rigging Services & Consulting Mexico](https://heavy-lift.com.mx/). Permite centralizar tareas y otras operaciones internas de la empresa.
 
 ## Instalación
 
