@@ -1,3 +1,4 @@
+import 'package:eos_mobile/config/theme/app_themes.dart';
 import 'package:eos_mobile/features/auth/login_page.dart';
 import 'package:eos_mobile/features/home/home_page.dart';
 import 'package:eos_mobile/features/inspecciones/inspeccion_con_requerimientos_page.dart';
@@ -19,11 +20,11 @@ class MainApp extends StatelessWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'EOS Mobile',
-      theme: ThemeData(
-        primaryColor: Colors.blue,
-        useMaterial3: true,
-      ),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.light,
       routerConfig: GoRouter(
+        initialLocation: '/',
         routes: [
           GoRoute(
             path: '/',
@@ -47,15 +48,15 @@ class MainApp extends StatelessWidget {
                   ),
                 ],
               ),
-               GoRoute(
-                path: 'con-requerimientos',
-                builder: (_, __) => const InspeccionConRequerimientosPage(),
-              ),
-               GoRoute(
+              GoRoute(
                 path: 'sin-requerimientos',
                 builder: (_, __) => const InspeccionSinRequerimientosPage(),
               ),
-               GoRoute(
+              GoRoute(
+                path: 'con-requerimientos',
+                builder: (_, __) => const InspeccionConRequerimientosPage(),
+              ),
+              GoRoute(
                 path: 'search',
                 builder: (_, __) => const InspeccionSearchPage(),
               ),

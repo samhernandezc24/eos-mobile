@@ -1,12 +1,7 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 
-enum AppTheme {
-  lightTheme,
-  darkTheme,
-}
-
-final appThemeData = {
-  AppTheme.lightTheme: FlexThemeData.light(
+class AppTheme {
+  static final lightTheme = FlexThemeData.light(
     scheme: FlexScheme.blue,
     surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
     blendLevel: 7,
@@ -21,8 +16,9 @@ final appThemeData = {
     visualDensity: FlexColorScheme.comfortablePlatformDensity,
     useMaterial3: true,
     swapLegacyOnMaterial3: true,
-  ),
-  AppTheme.darkTheme: FlexThemeData.dark(
+  );
+
+  static final darkTheme = FlexThemeData.dark(
     scheme: FlexScheme.blue,
     surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
     blendLevel: 13,
@@ -36,5 +32,5 @@ final appThemeData = {
     visualDensity: FlexColorScheme.comfortablePlatformDensity,
     useMaterial3: true,
     swapLegacyOnMaterial3: true,
-  ),
-};
+  );
+}
