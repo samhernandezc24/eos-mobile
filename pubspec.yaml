@@ -47,6 +47,8 @@ dependencies:
   intl: ^0.19.0
   # Seleccionar imágenes de galería y tomar nuevas fotografías
   image_picker: ^1.0.7
+  # Define anotaciones usados por `json_serializable`
+  json_annotation: ^4.8.1
   # Renderiza animaciones de After Effects en Flutter
   lottie: ^3.0.0
   # Abrir archivos con resultados de cadena en Flutter
@@ -55,6 +57,8 @@ dependencies:
   path_provider: ^2.1.2
   # Wrapper de InheritedWidget para reutilizaciones globales
   provider: ^6.1.1
+  # Generador de código para cliente Dio
+  retrofit: '>=4.0.0 <5.0.0'
   # Leer/Escribir key-value pairs en el sistema del usuario
   shared_preferences: ^2.2.2
   # Efecto de brillo en Flutter
@@ -63,6 +67,7 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   # Plugin de Flutter para lanzar URL
   url_launcher: ^6.2.4
+  http: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +78,10 @@ dev_dependencies:
   build_runner: ^2.4.8
   # Linters de Flutter
   flutter_lints: ^2.0.0
+  # Genera código convertido a JSON
+  json_serializable: ^6.6.2
+  # Generador de retrofit
+  retrofit_generator: '>=7.0.0 <8.0.0'
   # Reglas de lint para Dart y Flutter
   very_good_analysis: ^5.1.0
 

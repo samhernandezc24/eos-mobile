@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,6 +28,12 @@ class _HomePageState extends State<HomePage> {
     const FaIcon(FontAwesomeIcons.database, size: 25),
     const FaIcon(FontAwesomeIcons.truck, size: 25),
   ];
+
+  Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    GoRouter.of(context).go('/login');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,8 +73,9 @@ class _HomePageState extends State<HomePage> {
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () {
-                    //debugPrint('/${moduleNames[index].toLowerCase()}');
-                    GoRouter.of(context).go('/${moduleNames[index].toLowerCase()}');
+                    debugPrint('/${moduleNames[index].toLowerCase()}');
+                    final routeName = moduleNames[index].toLowerCase();
+                    GoRouter.of(context).go('/$routeName');
                   },
                   child: Column(
                     children: [
@@ -135,6 +143,18 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
               ),
+            ),
+            const Divider(),
+            ListTile(
+              leading: const FaIcon(FontAwesomeIcons.arrowRightFromBracket,
+                  color: Colors.red),
+              title: const Text(
+                'Cerrar Sesión',
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ),
+              onTap: logout,
             ),
           ],
         ),

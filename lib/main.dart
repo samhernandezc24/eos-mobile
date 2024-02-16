@@ -1,16 +1,14 @@
+import 'package:eos_mobile/config/router/app_router.dart';
 import 'package:eos_mobile/config/theme/app_themes.dart';
-import 'package:eos_mobile/features/auth/login_page.dart';
-import 'package:eos_mobile/features/home/home_page.dart';
-import 'package:eos_mobile/features/inspecciones/inspeccion_con_requerimientos_page.dart';
-import 'package:eos_mobile/features/inspecciones/inspeccion_details_page.dart';
-import 'package:eos_mobile/features/inspecciones/inspeccion_list_page.dart';
-import 'package:eos_mobile/features/inspecciones/inspeccion_page.dart';
-import 'package:eos_mobile/features/inspecciones/inspeccion_search_page.dart';
-import 'package:eos_mobile/features/inspecciones/inspeccion_sin_requerimientos_page.dart';
+import 'package:eos_mobile/injection_container.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-void main() => runApp(const MainApp());
+Future<void> main() async {
+  // Iniciar app.
+  await initializeDependencies();
+
+  runApp(const MainApp());
+}
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
@@ -23,47 +21,9 @@ class MainApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.light,
-      routerConfig: GoRouter(
-        initialLocation: '/',
-        routes: [
-          GoRoute(
-            path: '/',
-            builder: (_, __) => const HomePage(),
-          ),
-          GoRoute(
-            path: '/login',
-            builder: (_, __) => const LoginPage(),
-          ),
-          GoRoute(
-            path: '/inspecciones',
-            builder: (_, __) => const InspeccionPage(),
-            routes: [
-              GoRoute(
-                path: 'list',
-                builder: (_, __) => const InspeccionListPage(),
-                routes: [
-                  GoRoute(
-                    path: ':id',
-                    builder: (_, __) => const InspeccionDetailsPage(),
-                  ),
-                ],
-              ),
-              GoRoute(
-                path: 'sin-requerimientos',
-                builder: (_, __) => const InspeccionSinRequerimientosPage(),
-              ),
-              GoRoute(
-                path: 'con-requerimientos',
-                builder: (_, __) => const InspeccionConRequerimientosPage(),
-              ),
-              GoRoute(
-                path: 'search',
-                builder: (_, __) => const InspeccionSearchPage(),
-              ),
-            ],
-          ),
-        ],
-      ),
+      routerDelegate: appRouter.routerDelegate,
+      routeInformationParser: appRouter.routeInformationParser,
+      routeInformationProvider: appRouter.routeInformationProvider,
     );
   }
 }
