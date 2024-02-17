@@ -68,6 +68,9 @@ dependencies:
   # Plugin de Flutter para lanzar URL
   url_launcher: ^6.2.4
   http: ^1.2.0
+  gap: ^3.0.1
+  dropdown_search: ^5.0.6
+  material_floating_search_bar_2: ^0.5.0
 
 dev_dependencies:
   flutter_test:
@@ -93,6 +96,7 @@ flutter:
     - assets/icons/
     - assets/images/errors/
     - assets/images/logo/
+    - assets/images/screens/
     - assets/lottie/
 
   fonts:

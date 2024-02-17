@@ -39,6 +39,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> login() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
     final email = _emailController.text;
     final password = _passwordController.text;
 
@@ -79,11 +83,11 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final sizeHeight = MediaQuery.of(context).size.height;
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
         margin: EdgeInsets.zero,
-        height: sizeHeight,
+        height: size.height,
         child: Stack(
           children: <Widget>[
             WaveContainer(
@@ -99,12 +103,12 @@ class _LoginPageState extends State<LoginPage> {
               reverse: true,
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: sizeHeight * .2),
+                    SizedBox(height: size.height * .2),
                     const EOSLogo(
                       width: 82,
                     ),
@@ -112,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                     const Text(
                       'Iniciar Sesión',
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 28,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -162,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                               textInputAction: TextInputAction.done,
                             ),
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () => context.go('/forgot-password'),
                               child: Container(
                                 alignment: Alignment.centerRight,
                                 padding:

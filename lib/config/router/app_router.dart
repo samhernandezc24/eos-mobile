@@ -1,3 +1,4 @@
+import 'package:eos_mobile/features/auth/presentation/pages/forgot_password/forgot_password_page.dart';
 import 'package:eos_mobile/features/auth/presentation/pages/login/login_page.dart';
 import 'package:eos_mobile/features/home/home_page.dart';
 import 'package:eos_mobile/features/inspecciones/inspeccion_con_requerimientos_page.dart';
@@ -10,6 +11,7 @@ import 'package:eos_mobile/ui/pages/error_404_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ScreenPaths {
   static String home = '/home';
@@ -18,6 +20,17 @@ class ScreenPaths {
 }
 
 final appRouter = GoRouter(
+  // redirect: (context, state) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final token = prefs.getString('token');
+
+  //   if (token != null && token.isNotEmpty) {
+  //     return '/';
+  //   } else {
+  //     return '/login';
+  //   }
+  // },
+  initialLocation: '/',
   errorPageBuilder: (context, state) =>
       MaterialPage(child: Error404Page(state.uri.toString())),
   routes: [
@@ -30,6 +43,11 @@ final appRouter = GoRouter(
       name: 'login',
       path: '/login',
       builder: (context, state) => const LoginPage(),
+    ),
+    GoRoute(
+      name: 'forgot-password',
+      path: '/forgot-password',
+      builder: (context, state) => const ForgotPasswordPage(),
     ),
     GoRoute(
       name: 'inspecciones',

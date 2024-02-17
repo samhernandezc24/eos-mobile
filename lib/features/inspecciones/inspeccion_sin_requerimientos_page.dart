@@ -1,7 +1,7 @@
-// ignore_for_file: lines_longer_than_80_chars
-
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
 class InspeccionSinRequerimientosPage extends StatefulWidget {
@@ -12,29 +12,71 @@ class InspeccionSinRequerimientosPage extends StatefulWidget {
 }
 
 class _InspeccionSinRequerimientosPageState extends State<InspeccionSinRequerimientosPage> {
-  final bool _isChecked = false;
+  bool isChecked = false;
+
+  final List<String> _items = List.generate(50, (index) => 'Item $index');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Inspección de Unidad Sin Req.'),
+        title: const Text(
+          'Inspección de Unidad Sin Req.',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
         leading: IconButton(
           icon: const FaIcon(FontAwesomeIcons.xmark),
-          onPressed: () {
-            GoRouter.of(context).go('/inspecciones');
-          },
+          onPressed: () => context.go('/inspecciones'),
         ),
       ),
       body: Container(
-        child: Center(
-          //child: CheckboxListTile(value: _isChecked, onChanged: ),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              children: [
+                const Text('Unidad Temporal'),
+                Checkbox(
+                  value: isChecked,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isChecked = value!;
+                    });
+                  },
+                ),
+              ],
+            ),
+            DropdownSearch<String>(
+              items: _items,
+              dropdownDecoratorProps: const DropDownDecoratorProps(
+                dropdownSearchDecoration: InputDecoration(
+                  hintText: 'Buscar por No. Económico o Folio',
+                  isDense: true,
+                ),
+              ),
+              popupProps: const PopupPropsMultiSelection.menu(
+                showSearchBox: true,
+              ),
+            ),
+            const Gap(10),
+            const Divider(thickness: 1),
+            const Text('Seleccionar inspección *'),
+            const Gap(10),
+            DropdownSearch<String>(
+              items: _items,
+              dropdownDecoratorProps: const DropDownDecoratorProps(
+                dropdownSearchDecoration: InputDecoration(
+                  hintText: 'Seleccionar',
+                  isDense: true,
+                ),
+              ),
+              popupProps: const PopupPropsMultiSelection.menu(
+                showSearchBox: true,
+              ),
+            ),
+          ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: (){},
-        label: const Text('Guardar Inspección'),
-        icon: const FaIcon(FontAwesomeIcons.floppyDisk),
       ),
     );
   }

@@ -13,6 +13,7 @@ linter:
     directives_ordering: true                   # Respetar las convenciones de ordenamiento de las directivas de la Guía de Flutter.
 
     library_private_types_in_public_api: false  # Evitar utilizar tipos privados en API públicas.
+    lines_longer_than_80_chars: false           # Desactivar advertencias de lineas de mas de 80 caracteres.
 
     prefer_const_declarations: true             # Preferir const en lugar de final para las declaraciones.
     prefer_const_constructors: true             # Preferir const con constructores constantes.

@@ -72,11 +72,8 @@ class _HomePageState extends State<HomePage> {
               ),
               itemBuilder: (context, index) {
                 return InkWell(
-                  onTap: () {
-                    debugPrint('/${moduleNames[index].toLowerCase()}');
-                    final routeName = moduleNames[index].toLowerCase();
-                    GoRouter.of(context).go('/$routeName');
-                  },
+                  onTap: () =>
+                      context.go('/${moduleNames[index].toLowerCase()}'),
                   child: Column(
                     children: [
                       Container(
@@ -146,8 +143,10 @@ class _HomePageState extends State<HomePage> {
             ),
             const Divider(),
             ListTile(
-              leading: const FaIcon(FontAwesomeIcons.arrowRightFromBracket,
-                  color: Colors.red),
+              leading: const FaIcon(
+                FontAwesomeIcons.arrowRightFromBracket,
+                color: Colors.red,
+              ),
               title: const Text(
                 'Cerrar Sesión',
                 style: TextStyle(

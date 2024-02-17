@@ -12,9 +12,7 @@ class InspeccionPage extends StatelessWidget {
         title: const Text('Inspecciones de Unidades'),
         leading: IconButton(
           icon: const FaIcon(FontAwesomeIcons.arrowLeft),
-          onPressed: () {
-            GoRouter.of(context).go('/');
-          },
+          onPressed: () => context.go('/'),
         ),
       ),
       body: Padding(
@@ -25,13 +23,13 @@ class InspeccionPage extends StatelessWidget {
               context: context,
               tiles: [
                 ListTile(
-                  onTap: () {},
+                  onTap: () => context.go('/inspecciones/list'),
                   leading: const FaIcon(FontAwesomeIcons.listUl),
                   title: const Text('Lista de inspecciones'),
                   trailing: const FaIcon(FontAwesomeIcons.angleRight),
                 ),
                 ListTile(
-                  onTap: () {},
+                  onTap: () => context.go('/inspecciones/con-requerimientos'),
                   leading: const FaIcon(FontAwesomeIcons.folder),
                   title: const Text(
                     'Nueva inspección de unidad con requerimiento',
@@ -39,9 +37,7 @@ class InspeccionPage extends StatelessWidget {
                   trailing: const FaIcon(FontAwesomeIcons.angleRight),
                 ),
                 ListTile(
-                  onTap: () {
-                    GoRouter.of(context).go('/inspecciones/sin-requerimientos');
-                  },
+                  onTap: () => context.go('/inspecciones/sin-requerimientos'),
                   leading: const FaIcon(FontAwesomeIcons.listCheck),
                   title: const Text(
                     'Nueva inspección de unidad sin requerimiento',
@@ -49,7 +45,7 @@ class InspeccionPage extends StatelessWidget {
                   trailing: const FaIcon(FontAwesomeIcons.angleRight),
                 ),
                 ListTile(
-                  onTap: () {},
+                  onTap: () => context.go('/inspecciones/search'),
                   leading: const FaIcon(FontAwesomeIcons.magnifyingGlass),
                   title: const Text('Buscar unidad'),
                   trailing: const FaIcon(FontAwesomeIcons.angleRight),
