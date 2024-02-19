@@ -19,6 +19,8 @@ dependencies:
   dartz: ^0.10.1
   # Peticiones HTTP, Interceptores, Transformadores, etc
   dio: ^5.4.0
+  # Buscador de Flutter con dropdown
+  dropdown_search: ^5.0.6
   # Simplificar comparación de objetos de Dart
   equatable: ^2.0.5
   # Diseñar temas basado en Material Design
@@ -37,6 +39,8 @@ dependencies:
   fluttertoast: ^8.2.4
   # Pack de íconos de FontAwesome
   font_awesome_flutter: ^10.7.0
+  # Agregar gaps a widgets de Flutter
+  gap: ^3.0.1
   # Localizador directo de servicios
   get_it: ^7.6.7
   # Mixins para `watch` los servicios registrados con GetIt
@@ -51,6 +55,8 @@ dependencies:
   json_annotation: ^4.8.1
   # Renderiza animaciones de After Effects en Flutter
   lottie: ^3.0.0
+  # Buscador basado en el diseño Material de Google
+  material_floating_search_bar_2: ^0.5.0
   # Abrir archivos con resultados de cadena en Flutter
   open_file: ^3.3.2
   # Obtener ubicaciones de uso común en los sitemas de archivos
@@ -67,10 +73,6 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   # Plugin de Flutter para lanzar URL
   url_launcher: ^6.2.4
-  http: ^1.2.0
-  gap: ^3.0.1
-  dropdown_search: ^5.0.6
-  material_floating_search_bar_2: ^0.5.0
 
 dev_dependencies:
   flutter_test:
@@ -96,7 +98,7 @@ flutter:
     - assets/icons/
     - assets/images/errors/
     - assets/images/logo/
-    - assets/images/screens/
+    - assets/images/pages/
     - assets/lottie/
 
   fonts:

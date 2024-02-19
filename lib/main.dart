@@ -1,29 +1,25 @@
-import 'package:eos_mobile/config/router/app_router.dart';
-import 'package:eos_mobile/config/theme/app_themes.dart';
-import 'package:eos_mobile/injection_container.dart';
-import 'package:flutter/material.dart';
+import 'package:eos_mobile/config/styles/app_styles.dart';
+import 'package:eos_mobile/config/themes/app_theme.dart';
+import 'package:eos_mobile/features/auth/presentation/pages/sign_in/sign_in_page.dart';
+import 'package:eos_mobile/shared/shared.dart';
 
-Future<void> main() async {
-  // Iniciar app.
-  await initializeDependencies();
-
-  runApp(const MainApp());
-}
+void main() => runApp(const MainApp());
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
+  static AppStyle get style => _style;
+  static final AppStyle _style = AppStyle();
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
+    return MaterialApp(
       title: 'EOS Mobile',
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.light,
-      routerDelegate: appRouter.routerDelegate,
-      routeInformationParser: appRouter.routeInformationParser,
-      routeInformationProvider: appRouter.routeInformationProvider,
+      home: const SignInPage(),
     );
   }
 }
