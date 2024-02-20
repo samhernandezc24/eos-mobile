@@ -2,7 +2,6 @@ import 'package:eos_mobile/core/common/widgets/eos_mobile_logo.dart';
 import 'package:eos_mobile/core/common/widgets/wave_clipper.dart';
 import 'package:eos_mobile/core/validators/form_validators.dart';
 import 'package:eos_mobile/features/auth/presentation/pages/forgot_password/forgot_password.dart';
-import 'package:eos_mobile/features/home/presentation/home_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class SignInPage extends StatefulWidget {
@@ -144,28 +143,7 @@ class _SignInPageState extends State<SignInPage> {
                               ),
                             ),
                             FilledButton(
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (context) => const HomePage()),
-                                  );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      backgroundColor:
-                                          Theme.of(context).colorScheme.error,
-                                      content: Text(
-                                        'Formulario incompleto',
-                                        style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onError,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
+                              onPressed: (){},
                               style: ButtonStyle(
                                 minimumSize: MaterialStateProperty.all(
                                   const Size(double.infinity, 48),
