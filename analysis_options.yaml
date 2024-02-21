@@ -15,6 +15,7 @@ linter:
     library_private_types_in_public_api: false  # Evitar utilizar tipos privados en API públicas.
     lines_longer_than_80_chars: false           # Desactivar advertencias de lineas de mas de 80 caracteres.
 
+    one_member_abstracts: false                 # Desactivar advertencias de definicion de clase abstracta de un solo miembro.
     omit_local_variable_types: false            # Desactivar omitir anotaciones para variables locales.
 
     prefer_const_declarations: true             # Preferir const en lugar de final para las declaraciones.

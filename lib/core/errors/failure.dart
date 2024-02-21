@@ -1,12 +1,12 @@
 abstract class Failure {
   const Failure({required this.errorMessage});
-  final String errorMessage;  
+  final String errorMessage;
 }
 
 class ServerFailure extends Failure {
-  ServerFailure({required super.errorMessage});
+  ServerFailure({required String errorMessage}) : super(errorMessage: errorMessage);
 }
 
 class CacheFailure extends Failure {
-  CacheFailure({required super.errorMessage});
+  CacheFailure({required String errorMessage}) : super(errorMessage: errorMessage);
 }

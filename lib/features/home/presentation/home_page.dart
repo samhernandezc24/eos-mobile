@@ -1,13 +1,236 @@
+import 'package:eos_mobile/features/configuraciones/presentation/pages/inspecciones/inspeccion_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final List<String> moduleNames = [
+    'Inspecciones',
+    'Compras',
+    'Embarques',
+    'Requerimientos',
+    'Servicios',
+    'Unidades',
+  ];
+
+  final List<FaIcon> moduleIcons = [
+    const FaIcon(FontAwesomeIcons.listCheck, size: 24),
+    const FaIcon(FontAwesomeIcons.cartShopping, size: 24),
+    const FaIcon(FontAwesomeIcons.truckFast, size: 24),
+    const FaIcon(FontAwesomeIcons.fileInvoice, size: 24),
+    const FaIcon(FontAwesomeIcons.database, size: 24),
+    const FaIcon(FontAwesomeIcons.truck, size: 24),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Container(),
+      appBar: AppBar(
+        title: const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'EOS Mobile',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            FaIcon(
+              FontAwesomeIcons.bell,
+              size: 20,
+            ),
+          ],
+        ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+              ),
+              itemCount: moduleNames.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    switch (index) {
+                      case 0:
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const ConfiguracionInspeccionPage(),
+                          ),
+                        );
+                    }
+                  },
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: moduleIcons[index],
+                        ),
+                      ),
+                      const Gap(10),
+                      Text(
+                        moduleNames[index],
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(context).hintColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            _buildDrawerHeader(),
+            _buildDrawerItem(
+              icon: FontAwesomeIcons.house,
+              text: 'Inicio',
+              onTap: () => {},
+            ),
+            _buildDrawerItem(
+              icon: FontAwesomeIcons.borderAll,
+              text: 'Dashboard',
+              onTap: () => {},
+            ),
+            _buildDrawerItem(
+              icon: FontAwesomeIcons.list,
+              text: 'Actividad',
+              onTap: () => {},
+            ),
+            _buildDrawerItem(
+              icon: FontAwesomeIcons.circleUser,
+              text: 'Cuenta',
+              onTap: () => {},
+            ),
+            const Divider(),
+            _buildDrawerItem(
+              icon: FontAwesomeIcons.gear,
+              text: 'Configuración',
+              onTap: () => {},
+            ),
+            const Divider(),
+            _buildDrawerItem(
+              icon: FontAwesomeIcons.rightFromBracket,
+              text: 'Cerrar sesión',
+              onTap: () => {},
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: NavigationBar(
+        destinations: const <Widget>[
+          NavigationDestination(
+            icon: FaIcon(
+              FontAwesomeIcons.house,
+              size: 20,
+            ),
+            label: 'Inicio',
+          ),
+          NavigationDestination(
+            icon: FaIcon(
+              FontAwesomeIcons.borderAll,
+              size: 20,
+            ),
+            label: 'Dashboard',
+          ),
+          NavigationDestination(
+            icon: FaIcon(
+              FontAwesomeIcons.list,
+              size: 20,
+            ),
+            label: 'Actividad',
+          ),
+          NavigationDestination(
+            icon: FaIcon(
+              FontAwesomeIcons.circleUser,
+              size: 20,
+            ),
+            label: 'Cuenta',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDrawerHeader() {
+    return const UserAccountsDrawerHeader(
+      currentAccountPicture: CircleAvatar(
+        backgroundImage: NetworkImage(
+          'https://images.unsplash.com/photo-1584999734482-0361aecad844?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA&ixlib=rb-1.2.1&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=300',
+        ),
+      ),
+      accountEmail: Text(
+        'mauricio.santiago@heavy-lift.com.mx',
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      accountName: Text(
+        'Mauricio Santiago',
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          fit: BoxFit.fill,
+          image: AssetImage('assets/images/backgrounds/background_001.jpg'),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem({
+    required IconData icon,
+    required String text,
+    required GestureTapCallback onTap,
+  }) {
+    return ListTile(
+      title: Row(
+        children: <Widget>[
+          FaIcon(
+            icon,
+            size: 18,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: Text(
+              text,
+              style: const TextStyle(fontSize: 14),
+            ),
+          ),
+        ],
+      ),
+      onTap: onTap,
     );
   }
 }

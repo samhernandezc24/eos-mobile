@@ -10,6 +10,7 @@ class SignInUseCase {
   final SignInRepository _signInRepository;
 
   Future<Either<Failure, AccountEntity>> call({required SignInParams params}) async {
+    // ignore: unnecessary_await_in_return
     return await _signInRepository.signIn(params: params);
   }
 }

@@ -73,6 +73,7 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   # Plugin de Flutter para lanzar URL
   url_launcher: ^6.2.4
+  connectivity_plus: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -96,6 +97,7 @@ flutter:
 
   assets:
     - assets/icons/
+    - assets/images/backgrounds/
     - assets/images/errors/
     - assets/images/logo/
     - assets/images/pages/

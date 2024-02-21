@@ -8,3 +8,4 @@ export 'package:flutter_svg/flutter_svg.dart';
 export 'package:font_awesome_flutter/font_awesome_flutter.dart';
 export 'package:gap/gap.dart';
 export 'package:go_router/go_router.dart';
+export 'package:shared_preferences/shared_preferences.dart';

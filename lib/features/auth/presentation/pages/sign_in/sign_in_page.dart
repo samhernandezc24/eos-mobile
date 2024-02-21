@@ -124,7 +124,7 @@ class _SignInPageState extends State<SignInPage> {
                               onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(
+                                  MaterialPageRoute<void>(
                                     builder: (context) =>
                                         const ForgotPasswordPage(),
                                   ),
