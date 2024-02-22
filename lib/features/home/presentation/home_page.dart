@@ -203,7 +203,7 @@ class _HomePageState extends State<HomePage> {
       decoration: BoxDecoration(
         image: DecorationImage(
           fit: BoxFit.fill,
-          image: AssetImage('assets/images/backgrounds/background_001.jpg'),
+          image: AssetImage(ImagePaths.appLogo),
         ),
       ),
     );

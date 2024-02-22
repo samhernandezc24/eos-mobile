@@ -19,6 +19,7 @@ class _SignInPageState extends State<SignInPage> {
 
   // PROPIEDADES
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -143,16 +144,42 @@ class _SignInPageState extends State<SignInPage> {
                               ),
                             ),
                             FilledButton(
-                              onPressed: (){},
+                              onPressed: () {
+                                if (!_formKey.currentState!.validate()) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content:
+                                          const Text('Formulario incompleto'),
+                                      backgroundColor:
+                                          Theme.of(context).colorScheme.error,
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                setState(() {
+                                  _isLoading = true;
+                                });
+
+                                Future.delayed(const Duration(seconds: 2), () {
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+                                });
+                              },
                               style: ButtonStyle(
                                 minimumSize: MaterialStateProperty.all(
                                   const Size(double.infinity, 48),
                                 ),
                               ),
-                              child: const Text(
-                                'Ingresar',
-                                style: TextStyle(fontSize: 16),
-                              ),
+                              child: _isLoading
+                                  ? const CircularProgressIndicator(
+                                    color: Colors.white70,
+                                  )
+                                  : const Text(
+                                      'Ingresar',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
                             ),
                           ],
                         ),

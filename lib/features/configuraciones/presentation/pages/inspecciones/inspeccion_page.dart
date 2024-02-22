@@ -9,12 +9,11 @@ class ConfiguracionInspeccionPage extends StatefulWidget {
       _ConfiguracionInspeccionPageState();
 }
 
-class _ConfiguracionInspeccionPageState
-    extends State<ConfiguracionInspeccionPage> {
+class _ConfiguracionInspeccionPageState extends State<ConfiguracionInspeccionPage> {
   List<String> lstInspecciones = [
     'Inspeccion 1',
     'Inspeccion 2',
-    'Inspeccion 3'
+    'Inspeccion 3',
   ];
 
   Future<void> refresh() async {
