@@ -1,4 +1,5 @@
 import 'package:eos_mobile/features/configuraciones/presentation/pages/categorias/categoria_page.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/widgets/create_inspeccion.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class ConfiguracionInspeccionPage extends StatefulWidget {
@@ -9,12 +10,9 @@ class ConfiguracionInspeccionPage extends StatefulWidget {
       _ConfiguracionInspeccionPageState();
 }
 
-class _ConfiguracionInspeccionPageState extends State<ConfiguracionInspeccionPage> {
-  List<String> lstInspecciones = [
-    'Inspeccion 1',
-    'Inspeccion 2',
-    'Inspeccion 3',
-  ];
+class _ConfiguracionInspeccionPageState
+    extends State<ConfiguracionInspeccionPage> {
+  List<String> lstInspecciones = [];
 
   Future<void> refresh() async {
     setState(() {
@@ -43,63 +41,13 @@ class _ConfiguracionInspeccionPageState extends State<ConfiguracionInspeccionPag
             color: Theme.of(context).highlightColor,
             child: FilledButton.icon(
               onPressed: () {
-                showDialog<void>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text(
-                        'Nueva Inspección',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      content: Form(
-                        child: Container(
-                          padding: EdgeInsets.zero,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              const Text('Nombre *'),
-                              const Gap(6),
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                  isDense: true,
-                                ),
-                                keyboardType: TextInputType.text,
-                                textInputAction: TextInputAction.next,
-                              ),
-                              const Gap(24),
-                              const Text('Folio (opcional)'),
-                              const Gap(6),
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                  isDense: true,
-                                ),
-                                keyboardType: TextInputType.text,
-                                textInputAction: TextInputAction.done,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      actions: <Widget>[
-                        FilledButton(
-                          onPressed: () {
-                            Navigator.pop(context, 'Guardar');
-                          },
-                          child: const Text('Guardar'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context, 'Cerrar');
-                          },
-                          child: const Text('Cerrar'),
-                        ),
-                      ],
-                    );
-                  },
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) {
+                      return const CreateInspeccion();
+                    },
+                    fullscreenDialog: true,
+                  ),
                 );
               },
               icon: const FaIcon(
@@ -114,6 +62,29 @@ class _ConfiguracionInspeccionPageState extends State<ConfiguracionInspeccionPag
               ),
             ),
           ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Listado de Inspecciones',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  'Mantener presionado la inspección para ver más opciones.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Theme.of(context).hintColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
           Expanded(
             child: RefreshIndicator(
               onRefresh: refresh,
@@ -124,77 +95,85 @@ class _ConfiguracionInspeccionPageState extends State<ConfiguracionInspeccionPag
                   return ListTile(
                     title: Text(item),
                     onTap: () {},
-                    onLongPress: () {
-                      showModalBottomSheet<void>(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                const ListTile(
-                                  title: Text(
-                                    'Inspección: Grúas - Diario',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                const Divider(),
-                                ListTile(
-                                  leading: const FaIcon(
-                                    FontAwesomeIcons.circlePlus,
-                                    size: 18,
-                                  ),
-                                  title: const Text('Crear categoría'),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute<void>(
-                                        builder: (context) =>
-                                            const ConfiguracionCategoriaPage(),
-                                      ),
-                                    );
-                                  },
-                                ),
-                                ListTile(
-                                  leading: const FaIcon(
-                                    FontAwesomeIcons.penToSquare,
-                                    size: 18,
-                                  ),
-                                  title: const Text('Editar'),
-                                  onTap: () {},
-                                ),
-                                ListTile(
-                                  leading: FaIcon(
-                                    FontAwesomeIcons.trash,
-                                    size: 18,
-                                    color: Theme.of(context).colorScheme.error,
-                                  ),
-                                  title: Text(
-                                    'Eliminar',
-                                    style: TextStyle(
-                                      color:
-                                          Theme.of(context).colorScheme.error,
-                                    ),
-                                  ),
-                                  onTap: () {},
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
                     leading: const FaIcon(
                       FontAwesomeIcons.layerGroup,
                       size: 20,
                     ),
-                    trailing: const FaIcon(
-                      FontAwesomeIcons.angleRight,
-                      size: 18,
+                    trailing: IconButton(
+                      icon: const FaIcon(
+                        FontAwesomeIcons.ellipsisVertical,
+                        size: 18,
+                      ),
+                      onPressed: () {
+                        showModalBottomSheet<void>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  const ListTile(
+                                    title: Text(
+                                      'Inspección: Grúas',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  const Divider(),
+                                  ListTile(
+                                    leading: const FaIcon(
+                                      FontAwesomeIcons.circlePlus,
+                                      size: 18,
+                                    ),
+                                    title: const Text('Crear categoría'),
+                                    onTap: () {
+                                      // Abrir la nueva pagina de categorias
+                                      Future.delayed(
+                                          const Duration(milliseconds: 300),
+                                          () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute<void>(
+                                            builder: (context) =>
+                                                const ConfiguracionCategoriaPage(),
+                                          ),
+                                        );
+                                      });
+                                    },
+                                  ),
+                                  ListTile(
+                                    leading: const FaIcon(
+                                      FontAwesomeIcons.penToSquare,
+                                      size: 18,
+                                    ),
+                                    title: const Text('Editar'),
+                                    onTap: () {},
+                                  ),
+                                  ListTile(
+                                    leading: FaIcon(
+                                      FontAwesomeIcons.trash,
+                                      size: 18,
+                                      color:
+                                          Theme.of(context).colorScheme.error,
+                                    ),
+                                    title: Text(
+                                      'Eliminar',
+                                      style: TextStyle(
+                                        color:
+                                            Theme.of(context).colorScheme.error,
+                                      ),
+                                    ),
+                                    onTap: () {},
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
                     ),
                   );
                 },

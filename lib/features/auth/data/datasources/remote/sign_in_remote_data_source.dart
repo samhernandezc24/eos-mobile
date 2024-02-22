@@ -15,7 +15,7 @@ class SignInRemoteDataSourceImpl implements SignInRemoteDataSource {
 
   @override
   Future<AccountModel> signIn({required SignInParams params}) async {
-    final response = await dio.post(
+    final response = await dio.post<dynamic>(
       ListAPI.loginTreo,
       data: {
         'email': params.email,

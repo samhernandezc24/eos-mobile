@@ -1,4 +1,5 @@
-import 'package:eos_mobile/features/configuraciones/presentation/pages/inspecciones/inspeccion_page.dart';
+import 'package:eos_mobile/features/auth/presentation/pages/sign_in/sign_in_page.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/pages/index/index_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,7 +15,7 @@ class _HomePageState extends State<HomePage> {
     'Compras',
     'Embarques',
     'Requerimientos',
-    'Servicios',
+    'Proyectos',
     'Unidades',
   ];
 
@@ -22,8 +23,8 @@ class _HomePageState extends State<HomePage> {
     const FaIcon(FontAwesomeIcons.listCheck, size: 24),
     const FaIcon(FontAwesomeIcons.cartShopping, size: 24),
     const FaIcon(FontAwesomeIcons.truckFast, size: 24),
-    const FaIcon(FontAwesomeIcons.fileInvoice, size: 24),
-    const FaIcon(FontAwesomeIcons.database, size: 24),
+    const FaIcon(FontAwesomeIcons.checkToSlot, size: 24),
+    const FaIcon(FontAwesomeIcons.folder, size: 24),
     const FaIcon(FontAwesomeIcons.truck, size: 24),
   ];
 
@@ -65,25 +66,14 @@ class _HomePageState extends State<HomePage> {
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return InkWell(
-                  onTap: () {
-                    switch (index) {
-                      case 0:
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const ConfiguracionInspeccionPage(),
-                          ),
-                        );
-                    }
-                  },
+                  onTap: () {},
                   child: Column(
                     children: [
                       Container(
                         height: 60,
                         width: 60,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).cardColor,
+                          color: Theme.of(context).highlightColor,
                           shape: BoxShape.circle,
                         ),
                         child: Center(
@@ -117,7 +107,7 @@ class _HomePageState extends State<HomePage> {
               onTap: () => {},
             ),
             _buildDrawerItem(
-              icon: FontAwesomeIcons.borderAll,
+              icon: FontAwesomeIcons.tableColumns,
               text: 'Dashboard',
               onTap: () => {},
             ),
@@ -135,13 +125,35 @@ class _HomePageState extends State<HomePage> {
             _buildDrawerItem(
               icon: FontAwesomeIcons.gear,
               text: 'Configuración',
-              onTap: () => {},
+              onTap: () {
+                // Cerrar el drawer
+                Navigator.pop(context);
+                // Actualizar el estado en la app
+                Future.delayed(const Duration(milliseconds: 300), () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (context) => const ConfiguracionIndexPage(),
+                    ),
+                  );
+                });
+              },
             ),
             const Divider(),
             _buildDrawerItem(
               icon: FontAwesomeIcons.rightFromBracket,
               text: 'Cerrar sesión',
-              onTap: () => {},
+              onTap: () {
+                // Actualizar el estado en la app
+                Future.delayed(const Duration(milliseconds: 300), () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (context) => const SignInPage(),
+                    ),
+                  );
+                });
+              },
             ),
           ],
         ),
@@ -157,7 +169,7 @@ class _HomePageState extends State<HomePage> {
           ),
           NavigationDestination(
             icon: FaIcon(
-              FontAwesomeIcons.borderAll,
+              FontAwesomeIcons.tableColumns,
               size: 20,
             ),
             label: 'Dashboard',
@@ -203,7 +215,7 @@ class _HomePageState extends State<HomePage> {
       decoration: BoxDecoration(
         image: DecorationImage(
           fit: BoxFit.fill,
-          image: AssetImage(ImagePaths.appLogo),
+          image: AssetImage(ImagePaths.background1),
         ),
       ),
     );

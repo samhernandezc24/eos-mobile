@@ -5,12 +5,13 @@ class ListAPI {
   static const String androidEmulatorHost = 'http://10.0.2.2';
   static const String localhost           = 'http://localhost';
 
-  // API.Account
+  /// API.Account
   static const String apiAccount = '$androidEmulatorHost:7001';
 
-  /// BASE URLs: Production Mode
+  /// API.Inspecciones
+  static const String apiInspecciones = '$androidEmulatorHost:7018';
 
-  // ASPNETUSER
+  /// ASPNETUSER
   static const String loginTreo        = '$apiAccount/api/AspNetUser/LoginTreo';
   static const String emailRecovery    = '$apiAccount/api/AspNetUser/EmailRecovery';
   static const String recoverPassword  = '$apiAccount/api/AspNetUser/RecoverPassword';
@@ -18,4 +19,6 @@ class ListAPI {
   static const String passwordUpdate   = '$apiAccount/api/AspNetUser/PasswordUpdate';
   static const String logout           = '$apiAccount/api/AspNetUser/Logout';
 
+  /// INSPECCIONES
+  static const String inspeccionesList = '$apiInspecciones/api/Inspecciones';
 }
