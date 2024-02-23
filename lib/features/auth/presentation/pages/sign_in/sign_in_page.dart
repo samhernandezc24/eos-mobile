@@ -1,7 +1,8 @@
+import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/core/common/widgets/eos_mobile_logo.dart';
 import 'package:eos_mobile/core/common/widgets/wave_clipper.dart';
 import 'package:eos_mobile/core/validators/form_validators.dart';
-import 'package:eos_mobile/features/auth/presentation/pages/forgot_password/forgot_password.dart';
+import 'package:eos_mobile/features/auth/presentation/pages/forgot_password/forgot_password_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class SignInPage extends StatefulWidget {
@@ -172,14 +173,19 @@ class _SignInPageState extends State<SignInPage> {
                                   const Size(double.infinity, 48),
                                 ),
                               ),
-                              child: _isLoading
-                                  ? const CircularProgressIndicator(
-                                    color: Colors.white70,
-                                  )
-                                  : const Text(
-                                      'Ingresar',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
+                              // child: _isLoading
+                              //     ? const CircularProgressIndicator(
+                              //       color: Colors.white70,
+                              //     )
+                              //     : const Text(
+                              //         'Ingresar',
+                              //         style: TextStyle(fontSize: 16),
+                              //       ),
+                              child: const LoadingIndicator(
+                                width: 20,
+                                height: 20,
+                                strokeWidth: 2,
+                              ),
                             ),
                           ],
                         ),

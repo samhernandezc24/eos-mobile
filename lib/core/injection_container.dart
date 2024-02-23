@@ -9,6 +9,7 @@ import 'package:eos_mobile/shared/shared.dart';
 
 final sl = GetIt.instance;
 
+/// Crear singletons y factories (lógica y servicios) que pueden ser compartidos a través de la aplicación.
 Future<void> initializeDependencies() async {
   // Dio
   sl..registerSingleton<Dio>(Dio())
