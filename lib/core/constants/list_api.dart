@@ -21,4 +21,10 @@ class ListAPI {
 
   /// INSPECCIONES
   static const String inspeccionesList = '$apiInspecciones/api/Inspecciones';
+
+  /// INSPECCIONES CATEGORIAS
+  static const String categoriasList = '$apiInspecciones/api/Inspecciones/Categorias';
+
+  /// INSPECCIONES CATEGORIAS ITEMS
+  static const String preguntasItemsList = '$apiInspecciones/api/Inspecciones/Categorias/Items';
 }

@@ -8,7 +8,7 @@ import 'package:get_it/get_it.dart';
 
 final sl = GetIt.instance;
 
-void initializeDependencies() {
+Future<void> initializeDependencies() async {
   // Dio
   sl..registerSingleton<Dio>(Dio())
 

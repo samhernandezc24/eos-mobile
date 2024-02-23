@@ -1,5 +1,6 @@
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_state.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/widgets/inspeccion_tile.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -34,7 +35,9 @@ class ListPage extends StatelessWidget {
         if (state is RemoteInspeccionesDone) {
           return ListView.builder(
             itemBuilder: (context, index) {
-              return Container();
+              return InspeccionTile(
+                inspeccion: state.inspecciones![index],
+              );
             },
             itemCount: state.inspecciones!.length,
           );

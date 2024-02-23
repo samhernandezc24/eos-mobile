@@ -16,26 +16,15 @@ class RemoteInspeccionesBloc extends Bloc<RemoteInspeccionesEvent, RemoteInspecc
     final dataState = await _getInspeccionesUseCase();
 
     if (dataState is DataSuccess && dataState.data!.isNotEmpty) {
+      // print(dataState.data!);
       emit(
         RemoteInspeccionesDone(dataState.data!),
       );
     }
 
     if (dataState is DataFailed) {
+      // print(dataState.exception!.message);
       emit(RemoteInspeccionesFailure(dataState.exception!));
     }
   }
-
-  // Stream<RemoteInspeccionesState> mapEventToState(RemoteInspeccionesEvent event) async* {
-  //   if (event is GetInspeccionesEvent) {
-  //     yield*  _mapGetInspeccionesEventToState(event);
-  //   }
-  // }
-
-  // Stream<RemoteInspeccionesState> _mapGetInspeccionesEventToState(GetInspeccionesEvent event) async* {
-  //   yield const RemoteInspeccionesLoading();
-  //   final eitherFailureOrInspecciones = await getInspeccionesUseCase();
-
-  //   yield eitherFailureOrInspecciones.fold((f) => RemoteInspeccionesFailure(f), (r) => RemoteInspeccionesDone(r));
-  // }
 }
