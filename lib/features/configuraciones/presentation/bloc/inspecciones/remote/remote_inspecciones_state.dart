@@ -8,9 +8,7 @@ abstract class RemoteInspeccionesState extends Equatable {
   final DioException? failure;
 
   @override
-
-  @override
-  List<Object> get props => [inspecciones!, failure!];
+  List<Object?> get props => [inspecciones, failure];
 }
 
 class RemoteInspeccionesLoading extends RemoteInspeccionesState {

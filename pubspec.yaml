@@ -89,9 +89,23 @@ dev_dependencies:
   # Reglas de lint para Dart y Flutter
   very_good_analysis: ^5.1.0
 
+# Native Flutter Splash Screen
+flutter_native_splash:
+  color: '#fafafa'
+  image: assets/marketing/app-icon-1024.png
+
+  android_12:
+    color: '#fafafa'
+    image: assets/marketing/app-icon-1024.png
+
+  web: false
+
+
 # La siguiente sección es específica para los paquetes Flutter.
 flutter:
   uses-material-design: true
+
+  generate: true
 
   assets:
     - assets/icons/

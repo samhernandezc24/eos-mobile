@@ -5,7 +5,7 @@ import 'package:eos_mobile/features/auth/presentation/pages/forgot_password/forg
 import 'package:eos_mobile/shared/shared.dart';
 
 class SignInPage extends StatefulWidget {
-  const SignInPage({super.key});
+  const SignInPage({Key? key}) : super(key: key);
 
   @override
   State<SignInPage> createState() => _SignInPageState();

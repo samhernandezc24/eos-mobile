@@ -11,33 +11,16 @@ part 'inspecciones_remote_api_service.g.dart';
 abstract class InspeccionesRemoteApiService {
   factory InspeccionesRemoteApiService(Dio dio) = _InspeccionesRemoteApiService;
 
+  // LISTADO DE INSPECCIONES
   @POST('/List')
   Future<HttpResponse<List<InspeccionModel>>> getInspecciones(
     @Header(HttpHeaders.authorizationHeader) String token,
   );
+
+  // CREAR Y GUARDAR UNA INSPECCION
+  @POST('/Store')
+  Future<HttpResponse<void>> createInspeccion(
+    @Header(HttpHeaders.authorizationHeader) String token,
+    @Body() InspeccionModel inspeccion,
+  );
 }
-
-// class InspeccionRemoteDataSourceImpl implements InspeccionRepository {
-//   @override
-//   Future<DataState<List<InspeccionEntity>>> getInspecciones() {
-//     throw UnimplementedError();
-//   }
-//   // InspeccionRemoteDataSourceImpl({required this.dio});
-
-//   // final Dio dio;
-
-//   // @override
-//   // Future<List<InspeccionModel>> getInspecciones() async {
-//   //   final response = await dio.post<List<Map<String, dynamic>>>(
-//   //     ListAPI.inspeccionesList,
-//   //   );
-
-//   //   if (response.statusCode == 200) {
-//   //     final List<Map<String, dynamic>> inspeccionesData = response.data ?? [];
-//   //     final List<InspeccionModel> inspecciones = inspeccionesData.map(InspeccionModel.fromJson).toList();
-//   //     return inspecciones;
-//   //   } else {
-//   //     throw ServerException();
-//   //   }
-//   // }
-// }

@@ -1,6 +1,7 @@
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_bloc.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_event.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_state.dart';
-import 'package:eos_mobile/features/configuraciones/presentation/widgets/create_inspeccion.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/widgets/create_inspeccion_modal.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/widgets/inspeccion_tile.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,18 +14,11 @@ class ConfiguracionInspeccionPage extends StatefulWidget {
       _ConfiguracionInspeccionPageState();
 }
 
-class _ConfiguracionInspeccionPageState
-    extends State<ConfiguracionInspeccionPage> {
-  List<String> lstInspecciones = [
-    'Inspeccion 1',
-    'Inspeccion 2',
-    'Inspeccion 3',
-  ];
+class _ConfiguracionInspeccionPageState extends State<ConfiguracionInspeccionPage> {
 
   Future<void> refresh() async {
-    setState(() {
-      lstInspecciones.addAll(['Inspeccion 4', 'Inspeccion 5', 'Inspeccion 6']);
-    });
+    BlocProvider.of<RemoteInspeccionesBloc>(context)
+        .add(const RefreshInspecciones());
   }
 
   @override
@@ -78,7 +72,7 @@ class _ConfiguracionInspeccionPageState
                     Navigator.of(context).push(
                       MaterialPageRoute<void>(
                         builder: (BuildContext context) {
-                          return const CreateInspeccion();
+                          return const CreateInspeccionModal();
                         },
                         fullscreenDialog: true,
                       ),
@@ -129,7 +123,7 @@ class _ConfiguracionInspeccionPageState
                         inspeccion: state.inspecciones![index],
                       );
                     },
-                    itemCount: state.inspecciones!.length, 
+                    itemCount: state.inspecciones!.length,
                     separatorBuilder: (BuildContext context, int index) {
                       return const Divider();
                     },

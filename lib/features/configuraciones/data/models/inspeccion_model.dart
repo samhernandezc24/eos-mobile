@@ -2,11 +2,11 @@ import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_e
 
 class InspeccionModel extends InspeccionEntity {
   const InspeccionModel({
-    required String idInspeccion,
     required String folio,
     required String name,
+    String? idInspeccion,
   }) : super(
-          idInspeccion:   idInspeccion,
+          idInspeccion: idInspeccion,
           folio:          folio,
           name:           name,
         );
@@ -18,6 +18,14 @@ class InspeccionModel extends InspeccionEntity {
       idInspeccion:   json['idInspeccion'] as String,
       folio:          json['folio'] as String,
       name:           json['name'] as String,
+    );
+  }
+
+  factory InspeccionModel.fromEntity(InspeccionEntity entity) {
+    return InspeccionModel(
+      idInspeccion:   entity.idInspeccion,
+      folio:          entity.folio,
+      name:           entity.name,
     );
   }
 

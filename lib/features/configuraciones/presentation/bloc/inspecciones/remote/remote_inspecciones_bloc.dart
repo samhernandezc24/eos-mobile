@@ -8,6 +8,7 @@ class RemoteInspeccionesBloc extends Bloc<RemoteInspeccionesEvent, RemoteInspecc
 
   RemoteInspeccionesBloc(this._getInspeccionesUseCase) : super(const RemoteInspeccionesLoading()) {
     on<GetInspecciones> (onGetInspecciones);
+    on<RefreshInspecciones> (onRefreshInspecciones);
   }
 
   final GetInspeccionesUseCase _getInspeccionesUseCase;
@@ -24,6 +25,20 @@ class RemoteInspeccionesBloc extends Bloc<RemoteInspeccionesEvent, RemoteInspecc
 
     if (dataState is DataFailed) {
       // print(dataState.exception!.message);
+      emit(RemoteInspeccionesFailure(dataState.exception!));
+    }
+  }
+
+  Future<void> onRefreshInspecciones(RefreshInspecciones event, Emitter<RemoteInspeccionesState> emit) async {
+    final dataState = await _getInspeccionesUseCase();
+
+    if (dataState is DataSuccess && dataState.data!.isNotEmpty) {
+      emit(
+        RemoteInspeccionesDone(dataState.data!),
+      );
+    }
+
+    if (dataState is DataFailed) {
       emit(RemoteInspeccionesFailure(dataState.exception!));
     }
   }

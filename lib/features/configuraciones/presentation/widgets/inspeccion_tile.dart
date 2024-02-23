@@ -19,9 +19,6 @@ class InspeccionTile extends StatelessWidget {
         inspeccion!.name.toLowerCase().toProperCase(),
         maxLines: 3,
         overflow: TextOverflow.ellipsis,
-        style: const TextStyle(
-          fontWeight: FontWeight.w500,
-        ),
       ),
       onTap: () {},
       leading: const FaIcon(

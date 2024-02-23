@@ -27,8 +27,8 @@ class _InspeccionesRemoteApiService implements InspeccionesRemoteApiService {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'authorization': token};
     _headers.removeWhere((k, v) => v == null);
-    final _data = <String, dynamic>{};
-    final _result = await _dio.fetch<Map<String, dynamic>>(
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String,dynamic>>(
         _setStreamType<HttpResponse<List<InspeccionModel>>>(Options(
       method: 'POST',
       headers: _headers,
@@ -49,6 +49,38 @@ class _InspeccionesRemoteApiService implements InspeccionesRemoteApiService {
         .map<InspeccionModel>((dynamic i) => InspeccionModel.fromJson(i as Map<String, dynamic>))
         .toList() as List<InspeccionModel>;
     final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<void>> createInspeccion(
+    String token,
+    InspeccionModel inspeccion,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(inspeccion.toJson());
+    final _result =
+        await _dio.fetch<void>(_setStreamType<HttpResponse<void>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/Store',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final httpResponse = HttpResponse(null, _result);
     return httpResponse;
   }
 

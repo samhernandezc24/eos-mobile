@@ -4,4 +4,5 @@ import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_e
 abstract class InspeccionRepository {
   // API METHODS
   Future<DataState<List<InspeccionEntity>>> getInspecciones();
+  Future<DataState<void>> createInspeccion(InspeccionEntity inspeccion);
 }
