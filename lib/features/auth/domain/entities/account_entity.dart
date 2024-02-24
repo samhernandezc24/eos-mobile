@@ -18,7 +18,7 @@ class AccountEntity extends Equatable {
 
   final String id;
   final UserEntity user;
-  final String token;  
+  final String token;
   final String? rol;
   final String? idRol;
   final String? privilegies;
@@ -27,19 +27,19 @@ class AccountEntity extends Equatable {
   final String? foto;
   final String nombre;
   final String key;
-  
+
   @override
   List<Object?> get props => [
-    id,
-    user,
-    token,
-    rol,
-    idRol,
-    privilegies,
-    expiration,
-    action,
-    foto,
-    nombre,
-    key,
-  ];
+        id,
+        user,
+        token,
+        rol,
+        idRol,
+        privilegies,
+        expiration,
+        action,
+        foto,
+        nombre,
+        key,
+      ];
 }

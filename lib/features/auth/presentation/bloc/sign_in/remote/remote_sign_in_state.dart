@@ -1,22 +1,24 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-// Estos estados representan los diferentes estados en los que puede estar la autenticacion remota, como
-// la carga (loading), exito, error.
 import 'package:eos_mobile/features/auth/domain/entities/account_entity.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 abstract class RemoteSignInState extends Equatable {
-  const RemoteSignInState({this.account});
+  const RemoteSignInState({this.account, this.failure});
 
   final AccountEntity? account;
+  final DioException? failure;
 
   @override
-  List<Object> get props => [account!];
+  List<Object?> get props => [account, failure];
 }
 
-abstract class RemoteSignInStatus {
-  const RemoteSignInStatus();
+class RemoteSignInLoading extends RemoteSignInState {
+  const RemoteSignInLoading();
 }
 
-class RemoteSignInFormSubmitting extends RemoteSignInStatus {}
+class RemoteSignInSuccess extends RemoteSignInState {
+  const RemoteSignInSuccess(AccountEntity account) : super(account: account);
+}
 
-class RemoteSignInSuccess extends RemoteSignInStatus {}
+class RemoteSignInFailure extends RemoteSignInState {
+  const RemoteSignInFailure(DioException failure) : super(failure: failure);
+}

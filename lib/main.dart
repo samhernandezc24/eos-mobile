@@ -1,5 +1,6 @@
 import 'package:eos_mobile/config/themes/app_theme.dart';
 import 'package:eos_mobile/core/injection_container.dart';
+import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/remote/remote_sign_in_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/pages/sign_in/sign_in_page.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/create/remote/remote_create_inspeccion_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_bloc.dart';
@@ -30,6 +31,10 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider<RemoteSignInBloc>(
+          create: (context) =>
+              sl<RemoteSignInBloc>(),
+        ),
         BlocProvider<RemoteInspeccionesBloc>(
           create: (context) =>
               sl<RemoteInspeccionesBloc>()..add(const GetInspecciones()),
@@ -44,7 +49,7 @@ class MainApp extends StatelessWidget {
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.light,
-        home: const SignInPage(),
+        home: const AuthSignInPage(),
       ),
     );
   }

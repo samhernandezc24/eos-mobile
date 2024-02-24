@@ -18,7 +18,7 @@ dependencies:
   # Programación funcional en Dart
   dartz: ^0.10.1
   # Peticiones HTTP, Interceptores, Transformadores, etc
-  dio: ^5.4.0
+  dio: ^5.4.1
   # Buscador de Flutter con dropdown
   dropdown_search: ^5.0.6
   # Simplificar comparación de objetos de Dart
@@ -62,7 +62,7 @@ dependencies:
   # Wrapper de InheritedWidget para reutilizaciones globales
   provider: ^6.1.1
   # Generador de código para cliente Dio
-  retrofit: '>=4.0.0 <5.0.0'
+  retrofit: ^4.1.0
   # Leer/Escribir key-value pairs en el sistema del usuario
   shared_preferences: ^2.2.2
   # Efecto de brillo en Flutter
@@ -85,7 +85,7 @@ dev_dependencies:
   # Genera código convertido a JSON
   json_serializable: ^6.6.2
   # Generador de retrofit
-  retrofit_generator: '>=7.0.0 <8.0.0'
+  retrofit_generator: ^8.1.0
   # Reglas de lint para Dart y Flutter
   very_good_analysis: ^5.1.0
 

@@ -165,7 +165,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute<void>(
-                      builder: (context) => const SignInPage(),
+                      builder: (context) => const AuthSignInPage(),
                     ),
                   );
                 });

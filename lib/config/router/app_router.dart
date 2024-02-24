@@ -9,7 +9,7 @@ final appRouter = GoRouter(
   routes: [
     GoRoute(
       path: '/sign-in',
-      builder: (context, state) => const SignInPage(),
+      builder: (context, state) => const AuthSignInPage(),
     ),
     GoRoute(
       path: '/',

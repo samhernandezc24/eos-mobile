@@ -46,6 +46,22 @@ class AccountModel extends AccountEntity {
     );
   }
 
+  factory AccountModel.fromEntity(AccountEntity entity) {
+    return AccountModel(
+      id:           entity.id, 
+      user:         UserModel.fromEntity(entity.user), 
+      token:        entity.token, 
+      expiration:   entity.expiration, 
+      nombre:       entity.nombre, 
+      key:          entity.key,
+      rol:          entity.rol,
+      idRol:        entity.idRol,
+      privilegies:  entity.privilegies,
+      action:       entity.action,
+      foto:         entity.foto,
+    );
+  }
+
   /// `toJson` es la convención para que una clase soporte la
   /// serialización a formato JSON.
   Map<String, dynamic> toJson() {
@@ -53,7 +69,7 @@ class AccountModel extends AccountEntity {
       'id':           id,
       'user':         user,
       'token':        token,
-      'expiration':   expiration,
+      'expiration':   expiration.toIso8601String(),
       'nombre':       nombre,
       'key':          key,
       'rol':          rol,

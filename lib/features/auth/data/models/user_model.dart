@@ -4,7 +4,7 @@ class UserModel extends UserEntity {
   const UserModel({
     required String id,
     required String email,
-    required String idEmpleado,    
+    required String idEmpleado,
     required String nombreCompleto,
     required String name,
     String? idBase,
@@ -14,7 +14,7 @@ class UserModel extends UserEntity {
   }) : super(
           id:               id,
           email:            email,
-          idEmpleado:       idEmpleado, 
+          idEmpleado:       idEmpleado,
           idBase:           idBase,
           idBaseActual:     idBaseActual,
           nombreCompleto:   nombreCompleto,
@@ -27,7 +27,7 @@ class UserModel extends UserEntity {
   /// de [UserModel] para el mapeo de json.
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id:               json['id'] as String, 
+      id:               json['id'] as String,
       email:            json['email'] as String,
       idEmpleado:       json['idEmpleado'] as String,
       idBase:           json['idBase'] as String,
@@ -39,19 +39,33 @@ class UserModel extends UserEntity {
     );
   }
 
+  factory UserModel.fromEntity(UserEntity entity) {
+    return UserModel(
+      id:               entity.id,
+      email:            entity.email,
+      idEmpleado:       entity.idEmpleado,
+      idBase:           entity.idBase,
+      idBaseActual:     entity.idBaseActual,
+      nombreCompleto:   entity.nombreCompleto,
+      name:             entity.name,
+      status:           entity.status,
+      avatar:           entity.avatar,
+    );
+  }
+
   /// `toJson` es la convención para que una clase soporte la
   /// serialización a formato JSON.
   Map<String, dynamic> toJson() {
     return {
-      'id':             id,
-      'email':          email,
-      'idEmpleado':     idEmpleado,
-      'idBase':         idBase,
-      'idBaseActual':   idBaseActual,
-      'nombreCompleto': nombreCompleto,
-      'name':           name,
-      'status':         status,
-      'avatar':         avatar,
+      'id':               id,
+      'email':            email,
+      'idEmpleado':       idEmpleado,
+      'idBase':           idBase,
+      'idBaseActual':     idBaseActual,
+      'nombreCompleto':   nombreCompleto,
+      'name':             name,
+      'status':           status,
+      'avatar':           avatar,
     };
   }
 }

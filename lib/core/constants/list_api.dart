@@ -12,19 +12,14 @@ class ListAPI {
   static const String apiInspecciones = '$androidEmulatorHost:7018';
 
   /// ASPNETUSER
-  static const String loginTreo        = '$apiAccount/api/AspNetUser/LoginTreo';
-  static const String emailRecovery    = '$apiAccount/api/AspNetUser/EmailRecovery';
-  static const String recoverPassword  = '$apiAccount/api/AspNetUser/RecoverPassword';
-  static const String refreshTreo      = '$apiAccount/api/AspNetUser/RefreshTreo';
-  static const String passwordUpdate   = '$apiAccount/api/AspNetUser/PasswordUpdate';
-  static const String logout           = '$apiAccount/api/AspNetUser/Logout';
+  static const String aspNetUser      = '$apiAccount/api/AspNetUser';
 
   /// INSPECCIONES
-  static const String inspeccionesList = '$apiInspecciones/api/Inspecciones';
+  static const String inspecciones    = '$apiInspecciones/api/Inspecciones';
 
   /// INSPECCIONES CATEGORIAS
-  static const String categoriasList = '$apiInspecciones/api/Inspecciones/Categorias';
+  static const String categorias      = '$apiInspecciones/api/Inspecciones/Categorias';
 
   /// INSPECCIONES CATEGORIAS ITEMS
-  static const String preguntasItemsList = '$apiInspecciones/api/Inspecciones/Categorias/Items';
+  static const String categoriasItems = '$apiInspecciones/api/Inspecciones/Categorias/Items';
 }

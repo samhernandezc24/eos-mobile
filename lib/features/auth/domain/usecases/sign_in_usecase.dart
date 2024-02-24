@@ -1,16 +1,16 @@
-// import 'package:dartz/dartz.dart';
-// import 'package:eos_mobile/core/errors/failure.dart';
-// import 'package:eos_mobile/core/params/params.dart';
-// import 'package:eos_mobile/features/auth/domain/entities/account_entity.dart';
-// import 'package:eos_mobile/features/auth/domain/repositories/sign_in_repository.dart';
+import 'package:eos_mobile/core/network/data_state.dart';
+import 'package:eos_mobile/core/usecases/params.dart';
+import 'package:eos_mobile/core/usecases/usecase.dart';
+import 'package:eos_mobile/features/auth/domain/entities/account_entity.dart';
+import 'package:eos_mobile/features/auth/domain/repositories/auth_repository.dart';
 
-// class SignInUseCase {
-//   SignInUseCase(this._signInRepository);
+class SignInUseCase implements UseCase<DataState<AccountEntity>, SignInParams> {
+  SignInUseCase(this._authRepository);
 
-//   final SignInRepository _signInRepository;
-
-//   Future<Either<Failure, AccountEntity>> call({required SignInParams params}) async {
-//     // ignore: unnecessary_await_in_return
-//     return await _signInRepository.signIn(params: params);
-//   }
-// }
+  final AuthRepository _authRepository;
+  
+  @override
+  Future<DataState<AccountEntity>> call(SignInParams params) {
+    return _authRepository.signIn(params);
+  }
+}

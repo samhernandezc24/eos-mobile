@@ -7,7 +7,7 @@ import 'package:retrofit/retrofit.dart';
 
 part 'inspecciones_remote_api_service.g.dart';
 
-@RestApi(baseUrl: ListAPI.inspeccionesList)
+@RestApi(baseUrl: ListAPI.inspecciones)
 abstract class InspeccionesRemoteApiService {
   factory InspeccionesRemoteApiService(Dio dio) = _InspeccionesRemoteApiService;
 
