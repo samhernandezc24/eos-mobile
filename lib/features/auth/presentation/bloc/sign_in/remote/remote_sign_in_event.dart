@@ -1,15 +1,15 @@
-import 'package:eos_mobile/core/usecases/params.dart';
+import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 abstract class RemoteSignInEvent extends Equatable {
-  const RemoteSignInEvent({this.credentials});
+  const RemoteSignInEvent({required this.signIn});
 
-  final SignInParams? credentials;
+  final SignInEntity signIn;
 
   @override
-  List<Object> get props => [credentials!];
+  List<Object> get props => [signIn];
 }
 
 class SignIn extends RemoteSignInEvent {
-  const SignIn(SignInParams credentials) : super(credentials: credentials);
+  const SignIn(SignInEntity signIn) : super(signIn: signIn);
 }

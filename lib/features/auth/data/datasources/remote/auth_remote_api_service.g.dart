@@ -21,11 +21,12 @@ class _AuthRemoteApiService implements AuthRemoteApiService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<AccountModel>> signIn(SignInParams signIn) async {
+  Future<HttpResponse<AccountModel>> signIn(SignInModel signIn) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = signIn;
+    final _data = <String, dynamic>{};
+    _data.addAll(signIn.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<AccountModel>>(Options(
       method: 'POST',

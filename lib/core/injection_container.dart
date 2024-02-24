@@ -25,7 +25,7 @@ Future<void> initializeDependencies() async {
 
 
   // Repositorios
-  ..registerSingleton<AuthRepository>(AuthRepositoryImpl(sl()))
+  ..registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()))
   ..registerSingleton<InspeccionRepository>(InspeccionRepositoryImpl(sl()))
 
   // Casos de uso

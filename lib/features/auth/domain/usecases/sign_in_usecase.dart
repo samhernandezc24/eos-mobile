@@ -1,16 +1,14 @@
 import 'package:eos_mobile/core/network/data_state.dart';
-import 'package:eos_mobile/core/usecases/params.dart';
-import 'package:eos_mobile/core/usecases/usecase.dart';
 import 'package:eos_mobile/features/auth/domain/entities/account_entity.dart';
+import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
 import 'package:eos_mobile/features/auth/domain/repositories/auth_repository.dart';
 
-class SignInUseCase implements UseCase<DataState<AccountEntity>, SignInParams> {
+class SignInUseCase {
   SignInUseCase(this._authRepository);
 
   final AuthRepository _authRepository;
-  
-  @override
-  Future<DataState<AccountEntity>> call(SignInParams params) {
-    return _authRepository.signIn(params);
+
+  Future<DataState<AccountEntity>> call(SignInEntity signIn) async {
+    return await _authRepository.signIn(signIn);
   }
 }

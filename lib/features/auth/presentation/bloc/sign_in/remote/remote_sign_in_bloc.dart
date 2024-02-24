@@ -5,22 +5,24 @@ import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/remote/remote
 import 'package:eos_mobile/shared/shared.dart';
 
 class RemoteSignInBloc extends Bloc<RemoteSignInEvent, RemoteSignInState> {
-  RemoteSignInBloc(this._signInUseCase) : super(const RemoteSignInLoading()) {
+  RemoteSignInBloc(this._signInUseCase) : super(const RemoteSignInInitial()) {
     on<SignIn> (onSignIn);
   }
 
   final SignInUseCase _signInUseCase;
 
   Future<void> onSignIn(SignIn event, Emitter<RemoteSignInState> emit) async {
-    final dataState = await _signInUseCase(params: event.credentials);
+    emit(const RemoteSignInLoading());
+
+    final dataState = await _signInUseCase(event.signIn);
 
     if (dataState is DataSuccess) {
-      print(dataState.data);
+      // print(dataState.data);
       emit(RemoteSignInSuccess(dataState.data!));
     }
 
     if (dataState is DataFailed) {
-      print(dataState.exception!.message);
+      // print(dataState.exception!.message);
       emit(RemoteSignInFailure(dataState.exception!));
     }
   }
