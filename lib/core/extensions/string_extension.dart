@@ -8,7 +8,7 @@ extension StringExtension on String {
   ///   print("IVANA".toCapitalized());
   ///   => "Ivana"
   /// ```
-  String toCapitalized() => StyleString.toCapitalized(this);
+  String toCapitalized() => StyleStringsUtils.toCapitalized(this);
 
   /// Convierte el String a mayúsculas y minúsculas poniendo en mayúscula
   /// la primera letra de cada palabra y forzando todos los demás caracteres
@@ -19,5 +19,5 @@ extension StringExtension on String {
   ///   print("foo bar".toProperCase());
   ///   => "Foo Bar"
   /// ```
-  String toProperCase() => StyleString.toProperCase(this);
+  String toProperCase() => StyleStringsUtils.toProperCase(this);
 }

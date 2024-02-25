@@ -5,13 +5,14 @@ class SimpleCheckbox extends StatelessWidget {
   const SimpleCheckbox({
     required this.isActive,
     required this.label,
-    required this.onChanged,
-    super.key,
-  });
+    required void Function(bool?) onChanged,
+    Key? key,
+  }) : _onChanged = onChanged,
+       super(key: key);
 
   final bool isActive;
   final String label;
-  final Function(bool? onChanged) onChanged;
+  final void Function(bool?) _onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +31,12 @@ class SimpleCheckbox extends StatelessWidget {
             activeColor: Colors.white.withOpacity(0.75),
             onChanged: (bool? isActive) {
               HapticsUtils.mediumImpact();
-              onChanged.call(isActive);
+              _onChanged.call(isActive);
             },
           ),
         ),
+        const Gap(10),
+        Text(label),
       ],
     );
   }

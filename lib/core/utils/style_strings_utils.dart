@@ -1,4 +1,4 @@
-class StyleString {
+class StyleStringsUtils {
   /// toCapitalized
   static String toCapitalized(String? string) {
     if (string == null || string.isEmpty) {
