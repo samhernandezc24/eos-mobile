@@ -1,10 +1,10 @@
+import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_event.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_state.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/widgets/create_inspeccion_modal.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/widgets/inspeccion_tile.dart';
 import 'package:eos_mobile/shared/shared.dart';
-import 'package:flutter/cupertino.dart';
 
 class ConfiguracionInspeccionPage extends StatefulWidget {
   const ConfiguracionInspeccionPage({Key? key}) : super(key: key);
@@ -41,7 +41,12 @@ class _ConfiguracionInspeccionPageState extends State<ConfiguracionInspeccionPag
     return BlocBuilder<RemoteInspeccionesBloc, RemoteInspeccionesState>(
       builder: (_, state) {
         if (state is RemoteInspeccionesLoading) {
-          return const Center(child: CupertinoActivityIndicator());
+          return Center(
+            child: LoadingIndicator(
+              color: Theme.of(context).primaryColor,
+              strokeWidth: 2,
+            ),
+          );
         }
 
         if (state is RemoteInspeccionesFailure) {
@@ -49,7 +54,10 @@ class _ConfiguracionInspeccionPageState extends State<ConfiguracionInspeccionPag
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('No se pudo conectar al servidor.'),
+                Text(
+                  state.failure?.response?.data.toString() ?? '',
+                ),
+                const Gap(30),
                 FilledButton(
                   onPressed: refresh,
                   child: const Text('Reintentar'),

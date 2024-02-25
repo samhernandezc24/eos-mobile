@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:eos_mobile/core/constants/api_key.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
 import 'package:eos_mobile/features/configuraciones/data/datasources/remote/inspecciones_remote_api_service.dart';
 import 'package:eos_mobile/features/configuraciones/data/models/inspeccion_model.dart';
@@ -13,11 +12,15 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
 
   final InspeccionesRemoteApiService _inspeccionesRemoteApiService;
 
+  final _secureStorage = const FlutterSecureStorage();
+
   @override
   Future<DataState<List<InspeccionModel>>> getInspecciones() async {
     try {
+      // Recuperar el token almacenado
+      final retrieveToken = await _secureStorage.read(key: 'access_token');
       final httpResponse =
-          await _inspeccionesRemoteApiService.getInspecciones(apiKey);
+          await _inspeccionesRemoteApiService.getInspecciones(retrieveToken!);
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         return DataSuccess(httpResponse.data);
@@ -39,8 +42,10 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
   @override
   Future<DataState<void>> createInspeccion(InspeccionEntity inspeccion) async {
     try {
+      // Recuperar el token almacenado
+      final retrieveToken = await _secureStorage.read(key: 'access_token');
       final httpResponse = await _inspeccionesRemoteApiService.createInspeccion(
-        apiKey,
+        retrieveToken!,
         InspeccionModel.fromEntity(inspeccion),
       );
 

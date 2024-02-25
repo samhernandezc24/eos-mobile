@@ -11,6 +11,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final storage = const FlutterSecureStorage();
+
   final List<String> moduleNames = [
     'Inspecciones',
     'Compras',
@@ -28,6 +30,47 @@ class _HomePageState extends State<HomePage> {
     const FaIcon(FontAwesomeIcons.folder, size: 24),
     const FaIcon(FontAwesomeIcons.truck, size: 24),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _checkSecureStorage();
+  }
+
+  Future<void> _checkSecureStorage() async {
+    final allValues = await storage.readAll();
+    if (allValues.isEmpty) {
+      print('El almacenamiento seguro está vacío.');
+    } else {
+      allValues.forEach((key, value) {
+        print('$key: $value');
+      });
+    }
+  }
+
+  Future<void> _showLogoutConfirmationDialog() async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Cerrar sesión'),
+          content: const Text(
+            '¿Está seguro que desea cerrar la sesión?',
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Aceptar'),
+            ),
+          ],
+        );
+      }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -159,17 +202,7 @@ class _HomePageState extends State<HomePage> {
             _buildDrawerItem(
               icon: FontAwesomeIcons.rightFromBracket,
               text: 'Cerrar sesión',
-              onTap: () {
-                // Actualizar el estado en la app
-                Future.delayed(const Duration(milliseconds: 300), () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (context) => const AuthSignInPage(),
-                    ),
-                  );
-                });
-              },
+              onTap: _showLogoutConfirmationDialog,
             ),
           ],
         ),

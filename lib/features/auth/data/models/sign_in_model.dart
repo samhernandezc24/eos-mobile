@@ -9,6 +9,8 @@ class SignInModel extends SignInEntity {
           password:   password,
         );
 
+  /// `toJson` es la convención para que una clase soporte la
+  /// serialización a formato JSON.
   Map<String, dynamic> toJson() {
     return {
       'email':      email,

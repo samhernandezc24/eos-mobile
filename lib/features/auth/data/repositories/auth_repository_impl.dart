@@ -7,40 +7,39 @@ import 'package:eos_mobile/features/auth/data/models/sign_in_model.dart';
 import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
 import 'package:eos_mobile/features/auth/domain/repositories/auth_repository.dart';
 import 'package:eos_mobile/shared/shared.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  AuthRepositoryImpl(this._authRemoteApiService, this._secureStorage);
+  AuthRepositoryImpl(this._authRemoteApiService);
 
   final AuthRemoteApiService _authRemoteApiService;
-  final FlutterSecureStorage _secureStorage;
+
+  final _secureStorage = const FlutterSecureStorage();
 
   /// SIGN IN
   @override
   Future<DataState<AccountModel>> signIn(SignInEntity signIn) async {
     try {
-      final String? storedToken = await _secureStorage.read(key: 'access_token');
-
-      if (storedToken != null) {
-        // return DataFailed(
-        //   DioException(
-        //     error: 'El usuario ya ha iniciado sesión anteriormente.',
-        //     type: DioExceptionType.
-        //   ),
-        // );
-      }
-
-      final signInModel = SignInModel(email: signIn.email, password: signIn.password);
+      final signInModel =
+          SignInModel(email: signIn.email, password: signIn.password);
       final httpResponse = await _authRemoteApiService.signIn(signInModel);
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        // Establecer datos de sesion
+        final accountModel = httpResponse.data;
+        final prefs = await SharedPreferences.getInstance();
 
-        // Guardar el token de acceso en el sistema
-        final accessToken = httpResponse.data.token;
-        await _secureStorage.write(key: 'access_token', value: accessToken);
+        // Guardar el token en el almacenamiento seguro
+        await _secureStorage.write(
+            key: 'access_token', value: accountModel.token);
+        await _secureStorage.write(key: 'token', value: accountModel.token);
+        await _secureStorage.write(key: 'key', value: accountModel.key);
 
-        // Retornar la respuesta
+        // Guardar información del usuario
+        await prefs.setString('id', accountModel.id);
+        await prefs.setString('privilegies', accountModel.privilegies ?? '');
+        await prefs.setString('expiration', accountModel.expiration.toString());
+        await prefs.setString('foto', accountModel.foto ?? '');
+        await prefs.setString('nombre', accountModel.nombre);
+
         return DataSuccess(httpResponse.data);
       } else {
         return DataFailed(
@@ -57,21 +56,40 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
-  /// IS USER AUTHENTICATED
-  @override
-  Future<DataState<bool>> isAuthenticated() async {
-    final String? accessToken = await _secureStorage.read(key: 'access_token');
-    if (accessToken != null) {
-      return const DataSuccess(true);
-    } else {
-      return const DataSuccess(false);
-    }
-  }
-
   /// SIGN OUT
   @override
-  Future<DataState<void>> signOut() {
-    // TODO: implement signOut
-    throw UnimplementedError();
+  Future<DataState<void>> signOut() async {
+    try {
+      // Recuperar el token almacenado
+      final retrieveToken = await _secureStorage.read(key: 'access_token');
+
+      if (retrieveToken == null) {
+        return const DataSuccess(null);
+      } else {
+        final httpResponse = await _authRemoteApiService.signOut(retrieveToken);
+
+        if (httpResponse.response.statusCode == HttpStatus.ok) {
+          // Eliminar el access_token del secure storage
+          await _secureStorage.deleteAll();
+
+          // Eliminar los demas datos del shared preferences
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.clear();
+
+          return DataSuccess(httpResponse.data);
+        } else {
+          return DataFailed(
+            DioException(
+              error: httpResponse.response.statusMessage,
+              response: httpResponse.response,
+              type: DioExceptionType.badResponse,
+              requestOptions: httpResponse.response.requestOptions,
+            ),
+          );
+        }
+      }
+    } on DioException catch (e) {
+      return DataFailed(e);
+    }
   }
 }

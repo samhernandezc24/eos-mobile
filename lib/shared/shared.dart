@@ -26,6 +26,9 @@ export 'package:flutter/services.dart';
 // FLUTTER BLOC
 export 'package:flutter_bloc/flutter_bloc.dart';
 
+// FLUTTER SECURE STORAGE
+export 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 // FLUTTER SVG
 export 'package:flutter_svg/flutter_svg.dart';
 

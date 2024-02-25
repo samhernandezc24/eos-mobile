@@ -103,6 +103,19 @@ class _SignInFormState extends State<SignInForm> {
             ),
             BlocConsumer<RemoteSignInBloc, RemoteSignInState>(
               listener: (context, state) {
+                if (state is RemoteSignInFailure) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          state.failure?.response?.data.toString() ?? '',
+                        ),
+                        backgroundColor: Theme.of(context).colorScheme.error,
+                      ),
+                    );
+                  });
+                }
+
                 if (state is RemoteSignInSuccess) {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute<void>(
@@ -127,15 +140,6 @@ class _SignInFormState extends State<SignInForm> {
                       strokeWidth: 2,
                     ),
                   );
-                } else if (state is RemoteSignInFailure) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(state.failure?.response?.data.toString() ?? ''),
-                        backgroundColor: Theme.of(context).colorScheme.error,
-                      ),
-                    );
-                  });
                 }
 
                 return FilledButton(

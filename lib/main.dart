@@ -5,6 +5,7 @@ import 'package:eos_mobile/features/auth/presentation/pages/sign_in/sign_in_page
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/create/remote/remote_create_inspeccion_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_event.dart';
+import 'package:eos_mobile/features/home/presentation/home_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -49,7 +50,7 @@ class MainApp extends StatelessWidget {
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.light,
-        home: const AuthSignInPage(),
+        home: const HomePage(),
       ),
     );
   }

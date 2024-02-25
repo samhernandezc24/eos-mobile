@@ -1,5 +1,9 @@
 import 'package:eos_mobile/shared/shared.dart';
 
+/// [UserEntity]
+/// 
+/// Representa los detalles de la sesión del
+/// usuario.
 class UserEntity extends Equatable {
   const UserEntity({
     required this.id,

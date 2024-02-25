@@ -1,6 +1,10 @@
 import 'package:eos_mobile/features/auth/domain/entities/user_entity.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
+/// [AccountEntity]
+/// 
+/// Representa la cuenta del usuario y contiene información como el ID,
+/// token, rol de usuario, etc.
 class AccountEntity extends Equatable {
   const AccountEntity({
     required this.id,
