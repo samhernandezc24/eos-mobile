@@ -20,7 +20,9 @@ class InspeccionTile extends StatelessWidget {
         maxLines: 3,
         overflow: TextOverflow.ellipsis,
       ),
-      onTap: () {},
+      onTap: () {
+        print('Id de la inspeccion: ${inspeccion!.idInspeccion}');
+      },
       leading: const FaIcon(
         FontAwesomeIcons.layerGroup,
         size: 20,

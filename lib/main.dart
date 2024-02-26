@@ -49,9 +49,9 @@ class MainApp extends StatelessWidget {
         theme: AppTheme.lightTheme($styles),
         darkTheme: AppTheme.darkTheme($styles),
         themeMode: ThemeMode.light,
-        routeInformationProvider: AppRouter().appRouter.routeInformationProvider,
-        routeInformationParser: AppRouter().appRouter.routeInformationParser,
-        routerDelegate: AppRouter().appRouter.routerDelegate,
+        routeInformationProvider: appRouter.routeInformationProvider,
+        routeInformationParser: appRouter.routeInformationParser,
+        routerDelegate: appRouter.routerDelegate,
       ),
     );
   }

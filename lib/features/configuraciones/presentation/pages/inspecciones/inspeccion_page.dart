@@ -50,13 +50,13 @@ class _ConfiguracionInspeccionPageState extends State<ConfiguracionInspeccionPag
         }
 
         if (state is RemoteInspeccionesFailure) {
+          final jsonResponse = state.failure?.response?.data as Map<String, dynamic>?;
+          final errorMessage = jsonResponse != null ? jsonResponse['message'] : 'Ha ocurrido un error inesperado.';
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  state.failure?.response?.data.toString() ?? '',
-                ),
+                Text('$errorMessage'),
                 const Gap(30),
                 FilledButton(
                   onPressed: refresh,
