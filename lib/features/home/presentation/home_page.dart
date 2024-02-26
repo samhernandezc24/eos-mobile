@@ -1,4 +1,3 @@
-import 'package:eos_mobile/features/auth/presentation/pages/sign_in/sign_in_page.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/pages/index/index_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/pages/index/index_page.dart';
 import 'package:eos_mobile/shared/shared.dart';

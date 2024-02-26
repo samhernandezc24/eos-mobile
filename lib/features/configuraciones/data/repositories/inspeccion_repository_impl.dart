@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:eos_mobile/core/data/api_response_model.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
 import 'package:eos_mobile/features/configuraciones/data/datasources/remote/inspecciones_remote_api_service.dart';
 import 'package:eos_mobile/features/configuraciones/data/models/inspeccion_model.dart';
@@ -19,8 +20,8 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
     try {
       // Recuperar el token almacenado
       final retrieveToken = await _secureStorage.read(key: 'access_token');
-      final httpResponse =
-          await _inspeccionesRemoteApiService.getInspecciones(retrieveToken!);
+      final httpResponse = await _inspeccionesRemoteApiService
+          .getInspecciones('Bearer ${retrieveToken!}');
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         return DataSuccess(httpResponse.data);
@@ -34,23 +35,49 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
           ),
         );
       }
-    } on DioException catch(e) {
+    } on DioException catch (e) {
       return DataFailed(e);
     }
   }
 
   @override
-  Future<DataState<void>> createInspeccion(InspeccionEntity inspeccion) async {
+  Future<DataState<ApiResponseModel>> createInspeccion(
+      InspeccionEntity inspeccion) async {
     try {
       // Recuperar el token almacenado
       final retrieveToken = await _secureStorage.read(key: 'access_token');
       final httpResponse = await _inspeccionesRemoteApiService.createInspeccion(
-        retrieveToken!,
+        'Bearer ${retrieveToken!}',
         InspeccionModel.fromEntity(inspeccion),
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        return DataSuccess(httpResponse.data);
+        final objResponse =
+            ApiResponseModel.fromJson(httpResponse.data.toJson());
+
+        if (objResponse.session ?? false) {
+          if (objResponse.action ?? false) {
+            return DataSuccess(objResponse);
+          } else {
+            return DataFailed(
+              DioException(
+                error: httpResponse.response.statusMessage,
+                response: httpResponse.response,
+                type: DioExceptionType.badResponse,
+                requestOptions: httpResponse.response.requestOptions,
+              ),
+            );
+          }
+        } else {
+          return DataFailed(
+            DioException(
+              error: httpResponse.response.statusMessage,
+              response: httpResponse.response,
+              type: DioExceptionType.badResponse,
+              requestOptions: httpResponse.response.requestOptions,
+            ),
+          );
+        }
       } else {
         return DataFailed(
           DioException(

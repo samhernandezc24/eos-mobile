@@ -6,9 +6,13 @@ import 'package:flutter/gestures.dart';
 class AppScrollBehavior extends ScrollBehavior {
   // Añade el arrastre del ratón en el escritorio para facilitar el responsive testing.
   @override
-  Set<PointerDeviceKind> get dragDevices => super.dragDevices..add(PointerDeviceKind.mouse);
+  Set<PointerDeviceKind> get dragDevices {
+    final devices = Set<PointerDeviceKind>.from(super.dragDevices);
+    devices.add(PointerDeviceKind.mouse);
+    return devices;
+  }
 
-  // Usar la física de bouncing en todas las plataformas, encaja mejor con el diseño 
+  // Usar la física de bouncing en todas las plataformas, encaja mejor con el diseño
   // de la aplicación.
   @override
   ScrollPhysics getScrollPhysics(BuildContext context) => const BouncingScrollPhysics();

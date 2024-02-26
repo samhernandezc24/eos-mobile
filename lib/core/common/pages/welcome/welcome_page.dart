@@ -1,8 +1,12 @@
 import 'package:eos_mobile/core/common/data/page_data.dart';
 import 'package:eos_mobile/core/common/widgets/controls/app_page_indicator.dart';
+import 'package:eos_mobile/core/common/widgets/controls/circle_buttons.dart';
 import 'package:eos_mobile/core/common/widgets/gradient_container.dart';
+import 'package:eos_mobile/core/common/widgets/previous_next_navigation.dart';
 import 'package:eos_mobile/core/common/widgets/static_text_scale.dart';
+import 'package:eos_mobile/core/common/widgets/themed_text.dart';
 import 'package:eos_mobile/core/constants/constants.dart';
+import 'package:eos_mobile/core/enums/app_icons_enums.dart';
 import 'package:eos_mobile/core/logic/common/platform_info.dart';
 import 'package:eos_mobile/core/utils/haptics_utils.dart';
 import 'package:eos_mobile/shared/shared.dart';
@@ -15,13 +19,15 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  late final PageController _pageController = PageController()..addListener(() { });
-  late final ValueNotifier<int> _currentPage = ValueNotifier(0)..addListener(() => setState(() {}));
+  late final PageController _pageController = PageController()
+    ..addListener(_handlePageChanged);
+  late final ValueNotifier<int> _currentPage = ValueNotifier(0)
+    ..addListener(() => setState(() {}));
 
   static List<PageData> pageData = [];
 
-  bool get _isOnLastPage => _currentPage.value.round() == pageData.length - 1;
-  bool get _isOnFirstPage => _currentPage.value.round() == 0;
+  bool get _isOnLastPage => _currentPage.value == pageData.length - 1;
+  bool get _isOnFirstPage => _currentPage.value == 0;
 
   @override
   void dispose() {
@@ -32,7 +38,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   void _handleWelcomeCompletePressed() {
     if (_currentPage.value == pageData.length - 1) {
-
+      context.go('/');
     }
   }
 
@@ -56,22 +62,34 @@ class _WelcomePageState extends State<WelcomePage> {
     if (_isOnLastPage && direction > 0) return;
     if (_isOnFirstPage && direction < 0) return;
     _pageController.animateToPage(
-      current + direction, 
-      duration: $styles.times.pageTransition, 
+      current + direction,
+      duration: $styles.times.pageTransition,
       curve: Curves.easeIn,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Set the page data
+    // Establecer los datos de la página.
     pageData = [
-      PageData($strings.welcomeTitleOne, $strings.welcomeContentOne, 'one', '1'),
-      PageData($strings.welcomeTitleTwo, $strings.welcomeContentTwo, 'two', '2'),
-      PageData($strings.welcomeTitleThree, $strings.welcomeContentThree, 'three', '3'),
+      PageData(
+        $strings.welcomeTitleOne,
+        $strings.welcomeContentOne,
+        'one',
+      ),
+      PageData(
+        $strings.welcomeTitleTwo,
+        $strings.welcomeContentTwo,
+        'two',
+      ),
+      PageData(
+        $strings.welcomeTitleThree,
+        $strings.welcomeContentThree,
+        'three',
+      ),
     ];
 
-    // Esta vista utiliza un PageView a pantalla completa para permitir 
+    // Esta vista utiliza un PageView a pantalla completa para permitir
     // la navegación por deslizamiento.
     //
     // Sin embargo, sólo queremos el título / contenido para deslizar,
@@ -80,84 +98,114 @@ class _WelcomePageState extends State<WelcomePage> {
     final List<Widget> pages = pageData.map((e) => _Page(data: e)).toList();
 
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          MergeSemantics(
-            child: Semantics(
-              onIncrease: () => _handleSemanticSwipe(1),
-              onDecrease: () => _handleSemanticSwipe(-1),
-              child: PageView(
-                controller: _pageController,
-                children: pages,
-                onPageChanged: (_) => HapticsUtils.lightImpact(),
+      body: DefaultTextColor(
+        color: Theme.of(context).colorScheme.onBackground,
+        child: ColoredBox(
+          color: Theme.of(context).colorScheme.background,
+          child: SafeArea(
+            child: Animate(
+              delay: 500.ms,
+              effects: const [FadeEffect()],
+              child: PreviousNextNavigation(
+                maxWidth: 600,
+                nextButtonColor:
+                    _isOnLastPage ? Theme.of(context).primaryColor : null,
+                onPreviousPressed:
+                    _isOnFirstPage ? null : () => _incrementPage(-1),
+                onNextPressed: () {
+                  if (_isOnLastPage) {
+                    _handleWelcomeCompletePressed();
+                  } else {
+                    _incrementPage(1);
+                  }
+                },
+                child: Stack(
+                  children: <Widget>[
+                    // PÁGINA CON TITULO Y CONTENIDO:
+                    MergeSemantics(
+                      child: Semantics(
+                        onIncrease: () => _handleSemanticSwipe(1),
+                        onDecrease: () => _handleSemanticSwipe(-1),
+                        child: PageView(
+                          controller: _pageController,
+                          children: pages,
+                          onPageChanged: (_) => HapticsUtils.lightImpact(),
+                        ),
+                      ),
+                    ),
+                    ExcludeSemantics(
+                      excluding: false,
+                      child: Column(
+                        children: [
+                          const Spacer(),
+                          // LOGO:
+                          Semantics(
+                            header: true,
+                            child: Container(
+                              height: Constants.kDefaultLogoHeight,
+                              alignment: Alignment.center,
+                              child: const Text('EOS Mobile'),
+                            ),
+                          ),
+                          // IMAGEN CON MASK:
+                          SizedBox(
+                            height: Constants.kDefaultImageSize,
+                            width: Constants.kDefaultImageSize,
+                            child: ValueListenableBuilder<int>(
+                              valueListenable: _currentPage,
+                              builder: (_, value, __) {
+                                return AnimatedSwitcher(
+                                  duration: $styles.times.slow,
+                                  child: KeyedSubtree(
+                                    key: ValueKey(value),
+                                    child: _PageImage(data: pageData[value]),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          // ESPACIO PARA EL TEXTO:
+                          const Gap(Constants.kDefaultTextHeight * 2),
+                          // INDICADOR DE PÁGINA:
+                          Container(
+                            height: Constants.kDefaultPageIndicatorHeight,
+                            alignment: Alignment.center,
+                            child: AppPageIndicator(
+                              count: pageData.length,
+                              pageController: _pageController,
+                            ),
+                          ),
+                          const Spacer(flex: 2),
+                        ],
+                      ),
+                    ),
+
+                    // CONSTRUIR LOS OVERLAYS PARA OCULTAR EL CONTENIDO AL DESLIZAR EN PANTALLAS
+                    // MUY ANCHAS.
+                    _buildHorizontalGradientOverlay(left: true),
+                    _buildHorizontalGradientOverlay(),
+
+                    if (PlatformInfo.isMobile) ...[
+                      // BOTON DE FINALIZACION:
+                      Positioned(
+                        right: $styles.insets.lg,
+                        bottom: $styles.insets.lg,
+                        child: _buildFinishButton(context),
+                      ),
+
+                      BottomCenter(
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: $styles.insets.lg),
+                          child: _buildNavText(context),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
             ),
           ),
-          IgnorePointer(
-            ignoringSemantics: false,
-            child: Column(
-              children: [
-                const Spacer(),
-
-                // logo:
-                Semantics(
-                  header: true,
-                  child: Container(
-                    height: Constants.kDefaultLogoHeight,
-                    alignment: Alignment.center,
-                    child: const Text('Logo'),
-                  ),
-                ),
-
-                // masked image:
-                SizedBox(
-                  height: Constants.kDefaultImageSize,
-                  width: Constants.kDefaultImageSize,
-                  child: ValueListenableBuilder<int>(
-                    valueListenable: _currentPage,
-                    builder: (_, value, __) {
-                      return AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 800),
-                        child: KeyedSubtree(
-                          key: ValueKey(value),
-                          child: _PageImage(data: pageData[value]),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-
-                // placeholder gap for text:
-                const Gap(Constants.kDefaultTextHeight),
-
-                // page indicator:
-                Container(
-                  height: Constants.kDefaultPageIndicatorHeight,
-                  alignment: Alignment.center,
-                  child: AppPageIndicator(
-                    count: pageData.length,
-                    pageController: _pageController,
-                  ),
-                ),
-                const Spacer(flex: 2),
-              ],
-            ),
-          ),
-
-          // build a cpl overlays to hide the content when swiping on very wide screens
-          _buildHorizontalGradientOverlay(left: true),
-          _buildHorizontalGradientOverlay(),
-
-          // nav help text:
-          if (PlatformInfo.isMobile) ...[
-            // finish button:
-            Positioned(
-              right: 0,
-              bottom: 0,
-              child: _buildFinishButton(context),
-            ),
-          ],
-        ],
+        ),
       ),
     );
   }
@@ -168,8 +216,13 @@ class _WelcomePageState extends State<WelcomePage> {
       builder: (_, pageIndex, __) {
         return AnimatedOpacity(
           opacity: pageIndex == pageData.length - 1 ? 1 : 0,
-          duration: const Duration(milliseconds: 300),
-          child: FilledButton(child: Text('Siguiente'), onPressed: () {}),
+          duration: $styles.times.fast,
+          child: CircleIconButton(
+            icon: AppIconsEnums.next_large,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            onPressed: _handleWelcomeCompletePressed,
+            semanticLabel: $strings.welcomeSemanticEnterApp,
+          ),
         );
       },
     );
@@ -185,8 +238,8 @@ class _WelcomePageState extends State<WelcomePage> {
           child: Transform.scale(
             scaleX: left ? -1 : 1,
             child: HorizontalGradient([
-              Colors.black.withOpacity(0),
-              Colors.black,
+              const Color(0xFF1E1B18).withOpacity(0),
+              const Color(0xFF1E1B18),
             ], const [
               0,
               .2,
@@ -194,6 +247,26 @@ class _WelcomePageState extends State<WelcomePage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildNavText(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: _currentPage,
+      builder: (_, pageIndex, __) {
+        return AnimatedOpacity(
+          opacity: pageIndex == pageData.length - 1 ? 0 : 1,
+          duration: $styles.times.fast,
+          child: Semantics(
+            onTapHint: $strings.welcomeSemanticNavigate,
+            onTap: _isOnLastPage ? null : _handleNavTextSemanticTap,
+            child: Text(
+              $strings.welcomeSemanticSwipeLeft,
+              style: $styles.textStyles.bodySmall,
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -208,11 +281,13 @@ class _Page extends StatelessWidget {
     return Semantics(
       liveRegion: true,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: $styles.insets.md),
         child: Column(
           children: [
             const Spacer(),
-            const Gap(Constants.kDefaultImageSize + Constants.kDefaultLogoHeight),
+            const Gap(
+              Constants.kDefaultImageSize + Constants.kDefaultLogoHeight,
+            ),
             SizedBox(
               height: Constants.kDefaultTextHeight,
               width: 400,
@@ -220,9 +295,17 @@ class _Page extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(data.title),
-                    const Gap(16),
-                    Text(data.content, textAlign: TextAlign.center),
+                    Text(
+                      data.title,
+                      style: $styles.textStyles.eosTitleFont
+                          .copyWith(fontSize: 24 * $styles.scale),
+                    ),
+                    Gap($styles.insets.sm),
+                    Text(
+                      data.content,
+                      style: $styles.textStyles.bodySmall,
+                      textAlign: TextAlign.center,
+                    ),
                   ],
                 ),
               ),
@@ -240,7 +323,7 @@ class _PageImage extends StatelessWidget {
   const _PageImage({required this.data});
 
   final PageData data;
-  
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -250,12 +333,6 @@ class _PageImage extends StatelessWidget {
             '${ImagePaths.welcome}/welcome-${data.image}.png',
             fit: BoxFit.cover,
             alignment: Alignment.centerRight,
-          ),
-        ),
-        Positioned.fill(
-          child: Image.asset(
-            '${ImagePaths.mask}/intro-mask-${data.mask}.png',
-            fit: BoxFit.fill,
           ),
         ),
       ],

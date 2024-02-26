@@ -28,7 +28,7 @@ class _InspeccionesRemoteApiService implements InspeccionesRemoteApiService {
     final _headers = <String, dynamic>{r'authorization': token};
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String,dynamic>>(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<List<InspeccionModel>>>(Options(
       method: 'POST',
       headers: _headers,
@@ -53,7 +53,7 @@ class _InspeccionesRemoteApiService implements InspeccionesRemoteApiService {
   }
 
   @override
-  Future<HttpResponse<void>> createInspeccion(
+  Future<HttpResponse<ApiResponseModel>> createInspeccion(
     String token,
     InspeccionModel inspeccion,
   ) async {
@@ -63,8 +63,8 @@ class _InspeccionesRemoteApiService implements InspeccionesRemoteApiService {
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(inspeccion.toJson());
-    final _result =
-        await _dio.fetch<void>(_setStreamType<HttpResponse<void>>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<ApiResponseModel>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -80,7 +80,8 @@ class _InspeccionesRemoteApiService implements InspeccionesRemoteApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final httpResponse = HttpResponse(null, _result);
+    final value = ApiResponseModel.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 

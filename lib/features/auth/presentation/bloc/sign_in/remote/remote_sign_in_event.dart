@@ -2,12 +2,12 @@ import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 abstract class RemoteSignInEvent extends Equatable {
-  const RemoteSignInEvent({required this.signIn});
+  const RemoteSignInEvent({this.signIn});
 
-  final SignInEntity signIn;
+  final SignInEntity? signIn;
 
   @override
-  List<Object> get props => [signIn];
+  List<Object?> get props => [signIn];
 }
 
 class SignIn extends RemoteSignInEvent {

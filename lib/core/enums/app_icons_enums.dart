@@ -1,10 +1,12 @@
+// ignore_for_file: constant_identifier_names
+
 enum AppIconsEnums {
   close,
-  closeLarge,
+  close_large,
   download,
   info,
   menu,
-  nextLarge,
+  next_large,
   prev,
   search,
 }

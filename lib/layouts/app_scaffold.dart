@@ -1,3 +1,4 @@
+import 'package:eos_mobile/config/themes/app_theme.dart';
 import 'package:eos_mobile/core/common/widgets/app_scroll_behavior.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
@@ -11,13 +12,19 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final appTheme = theme.brightness == Brightness.light
+        ? AppTheme.lightTheme($styles)
+        : AppTheme.darkTheme($styles);
+
     return KeyedSubtree(
       key: ValueKey($styles.scale),
       child: Theme(
-        data: ...,
+        data: appTheme,
         child: DefaultTextStyle(
-          style: $styles.text.body,
-          // Use a custom scroll behavior across entire app
+          style: $styles.textStyles.body,
+          // Utilizar un comportamiento de desplazamiento personalizado
+          // en toda la aplicación.
           child: ScrollConfiguration(
             behavior: AppScrollBehavior(),
             child: child,

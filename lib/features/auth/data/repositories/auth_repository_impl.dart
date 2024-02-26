@@ -13,6 +13,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   final AuthRemoteApiService _authRemoteApiService;
 
+  // SET THE DEFAULTS
   final _secureStorage = const FlutterSecureStorage();
 
   /// SIGN IN

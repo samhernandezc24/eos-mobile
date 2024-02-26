@@ -6,7 +6,7 @@ import 'package:eos_mobile/shared/shared.dart';
 
 class RemoteSignInBloc extends Bloc<RemoteSignInEvent, RemoteSignInState> {
   RemoteSignInBloc(this._signInUseCase) : super(const RemoteSignInInitial()) {
-    on<SignIn> (onSignIn);
+    on<SignIn>(onSignIn);
   }
 
   final SignInUseCase _signInUseCase;
@@ -14,7 +14,7 @@ class RemoteSignInBloc extends Bloc<RemoteSignInEvent, RemoteSignInState> {
   Future<void> onSignIn(SignIn event, Emitter<RemoteSignInState> emit) async {
     emit(const RemoteSignInLoading());
 
-    final dataState = await _signInUseCase(event.signIn);
+    final dataState = await _signInUseCase(event.signIn!);
 
     if (dataState is DataSuccess) {
       // print(dataState.data);

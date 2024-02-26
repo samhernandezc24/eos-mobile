@@ -10,7 +10,11 @@ export 'package:eos_mobile/config/styles/app_styles.dart';
 // CORE
 export 'package:eos_mobile/core/constants/app_strings.dart';
 export 'package:eos_mobile/core/constants/assets.dart';
+export 'package:eos_mobile/core/extensions/alignments_extension.dart';
 export 'package:eos_mobile/core/extensions/string_extension.dart';
+
+// LAYOUTS
+export 'package:eos_mobile/layouts/app_scaffold.dart';
 
 // MAIN
 export 'package:eos_mobile/main.dart';
@@ -25,6 +29,9 @@ export 'package:flex_color_scheme/flex_color_scheme.dart';
 export 'package:flutter/material.dart';
 export 'package:flutter/services.dart';
 
+// ANIMATIONS
+export 'package:flutter_animate/flutter_animate.dart';
+
 // FLUTTER BLOC
 export 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -36,8 +43,6 @@ export 'package:flutter_svg/flutter_svg.dart';
 
 // FONTAWESOME FLUTTER
 export 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-// ANIMATIONS
 
 // GAP (FLEX)
 export 'package:gap/gap.dart';

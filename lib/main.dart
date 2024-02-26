@@ -1,12 +1,10 @@
-import 'package:eos_mobile/config/styles/app_styles.dart';
+import 'package:eos_mobile/config/router/app_router.dart';
 import 'package:eos_mobile/config/themes/app_theme.dart';
-import 'package:eos_mobile/core/common/pages/welcome/welcome_page.dart';
 import 'package:eos_mobile/core/injection_container.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/remote/remote_sign_in_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/create/remote/remote_create_inspeccion_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_event.dart';
-import 'package:eos_mobile/layouts/app_scaffold.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -45,13 +43,15 @@ class MainApp extends StatelessWidget {
           create: (context) => sl<RemoteCreateInspeccionBloc>(),
         ),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         title: 'EOS Mobile',
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
+        theme: AppTheme.lightTheme($styles),
+        darkTheme: AppTheme.darkTheme($styles),
         themeMode: ThemeMode.light,
-        home: const WelcomePage(),
+        routeInformationProvider: AppRouter().appRouter.routeInformationProvider,
+        routeInformationParser: AppRouter().appRouter.routeInformationParser,
+        routerDelegate: AppRouter().appRouter.routerDelegate,
       ),
     );
   }

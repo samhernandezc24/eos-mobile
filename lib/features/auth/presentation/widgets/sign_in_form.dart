@@ -5,7 +5,6 @@ import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/remote/remote
 import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/remote/remote_sign_in_event.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/remote/remote_sign_in_state.dart';
 import 'package:eos_mobile/features/auth/presentation/pages/forgot_password/forgot_password_page.dart';
-import 'package:eos_mobile/features/home/presentation/home_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class SignInForm extends StatefulWidget {
@@ -54,8 +53,8 @@ class _SignInFormState extends State<SignInForm> {
               textInputAction: TextInputAction.next,
               validator: FormValidators.emailValidator,
             ),
-            // Form Control: Contraseña
             const Gap(24),
+            // Form Control: Contraseña
             const Text('Contraseña'),
             const Gap(6),
             TextFormField(
@@ -117,11 +116,7 @@ class _SignInFormState extends State<SignInForm> {
                 }
 
                 if (state is RemoteSignInSuccess) {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute<void>(
-                      builder: (context) => const HomePage(),
-                    ),
-                  );
+                  context.go('/');
                 }
               },
               builder: (context, state) {
@@ -164,9 +159,9 @@ class _SignInFormState extends State<SignInForm> {
                       const Size(double.infinity, 48),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Ingresar',
-                    style: TextStyle(fontSize: 16),
+                    style: $styles.textStyles.button,
                   ),
                 );
               },

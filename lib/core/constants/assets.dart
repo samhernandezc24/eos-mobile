@@ -4,7 +4,6 @@ class ImagePaths {
   static const String backgrounds   = '$root/backgrounds';
   static const String errors        = '$root/errors';
   static const String logo          = '$root/logo';
-  static const String mask          = '$root/mask';
   static const String pages         = '$root/pages';
   static const String welcome       = '$root/welcome';
 

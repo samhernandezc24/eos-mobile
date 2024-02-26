@@ -72,6 +72,7 @@ dependencies:
   # Plugin de Flutter para lanzar URL
   url_launcher: ^6.2.4
   connectivity_plus: ^5.0.2
+  flutter_animate: ^4.5.0
 
 dev_dependencies:
   flutter_test:
@@ -112,7 +113,6 @@ flutter:
     - assets/images/backgrounds/
     - assets/images/errors/
     - assets/images/logo/
-    - assets/images/mask/
     - assets/images/pages/
     - assets/images/welcome/
     - assets/lottie/

@@ -5,21 +5,24 @@ import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion
 import 'package:eos_mobile/shared/shared.dart';
 
 class RemoteCreateInspeccionBloc extends Bloc<RemoteCreateInspeccionEvent, RemoteCreateInspeccionState> {
-  RemoteCreateInspeccionBloc(this._createInspeccionUseCase) : super(const RemoteCreateInspeccionLoading()) {
+  RemoteCreateInspeccionBloc(this._createInspeccionUseCase) : super(const RemoteCreateInspeccionInitial()) {
     on<CreateInspeccion> (onCreateInspeccion);
   }
 
   final CreateInspeccionUseCase _createInspeccionUseCase;
 
   Future<void> onCreateInspeccion(CreateInspeccion event, Emitter<RemoteCreateInspeccionState> emit) async {
+    emit(const RemoteCreateInspeccionLoading());
+
     final dataState = await _createInspeccionUseCase(params: event.inspeccion);
 
     if (dataState is DataSuccess) {
-      print(dataState);
-      emit(const RemoteCreateInspeccionDone('Inspección creada exitosamente'));
+      print(dataState.data!);
+      emit(RemoteCreateInspeccionDone(dataState.data!));
     }
 
     if (dataState is DataFailed) {
+      print(dataState.exception!.message);
       emit(RemoteCreateInspeccionFailure(dataState.exception!));
     }
   }

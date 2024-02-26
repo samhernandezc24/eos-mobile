@@ -13,7 +13,7 @@ class AppIcons extends StatelessWidget {
   final AppIconsEnums icon;
   final double size;
   final Color? color;
-  
+
   @override
   Widget build(BuildContext context) {
     final String i = icon.name.toLowerCase().replaceAll('_', '-');
@@ -27,7 +27,7 @@ class AppIcons extends StatelessWidget {
           path,
           width: size,
           height: size,
-          color: color ?? $styles.colors.offWhite,
+          color: color ?? Theme.of(context).canvasColor,
           filterQuality: FilterQuality.high,
         ),
       ),
