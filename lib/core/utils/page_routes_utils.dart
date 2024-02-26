@@ -3,13 +3,19 @@ import 'package:flutter/cupertino.dart';
 class PageRoutesUtils {
   static const Duration kDefaultDuration = Duration(milliseconds: 300);
 
-  static Route<T> dialog<T>(Widget child, {Duration duration = kDefaultDuration, bool opaque = false}) {
-    // Utilizar las rutas de Cupertino en todos los diálogos para obtener el comportamiento "deslizar a la derecha para volver".
+  static Route<T> dialog<T>(
+    Widget child, {
+    Duration duration = kDefaultDuration,
+    bool opaque = false,
+  }) {
+    // Utilizar las rutas de Cupertino en todos los diálogos para obtener 
+    // el comportamiento "deslizar a la derecha para volver".
     if (opaque) {
       return CupertinoPageRoute(builder: (_) => child);
     }
 
-    // SB: Elimina esto en favor de las rutas de Cupertino, podríamos restaurar con una opción `useFade`.
+    // SB: Elimina esto en favor de las rutas de Cupertino, podríamos 
+    // restaurar con una opción `useFade`.
     return PageRouteBuilder(
       transitionDuration: duration,
       reverseTransitionDuration: duration,

@@ -20,6 +20,7 @@ class FormValidators {
     return null;
   }
 
+  // Validación de campos de texto
   static String? textValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Este campo es obligatorio';

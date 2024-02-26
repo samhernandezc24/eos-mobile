@@ -7,6 +7,7 @@ analyzer:
 # Reglas Lint y documentación, véase en https://dart.dev/tools/linter-rules.
 linter:
   rules:
+    avoid_positional_boolean_parameters: false  # Desactivar advertencia en los parámetros booleanos posicionales.
     avoid_redundant_argument_values: true       # Evitar valores argumentales redundantes.
 
     depend_on_referenced_packages: true         # Depender de los paquetes referenciados.

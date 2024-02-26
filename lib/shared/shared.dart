@@ -5,8 +5,10 @@ library;
 export 'package:dio/dio.dart';
 
 // CONFIGURATION
+export 'package:eos_mobile/config/styles/app_styles.dart';
 
 // CORE
+export 'package:eos_mobile/core/constants/app_strings.dart';
 export 'package:eos_mobile/core/constants/assets.dart';
 export 'package:eos_mobile/core/extensions/string_extension.dart';
 

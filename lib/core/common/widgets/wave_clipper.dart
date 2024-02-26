@@ -26,17 +26,26 @@ class WaveClipper extends CustomClipper<Path> {
       path.lineTo(0, sizeHeight - depthBottom);
 
       firstControlPoint = Offset(sizeWidth * .25, sizeHeight - depthBottom * 2);
-      firstEndPoint = Offset(sizeWidth * .5, sizeHeight - depthTop - depthBottom);
+      firstEndPoint =
+          Offset(sizeWidth * .5, sizeHeight - depthTop - depthBottom);
 
       secondControlPoint = Offset(sizeWidth * .75, sizeHeight - depthTop * 2);
       secondEndPoint = Offset(sizeWidth, sizeHeight - depthTop);
 
-      path
-      ..quadraticBezierTo(firstControlPoint.dx, firstControlPoint.dy, firstEndPoint.dx, firstEndPoint.dy)
-      ..quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy, secondEndPoint.dx, secondEndPoint.dy)
-      ..lineTo(sizeWidth, 0)
-      ..lineTo(0, 0)
-      ..close();
+      path..quadraticBezierTo(
+          firstControlPoint.dx,
+          firstControlPoint.dy,
+          firstEndPoint.dx,
+          firstEndPoint.dy,
+        )..quadraticBezierTo(
+          secondControlPoint.dx, 
+          secondControlPoint.dy,
+          secondEndPoint.dx, 
+          secondEndPoint.dy,
+        )
+        ..lineTo(sizeWidth, 0)
+        ..lineTo(0, 0)
+        ..close();
     } else {
       depthTop = 0.0;
       depthBottom = 100.0;
@@ -44,17 +53,26 @@ class WaveClipper extends CustomClipper<Path> {
       path.lineTo(0, sizeHeight - depthBottom);
 
       firstControlPoint = Offset(sizeWidth * .25, sizeHeight - depthBottom * 2);
-      firstEndPoint = Offset(sizeWidth * .5, sizeHeight - depthTop - depthBottom);
+      firstEndPoint =
+          Offset(sizeWidth * .5, sizeHeight - depthTop - depthBottom);
 
       secondControlPoint = Offset(sizeWidth * .75, sizeHeight - depthTop * 2);
       secondEndPoint = Offset(sizeWidth, sizeHeight - depthTop);
 
-      path
-      ..quadraticBezierTo(firstControlPoint.dx, firstControlPoint.dy,firstEndPoint.dx, firstEndPoint.dy)
-      ..quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy, secondEndPoint.dx, secondEndPoint.dy)
-      ..lineTo(sizeWidth, 0)
-      ..lineTo(0, 0)
-      ..close();
+      path..quadraticBezierTo(
+          firstControlPoint.dx,
+          firstControlPoint.dy,
+          firstEndPoint.dx,
+          firstEndPoint.dy,
+        )..quadraticBezierTo(
+          secondControlPoint.dx, 
+          secondControlPoint.dy,
+          secondEndPoint.dx, 
+          secondEndPoint.dy,
+        )
+        ..lineTo(sizeWidth, 0)
+        ..lineTo(0, 0)
+        ..close();
     }
     return path;
   }

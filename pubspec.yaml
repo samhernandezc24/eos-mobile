@@ -112,7 +112,9 @@ flutter:
     - assets/images/backgrounds/
     - assets/images/errors/
     - assets/images/logo/
+    - assets/images/mask/
     - assets/images/pages/
+    - assets/images/welcome/
     - assets/lottie/
 
   fonts:

@@ -29,7 +29,9 @@ class AuthRepositoryImpl implements AuthRepository {
 
         // Guardar el token en el almacenamiento seguro
         await _secureStorage.write(
-            key: 'access_token', value: accountModel.token);
+          key: 'access_token',
+          value: accountModel.token,
+        );
         await _secureStorage.write(key: 'token', value: accountModel.token);
         await _secureStorage.write(key: 'key', value: accountModel.key);
 

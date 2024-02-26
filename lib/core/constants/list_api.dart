@@ -6,7 +6,7 @@ class ListAPI {
   static const String localhost           = 'http://localhost';
 
   /// API.Account
-  static const String apiAccount = '$androidEmulatorHost:7001';
+  static const String apiAccount      = '$androidEmulatorHost:7001';
 
   /// API.Inspecciones
   static const String apiInspecciones = '$androidEmulatorHost:7018';
