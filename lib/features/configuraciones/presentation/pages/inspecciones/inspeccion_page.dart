@@ -1,8 +1,9 @@
+import 'package:eos_mobile/core/common/widgets/controls/basic_modal.dart';
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_event.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_state.dart';
-import 'package:eos_mobile/features/configuraciones/presentation/widgets/create_inspeccion_modal.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/widgets/create_inspeccion_form.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/widgets/inspeccion_tile.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
@@ -80,7 +81,10 @@ class _ConfiguracionInspeccionPageState extends State<ConfiguracionInspeccionPag
                     Navigator.of(context).push(
                       MaterialPageRoute<void>(
                         builder: (BuildContext context) {
-                          return const CreateInspeccionModal();
+                          return const BasicModal(
+                            title: 'Nueva Inspección',
+                            child: CreateInspeccionForm(),
+                          );
                         },
                         fullscreenDialog: true,
                       ),

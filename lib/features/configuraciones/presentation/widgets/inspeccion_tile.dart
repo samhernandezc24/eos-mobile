@@ -1,4 +1,7 @@
 import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_entity.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/inspecciones_req_entity.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_bloc.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_event.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/pages/categorias/categoria_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
@@ -12,16 +15,34 @@ class InspeccionTile extends StatelessWidget {
   final InspeccionEntity? inspeccion;
   final void Function(InspeccionEntity inspeccion)? onInspeccionPressed;
 
+  void _onRemoveInspeccion(
+    BuildContext context,
+    InspeccionReqEntity inspeccion,
+  ) {
+    BlocProvider.of<RemoteInspeccionesBloc>(context)
+        .add(RemoveInspeccion(inspeccion));
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
-        inspeccion!.name.toLowerCase().toProperCase(),
+        inspeccion!.name!.toLowerCase().toProperCase(),
         maxLines: 3,
         overflow: TextOverflow.ellipsis,
       ),
       onTap: () {
-        print('Id de la inspeccion: ${inspeccion!.idInspeccion}');
+        // print('Id de la inspeccion: ${inspeccion!.idInspeccion}');
+        Future.delayed($styles.times.fast, () {
+          Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (context) => ConfiguracionCategoriaPage(
+                idInspeccion: inspeccion!.idInspeccion,
+              ),
+            ),
+          );
+        });
       },
       leading: const FaIcon(
         FontAwesomeIcons.layerGroup,
@@ -90,7 +111,27 @@ class InspeccionTile extends StatelessWidget {
                           color: Theme.of(context).colorScheme.error,
                         ),
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        _onRemoveInspeccion(
+                          context,
+                          InspeccionReqEntity(
+                            idInspeccion: inspeccion!.idInspeccion!,
+                          ),
+                        );
+
+                        // Cierra el modal
+                        Navigator.pop(context);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'La inspección ha sido eliminada exitosamente.',
+                            ),
+                            backgroundColor: Colors
+                                .green, // Color de fondo verde para indicar éxito
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),

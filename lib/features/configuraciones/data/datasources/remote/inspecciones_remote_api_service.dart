@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/core/data/api_response_model.dart';
 import 'package:eos_mobile/features/configuraciones/data/models/inspeccion_model.dart';
+import 'package:eos_mobile/features/configuraciones/data/models/inspeccion_req_model.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -23,5 +24,12 @@ abstract class InspeccionesRemoteApiService {
   Future<HttpResponse<ApiResponseModel>> createInspeccion(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Body() InspeccionModel inspeccion,
+  );
+
+  // ELIMINAR UNA INSPECCIÓN
+  @POST('/Delete')
+  Future<HttpResponse<ApiResponseModel>> removeInspeccion(
+    @Header(HttpHeaders.authorizationHeader) String token,
+    @Body() InspeccionReqModel inspeccion,
   );
 }

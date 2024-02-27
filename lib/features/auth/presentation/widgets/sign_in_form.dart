@@ -149,8 +149,9 @@ class _SignInFormState extends State<SignInForm> {
                       return;
                     } else {
                       final signInData = SignInEntity(
-                          email: _emailController.text,
-                          password: _passwordController.text);
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                      );
                       context.read<RemoteSignInBloc>().add(SignIn(signInData));
                     }
                   },

@@ -1,7 +1,21 @@
+import 'package:eos_mobile/core/common/widgets/controls/basic_modal.dart';
+import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/categoria_entity.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/inspecciones_req_entity.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/bloc/categorias/remote/remote_categorias_bloc.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/bloc/categorias/remote/remote_categorias_event.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/bloc/categorias/remote/remote_categorias_state.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/widgets/categoria_tile.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/widgets/create_inspeccion_form.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class ConfiguracionCategoriaPage extends StatefulWidget {
-  const ConfiguracionCategoriaPage({Key? key}) : super(key: key);
+  const ConfiguracionCategoriaPage({
+    this.idInspeccion,
+    Key? key,
+  }) : super(key: key);
+
+  final String? idInspeccion;
 
   @override
   State<ConfiguracionCategoriaPage> createState() =>
@@ -10,15 +24,37 @@ class ConfiguracionCategoriaPage extends StatefulWidget {
 
 class _ConfiguracionCategoriaPageState
     extends State<ConfiguracionCategoriaPage> {
-  List<String> lstInspecciones = [
-    'Categoría 1',
-    'Categoría 2',
-    'Categoría 3',
-  ];
+  List<CategoriaEntity> inspeccionCategorias = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCategorias();
+  }
+
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   _closeCategorias();
+  // }
+
+  Future<void> _loadCategorias() async {
+    if (widget.idInspeccion != null) {
+      final idInspeccionData = InspeccionReqEntity(
+        idInspeccion: widget.idInspeccion!,
+      );
+      BlocProvider.of<RemoteCategoriasBloc>(context)
+          .add(GetCategoriasByIdInspeccion(idInspeccionData));
+    }
+  }
+
+  // void _closeCategorias() {
+  //   BlocProvider.of<RemoteCategoriasBloc>(context).close();
+  // }
 
   Future<void> refresh() async {
     setState(() {
-      lstInspecciones.addAll(['Categoría 4', 'Categoría 5', 'Categoría 6']);
+      //lstInspecciones.addAll(['Categoría 4', 'Categoría 5', 'Categoría 6']);
     });
   }
 
@@ -34,159 +70,161 @@ class _ConfiguracionCategoriaPageState
           ),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Container(
-            height: 100,
-            alignment: Alignment.center,
-            color: Theme.of(context).highlightColor,
-            child: FilledButton.icon(
-              onPressed: () {
-                showDialog<void>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text(
-                        'Nueva Categoría',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      content: Form(
-                        child: Container(
-                          padding: EdgeInsets.zero,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              const Text('Nombre *'),
-                              const Gap(6),
-                              TextFormField(
-                                decoration: const InputDecoration(
-                                  isDense: true,
-                                ),
-                                keyboardType: TextInputType.text,
-                                textInputAction: TextInputAction.done,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      actions: <Widget>[
-                        FilledButton(
-                          onPressed: () {
-                            Navigator.pop(context, 'Guardar');
-                          },
-                          child: const Text('Guardar'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context, 'Cerrar');
-                          },
-                          child: const Text('Cerrar'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-              icon: const FaIcon(
-                FontAwesomeIcons.plus,
-                size: 16,
-              ),
-              label: const Text(
-                'Crear categoría',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    return BlocBuilder<RemoteCategoriasBloc, RemoteCategoriasState>(
+      builder: (_, state) {
+        if (state is RemoteCategoriasLoading) {
+          return Center(
+            child: LoadingIndicator(
+              color: Theme.of(context).primaryColor,
+              strokeWidth: 2,
             ),
-          ),
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: refresh,
-              child: ListView.separated(
-                itemCount: lstInspecciones.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final item = lstInspecciones[index];
-                  return ListTile(
-                    title: Text(item),
-                    onTap: () {},
-                    onLongPress: () {
-                      showModalBottomSheet<void>(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                const ListTile(
-                                  title: Text(
-                                    'Categoría: Tanque de Combustible',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                const Divider(),
-                                ListTile(
-                                  leading: const FaIcon(
-                                    FontAwesomeIcons.circlePlus,
-                                    size: 18,
-                                  ),
-                                  title: const Text('Crear preguntas'),
-                                  onTap: () {},
-                                ),
-                                ListTile(
-                                  leading: const FaIcon(
-                                    FontAwesomeIcons.penToSquare,
-                                    size: 18,
-                                  ),
-                                  title: const Text('Editar'),
-                                  onTap: () {},
-                                ),
-                                ListTile(
-                                  leading: FaIcon(
-                                    FontAwesomeIcons.trash,
-                                    size: 18,
-                                    color: Theme.of(context).colorScheme.error,
-                                  ),
-                                  title: Text(
-                                    'Eliminar',
-                                    style: TextStyle(
-                                      color:
-                                          Theme.of(context).colorScheme.error,
-                                    ),
-                                  ),
-                                  onTap: () {},
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    leading: const FaIcon(
-                      FontAwesomeIcons.layerGroup,
-                      size: 20,
-                    ),
-                    trailing: const FaIcon(
-                      FontAwesomeIcons.angleRight,
-                      size: 18,
+          );
+        }
+
+        if (state is RemoteCategoriasFailure) {
+          final jsonResponse =
+              state.failure?.response?.data as Map<String, dynamic>?;
+          final errorMessage = jsonResponse != null
+              ? jsonResponse['message']
+              : 'Ha ocurrido un error inesperado.';
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('$errorMessage'),
+                const Gap(30),
+                FilledButton(
+                  onPressed: refresh,
+                  child: const Text('Reintentar'),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Container(
+              height: 100,
+              alignment: Alignment.center,
+              color: Theme.of(context).highlightColor,
+              child: FilledButton.icon(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) {
+                        return const BasicModal(
+                          title: 'Nueva Inspección',
+                          child: CreateInspeccionForm(),
+                        );
+                      },
+                      fullscreenDialog: true,
                     ),
                   );
                 },
-                separatorBuilder: (BuildContext context, int index) =>
-                    const Divider(),
+                icon: const FaIcon(
+                  FontAwesomeIcons.plus,
+                  size: 16,
+                ),
+                label: const Text(
+                  'Crear categoría',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
-          ),
-        ],
-      ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Listado de Categorías',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  RichText(
+                    text: const TextSpan(
+                      text: 'Inspección: ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: '',
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  RichText(
+                    text: const TextSpan(
+                      text: 'No. Folio: ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: '',
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (state is RemoteCategoriasDone) ...[
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: refresh,
+                  child: ListView.separated(
+                    itemBuilder: (BuildContext context, int index) {
+                      return CategoriaTile(
+                        inspeccionCategoria:
+                            state.inspeccionesCategorias![index],
+                      );
+                    },
+                    itemCount: state.inspeccionesCategorias!.length,
+                    separatorBuilder: (BuildContext context, int index) =>
+                        const Divider(),
+                  ),
+                ),
+              ),
+            ] else if (state is RemoteCategoriasEmpty) ...[
+              const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Aun no hay categorías'),
+                  ],
+                ),
+              ),
+            ],
+          ],
+        );
+      },
     );
   }
 }

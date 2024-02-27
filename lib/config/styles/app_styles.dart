@@ -73,12 +73,17 @@ class _TextStyles {
   late final TextStyle eosTitle =
       _createFont(eosTitleFont, sizePx: 64, heightPx: 56);
 
-  late final TextStyle h1 = _createFont(titleFont, sizePx: 64, heightPx: 62);
-  late final TextStyle h2 = _createFont(titleFont, sizePx: 32, heightPx: 46);
+  late final TextStyle h1 = _createFont(titleFont, sizePx: 28, heightPx: 62);
+  late final TextStyle h2 = _createFont(titleFont, sizePx: 24, heightPx: 46);
   late final TextStyle h3 =
-      _createFont(titleFont, sizePx: 24, heightPx: 36, weight: FontWeight.w600);
-  late final TextStyle h4 = _createFont(contentFont,
-      sizePx: 14, heightPx: 23, spacingPc: 5, weight: FontWeight.w600);
+      _createFont(titleFont, sizePx: 20, heightPx: 36, weight: FontWeight.w500);
+  late final TextStyle h4 = _createFont(
+    contentFont,
+    sizePx: 14,
+    heightPx: 23,
+    spacingPc: 5,
+    weight: FontWeight.w500,
+  );
 
   late final TextStyle title1 =
       _createFont(titleFont, sizePx: 16, heightPx: 26, spacingPc: 5);

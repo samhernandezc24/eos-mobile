@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'inspecciones_remote_api_service.dart';
+part of 'categorias_remote_api_service.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,12 +8,12 @@ part of 'inspecciones_remote_api_service.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
-class _InspeccionesRemoteApiService implements InspeccionesRemoteApiService {
-  _InspeccionesRemoteApiService(
+class _CategoriasRemoteApiService implements CategoriasRemoteApiService {
+  _CategoriasRemoteApiService(
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://10.0.2.2:7018/api/Inspecciones';
+    baseUrl ??= 'http://10.0.2.2:7018/api/Inspecciones/Categorias';
   }
 
   final Dio _dio;
@@ -21,15 +21,14 @@ class _InspeccionesRemoteApiService implements InspeccionesRemoteApiService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<List<InspeccionModel>>> getInspecciones(
-      String token) async {
+  Future<HttpResponse<List<CategoriaModel>>> getCategorias(String token) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'authorization': token};
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<List<InspeccionModel>>>(Options(
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<HttpResponse<List<CategoriaModel>>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -45,33 +44,33 @@ class _InspeccionesRemoteApiService implements InspeccionesRemoteApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    List<InspeccionModel> value = _result.data!['result']['inspecciones']
-        .map<InspeccionModel>((dynamic i) => InspeccionModel.fromJson(i as Map<String, dynamic>))
-        .toList() as List<InspeccionModel>;
+    var value = _result.data!
+        .map((dynamic i) => CategoriaModel.fromJson(i as Map<String, dynamic>))
+        .toList();
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<ApiResponseModel>> createInspeccion(
+  Future<HttpResponse<List<CategoriaModel>>> getCategoriasByIdInspeccion(
     String token,
-    InspeccionModel inspeccion,
+    InspeccionReqModel idInspeccion,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(inspeccion.toJson());
+    _data.addAll(idInspeccion.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ApiResponseModel>>(Options(
+        _setStreamType<HttpResponse<List<CategoriaModel>>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/Store',
+              '/ListByIdInspeccion',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -80,40 +79,9 @@ class _InspeccionesRemoteApiService implements InspeccionesRemoteApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ApiResponseModel.fromJson(_result.data!);
-    final httpResponse = HttpResponse(value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<ApiResponseModel>> removeInspeccion(
-    String token,
-    InspeccionReqModel inspeccion,
-  ) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'authorization': token};
-    _headers.removeWhere((k, v) => v == null);
-    final _data = <String, dynamic>{};
-    _data.addAll(inspeccion.toJson());
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ApiResponseModel>>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/Delete',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = ApiResponseModel.fromJson(_result.data!);
+    List<CategoriaModel> value = _result.data!['result']['inspeccionesCategorias']
+        .map<CategoriaModel>((dynamic i) => CategoriaModel.fromJson(i as Map<String, dynamic>))
+        .toList() as List<CategoriaModel>;
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

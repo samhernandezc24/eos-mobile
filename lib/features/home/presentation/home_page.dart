@@ -11,6 +11,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final storage = const FlutterSecureStorage();
+  final prefs = SharedPreferences.getInstance();
 
   final List<String> moduleNames = [
     'Inspecciones',
@@ -34,14 +35,30 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _checkSecureStorage();
+    _checkSharedPreferences();
   }
 
   Future<void> _checkSecureStorage() async {
     final allValues = await storage.readAll();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (allValues.isEmpty) {
       print('El almacenamiento seguro está vacío.');
     } else {
       allValues.forEach((key, value) {
+        print('$key: $value');
+      });
+    }
+  }
+
+  Future<void> _checkSharedPreferences() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final keys = prefs.getKeys();
+
+    if (keys.isEmpty) {
+      print('El almacenamiento de SharedPreferences está vacío.');
+    } else {
+      keys.forEach((key) {
+        final value = prefs.get(key);
         print('$key: $value');
       });
     }
@@ -62,13 +79,20 @@ class _HomePageState extends State<HomePage> {
               child: const Text('Cancelar'),
             ),
             TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
+              onPressed: _logout,
               child: const Text('Aceptar'),
             ),
           ],
         );
-      }
+      },
     );
+  }
+
+  Future<void> _logout() async {
+    await storage.deleteAll();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    // await Navigator.pushReplacementNamed(context, '/sign-in');
   }
 
   @override

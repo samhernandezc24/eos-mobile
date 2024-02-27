@@ -2,14 +2,14 @@ import 'package:eos_mobile/shared/shared.dart';
 
 class InspeccionEntity extends Equatable {
   const InspeccionEntity({
-    required this.folio,
-    required this.name,
+    this.folio,
+    this.name,
     this.idInspeccion,
   });
 
   final String? idInspeccion;
-  final String folio;
-  final String name;
+  final String? folio;
+  final String? name;
 
   @override
   List<Object?> get props => [

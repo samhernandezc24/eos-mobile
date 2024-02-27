@@ -2,8 +2,8 @@ import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_e
 
 class InspeccionModel extends InspeccionEntity {
   const InspeccionModel({
-    required String folio,
-    required String name,
+    String? folio,
+    String? name,
     String? idInspeccion,
   }) : super(
           idInspeccion: idInspeccion,

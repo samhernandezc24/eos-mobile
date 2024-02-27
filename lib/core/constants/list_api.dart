@@ -5,21 +5,18 @@ class ListAPI {
   static const String androidEmulatorHost = 'http://10.0.2.2';
   static const String localhost           = 'http://localhost';
 
-  /// API.Account
-  static const String apiAccount      = '$androidEmulatorHost:7001';
-
-  /// API.Inspecciones
-  static const String apiInspecciones = '$androidEmulatorHost:7018';
+  /// API.GATEWAY
+  static const String apiBaseUrl      = '$androidEmulatorHost:7000';
 
   /// ASPNETUSER
-  static const String aspNetUser      = '$apiAccount/api/AspNetUser';
+  static const String aspNetUser      = '$apiBaseUrl/api/AspNetUser';
 
   /// INSPECCIONES
-  static const String inspecciones    = '$apiInspecciones/api/Inspecciones';
+  static const String inspecciones    = '$apiBaseUrl/api/Inspecciones';
 
   /// INSPECCIONES CATEGORIAS
-  static const String categorias      = '$apiInspecciones/api/Inspecciones/Categorias';
+  static const String categorias      = '$apiBaseUrl/api/Inspecciones/Categorias';
 
   /// INSPECCIONES CATEGORIAS ITEMS
-  static const String categoriasItems = '$apiInspecciones/api/Inspecciones/Categorias/Items';
+  static const String categoriasItems = '$apiBaseUrl/api/Inspecciones/Categorias/Items';
 }

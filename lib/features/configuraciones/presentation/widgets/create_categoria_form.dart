@@ -6,24 +6,22 @@ import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_state.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
-class CreateInspeccionForm extends StatefulWidget {
-  const CreateInspeccionForm({super.key});
+class CreateCategoriaForm extends StatefulWidget {
+  const CreateCategoriaForm({super.key});
 
   @override
-  State<CreateInspeccionForm> createState() => _CreateInspeccionFormState();
+  State<CreateCategoriaForm> createState() => _CreateCategoriaFormState();
 }
 
-class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
+class _CreateCategoriaFormState extends State<CreateCategoriaForm> {
   // LISTENERS
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _folioController = TextEditingController();
 
   @override
   void dispose() {
     // Limpia el controlador cuando se elimina el widget.
     _nameController.dispose();
-    _folioController.dispose();
     super.dispose();
   }
 
@@ -49,18 +47,6 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
               textInputAction: TextInputAction.next,
               validator: FormValidators.textValidator,
             ),
-            const Gap(24),
-            // Form Control: Folio
-            const Text('Folio (opcional)'),
-            const Gap(6),
-            TextFormField(
-              controller: _folioController,
-              decoration: const InputDecoration(
-                isDense: true,
-              ),
-              keyboardType: TextInputType.text,
-              textInputAction: TextInputAction.done,
-            ),
             const Gap(32),
             BlocConsumer<RemoteInspeccionesBloc,
                 RemoteInspeccionesState>(
@@ -72,7 +58,7 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          '$errorMessage: Lo siento, no se ha podido crear la inspección. Por favor, inténtalo de nuevo más tarde.',
+                          '$errorMessage: Lo siento, no se ha podido crear la categoría. Por favor, inténtalo de nuevo más tarde.',
                         ),
                         backgroundColor: Theme.of(context).colorScheme.error,
                       ),
@@ -124,7 +110,6 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
                     }
                     final inspeccionData = InspeccionEntity(
                       name: _nameController.text,
-                      folio: _folioController.text,
                     );
                     context.read<RemoteInspeccionesBloc>().add(
                           CreateInspeccion(inspeccionData),
