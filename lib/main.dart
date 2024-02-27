@@ -1,6 +1,6 @@
 import 'package:eos_mobile/config/router/app_router.dart';
 import 'package:eos_mobile/config/themes/app_theme.dart';
-import 'package:eos_mobile/core/injection_container.dart';
+import 'package:eos_mobile/core/dependency_injection/injection_container.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/remote/remote_sign_in_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/create/remote/remote_create_inspeccion_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_bloc.dart';
@@ -12,7 +12,7 @@ Future<void> main() async {
   final WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   // Mantener el native splash screen hasta que la app haya terminado de construirse
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  // GoRouter.optionURLReflectsImperativeAPIs = true;
+  GoRouter.optionURLReflectsImperativeAPIs = true;
 
   // Iniciar la app
   await initializeDependencies();
@@ -23,8 +23,8 @@ Future<void> main() async {
   FlutterNativeSplash.remove();
 }
 
-/// Creates an app using the [MaterialApp.router] constructor and the
-/// global `appRouter`, an instance of [GoRouter].
+/// Crea una app usando el constructor [MaterialApp.router] y el constructor
+/// global `appRouter`, una instancia de [GoRouter].
 class MainApp extends StatelessWidget {
   const MainApp({Key? key}) : super(key: key);
   @override
@@ -57,6 +57,6 @@ class MainApp extends StatelessWidget {
   }
 }
 
-/// Global helpers for readability
+/// Helpers globales para facilitar la lectura de código
 AppStrings get $strings => AppStrings.instance;
 AppStyles get $styles => AppScaffold.style;
