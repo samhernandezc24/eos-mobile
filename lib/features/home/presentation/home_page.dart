@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
     const FaIcon(FontAwesomeIcons.cartShopping, size: 24),
     const FaIcon(FontAwesomeIcons.truckFast, size: 24),
     const FaIcon(FontAwesomeIcons.checkToSlot, size: 24),
-    const FaIcon(FontAwesomeIcons.folder, size: 24),
+    const FaIcon(FontAwesomeIcons.solidFolder, size: 24),
     const FaIcon(FontAwesomeIcons.truck, size: 24),
   ];
 
@@ -40,7 +40,6 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _checkSecureStorage() async {
     final allValues = await storage.readAll();
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (allValues.isEmpty) {
       print('El almacenamiento seguro está vacío.');
     } else {
@@ -189,7 +188,7 @@ class _HomePageState extends State<HomePage> {
               onTap: () => {},
             ),
             _buildDrawerItem(
-              icon: FontAwesomeIcons.tableColumns,
+              icon: Icons.dashboard,
               text: 'Dashboard',
               onTap: () => {},
             ),
@@ -199,7 +198,7 @@ class _HomePageState extends State<HomePage> {
               onTap: () => {},
             ),
             _buildDrawerItem(
-              icon: FontAwesomeIcons.circleUser,
+              icon: Icons.account_circle,
               text: 'Cuenta',
               onTap: () => {},
             ),
@@ -240,9 +239,8 @@ class _HomePageState extends State<HomePage> {
             label: 'Inicio',
           ),
           NavigationDestination(
-            icon: FaIcon(
-              FontAwesomeIcons.tableColumns,
-              size: 20,
+            icon: Icon(
+              Icons.dashboard,
             ),
             label: 'Dashboard',
           ),
@@ -254,9 +252,8 @@ class _HomePageState extends State<HomePage> {
             label: 'Actividad',
           ),
           NavigationDestination(
-            icon: FaIcon(
-              FontAwesomeIcons.circleUser,
-              size: 20,
+            icon: Icon(
+              Icons.account_circle,
             ),
             label: 'Cuenta',
           ),
@@ -303,7 +300,7 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           FaIcon(
             icon,
-            size: 18,
+            size: 20,
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8),

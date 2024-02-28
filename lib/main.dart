@@ -9,8 +9,7 @@ import 'package:eos_mobile/shared/shared.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 Future<void> main() async {
-  final WidgetsBinding widgetsBinding =
-      WidgetsFlutterBinding.ensureInitialized();
+  final WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   // Mantener el native splash screen hasta que la app haya terminado de construirse
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   GoRouter.optionURLReflectsImperativeAPIs = true;
