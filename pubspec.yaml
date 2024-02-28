@@ -74,7 +74,7 @@ dependencies:
   # Indicadores de página animados
   smooth_page_indicator: ^1.1.0
   # Plugin de Flutter para lanzar URL
-  url_launcher: ^6.2.4  
+  url_launcher: ^6.2.4
 
 dev_dependencies:
   flutter_test:
@@ -120,34 +120,15 @@ flutter:
     - assets/lottie/
 
   fonts:
-    - family: Quicksand
+    - family: Font72
       fonts:
-        - asset: assets/fonts/Quicksand-Light.ttf
-          weight: 300
-        - asset: assets/fonts/Quicksand-Regular.ttf
+        - asset: assets/fonts/72-Light.ttf
+          weight: 200
+        - asset: assets/fonts/72-Regular.ttf
           weight: 400
-        - asset: assets/fonts/Quicksand-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Quicksand-SemiBold.ttf
+        - asset: assets/fonts/72-SemiBold.ttf
           weight: 600
-        - asset: assets/fonts/Quicksand-Bold.ttf
+        - asset: assets/fonts/72-Bold.ttf
           weight: 700
-
-    - family: OpenSans
-      fonts:
-        - asset: assets/fonts/OpenSans-Light.ttf
-          weight: 300
-        - asset: assets/fonts/OpenSans-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/OpenSans-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/OpenSans-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/OpenSans-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/OpenSans-ExtraBold.ttf
+        - asset: assets/fonts/72-Black.ttf
           weight: 800
-
-    - family: OpenSansEmoji
-      fonts:
-        - asset: assets/fonts/OpenSansEmoji.ttf

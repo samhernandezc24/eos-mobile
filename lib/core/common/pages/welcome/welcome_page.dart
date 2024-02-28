@@ -12,7 +12,7 @@ import 'package:eos_mobile/core/utils/haptics_utils.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class WelcomePage extends StatefulWidget {
-  const WelcomePage({super.key});
+  const WelcomePage({Key? key}) : super(key: key);
 
   @override
   State<WelcomePage> createState() => _WelcomePageState();

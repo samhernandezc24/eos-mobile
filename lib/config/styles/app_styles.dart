@@ -23,10 +23,12 @@ class AppStyles {
 
   late final double scale;
 
+  /// Radios de esquina con bordes redondeados
   late final _Corners corners = _Corners();
 
   late final _Shadows shadows = _Shadows();
 
+  /// Valores de los padding y margin
   late final _Insets insets = _Insets(scale);
 
   /// Estilos de los textos
@@ -38,74 +40,36 @@ class AppStyles {
 }
 
 @immutable
-class _Fonts {
-  final String sans = 'OpenSans';
-  final String quicksand = 'Quicksand';
-  final String emoji = 'OpenSansEmoji';
-}
-
-@immutable
 class _TextStyles {
   _TextStyles(this._scale);
   final double _scale;
 
-  final TextStyle _titleFont = TextStyle(
-    fontFamily: _Fonts().quicksand,
+  final TextStyle _titleFont = const TextStyle(
+    fontFamily: 'Font72',
   );
 
-  final TextStyle _eosTitleFont = TextStyle(
-    fontFamily: _Fonts().quicksand,
-  );
-
-  final TextStyle _contentFont = TextStyle(
-    fontFamily: _Fonts().sans,
-  );
-
-  final TextStyle _captionFont = TextStyle(
-    fontFamily: _Fonts().sans,
+  final TextStyle _contentFont = const TextStyle(
+    fontFamily: 'Font72',
   );
 
   TextStyle get titleFont => _titleFont;
-  TextStyle get eosTitleFont => _eosTitleFont;
+  TextStyle get eosTitleFont => _titleFont;
   TextStyle get contentFont => _contentFont;
-  TextStyle get captionFont => _captionFont;
 
-  late final TextStyle eosTitle =
-      _createFont(eosTitleFont, sizePx: 64, heightPx: 56);
+  late final TextStyle eosTitle = _createFont(eosTitleFont, sizePx: 64, heightPx: 56);
 
-  late final TextStyle h1 = _createFont(titleFont, sizePx: 28, heightPx: 62);
-  late final TextStyle h2 = _createFont(titleFont, sizePx: 24, heightPx: 46);
-  late final TextStyle h3 =
-      _createFont(titleFont, sizePx: 20, heightPx: 36, weight: FontWeight.w500);
-  late final TextStyle h4 = _createFont(
-    contentFont,
-    sizePx: 14,
-    heightPx: 23,
-    spacingPc: 5,
-    weight: FontWeight.w500,
-  );
+  late final TextStyle h1   = _createFont(titleFont, sizePx: 34, heightPx: 40);
+  late final TextStyle h2   = _createFont(titleFont, sizePx: 24, heightPx: 32);
+  late final TextStyle h3   = _createFont(titleFont, sizePx: 20, heightPx: 28, weight: FontWeight.w600);
+  late final TextStyle h4   = _createFont(titleFont, sizePx: 16, heightPx: 24, spacingPc: 5, weight: FontWeight.w600);
 
-  late final TextStyle title1 =
-      _createFont(titleFont, sizePx: 16, heightPx: 26, spacingPc: 5);
-  late final TextStyle title2 =
-      _createFont(titleFont, sizePx: 14, heightPx: 16.38);
+  late final TextStyle title1   = _createFont(titleFont, sizePx: 18, heightPx: 26, spacingPc: 5);
+  late final TextStyle title2   = _createFont(contentFont, sizePx: 16, heightPx: 18.38);
 
-  late final TextStyle body =
-      _createFont(contentFont, sizePx: 16, heightPx: 26);
-  late final TextStyle bodyBold = _createFont(
-    contentFont,
-    sizePx: 16,
-    heightPx: 26,
-    weight: FontWeight.w500,
-  );
-  late final TextStyle bodySmall =
-      _createFont(contentFont, sizePx: 14, heightPx: 23);
-  late final TextStyle bodySmallBold = _createFont(
-    contentFont,
-    sizePx: 14,
-    heightPx: 23,
-    weight: FontWeight.w600,
-  );
+  late final TextStyle body           = _createFont(contentFont, sizePx: 16, heightPx: 26);
+  late final TextStyle bodyBold       = _createFont(contentFont, sizePx: 16, heightPx: 26, weight: FontWeight.w600);
+  late final TextStyle bodySmall      = _createFont(contentFont, sizePx: 14, heightPx: 23);
+  late final TextStyle bodySmallBold  = _createFont(contentFont, sizePx: 14, heightPx: 23, weight: FontWeight.w600);
 
   late final TextStyle caption = _createFont(
     contentFont,
@@ -114,8 +78,9 @@ class _TextStyles {
     weight: FontWeight.w500,
   ).copyWith(fontStyle: FontStyle.italic);
 
-  late final TextStyle button = _createFont(contentFont,
-      sizePx: 16, weight: FontWeight.w500, spacingPc: 2, heightPx: 14);
+  late final TextStyle label = _createFont(contentFont, sizePx: 14, heightPx: 20,  spacingPc: 2);
+
+  late final TextStyle button = _createFont(contentFont, sizePx: 16, weight: FontWeight.w500, spacingPc: 2, heightPx: 14);
 
   TextStyle _createFont(
     TextStyle style, {
@@ -125,6 +90,7 @@ class _TextStyles {
     FontWeight? weight,
   }) {
     sizePx *= _scale;
+
     if (heightPx != null) {
       heightPx *= _scale;
     }
@@ -141,9 +107,9 @@ class _TextStyles {
 
 @immutable
 class _Times {
-  final Duration fast = const Duration(milliseconds: 300);
-  final Duration medium = const Duration(milliseconds: 600);
-  final Duration slow = const Duration(milliseconds: 900);
+  final Duration fast           = const Duration(milliseconds: 300);
+  final Duration medium         = const Duration(milliseconds: 600);
+  final Duration slow           = const Duration(milliseconds: 900);
   final Duration pageTransition = const Duration(milliseconds: 200);
 }
 
@@ -159,14 +125,14 @@ class _Insets {
   _Insets(this._scale);
   final double _scale;
 
-  late final double xxs = 4 * _scale;
-  late final double xs = 8 * _scale;
-  late final double sm = 16 * _scale;
-  late final double md = 24 * _scale;
-  late final double lg = 32 * _scale;
-  late final double xl = 48 * _scale;
-  late final double xxl = 56 * _scale;
-  late final double offset = 80 * _scale;
+  late final double xxs     = 4 * _scale;
+  late final double xs      = 8 * _scale;
+  late final double sm      = 16 * _scale;
+  late final double md      = 24 * _scale;
+  late final double lg      = 32 * _scale;
+  late final double xl      = 48 * _scale;
+  late final double xxl     = 56 * _scale;
+  late final double offset  = 80 * _scale;
 }
 
 @immutable
@@ -190,6 +156,14 @@ class _Shadows {
       color: Colors.black.withOpacity(.6),
       offset: const Offset(0, 4),
       blurRadius: 6,
+    ),
+  ];
+  final boxSoft = [
+    BoxShadow(
+      color: Colors.black.withOpacity(.1),
+      blurRadius: 8 / 2,
+      spreadRadius: 8 / 4,
+      offset: const Offset(1, 0),
     ),
   ];
 }

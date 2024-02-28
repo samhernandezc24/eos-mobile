@@ -1,5 +1,7 @@
+import 'package:eos_mobile/core/common/data/modules_data.dart';
+import 'package:eos_mobile/features/auth/presentation/pages/sign_in/sign_in_page.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/pages/index/index_page.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/pages/index/index_page.dart';
+import 'package:eos_mobile/features/home/presentation/widgets/module_grid_item.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,23 +15,7 @@ class _HomePageState extends State<HomePage> {
   final storage = const FlutterSecureStorage();
   final prefs = SharedPreferences.getInstance();
 
-  final List<String> moduleNames = [
-    'Inspecciones',
-    'Compras',
-    'Embarques',
-    'Requerimientos',
-    'Proyectos',
-    'Unidades',
-  ];
-
-  final List<FaIcon> moduleIcons = [
-    const FaIcon(FontAwesomeIcons.listCheck, size: 24),
-    const FaIcon(FontAwesomeIcons.cartShopping, size: 24),
-    const FaIcon(FontAwesomeIcons.truckFast, size: 24),
-    const FaIcon(FontAwesomeIcons.checkToSlot, size: 24),
-    const FaIcon(FontAwesomeIcons.solidFolder, size: 24),
-    const FaIcon(FontAwesomeIcons.truck, size: 24),
-  ];
+  static List<ModulesData> modulesData = [];
 
   @override
   void initState() {
@@ -78,7 +64,10 @@ class _HomePageState extends State<HomePage> {
               child: const Text('Cancelar'),
             ),
             TextButton(
-              onPressed: _logout,
+              onPressed: () {
+                Navigator.of(context).pop();
+                _logout();
+              },
               child: const Text('Aceptar'),
             ),
           ],
@@ -91,11 +80,34 @@ class _HomePageState extends State<HomePage> {
     await storage.deleteAll();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
-    // await Navigator.pushReplacementNamed(context, '/sign-in');
+    await Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (context) => const AuthSignInPage(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    // Definiendo el color de los iconos al primario.
+    final Color moduleIconColor = Theme.of(context).primaryColor;
+
+    // Establecer los módulos de la aplicación.
+    modulesData = [
+      ModulesData(
+          $strings.module1, Icon(Icons.checklist, color: moduleIconColor)),
+      ModulesData(
+          $strings.module2, Icon(Icons.shopping_cart, color: moduleIconColor)),
+      ModulesData(
+          $strings.module3, Icon(Icons.forklift, color: moduleIconColor)),
+      ModulesData($strings.module4,
+          Icon(Icons.assignment_turned_in, color: moduleIconColor)),
+      ModulesData($strings.module5, Icon(Icons.folder, color: moduleIconColor)),
+      ModulesData(
+          $strings.module6, Icon(Icons.local_shipping, color: moduleIconColor)),
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Row(
@@ -125,51 +137,17 @@ class _HomePageState extends State<HomePage> {
               GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
                 ),
-                itemCount: moduleNames.length,
+                itemCount: modulesData.length,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      switch (index) {
-                        case 0:
-                          Future.delayed(const Duration(milliseconds: 300), () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute<void>(
-                                builder: (context) =>
-                                    const InspeccionIndexPage(),
-                              ),
-                            );
-                          });
-                      }
-                    },
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).highlightColor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: moduleIcons[index],
-                          ),
-                        ),
-                        const Gap(10),
-                        Text(
-                          moduleNames[index],
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: Theme.of(context).hintColor,
-                          ),
-                        ),
-                      ],
-                    ),
+                  return ModuleGridItem(
+                    moduleTitle: modulesData[index].name,
+                    moduleIcon: modulesData[index].icon,
+                    onTap: () {},
                   );
                 },
               ),
