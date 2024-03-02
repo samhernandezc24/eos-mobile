@@ -17,26 +17,28 @@ class SimpleCheckbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
+        Text(
+          label,
+          style: $styles.textStyles.label,
+        ),
+        // Gap($styles.insets.xs),
         Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular($styles.corners.sm)),
           ),
           child: Checkbox(
-            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular($styles.corners.sm))),
             value: isActive,
             visualDensity: const VisualDensity(horizontal: 0.5, vertical: 0.5),
-            checkColor: Colors.black.withOpacity(0.75),
-            activeColor: Colors.white.withOpacity(0.75),
+            checkColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.75),
+            activeColor: Theme.of(context).primaryColor.withOpacity(0.75),
             onChanged: (bool? isActive) {
               HapticsUtils.mediumImpact();
               _onChanged.call(isActive);
             },
           ),
         ),
-        const Gap(10),
-        Text(label),
       ],
     );
   }

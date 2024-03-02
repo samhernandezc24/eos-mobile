@@ -10,6 +10,10 @@ class AppStrings {
   String module5    = 'Proyectos';
   String module6    = 'Unidades';
 
+  String searchInputTitleSuggestions  = 'Sugerencias';
+  String searchInputHintSearch        = 'Buscar por No. Económico o Folio';
+  String searchInputSemanticClear     = 'limpiar búsqueda';
+
   String welcomeTitleOne      = 'Accede al EOS';
   String welcomeTitleTwo      = 'Explora módulos';
   String welcomeTitleThree    = 'Eficiencia empresarial';
