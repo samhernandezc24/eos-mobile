@@ -96,39 +96,52 @@ class _HomePageState extends State<HomePage> {
     // Establecer los módulos de la aplicación.
     modulesData = [
       ModulesData(
-          $strings.module1, Icon(Icons.checklist, color: moduleIconColor)),
+        $strings.module1,
+        Icon(Icons.checklist, color: moduleIconColor),
+      ),
       ModulesData(
-          $strings.module2, Icon(Icons.shopping_cart, color: moduleIconColor)),
+        $strings.module2,
+        Icon(Icons.shopping_cart, color: moduleIconColor),
+      ),
       ModulesData(
-          $strings.module3, Icon(Icons.forklift, color: moduleIconColor)),
-      ModulesData($strings.module4,
-          Icon(Icons.assignment_turned_in, color: moduleIconColor)),
-      ModulesData($strings.module5, Icon(Icons.folder, color: moduleIconColor)),
+        $strings.module3,
+        Icon(Icons.forklift, color: moduleIconColor),
+      ),
       ModulesData(
-          $strings.module6, Icon(Icons.local_shipping, color: moduleIconColor)),
+        $strings.module4,
+        Icon(Icons.assignment_turned_in, color: moduleIconColor),
+      ),
+      ModulesData(
+        $strings.module5,
+        Icon(Icons.folder, color: moduleIconColor),
+      ),
+      ModulesData(
+        $strings.module6,
+        Icon(Icons.local_shipping, color: moduleIconColor),
+      ),
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              'EOS Mobile',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            FaIcon(
-              FontAwesomeIcons.bell,
-              size: 20,
-            ),
-          ],
-        ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0,
-      ),
+      // appBar: AppBar(
+      //   title: const Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //     children: <Widget>[
+      //       Text(
+      //         'EOS Mobile',
+      //         style: TextStyle(
+      //           fontSize: 18,
+      //           fontWeight: FontWeight.w500,
+      //         ),
+      //       ),
+      //       FaIcon(
+      //         FontAwesomeIcons.bell,
+      //         size: 20,
+      //       ),
+      //     ],
+      //   ),
+      //   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      //   elevation: 0,
+      // ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
@@ -147,7 +160,15 @@ class _HomePageState extends State<HomePage> {
                   return ModuleGridItem(
                     moduleTitle: modulesData[index].name,
                     moduleIcon: modulesData[index].icon,
-                    onTap: () {},
+                    onTap: () {
+                      switch(index) {
+                        case 0:
+                          GoRouter.of(context).go('/home/inspecciones');
+                        /// aqui se agregaran los demas modulos
+                        /// una vez se haya finalizado el modulo
+                        /// de inspecciones...
+                      }
+                    },
                   );
                 },
               ),
@@ -206,36 +227,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: NavigationBar(
-        destinations: const <Widget>[
-          NavigationDestination(
-            icon: FaIcon(
-              FontAwesomeIcons.house,
-              size: 20,
-            ),
-            label: 'Inicio',
-          ),
-          NavigationDestination(
-            icon: Icon(
-              Icons.dashboard,
-            ),
-            label: 'Dashboard',
-          ),
-          NavigationDestination(
-            icon: FaIcon(
-              FontAwesomeIcons.list,
-              size: 20,
-            ),
-            label: 'Actividad',
-          ),
-          NavigationDestination(
-            icon: Icon(
-              Icons.account_circle,
-            ),
-            label: 'Cuenta',
-          ),
-        ],
       ),
     );
   }

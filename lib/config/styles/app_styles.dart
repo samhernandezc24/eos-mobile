@@ -66,10 +66,10 @@ class _TextStyles {
   late final TextStyle title1   = _createFont(titleFont, sizePx: 18, heightPx: 26, spacingPc: 5);
   late final TextStyle title2   = _createFont(contentFont, sizePx: 16, heightPx: 18.38);
 
-  late final TextStyle body           = _createFont(contentFont, sizePx: 16, heightPx: 26);
-  late final TextStyle bodyBold       = _createFont(contentFont, sizePx: 16, heightPx: 26, weight: FontWeight.w600);
-  late final TextStyle bodySmall      = _createFont(contentFont, sizePx: 14, heightPx: 23);
-  late final TextStyle bodySmallBold  = _createFont(contentFont, sizePx: 14, heightPx: 23, weight: FontWeight.w600);
+  late final TextStyle body             = _createFont(contentFont, sizePx: 16, heightPx: 26);
+  late final TextStyle bodyBold         = _createFont(contentFont, sizePx: 16, heightPx: 26, weight: FontWeight.w600);
+  late final TextStyle bodySmall        = _createFont(contentFont, sizePx: 14, heightPx: 23);
+  late final TextStyle bodySmallBold    = _createFont(contentFont, sizePx: 14, heightPx: 23, weight: FontWeight.w600);
 
   late final TextStyle caption = _createFont(
     contentFont,
@@ -79,6 +79,10 @@ class _TextStyles {
   ).copyWith(fontStyle: FontStyle.italic);
 
   late final TextStyle label = _createFont(contentFont, sizePx: 14, heightPx: 20,  spacingPc: 2);
+
+  late final TextStyle badge = _createFont(contentFont, sizePx: 12, heightPx: 16, spacingPc: 2).copyWith(
+    color: Colors.white,
+  );
 
   late final TextStyle button = _createFont(contentFont, sizePx: 16, weight: FontWeight.w500, spacingPc: 2, heightPx: 14);
 

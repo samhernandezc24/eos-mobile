@@ -17,15 +17,6 @@ class _InspeccionSinRequerimientoPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Inspección de Unidad Sin Req.',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SimpleCheckbox(

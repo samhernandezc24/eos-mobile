@@ -1,7 +1,3 @@
-import 'package:eos_mobile/features/inspecciones/presentation/pages/list/list_page.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/pages/search_unidad/search_unidad_page.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/pages/unidad_con_requerimiento/unidad_con_requerimiento_page.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/pages/unidad_sin_requerimiento/unidad_sin_requerimiento_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class InspeccionIndexPage extends StatefulWidget {
@@ -19,25 +15,16 @@ class _InspeccionIndexPageState extends State<InspeccionIndexPage> {
     'Buscar unidad',
   ];
 
-  final List<FaIcon> itemIcons = <FaIcon>[
-    const FaIcon(FontAwesomeIcons.listOl, size: 20),
-    const FaIcon(FontAwesomeIcons.checkToSlot, size: 20),
-    const FaIcon(FontAwesomeIcons.tableList, size: 20),
-    const FaIcon(FontAwesomeIcons.magnifyingGlass, size: 20),
+  final List<Icon> itemIcons = <Icon>[
+    const Icon(Icons.format_list_numbered),
+    const Icon(Icons.fact_check),
+    const Icon(Icons.my_library_books),
+    const Icon(Icons.search),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Índice de Inspecciones',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
       body: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: ListView.separated(
@@ -49,86 +36,23 @@ class _InspeccionIndexPageState extends State<InspeccionIndexPage> {
               onTap: () {
                 switch (index) {
                   case 0:
-                    Future.delayed(const Duration(milliseconds: 300), () {
-                      Navigator.push<void>(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const InspeccionListPage(),
-                        ),
-                      );
-                    });
+                    GoRouter.of(context).go('/home/inspecciones/list');
                   case 1:
-                    Future.delayed(const Duration(milliseconds: 300), () {
-                      Navigator.push<void>(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const InspeccionUnidadConRequerimientoPage(),
-                        ),
-                      );
-                    });
+                    GoRouter.of(context).go('/home/inspecciones/conrequerimiento');
                   case 2:
-                    Future.delayed(const Duration(milliseconds: 300), () {
-                      Navigator.push<void>(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const InspeccionUnidadSinRequerimientoPage(),
-                        ),
-                      );
-                    });
+                    GoRouter.of(context).go('/home/inspecciones/sinrequerimiento');
                   case 3:
-                    Future.delayed(const Duration(milliseconds: 300), () {
-                      Navigator.push<void>(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const InspeccionSearchUnidadPage(),
-                        ),
-                      );
-                    });
+                    GoRouter.of(context).go('/home/inspecciones/searchunidad');
                 }
               },
               leading: itemIcons[index],
-              trailing: const FaIcon(FontAwesomeIcons.angleRight, size: 18),
+              trailing: const Icon(Icons.keyboard_arrow_right, size: 24),
             );
           },
           separatorBuilder: (BuildContext context, int index) =>
               const Divider(),
           itemCount: itemNames.length,
         ),
-      ),
-      bottomNavigationBar: NavigationBar(
-        destinations: const <Widget>[
-          NavigationDestination(
-            icon: FaIcon(
-              FontAwesomeIcons.house,
-              size: 20,
-            ),
-            label: 'Inicio',
-          ),
-          NavigationDestination(
-            icon: FaIcon(
-              FontAwesomeIcons.tableColumns,
-              size: 20,
-            ),
-            label: 'Dashboard',
-          ),
-          NavigationDestination(
-            icon: FaIcon(
-              FontAwesomeIcons.list,
-              size: 20,
-            ),
-            label: 'Actividad',
-          ),
-          NavigationDestination(
-            icon: FaIcon(
-              FontAwesomeIcons.circleUser,
-              size: 20,
-            ),
-            label: 'Cuenta',
-          ),
-        ],
       ),
     );
   }

@@ -18,7 +18,7 @@ class AppTheme {
       useMaterial3: true,
       useMaterial3ErrorColors: true,
       swapLegacyOnMaterial3: true,
-      fontFamily: 'Font72',
+      fontFamily: $styles.textStyles.body.fontFamily,
     );
   }
 
