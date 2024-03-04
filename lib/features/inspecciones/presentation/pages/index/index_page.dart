@@ -1,3 +1,4 @@
+import 'package:eos_mobile/features/inspecciones/presentation/pages/unidad_sin_requerimiento/unidad_sin_requerimiento_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class InspeccionIndexPage extends StatefulWidget {
@@ -38,9 +39,24 @@ class _InspeccionIndexPageState extends State<InspeccionIndexPage> {
                   case 0:
                     GoRouter.of(context).go('/home/inspecciones/list');
                   case 1:
-                    GoRouter.of(context).go('/home/inspecciones/conrequerimiento');
+                    GoRouter.of(context)
+                        .go('/home/inspecciones/conrequerimiento');
                   case 2:
-                    GoRouter.of(context).go('/home/inspecciones/sinrequerimiento');
+                    showDialog<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          insetPadding: EdgeInsets.zero,
+                          child: FadeTransition(
+                            opacity: CurvedAnimation(
+                              parent: ModalRoute.of(context)!.animation!,
+                              curve: Curves.easeInOut,
+                            ),
+                            child: const InspeccionUnidadSinRequerimientoPage(),
+                          ),
+                        );
+                      },
+                    );
                   case 3:
                     GoRouter.of(context).go('/home/inspecciones/searchunidad');
                 }

@@ -1,4 +1,5 @@
 import 'package:eos_mobile/core/common/widgets/controls/simple_checkbox.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/widgets/radio_group_checklist.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:intl/intl.dart';
 
@@ -14,15 +15,22 @@ class _InspeccionSinRequerimientoPageState
     extends State<InspeccionUnidadSinRequerimientoPage> {
   final TextEditingController _dateInputController = TextEditingController();
   final TextEditingController _locacionController = TextEditingController();
-  final TextEditingController _baseNameInputController = TextEditingController();
-  final TextEditingController _unidadNumeroEconomicoController = TextEditingController();
+  final TextEditingController _baseNameInputController =
+      TextEditingController();
+  final TextEditingController _unidadNumeroEconomicoController =
+      TextEditingController();
   final TextEditingController _modeloController = TextEditingController();
   final TextEditingController _numeroSerieController = TextEditingController();
   final TextEditingController _capacidadController = TextEditingController();
   final TextEditingController _horometroController = TextEditingController();
   final TextEditingController _odometroController = TextEditingController();
-  final TextEditingController _tipoPlataformaController = TextEditingController();
-  final TextEditingController _unidadMarcaNameController = TextEditingController();
+  final TextEditingController _tipoPlataformaController =
+      TextEditingController();
+  final TextEditingController _unidadMarcaNameController =
+      TextEditingController();
+
+  final List<String> lstOptions = ['Sí', 'N/A', 'No'];
+  late final List<TextEditingController> _optionControllers;
 
   final List<String> lstBases = [
     'BALANCAN',
@@ -45,7 +53,10 @@ class _InspeccionSinRequerimientoPageState
   @override
   void initState() {
     super.initState();
-    _dateInputController.text = DateFormat.yMd().add_jm().format(DateTime.now());
+    _dateInputController.text =
+        DateFormat.yMd().add_jm().format(DateTime.now());
+    _optionControllers =
+        lstOptions.map((opt) => TextEditingController()).toList();
   }
 
   @override
@@ -97,6 +108,16 @@ class _InspeccionSinRequerimientoPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Inspección de Unidad Sin Req.',
+          style: $styles.textStyles.h3,
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all($styles.insets.sm),
@@ -235,7 +256,7 @@ class _InspeccionSinRequerimientoPageState
                 ),
                 readOnly: true,
               ),
-               const Gap(12),
+              const Gap(12),
               const Divider(),
               const Gap(12),
               Text(
@@ -372,16 +393,116 @@ class _InspeccionSinRequerimientoPageState
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
               ),
+              const Gap(12),
+              const Divider(),
+              const Gap(12),
+              SizedBox(
+                height: 350,
+                width: double.infinity,
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular($styles.insets.xs),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.all($styles.insets.sm),
+                        child: Text(
+                          'Niveles & Motor',
+                          style: $styles.textStyles.h4,
+                        ),
+                      ),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              RadioGroupChecklist(
+                                label: 'Tanque de Combustible',
+                                options: lstOptions,
+                                selectedValue: '',
+                                onChanged: (_) {},
+                              ),
+                              RadioGroupChecklist(
+                                label: 'Tanque de Combustible',
+                                options: lstOptions,
+                                selectedValue: '',
+                                onChanged: (_) {},
+                              ),
+                              RadioGroupChecklist(
+                                label: 'Tanque de Combustible',
+                                options: lstOptions,
+                                selectedValue: '',
+                                onChanged: (_) {},
+                              ),
+                              RadioGroupChecklist(
+                                label: 'Tanque de Combustible',
+                                options: lstOptions,
+                                selectedValue: '',
+                                onChanged: (_) {},
+                              ),
+                              RadioGroupChecklist(
+                                label: 'Tanque de Combustible',
+                                options: lstOptions,
+                                selectedValue: '',
+                                onChanged: (_) {},
+                              ),
+                              RadioGroupChecklist(
+                                label: 'Tanque de Combustible',
+                                options: lstOptions,
+                                selectedValue: '',
+                                onChanged: (_) {},
+                              ),
+                              RadioGroupChecklist(
+                                label: 'Tanque de Combustible',
+                                options: lstOptions,
+                                selectedValue: '',
+                                onChanged: (_) {},
+                              ),
+                              RadioGroupChecklist(
+                                label: 'Tanque de Combustible',
+                                options: lstOptions,
+                                selectedValue: '',
+                                onChanged: (_) {},
+                              ),
+                              RadioGroupChecklist(
+                                label: 'Tanque de Combustible',
+                                options: lstOptions,
+                                selectedValue: '',
+                                onChanged: (_) {},
+                              ),
+                              RadioGroupChecklist(
+                                label: 'Tanque de Combustible',
+                                options: lstOptions,
+                                selectedValue: '',
+                                onChanged: (_) {},
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        onPressed: () {},
-        label: const Text('Guardar Inspección'),
-        icon: const Icon(Icons.save),
+      bottomNavigationBar: BottomAppBar(
+        child: Container(
+          alignment: Alignment.center,
+          child: Center(
+            child: FilledButton(
+              onPressed: null,
+              child: Text(
+                'Guardar Inspección',
+                style: $styles.textStyles.button,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
