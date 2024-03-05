@@ -217,7 +217,7 @@ class _WelcomePageState extends State<WelcomePage> {
         return AnimatedOpacity(
           opacity: pageIndex == pageData.length - 1 ? 1 : 0,
           duration: $styles.times.fast,
-          child: CircleIconButton(
+          child: CircleIconBtn(
             icon: AppIconsEnums.next_large,
             backgroundColor: Theme.of(context).colorScheme.primary,
             onPressed: _handleWelcomeCompletePressed,
