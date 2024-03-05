@@ -7,7 +7,6 @@ import 'package:eos_mobile/features/inspecciones/presentation/pages/index/index_
 import 'package:eos_mobile/features/inspecciones/presentation/pages/list/list_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/pages/search_unidad/search_unidad_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/pages/unidad_con_requerimiento/unidad_con_requerimiento_page.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/pages/unidad_sin_requerimiento/unidad_sin_requerimiento_page.dart';
 import 'package:eos_mobile/layouts/app_scaffold_with_navbar.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
@@ -29,13 +28,12 @@ final GoRouter appRouter = GoRouter(
       ) {
         final String? routeName = GoRouterState.of(context).topRoute?.name;
         final String title = switch (routeName) {
-          'home' => 'EOS Mobile',
-          'home.inspecciones' => 'Índice de Inspecciones',
-          'home.inspecciones.list' => 'Lista de Inspecciones',
-          'home.inspecciones.conrequerimiento' => 'Unidades con Requerimientos',
-          'home.inspecciones.sinrequerimiento' => 'Inspección de Unidad Sin Req.',
-          'home.inspecciones.searchunidad' => 'Buscar Unidad',
-          _ => 'Desconocido',
+          'home'                                => 'EOS Mobile',
+          'home.inspecciones'                   => 'Índice de Inspecciones',
+          'home.inspecciones.list'              => 'Lista de Inspecciones',
+          'home.inspecciones.conrequerimiento'  => 'Unidades con Requerimientos',
+          'home.inspecciones.searchunidad'      => 'Buscar Unidad',
+          _ => 'Empty Page',
         };
         return AppScaffoldWithNavBar(
           title: title,
@@ -70,8 +68,6 @@ final GoRouter appRouter = GoRouter(
                   },
                 );
               },
-              // builder: (BuildContext context, GoRouterState state) =>
-              //     const HomePage(),
               routes: <RouteBase>[
                 GoRoute(
                   name: 'home.inspecciones',
@@ -141,29 +137,6 @@ final GoRouter appRouter = GoRouter(
                       },
                     ),
                     GoRoute(
-                      name: 'home.inspecciones.sinrequerimiento',
-                      path: 'sinrequerimiento',
-                      pageBuilder: (BuildContext context, GoRouterState state) {
-                        return CustomTransitionPage<void>(
-                          key: state.pageKey,
-                          child: const InspeccionUnidadSinRequerimientoPage(),
-                          transitionDuration: $styles.times.pageTransition,
-                          transitionsBuilder: (
-                            BuildContext context,
-                            Animation<double> animation,
-                            Animation<double> secondaryAnimation,
-                            Widget child,
-                          ) {
-                            return FadeTransition(
-                              opacity: CurveTween(curve: Curves.easeInOut)
-                                  .animate(animation),
-                              child: child,
-                            );
-                          },
-                        );
-                      },
-                    ),
-                    GoRoute(
                       name: 'home.inspecciones.searchunidad',
                       path: 'searchunidad',
                       pageBuilder: (BuildContext context, GoRouterState state) {
@@ -187,8 +160,6 @@ final GoRouter appRouter = GoRouter(
                       },
                     ),
                   ],
-                  // builder: (BuildContext context, GoRouterState state) =>
-                  //     const InspeccionIndexPage(),
                 ),
                 GoRoute(
                   name: 'home.compras',

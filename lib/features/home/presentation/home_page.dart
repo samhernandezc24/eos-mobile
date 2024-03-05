@@ -1,7 +1,7 @@
 import 'package:eos_mobile/core/common/data/modules_data.dart';
+import 'package:eos_mobile/core/common/widgets/card_view.dart';
 import 'package:eos_mobile/features/auth/presentation/pages/sign_in/sign_in_page.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/pages/index/index_page.dart';
-import 'package:eos_mobile/features/home/presentation/widgets/module_grid_item.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class HomePage extends StatefulWidget {
@@ -122,26 +122,18 @@ class _HomePageState extends State<HomePage> {
     ];
 
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //     children: <Widget>[
-      //       Text(
-      //         'EOS Mobile',
-      //         style: TextStyle(
-      //           fontSize: 18,
-      //           fontWeight: FontWeight.w500,
-      //         ),
-      //       ),
-      //       FaIcon(
-      //         FontAwesomeIcons.bell,
-      //         size: 20,
-      //       ),
-      //     ],
-      //   ),
-      //   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      //   elevation: 0,
-      // ),
+      appBar: AppBar(
+        title: Text(
+          'EOS Mobile',
+          style: $styles.textStyles.h3,
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.notifications),
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
@@ -149,7 +141,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
+                  crossAxisCount: 2,
                   mainAxisSpacing: 16,
                   crossAxisSpacing: 16,
                 ),
@@ -157,16 +149,16 @@ class _HomePageState extends State<HomePage> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return ModuleGridItem(
-                    moduleTitle: modulesData[index].name,
-                    moduleIcon: modulesData[index].icon,
+                  return CardViewIcon(
+                    icon: modulesData[index].icon,
+                    title: modulesData[index].name,
                     onTap: () {
-                      switch(index) {
+                      switch (index) {
                         case 0:
                           GoRouter.of(context).go('/home/inspecciones');
-                        /// aqui se agregaran los demas modulos
-                        /// una vez se haya finalizado el modulo
-                        /// de inspecciones...
+
+                        /// se agregaran las demás rutas para los módulos
+                        /// una vez se haya finalizado el módulo principal.
                       }
                     },
                   );
@@ -182,7 +174,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             _buildDrawerHeader(),
             _buildDrawerItem(
-              icon: FontAwesomeIcons.house,
+              icon: Icons.home,
               text: 'Inicio',
               onTap: () => {},
             ),
@@ -192,7 +184,7 @@ class _HomePageState extends State<HomePage> {
               onTap: () => {},
             ),
             _buildDrawerItem(
-              icon: FontAwesomeIcons.list,
+              icon: Icons.format_list_bulleted,
               text: 'Actividad',
               onTap: () => {},
             ),
@@ -203,7 +195,7 @@ class _HomePageState extends State<HomePage> {
             ),
             const Divider(),
             _buildDrawerItem(
-              icon: FontAwesomeIcons.gear,
+              icon: Icons.settings,
               text: 'Configuración',
               onTap: () {
                 // Cerrar el drawer
@@ -221,12 +213,36 @@ class _HomePageState extends State<HomePage> {
             ),
             const Divider(),
             _buildDrawerItem(
-              icon: FontAwesomeIcons.rightFromBracket,
+              iconColor: Theme.of(context).colorScheme.error,
+              textColor: Theme.of(context).colorScheme.error,
+              icon: Icons.logout,
               text: 'Cerrar sesión',
               onTap: _showLogoutConfirmationDialog,
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: NavigationBar(
+        destinations: const <NavigationDestination>[
+          NavigationDestination(
+            icon: Icon(Icons.home),
+            label: 'Inicio',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.format_list_bulleted),
+            label: 'Actividad',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.account_circle),
+            label: 'Cuenta',
+          ),
+        ],
+        // selectedIndex: widget.navigationShell.currentIndex,
+        // onDestinationSelected: (int index) => _onTap(context, index),
       ),
     );
   }
@@ -263,20 +279,19 @@ class _HomePageState extends State<HomePage> {
     required IconData icon,
     required String text,
     required GestureTapCallback onTap,
+    Color? iconColor,
+    Color? textColor,
   }) {
     return ListTile(
+      iconColor: iconColor,
+      textColor: textColor,
       title: Row(
         children: <Widget>[
-          FaIcon(
-            icon,
-            size: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 8),
-            child: Text(
-              text,
-              style: const TextStyle(fontSize: 14),
-            ),
+          Icon(icon),
+          SizedBox(width: $styles.insets.sm),
+          Text(
+            text,
+            style: $styles.textStyles.bodySmall,
           ),
         ],
       ),

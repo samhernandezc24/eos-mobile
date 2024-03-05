@@ -42,17 +42,25 @@ class _InspeccionIndexPageState extends State<InspeccionIndexPage> {
                     GoRouter.of(context)
                         .go('/home/inspecciones/conrequerimiento');
                   case 2:
-                    showDialog<void>(
+                    showGeneralDialog<void>(
+                      transitionBuilder: (context, animation, secondaryAnimation, child) {
+                        final double scale = Curves.easeInOut.transform(animation.value);
+                        final double opacity = Curves.easeInOut.transform(animation.value);
+                        return Opacity(
+                          opacity: opacity,
+                          child: Transform.scale(
+                            scale: scale,
+                            child: child,
+                          ),
+                        );
+                      },
+                      transitionDuration: $styles.times.fast,
                       context: context,
-                      builder: (BuildContext context) {
-                        return Dialog(
-                          insetPadding: EdgeInsets.zero,
-                          child: FadeTransition(
-                            opacity: CurvedAnimation(
-                              parent: ModalRoute.of(context)!.animation!,
-                              curve: Curves.easeInOut,
-                            ),
-                            child: const InspeccionUnidadSinRequerimientoPage(),
+                      pageBuilder: (context, animation, secondaryAnimation) {
+                        return const Center(
+                          child: Dialog(
+                            insetPadding: EdgeInsets.zero,
+                            child: InspeccionUnidadSinRequerimientoPage(),
                           ),
                         );
                       },

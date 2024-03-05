@@ -1,14 +1,8 @@
 import 'package:eos_mobile/core/enums/app_icons_enums.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
-class AppIcons extends StatelessWidget {
-  const AppIcons(
-    this.icon, {
-      super.key,
-      this.size = 22,
-      this.color,
-    }
-  );
+class AppIcon extends StatelessWidget {
+  const AppIcon(this.icon, {super.key, this.size = 22, this.color});
 
   final AppIconsEnums icon;
   final double size;
@@ -18,7 +12,6 @@ class AppIcons extends StatelessWidget {
   Widget build(BuildContext context) {
     final String i = icon.name.toLowerCase().replaceAll('_', '-');
     final String path = 'assets/icons/icon-$i.png';
-
     return SizedBox(
       width: size,
       height: size,

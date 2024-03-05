@@ -2,7 +2,7 @@ import 'package:eos_mobile/config/themes/app_theme.dart';
 import 'package:eos_mobile/core/common/widgets/app_scroll_behavior.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
-class AppScaffoldWithNavBar extends StatelessWidget {
+class AppScaffoldWithNavBar extends StatefulWidget {
   const AppScaffoldWithNavBar({
     required this.navigationShell,
     required this.title,
@@ -18,36 +18,32 @@ class AppScaffoldWithNavBar extends StatelessWidget {
   static AppStyles get style => _style;
   static final AppStyles _style = AppStyles();
 
+  @override
+  State<AppScaffoldWithNavBar> createState() => _AppScaffoldWithNavBarState();
+}
+
+class _AppScaffoldWithNavBarState extends State<AppScaffoldWithNavBar> {
   void _onTap(BuildContext context, int index) {
-    navigationShell.goBranch(
+    widget.navigationShell.goBranch(
       index,
-      initialLocation: index == navigationShell.currentIndex,
+      initialLocation: index == widget.navigationShell.currentIndex,
     );
   }
 
   Widget? _buildLeadingButton(BuildContext context) {
-    final String? currentRouteName = GoRouterState.of(context).topRoute?.name;
-    final bool isHome = currentRouteName == 'home';
-
-    if (isHome) {
-      return IconButton(
-        icon: const Icon(Icons.menu),
-        onPressed: () {},
-      );
-    } else {
-      final RouteMatchList currentConfiguration =
-          GoRouter.of(context).routerDelegate.currentConfiguration;
-      final RouteMatch lastMatch = currentConfiguration.last;
-      final Uri location = lastMatch is ImperativeRouteMatch
-          ? lastMatch.matches.uri
-          : currentConfiguration.uri;
-      final bool canPop = location.pathSegments.length > 1;
-      return canPop ? BackButton(onPressed: GoRouter.of(context).pop) : null;
-    }
+    final RouteMatchList currentConfiguration =
+        GoRouter.of(context).routerDelegate.currentConfiguration;
+    final RouteMatch lastMatch = currentConfiguration.last;
+    final Uri location = lastMatch is ImperativeRouteMatch
+        ? lastMatch.matches.uri
+        : currentConfiguration.uri;
+    final bool canPop = location.pathSegments.length > 1;
+    return canPop ? BackButton(onPressed: GoRouter.of(context).pop) : null;
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool isHomePage = GoRouterState.of(context).topRoute?.name == 'home';
     final theme = Theme.of(context);
     final appTheme = theme.brightness == Brightness.light
         ? AppTheme.lightTheme($styles)
@@ -65,15 +61,17 @@ class AppScaffoldWithNavBar extends StatelessWidget {
             behavior: AppScrollBehavior(),
             child: Scaffold(
               key: ValueKey($styles.scale),
-              appBar: AppBar(
-                title: Text(
-                  title,
-                  style: $styles.textStyles.h3,
-                ),
-                leading: _buildLeadingButton(context),
-              ),
-              body: navigationShell,
-              bottomNavigationBar: NavigationBar(
+              appBar: !isHomePage
+                  ? AppBar(
+                      title: Text(
+                        widget.title,
+                        style: $styles.textStyles.h3,
+                      ),
+                      leading: _buildLeadingButton(context),
+                    )
+                  : null,
+              body: widget.navigationShell,
+              bottomNavigationBar: !isHomePage ? NavigationBar(
                 destinations: const <NavigationDestination>[
                   NavigationDestination(
                     icon: Icon(Icons.home),
@@ -92,9 +90,9 @@ class AppScaffoldWithNavBar extends StatelessWidget {
                     label: 'Cuenta',
                   ),
                 ],
-                selectedIndex: navigationShell.currentIndex,
+                selectedIndex: widget.navigationShell.currentIndex,
                 onDestinationSelected: (int index) => _onTap(context, index),
-              ),
+              ) : null,
             ),
           ),
         ),

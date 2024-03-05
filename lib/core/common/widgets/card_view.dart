@@ -5,29 +5,33 @@ class CardViewIcon extends StatelessWidget {
     required this.icon,
     required this.title,
     this.color,
+    this.onTap,
     Key? key,
   }) : super(key: key);
 
   final Icon icon;
   final String title;
   final Color? color;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final iconSize = screenSize.width * 0.12;
+    final iconSize = MediaQuery.of(context).size.width * 0.14;
 
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular($styles.corners.md),
-      ),
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      child: Container(
-        padding: EdgeInsets.all($styles.insets.sm),
-        child: Column(
-          children: [
-            Center(
-              child: Container(
+    return InkWell(
+      onTap: onTap,
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular($styles.corners.md),
+        ),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        child: Padding(
+          padding: EdgeInsets.all($styles.insets.sm),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
                 height: iconSize,
                 width: iconSize,
                 decoration: BoxDecoration(
@@ -38,21 +42,18 @@ class CardViewIcon extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular($styles.corners.lg),
                 ),
-                child: Center(
-                  child: icon,
-                ),
+                child: icon,
               ),
-            ),
-            const Gap(6),
-            Flexible(
-              child: Text(
+              Gap($styles.insets.sm),
+              Text(
                 title,
-                style: $styles.textStyles.bodySmallBold,
-                maxLines: 1,
+                style: $styles.textStyles.bodySmallBold.copyWith(fontSize: 16),
+                textAlign: TextAlign.center,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

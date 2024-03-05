@@ -3,6 +3,9 @@ class AppStrings {
 
   String appPageDefaultTitlePage  = 'página';
 
+  String circleButtonsSemanticClose   = 'cerrar';
+  String circleButtonsSemanticBack    = 'volver';
+
   String module1    = 'Inspecciones';
   String module2    = 'Compras';
   String module3    = 'Embarques';
