@@ -1,3 +1,4 @@
+import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_field.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_text_field.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/card_checklist.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/radio_group_checklist.dart';
@@ -33,14 +34,24 @@ class _InspeccionSinRequerimientoPageState
   // Propiedades
   final List<String> lstOptions = <String>['Uno', 'Dos', 'Tres'];
   final List<String> lstOptionsControl = <String>['Sí', 'N/A', 'No'];
-  bool _isVisible = false;
+  final List<Map<String, dynamic>> myProducts = List.generate(
+    6,
+    (index) => {
+      'id': index,
+      'path':
+          'https://fastly.picsum.photos/id/88/1280/1707.jpg?hmac=NnkwPVDBTVxHkc4rALB_fyu-OHY2usdm7iRk5El7JC4',
+      'fileName': 'nombre_archivo_$index',
+    },
+  ).toList();
 
-  // late final ValueChanged<BaseData> onChanged;
+  int? _selectedRadioValue;
+  bool _isVisible = false;
+  bool _showNuevaUnidadButton = false;
 
   @override
   void initState() {
     super.initState();
-    // onChanged = (data) {};
+    _selectedRadioValue = 1;
     _fechaInspeccionController.text =
         DateFormat.yMd().add_jm().format(DateTime.now());
   }
@@ -60,12 +71,6 @@ class _InspeccionSinRequerimientoPageState
     _odometroController.dispose();
     super.dispose();
   }
-
-  // void _onChanged(BuildContext context, BaseData? data) {
-  //   if (data != null) {
-  //     onChanged(data);
-  //   }
-  // }
 
   void _scrollToTop() {
     _scrollController.animateTo(
@@ -105,6 +110,57 @@ class _InspeccionSinRequerimientoPageState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
+                  // ES UNIDAD TEMPORAL O UNIDAD DE INVENTARIO?
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Radio(
+                              value: 1,
+                              groupValue: _selectedRadioValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedRadioValue = value;
+                                  _showNuevaUnidadButton = false;
+                                });
+                              },
+                            ),
+                            Expanded(
+                              child: Text(
+                                'Unidad Inventario',
+                                style: $styles.textStyles.label,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Radio(
+                              value: 2,
+                              groupValue: _selectedRadioValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedRadioValue = value;
+                                  _showNuevaUnidadButton = true;
+                                });
+                              },
+                            ),
+                            Expanded(
+                              child: Text(
+                                'Unidad Temporal',
+                                style: $styles.textStyles.label,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+
                   // SELECCIONAR UNIDAD (INVENTARIO O TEMPORAL)
                   DropdownButtonFormField<String>(
                     items: lstOptions.map((String option) {
@@ -123,42 +179,35 @@ class _InspeccionSinRequerimientoPageState
                     ),
                   ),
 
-                  Gap($styles.insets.xs),
+                  Gap($styles.insets.sm),
 
-                  Row(
-                    children: [
-                      Expanded(child: Container(),),
-                      const Spacer(),
-                      TextButton(
-                        onPressed: (){},
-                        child: const Text(
-                          'Nueva Unidad',
-                        )),
-                    ],
-                  ),
-
-                  Gap($styles.insets.xs),
-
-                  // SELECCIONAR INSPECCIÓN TIPO
-                  DropdownButtonFormField<String>(
-                    items: lstOptions.map((String option) {
-                      return DropdownMenuItem(
-                        value: option,
-                        child: Text(option),
+                  AnimatedSwitcher(
+                    duration: $styles.times.fast,
+                    transitionBuilder:
+                        (Widget child, Animation<double> animation) {
+                      return FadeTransition(
+                        opacity: animation,
+                        child: SizeTransition(
+                          sizeFactor: animation,
+                          child: child,
+                        ),
                       );
-                    }).toList(),
-                    onChanged: (_) {},
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: $styles.insets.sm - 3,
-                        horizontal: $styles.insets.xs + 2,
-                      ),
-                      hintText: 'Ej. Unidad',
-                      labelText: 'Seleccione tipo de inspección',
-                    ),
+                    },
+                    child: _showNuevaUnidadButton
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              FilledButton.icon(
+                                onPressed: () {},
+                                icon: const Icon(Icons.add),
+                                label: const Text(
+                                  'Nueva Unidad',
+                                ),
+                              ),
+                            ],
+                          )
+                        : const SizedBox.shrink(),
                   ),
-
-                  Gap($styles.insets.md),
 
                   // FECHA DE LA INSPECCIÓN
                   LabeledTextField(
@@ -167,7 +216,7 @@ class _InspeccionSinRequerimientoPageState
                     isReadOnly: true,
                   ),
 
-                  Gap($styles.insets.md),
+                  Gap($styles.insets.sm),
 
                   // NO. ECONÓMICO
                   LabeledTextField(
@@ -175,7 +224,7 @@ class _InspeccionSinRequerimientoPageState
                     labelText: 'No. Económico *',
                   ),
 
-                  Gap($styles.insets.md),
+                  Gap($styles.insets.sm),
 
                   // SelectDropList(
                   //   itemSelected: optionItemSelected,
@@ -230,56 +279,44 @@ class _InspeccionSinRequerimientoPageState
                   //   },
                   // ),
 
-                  Gap($styles.insets.md),
-
-                  // MARCA
-                  Text(
-                    'Marca *',
-                    style: $styles.textStyles.label,
-                  ),
-
-                  Gap($styles.insets.xs),
-
-                  // MARCA
-                  DropdownButtonFormField<String>(
-                    menuMaxHeight: 280,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: $styles.insets.sm - 6,
-                        horizontal: $styles.insets.xs + 2,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      // MARCA
+                      Expanded(
+                        child: LabeledDropdownField(
+                          labelText: 'Marca *',
+                          hintText: 'Seleccione',
+                          items: const <String>[
+                            '3MA',
+                            'AFFER',
+                            'All Pressure',
+                            'AMC',
+                            'Amida',
+                            'ASM',
+                            'Audi',
+                            'Autocar',
+                            'Braden',
+                            'Mercedes Benz',
+                            'Mitsubishi',
+                          ],
+                          onChanged: (newValue) {
+                            setState(() {});
+                          },
+                        ),
                       ),
-                      hintText: 'Seleccione la marca',
-                    ),
-                    items: <String>[
-                      '3MA',
-                      'AFFER',
-                      'All Pressure',
-                      'AMC',
-                      'Amida',
-                      'ASM',
-                      'Audi',
-                      'Autocar',
-                      'Braden',
-                      'Mercedes Benz',
-                      'Mitsubishi',
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value, style: $styles.textStyles.bodySmall),
-                      );
-                    }).toList(),
-                    onChanged: (_) {},
+                      SizedBox(width: $styles.insets.sm),
+                      // MODELO
+                      Expanded(
+                        child: LabeledTextField(
+                          controller: _modeloController,
+                          labelText: 'Modelo *',
+                        ),
+                      ),
+                    ],
                   ),
 
-                  Gap($styles.insets.md),
-
-                  // MODELO
-                  LabeledTextField(
-                    controller: _modeloController,
-                    labelText: 'Modelo *',
-                  ),
-
-                  Gap($styles.insets.md),
+                  Gap($styles.insets.sm),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -302,7 +339,7 @@ class _InspeccionSinRequerimientoPageState
                     ],
                   ),
 
-                  Gap($styles.insets.md),
+                  Gap($styles.insets.sm),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -326,34 +363,21 @@ class _InspeccionSinRequerimientoPageState
                     ],
                   ),
 
-                  Gap($styles.insets.md),
+                  Gap($styles.insets.sm),
 
-                   // LOCACIÓN
+                  // LOCACIÓN
                   LabeledTextField(
                     controller: _locacionController,
                     labelText: 'Locación *',
                   ),
 
-                  Gap($styles.insets.md),
+                  Gap($styles.insets.sm),
 
                   // BASE DE LA UNIDAD
-                  Text(
-                    'Base *',
-                    style: $styles.textStyles.label,
-                  ),
-
-                  Gap($styles.insets.xs),
-
-                  DropdownButtonFormField<String>(
-                    menuMaxHeight: 280,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: $styles.insets.sm - 6,
-                        horizontal: $styles.insets.xs + 2,
-                      ),
-                      hintText: 'Seleccione una base',
-                    ),
-                    items: <String>[
+                  LabeledDropdownField(
+                    labelText: 'Base *',
+                    hintText: 'Seleccione una base',
+                    items: const <String>[
                       'BALANCAN',
                       'CIUDAD ACUÑA',
                       'CIUDAD DEL CARMEN',
@@ -367,16 +391,13 @@ class _InspeccionSinRequerimientoPageState
                       'TOLUCA',
                       'VERACRUZ',
                       'VILLAHERMOSA',
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value, style: $styles.textStyles.bodySmall),
-                      );
-                    }).toList(),
-                    onChanged: (_) {},
+                    ],
+                    onChanged: (newValue) {
+                      setState(() {});
+                    },
                   ),
 
-                  Gap($styles.insets.md),
+                  Gap($styles.insets.sm),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -401,93 +422,94 @@ class _InspeccionSinRequerimientoPageState
                     ],
                   ),
 
-                  Gap($styles.insets.md),
+                  Gap($styles.insets.sm),
                   const Divider(),
+                  Gap($styles.insets.sm),
 
                   // FORMULARIOS
                   CardCheckList(
-                    title: 'Niveles y Motor',
+                    title: 'Niveles y Motor MotorMotorMotor Motor Motor Motor',
                     children: [
                       RadioGroupChecklist(
-                        label: 'Tanque de Combustible',
+                        label: '1. Tanque de Combustible',
                         options: lstOptionsControl,
                         selectedValue: '',
                         onChanged: (_) {},
                       ),
                       RadioGroupChecklist(
-                        label: 'Tanque de Aceite Hidráulico',
+                        label: '2. Tanque de Aceite Hidráulico',
                         options: lstOptionsControl,
                         selectedValue: '',
                         onChanged: (_) {},
                       ),
                       RadioGroupChecklist(
-                        label: 'Nivel de Aceite Hidráulico',
+                        label: '3. Nivel de Aceite Hidráulico',
                         options: lstOptionsControl,
                         selectedValue: '',
                         onChanged: (_) {},
                       ),
                       RadioGroupChecklist(
-                        label: 'Nivel de Combustible',
+                        label: '4. Nivel de Combustible',
                         options: lstOptionsControl,
                         selectedValue: '',
                         onChanged: (_) {},
                       ),
                       RadioGroupChecklist(
-                        label: 'Nivel de Anticongelante',
+                        label: '5. Nivel de Anticongelante',
                         options: lstOptionsControl,
                         selectedValue: '',
                         onChanged: (_) {},
                       ),
                       RadioGroupChecklist(
-                        label: 'Batería en Buen Estado',
+                        label: '6. Batería en Buen Estado',
                         options: lstOptionsControl,
                         selectedValue: '',
                         onChanged: (_) {},
                       ),
                       RadioGroupChecklist(
-                        label: 'Nivel de Aceite de Motor',
+                        label: '7. Nivel de Aceite de Motor',
                         options: lstOptionsControl,
                         selectedValue: '',
                         onChanged: (_) {},
                       ),
                       RadioGroupChecklist(
-                        label: 'Filtro de Aire',
+                        label: '8. Filtro de Aire',
                         options: lstOptionsControl,
                         selectedValue: '',
                         onChanged: (_) {},
                       ),
                       RadioGroupChecklist(
-                        label: 'Conexiones Eléctricas en General',
+                        label: '9. Conexiones Eléctricas en General',
                         options: lstOptionsControl,
                         selectedValue: '',
                         onChanged: (_) {},
                       ),
                       RadioGroupChecklist(
-                        label: 'Conexiones Hidráulicas',
+                        label: '10. Conexiones Hidráulicas',
                         options: lstOptionsControl,
                         selectedValue: '',
                         onChanged: (_) {},
                       ),
                       RadioGroupChecklist(
-                        label: 'Estado de Soldaduras',
+                        label: '11. Estado de Soldaduras',
                         options: lstOptionsControl,
                         selectedValue: '',
                         onChanged: (_) {},
                       ),
                       RadioGroupChecklist(
-                        label: 'Tapa del Motor',
+                        label: '12. Tapa del Motor',
                         options: lstOptionsControl,
                         selectedValue: '',
                         onChanged: (_) {},
                       ),
                       RadioGroupChecklist(
-                        label: 'Tornillería en General',
+                        label: '13. Tornillería en General',
                         options: lstOptionsControl,
                         selectedValue: '',
                         onChanged: (_) {},
                       ),
                       RadioGroupChecklist(
-                        label: 'Estado del Aceite de Motor',
+                        label: '14. Estado del Aceite de Motor',
                         options: lstOptionsControl,
                         selectedValue: '',
                         onChanged: (_) {},
@@ -495,8 +517,88 @@ class _InspeccionSinRequerimientoPageState
                     ],
                   ),
 
-                  Gap($styles.insets.md),
+                  Gap($styles.insets.sm),
                   const Divider(),
+
+                  // EVIDENCIA FOTOGRAFICA
+                  Gap($styles.insets.sm),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Text(
+                        'Evidencia Fotográfica *',
+                        style: $styles.textStyles.label,
+                      ),
+                      Gap($styles.insets.sm),
+                      Container(
+                        padding: EdgeInsets.all($styles.insets.xs + 2),
+                        color: Theme.of(context).dividerColor,
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: myProducts.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                          ),
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 2,
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular($styles.corners.md),
+                              ),
+                              child: Stack(
+                                children: [
+                                  Positioned.fill(
+                                    child: Ink.image(
+                                      image: NetworkImage(
+                                        myProducts[index]['path'].toString(),
+                                      ),
+                                      fit: BoxFit.cover,
+                                      child: InkWell(onTap: () {}),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 4,
+                                    right: 4,
+                                    child: IconButton(
+                                      color:
+                                          Theme.of(context).colorScheme.error,
+                                      icon: const Icon(Icons.delete),
+                                      onPressed: () {},
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.all($styles.insets.xxs),
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .secondaryHeaderColor
+                                            .withOpacity(0.7),
+                                      ),
+                                      child: Text(
+                                        myProducts[index]['fileName'].toString(),
+                                        textAlign: TextAlign.center,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -509,13 +611,13 @@ class _InspeccionSinRequerimientoPageState
           children: <Widget>[
             IconButton(
               onPressed: () {},
-              icon: const Icon(Icons.restore),
-              tooltip: 'Restablecer',
+              icon: const Icon(Icons.camera_alt),
+              tooltip: 'Tomar Fotografía',
             ),
             IconButton(
               onPressed: () {},
               icon: const Icon(Icons.sync),
-              tooltip: 'Sincronizar',
+              tooltip: 'Sincronizar Información',
             ),
             const Spacer(),
             FilledButton(

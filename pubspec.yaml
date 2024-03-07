@@ -75,6 +75,8 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   # Plugin de Flutter para lanzar URL
   url_launcher: ^6.2.4
+  path: ^1.8.3
+  camera: ^0.10.5+9
 
 dev_dependencies:
   flutter_test:
