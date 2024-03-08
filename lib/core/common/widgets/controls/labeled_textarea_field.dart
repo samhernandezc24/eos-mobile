@@ -1,11 +1,12 @@
 import 'package:eos_mobile/shared/shared.dart';
 
-class LabeledTextField extends StatelessWidget {
-  const LabeledTextField({
+class LabeledTextAreaField extends StatelessWidget {
+  const LabeledTextAreaField({
     required this.controller,
     required this.labelText,
     Key? key,
-    this.isReadOnly = false,
+    this.maxCharacters,
+    this.maxLines = 5,
     this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.next,
     this.hintText,
@@ -16,7 +17,8 @@ class LabeledTextField extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
   final String? hintText;
-  final bool isReadOnly;
+  final int? maxCharacters;
+  final int maxLines;
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
   final String? Function(String?)? validator;
@@ -35,6 +37,8 @@ class LabeledTextField extends StatelessWidget {
         TextFormField(
           controller: controller,
           autofocus: autoFocus,
+          maxLines: maxLines,
+          maxLength: maxCharacters,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(
               vertical: $styles.insets.sm - 6,
@@ -42,7 +46,6 @@ class LabeledTextField extends StatelessWidget {
             ),
             hintText: hintText,
           ),
-          readOnly: isReadOnly,
           keyboardType: keyboardType,
           textInputAction: textInputAction,
           validator: validator,

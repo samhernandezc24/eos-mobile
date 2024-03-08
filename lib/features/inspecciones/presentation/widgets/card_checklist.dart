@@ -40,15 +40,21 @@ class _CardCheckListState extends State<CardCheckList> {
             style: $styles.textStyles.label.copyWith(fontSize: 12),
           ),
         ),
-        title: Text(
-          widget.title,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: $styles.textStyles.h4,
-        ),
-        trailing: IconButton.filledTonal(
-          onPressed: () {},
-          icon: const Icon(Icons.save),
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                widget.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: $styles.textStyles.h4,
+              ),
+            ),
+            IconButton.filledTonal(
+              onPressed: () {},
+              icon: const Icon(Icons.save),
+            ),
+          ],
         ),
         children: <Widget>[
           SizedBox(

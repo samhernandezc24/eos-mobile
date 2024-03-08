@@ -1,6 +1,8 @@
+import 'package:eos_mobile/core/common/widgets/controls/basic_modal.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_field.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_text_field.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/card_checklist.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/widgets/create_unidad_form.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/radio_group_checklist.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:intl/intl.dart';
@@ -198,7 +200,19 @@ class _InspeccionSinRequerimientoPageState
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               FilledButton.icon(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute<void>(
+                                      builder: (BuildContext context) {
+                                        return const BasicModal(
+                                          title: 'Nueva Unidad Temporal',
+                                          child: CreateUnidadForm(),
+                                        );
+                                      },
+                                      fullscreenDialog: true,
+                                    ),
+                                  );
+                                },
                                 icon: const Icon(Icons.add),
                                 label: const Text(
                                   'Nueva Unidad',
@@ -285,7 +299,7 @@ class _InspeccionSinRequerimientoPageState
                       // MARCA
                       Expanded(
                         child: LabeledDropdownField(
-                          labelText: 'Marca *',
+                          labelText: 'Marca',
                           hintText: 'Seleccione',
                           items: const <String>[
                             '3MA',
@@ -310,7 +324,7 @@ class _InspeccionSinRequerimientoPageState
                       Expanded(
                         child: LabeledTextField(
                           controller: _modeloController,
-                          labelText: 'Modelo *',
+                          labelText: 'Modelo',
                         ),
                       ),
                     ],
@@ -428,7 +442,7 @@ class _InspeccionSinRequerimientoPageState
 
                   // FORMULARIOS
                   CardCheckList(
-                    title: 'Niveles y Motor MotorMotorMotor Motor Motor Motor',
+                    title: 'Niveles y Motor',
                     children: [
                       RadioGroupChecklist(
                         label: '1. Tanque de Combustible',
@@ -584,7 +598,8 @@ class _InspeccionSinRequerimientoPageState
                                             .withOpacity(0.7),
                                       ),
                                       child: Text(
-                                        myProducts[index]['fileName'].toString(),
+                                        myProducts[index]['fileName']
+                                            .toString(),
                                         textAlign: TextAlign.center,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,

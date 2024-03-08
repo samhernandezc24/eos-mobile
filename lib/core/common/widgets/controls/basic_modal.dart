@@ -18,13 +18,15 @@ class BasicModal extends StatelessWidget {
           style: $styles.textStyles.h3,
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all($styles.insets.sm),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            child,
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all($styles.insets.sm),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              child,
+            ],
+          ),
         ),
       ),
     );
