@@ -1,4 +1,3 @@
-import 'package:eos_mobile/config/router/app_router.dart';
 import 'package:eos_mobile/config/themes/app_theme.dart';
 import 'package:eos_mobile/core/dependency_injection/injection_container.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/remote/remote_sign_in_bloc.dart';
@@ -10,16 +9,18 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 Future<void> main() async {
   final WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  // Mantener el native splash screen hasta que la app haya terminado de construirse
+  // Mantener el native splash screen hasta que la app haya terminado de construirse.
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   GoRouter.optionURLReflectsImperativeAPIs = true;
 
-  // Iniciar la app
+  // Inicializar las dependencias de la aplicación.
   await initializeDependencies();
 
+  // Ejecutar la aplicación.
   runApp(const MainApp());
+  await appLogic.bootstrap();
 
-  // Remover el splash screen cuando la construcción ha terminado
+  // Remover el splash screen cuando la construcción ha terminado.
   FlutterNativeSplash.remove();
 }
 
@@ -58,6 +59,12 @@ class MainApp extends StatelessWidget {
   }
 }
 
+/// Agregar syntactic sugar para acceder rápidamente a los principales controladores
+/// "lógicos" de la aplicación.
+/// Deliberadamente no se crean shortcuts para los servicios, para desalentar su uso
+/// directamente en la capa de presentación.
+AppLogic get appLogic     =>  sl<AppLogic>();
+
 /// Helpers globales para facilitar la lectura de código
-AppStrings get $strings => AppStrings.instance;
-AppStyles get $styles => AppScaffold.style;
+AppStrings get $strings   =>  AppStrings.instance;
+AppStyles get $styles     =>  AppScaffold.style;

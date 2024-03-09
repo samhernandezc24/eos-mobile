@@ -14,7 +14,6 @@ class _AuthSignInPageState extends State<AuthSignInPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
     return Scaffold(
       body: Container(
         margin: EdgeInsets.zero,

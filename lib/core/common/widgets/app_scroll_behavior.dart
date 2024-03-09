@@ -1,4 +1,4 @@
-import 'package:eos_mobile/core/logic/common/platform_info.dart';
+import 'package:eos_mobile/config/logic/common/platform_info.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';

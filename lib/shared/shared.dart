@@ -5,6 +5,8 @@ library;
 export 'package:dio/dio.dart';
 
 // CONFIGURATION
+export 'package:eos_mobile/config/logic/app_logic.dart';
+export 'package:eos_mobile/config/router/app_router.dart';
 export 'package:eos_mobile/config/styles/app_styles.dart';
 
 // CORE
@@ -53,6 +55,9 @@ export 'package:get_it_mixin/get_it_mixin.dart';
 
 // ROUTING
 export 'package:go_router/go_router.dart';
+
+// PROVIDER
+export 'package:provider/provider.dart';
 
 // SHARED PREFERENCES
 export 'package:shared_preferences/shared_preferences.dart';

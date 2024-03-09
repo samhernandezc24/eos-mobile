@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:eos_mobile/core/errors/exceptions.dart';
+import 'package:eos_mobile/core/network/exceptions.dart';
 import 'package:eos_mobile/features/auth/data/models/account_model.dart';
 import 'package:eos_mobile/shared/shared.dart';
 

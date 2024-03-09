@@ -9,8 +9,8 @@ class AppStyles {
     }
 
     final shortesSide = screenSize.shortestSide;
-    const tabletXl = 1000;
-    const tabletLg = 800;
+    const tabletXl    = 1000;
+    const tabletLg    = 800;
 
     if (shortesSide > tabletXl) {
       scale = 1.2;
@@ -23,15 +23,13 @@ class AppStyles {
 
   late final double scale;
 
-  /// Radios de esquina con bordes redondeados
+  /// Radios de esquina con bordes redondeados.
   late final _Corners corners = _Corners();
 
-  late final _Shadows shadows = _Shadows();
-
-  /// Valores de los padding y margin
+  /// Valores de los padding y margin.
   late final _Insets insets = _Insets(scale);
 
-  /// Estilos de los textos
+  /// Estilos de los textos.
   late final _TextStyles textStyles = _TextStyles(scale);
 
   /// Las velocidades de las duraciones o transiciones
@@ -44,66 +42,40 @@ class _TextStyles {
   _TextStyles(this._scale);
   final double _scale;
 
-  final TextStyle _titleFont = const TextStyle(
-    fontFamily: 'Font72',
-  );
+  final TextStyle _mainTextFont = const TextStyle(fontFamily: 'Font72');
 
-  final TextStyle _contentFont = const TextStyle(
-    fontFamily: 'Font72',
-  );
+  TextStyle get titleFont     => _mainTextFont;
+  TextStyle get eosTitleFont  => _mainTextFont;
+  TextStyle get contentFont   => _mainTextFont;
 
-  TextStyle get titleFont => _titleFont;
-  TextStyle get eosTitleFont => _titleFont;
-  TextStyle get contentFont => _contentFont;
+  late final TextStyle eosTitle       = _createFont(eosTitleFont, sizePx: 64, heightPx: 56);
 
-  late final TextStyle eosTitle = _createFont(eosTitleFont, sizePx: 64, heightPx: 56);
+  late final TextStyle h1             = _createFont(titleFont, sizePx: 34, heightPx: 40);
+  late final TextStyle h2             = _createFont(titleFont, sizePx: 24, heightPx: 32);
+  late final TextStyle h3             = _createFont(titleFont, sizePx: 20, heightPx: 28, weight: FontWeight.w600);
+  late final TextStyle h4             = _createFont(titleFont, sizePx: 16, heightPx: 24, spacingPc: 5, weight: FontWeight.w600);
 
-  late final TextStyle h1   = _createFont(titleFont, sizePx: 34, heightPx: 40);
-  late final TextStyle h2   = _createFont(titleFont, sizePx: 24, heightPx: 32);
-  late final TextStyle h3   = _createFont(titleFont, sizePx: 20, heightPx: 28, weight: FontWeight.w600);
-  late final TextStyle h4   = _createFont(titleFont, sizePx: 16, heightPx: 24, spacingPc: 5, weight: FontWeight.w600);
+  late final TextStyle title1         = _createFont(titleFont, sizePx: 18, heightPx: 26, spacingPc: 5);
+  late final TextStyle title2         = _createFont(contentFont, sizePx: 16, heightPx: 18.38);
 
-  late final TextStyle title1   = _createFont(titleFont, sizePx: 18, heightPx: 26, spacingPc: 5);
-  late final TextStyle title2   = _createFont(contentFont, sizePx: 16, heightPx: 18.38);
+  late final TextStyle body           = _createFont(contentFont, sizePx: 16, heightPx: 26);
+  late final TextStyle bodyBold       = _createFont(contentFont, sizePx: 16, heightPx: 26, weight: FontWeight.w600);
+  late final TextStyle bodySmall      = _createFont(contentFont, sizePx: 14, heightPx: 23);
+  late final TextStyle bodySmallBold  = _createFont(contentFont, sizePx: 14, heightPx: 23, weight: FontWeight.w600);
 
-  late final TextStyle body             = _createFont(contentFont, sizePx: 16, heightPx: 26);
-  late final TextStyle bodyBold         = _createFont(contentFont, sizePx: 16, heightPx: 26, weight: FontWeight.w600);
-  late final TextStyle bodySmall        = _createFont(contentFont, sizePx: 14, heightPx: 23);
-  late final TextStyle bodySmallBold    = _createFont(contentFont, sizePx: 14, heightPx: 23, weight: FontWeight.w600);
+  late final TextStyle button         = _createFont(contentFont, sizePx: 16, weight: FontWeight.w500, spacingPc: 2, heightPx: 14);
+  late final TextStyle caption        = _createFont(contentFont, sizePx: 14, heightPx: 20, weight: FontWeight.w500).copyWith(fontStyle: FontStyle.italic);
+  late final TextStyle label          = _createFont(contentFont, sizePx: 14, heightPx: 20,  spacingPc: 2);
 
-  late final TextStyle caption = _createFont(
-    contentFont,
-    sizePx: 14,
-    heightPx: 20,
-    weight: FontWeight.w500,
-  ).copyWith(fontStyle: FontStyle.italic);
-
-  late final TextStyle label = _createFont(contentFont, sizePx: 14, heightPx: 20,  spacingPc: 2);
-
-  late final TextStyle badge = _createFont(contentFont, sizePx: 12, heightPx: 16, spacingPc: 2).copyWith(
-    color: Colors.white,
-  );
-
-  late final TextStyle button = _createFont(contentFont, sizePx: 16, weight: FontWeight.w500, spacingPc: 2, heightPx: 14);
-
-  TextStyle _createFont(
-    TextStyle style, {
-    required double sizePx,
-    double? heightPx,
-    double? spacingPc,
-    FontWeight? weight,
-  }) {
-    sizePx *= _scale;
-
-    if (heightPx != null) {
-      heightPx *= _scale;
-    }
+  TextStyle _createFont(TextStyle style, {required double sizePx, double? heightPx, double? spacingPc, FontWeight? weight}) {
+    final scaledSizePx    = sizePx * _scale;
+    final scaledHeightPx  = heightPx != null ? heightPx * _scale : null;
+    final letterSpacing   = spacingPc != null ? scaledSizePx * spacingPc * 0.01 : style.letterSpacing;
 
     return style.copyWith(
-      fontSize: sizePx,
-      height: heightPx != null ? (heightPx / sizePx) : style.height,
-      letterSpacing:
-          spacingPc != null ? sizePx * spacingPc * 0.01 : style.letterSpacing,
+      fontSize: scaledSizePx,
+      height: scaledHeightPx != null ? scaledHeightPx / scaledSizePx : style.height,
+      letterSpacing: letterSpacing,
       fontWeight: weight,
     );
   }
@@ -137,37 +109,4 @@ class _Insets {
   late final double xl      = 48 * _scale;
   late final double xxl     = 56 * _scale;
   late final double offset  = 80 * _scale;
-}
-
-@immutable
-class _Shadows {
-  final textSoft = [
-    Shadow(
-      color: Colors.black.withOpacity(.25),
-      offset: const Offset(0, 2),
-      blurRadius: 4,
-    ),
-  ];
-  final text = [
-    Shadow(
-      color: Colors.black.withOpacity(.6),
-      offset: const Offset(0, 2),
-      blurRadius: 2,
-    ),
-  ];
-  final textStrong = [
-    Shadow(
-      color: Colors.black.withOpacity(.6),
-      offset: const Offset(0, 4),
-      blurRadius: 6,
-    ),
-  ];
-  final boxSoft = [
-    BoxShadow(
-      color: Colors.black.withOpacity(.1),
-      blurRadius: 8 / 2,
-      spreadRadius: 8 / 4,
-      offset: const Offset(1, 0),
-    ),
-  ];
 }

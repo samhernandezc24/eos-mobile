@@ -6,6 +6,7 @@ class LabeledTextField extends StatelessWidget {
     required this.labelText,
     Key? key,
     this.isReadOnly = false,
+    this.textAlign = TextAlign.start,
     this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.next,
     this.hintText,
@@ -14,6 +15,7 @@ class LabeledTextField extends StatelessWidget {
   }) : super(key: key);
 
   final TextEditingController controller;
+  final TextAlign textAlign;
   final String labelText;
   final String? hintText;
   final bool isReadOnly;
@@ -42,6 +44,7 @@ class LabeledTextField extends StatelessWidget {
             ),
             hintText: hintText,
           ),
+          textAlign: textAlign,
           readOnly: isReadOnly,
           keyboardType: keyboardType,
           textInputAction: textInputAction,

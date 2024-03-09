@@ -10,7 +10,7 @@ class AppPageIndicator extends StatefulWidget {
     this.color,
     this.dotSize,
     String? semanticPageTitle,
-  }) : semanticPageTitle = semanticPageTitle ?? $strings.appPageDefaultTitlePage;
+  }) : semanticPageTitle = semanticPageTitle ?? $strings.defaultPageTitle;
 
   final int count;
   final PageController pageController;

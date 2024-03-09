@@ -13,7 +13,7 @@ class _InspeccionesRemoteApiService implements InspeccionesRemoteApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://10.0.2.2:7018/api/Inspecciones';
+    baseUrl ??= 'http://10.0.2.2:7018/api/Inspecciones/Tipos';
   }
 
   final Dio _dio;

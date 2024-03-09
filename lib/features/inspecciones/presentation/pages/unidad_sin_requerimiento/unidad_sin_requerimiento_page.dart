@@ -36,15 +36,7 @@ class _InspeccionSinRequerimientoPageState
   // Propiedades
   final List<String> lstOptions = <String>['Uno', 'Dos', 'Tres'];
   final List<String> lstOptionsControl = <String>['Sí', 'N/A', 'No'];
-  final List<Map<String, dynamic>> myProducts = List.generate(
-    6,
-    (index) => {
-      'id': index,
-      'path':
-          'https://fastly.picsum.photos/id/88/1280/1707.jpg?hmac=NnkwPVDBTVxHkc4rALB_fyu-OHY2usdm7iRk5El7JC4',
-      'fileName': 'nombre_archivo_$index',
-    },
-  ).toList();
+  final List<Map<String, dynamic>> myProducts = List.empty();
 
   int? _selectedRadioValue;
   bool _isVisible = false;
@@ -79,6 +71,34 @@ class _InspeccionSinRequerimientoPageState
       0,
       duration: $styles.times.medium,
       curve: Curves.easeInOut,
+    );
+  }
+
+  Future<void> _showDeletionConfirmationDialog() async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Eliminar Foto',
+            style: $styles.textStyles.h3,
+          ),
+          content: Text(
+            '¿Está seguro que desea cerrar eliminar esta foto?',
+            style: $styles.textStyles.body.copyWith(height: 26),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {},
+              child: const Text('Aceptar'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -228,6 +248,7 @@ class _InspeccionSinRequerimientoPageState
                     controller: _fechaInspeccionController,
                     labelText: 'Fecha Inspección *',
                     isReadOnly: true,
+                    textAlign: TextAlign.end,
                   ),
 
                   Gap($styles.insets.sm),
@@ -544,76 +565,116 @@ class _InspeccionSinRequerimientoPageState
                         style: $styles.textStyles.label,
                       ),
                       Gap($styles.insets.sm),
-                      Container(
-                        padding: EdgeInsets.all($styles.insets.xs + 2),
-                        color: Theme.of(context).dividerColor,
-                        child: GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: myProducts.length,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
+                      if (myProducts.isEmpty)
+                        Container(
+                          height: 150,
+                          padding: EdgeInsets.all($styles.insets.lg),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor,
+                            border: Border.all(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            borderRadius:
+                                BorderRadius.circular($styles.corners.md),
                           ),
-                          itemBuilder: (BuildContext context, int index) {
-                            return Card(
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular($styles.corners.md),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Aún no hay fotografías',
+                                style: $styles.textStyles.title2,
                               ),
-                              child: Stack(
-                                children: [
-                                  Positioned.fill(
-                                    child: Ink.image(
-                                      image: NetworkImage(
-                                        myProducts[index]['path'].toString(),
-                                      ),
-                                      fit: BoxFit.cover,
-                                      child: InkWell(onTap: () {}),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 4,
-                                    right: 4,
-                                    child: IconButton(
-                                      color:
-                                          Theme.of(context).colorScheme.error,
-                                      icon: const Icon(Icons.delete),
-                                      onPressed: () {},
-                                    ),
-                                  ),
-                                  Positioned(
-                                    left: 0,
-                                    right: 0,
-                                    bottom: 0,
-                                    child: Container(
-                                      padding:
-                                          EdgeInsets.all($styles.insets.xxs),
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .secondaryHeaderColor
-                                            .withOpacity(0.7),
-                                      ),
-                                      child: Text(
-                                        myProducts[index]['fileName']
-                                            .toString(),
-                                        textAlign: TextAlign.center,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              Gap($styles.insets.xs),
+                              Text(
+                                '(Da click en el ícono de la cámara para agregar evidencias fotográficas)',
+                                textAlign: TextAlign.center,
+                                style: $styles.textStyles.caption.copyWith(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .color!
+                                      .withOpacity(0.64),
+                                  fontSize: 13,
+                                ),
                               ),
-                            );
-                          },
+                            ],
+                          ),
+                        )
+                      else
+                        Container(
+                          padding: EdgeInsets.all($styles.insets.xs + 2),
+                          color: Theme.of(context).dividerColor,
+                          child: GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: myProducts.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                            ),
+                            itemBuilder: (BuildContext context, int index) {
+                              return Card(
+                                elevation: 2,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular($styles.corners.md),
+                                ),
+                                child: Stack(
+                                  children: [
+                                    Positioned.fill(
+                                      child: Ink.image(
+                                        image: NetworkImage(
+                                          myProducts[index]['path'].toString(),
+                                        ),
+                                        fit: BoxFit.cover,
+                                        child: InkWell(
+                                          onTap: () {},
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 4,
+                                      right: 4,
+                                      child: IconButton(
+                                        color:
+                                            Theme.of(context).colorScheme.error,
+                                        icon: const Icon(Icons.delete),
+                                        onPressed:
+                                            _showDeletionConfirmationDialog,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 0,
+                                      right: 0,
+                                      bottom: 0,
+                                      child: Container(
+                                        padding:
+                                            EdgeInsets.all($styles.insets.xxs),
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .secondaryHeaderColor
+                                              .withOpacity(0.7),
+                                        ),
+                                        child: Text(
+                                          myProducts[index]['fileName']
+                                              .toString(),
+                                          textAlign: TextAlign.center,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
                     ],
                   ),
+                  Gap($styles.insets.sm),
                 ],
               ),
             ),

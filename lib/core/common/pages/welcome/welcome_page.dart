@@ -1,3 +1,4 @@
+import 'package:eos_mobile/config/logic/common/platform_info.dart';
 import 'package:eos_mobile/core/common/data/page_data.dart';
 import 'package:eos_mobile/core/common/widgets/controls/app_page_indicator.dart';
 import 'package:eos_mobile/core/common/widgets/controls/circle_buttons.dart';
@@ -7,7 +8,6 @@ import 'package:eos_mobile/core/common/widgets/static_text_scale.dart';
 import 'package:eos_mobile/core/common/widgets/themed_text.dart';
 import 'package:eos_mobile/core/constants/constants.dart';
 import 'package:eos_mobile/core/enums/app_icons_enums.dart';
-import 'package:eos_mobile/core/logic/common/platform_info.dart';
 import 'package:eos_mobile/core/utils/haptics_utils.dart';
 import 'package:eos_mobile/shared/shared.dart';
 

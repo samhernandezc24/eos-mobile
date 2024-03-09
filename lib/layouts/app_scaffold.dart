@@ -6,17 +6,20 @@ class AppScaffold extends StatelessWidget {
   const AppScaffold({required this.child, super.key});
 
   final Widget child;
-
   static AppStyles get style => _style;
   static final AppStyles _style = AppStyles();
 
   @override
   Widget build(BuildContext context) {
+    // Escucha el tamaño del dispositivo y actualiza AppStyle cuando cambia.
+    final mq = MediaQuery.of(context);
+
     final theme = Theme.of(context);
     final appTheme = theme.brightness == Brightness.light
         ? AppTheme.lightTheme($styles)
         : AppTheme.darkTheme($styles);
 
+    appLogic.handleAppSizeChanged(mq.size);
     return KeyedSubtree(
       key: ValueKey($styles.scale),
       child: Theme(
