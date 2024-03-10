@@ -47,7 +47,8 @@ class AppLogic {
     // Marcar bootstrap como completado.
     isBootstrapComplete = true;
 
-    // Load initial view (replace empty initial view which is covered by a native splash screen)
+    // Cargar vista inicial (sustituir la vista inicial vacía que está cubierta 
+    // por una pantalla de inicio nativa).
     final bool showIntro = settingsLogic.hasCompletedOnboarding.value == false;
     if (showIntro) {
       appRouter.go('/welcome');

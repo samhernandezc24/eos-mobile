@@ -1,5 +1,4 @@
 import 'package:eos_mobile/core/common/widgets/app_icons.dart';
-import 'package:eos_mobile/core/enums/app_icons_enums.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 /// Métodos compartidos entre tipos de botones

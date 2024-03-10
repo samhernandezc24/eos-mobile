@@ -30,8 +30,8 @@ class _AppPageIndicatorState extends State<AppPageIndicator> {
 
   @override
   void initState() {
-    widget.pageController.addListener(_handlePageChanged);
     super.initState();
+    widget.pageController.addListener(_handlePageChanged);
   }
 
   void _handlePageChanged() {

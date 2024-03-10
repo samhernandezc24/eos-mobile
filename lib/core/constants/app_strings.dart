@@ -1,6 +1,7 @@
 class AppStrings {
   static final AppStrings instance = AppStrings();
 
+  String defaultAppName               = 'EOS Mobile';
   String defaultPageTitle             = 'Página';
 
   String circleButtonsSemanticBack    = 'Volver';

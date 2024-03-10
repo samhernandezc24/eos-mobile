@@ -1,4 +1,3 @@
-import 'package:eos_mobile/core/enums/app_icons_enums.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class AppIcon extends StatelessWidget {

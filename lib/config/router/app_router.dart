@@ -14,13 +14,13 @@ final GoRouter appRouter = GoRouter(
   initialLocation: '/',
   debugLogDiagnostics: true,
   errorPageBuilder: (BuildContext context, GoRouterState state) =>
-      const MaterialPage(child: Error404Page()),
+      const MaterialPage<dynamic>(child: Error404Page()),
   routes: <RouteBase>[
     /// Application Shell
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
-      builder: (BuildContext context, GoRouterState state, Widget child) {
-        return AppScaffold(child: child);
+      builder: (BuildContext context, GoRouterState state, Widget navigator) {
+        return AppScaffold(child: navigator);
       },
       routes: <RouteBase>[
         GoRoute(
@@ -29,12 +29,7 @@ final GoRouter appRouter = GoRouter(
             return const HomePage();
           },
         ),
-        GoRoute(
-          path: '/welcome',
-          builder: (BuildContext context, GoRouterState state) {
-            return const WelcomePage();
-          },
-        ),
+        AppRoute('/welcome', 'welcome', (_) => const WelcomePage()),
       ],
     ),
   ],

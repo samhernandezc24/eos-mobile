@@ -1,6 +1,6 @@
 import 'package:eos_mobile/core/common/widgets/app_icons.dart';
 import 'package:eos_mobile/core/common/widgets/controls/buttons.dart';
-import 'package:eos_mobile/core/enums/app_icons_enums.dart';
+import 'package:eos_mobile/core/common/widgets/full_screen_keyboard_listener.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class CircleBtn extends StatelessWidget {
@@ -53,7 +53,7 @@ class CircleIconBtn extends StatelessWidget {
     this.flipIcon = false,
   });
 
-  //TODO: Reduce size if design re-exports icon-images without padding
+  // TODO(samhernandezc24): Reducir el tamaño si el diseño reexporta imágenes-icono sin padding.
   static double defaultSize = 28;
 
   final AppIconsEnums icon;
@@ -68,8 +68,8 @@ class CircleIconBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color defaultColor = Theme.of(context).primaryColor;
-    final Color iconColor = color ?? Colors.white;
+    final Color defaultColor  = Theme.of(context).colorScheme.primary;
+    final Color iconColor     = color ?? Theme.of(context).colorScheme.onPrimary;
     return CircleBtn(
       onPressed: onPressed,
       border: border,
@@ -110,6 +110,14 @@ class BackBtn extends StatelessWidget {
           iconColor: iconColor,
         );
 
+  bool _handleKeyDown(BuildContext context, KeyDownEvent event) {
+    if (event.logicalKey == LogicalKeyboardKey.escape) {
+      _handleOnPressed(context);
+      return true;
+    }
+    return false;
+  }
+
   final Color? backgroundColor;
   final Color? iconColor;
   final AppIconsEnums icon;
@@ -118,19 +126,39 @@ class BackBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CircleIconBtn(
-      icon: icon,
-      backgroundColor: backgroundColor,
-      color: iconColor,
-      onPressed: onPressed ??
-          () {
-            Navigator.pop(context);
-          },
-      semanticLabel: semanticLabel ?? $strings.circleButtonsSemanticBack,
+    return FullScreenKeyboardListener(
+      onKeyDown: (event) => _handleKeyDown(context, event),
+      child: CircleIconBtn(
+        icon: icon,
+        backgroundColor: backgroundColor,
+        color: iconColor,
+        onPressed: onPressed ??
+            () {
+              final nav = Navigator.of(context);
+              if (nav.canPop()) {
+                Navigator.pop(context);
+              } else {
+                context.go('/');
+              }
+            },
+        semanticLabel: semanticLabel ?? $strings.circleButtonsSemanticBack,
+      ),
     );
   }
 
   Widget safe() => _SafeAreaWithPadding(child: this);
+
+  void _handleOnPressed(BuildContext context) {
+    if (onPressed != null) {
+      onPressed?.call();
+    } else {
+      if (context.canPop()) {
+        context.pop();
+      } else {
+        context.go('/');
+      }
+    }
+  }
 }
 
 class _SafeAreaWithPadding extends StatelessWidget {

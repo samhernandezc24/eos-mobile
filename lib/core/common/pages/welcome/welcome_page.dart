@@ -7,7 +7,6 @@ import 'package:eos_mobile/core/common/widgets/previous_next_navigation.dart';
 import 'package:eos_mobile/core/common/widgets/static_text_scale.dart';
 import 'package:eos_mobile/core/common/widgets/themed_text.dart';
 import 'package:eos_mobile/core/constants/constants.dart';
-import 'package:eos_mobile/core/enums/app_icons_enums.dart';
 import 'package:eos_mobile/core/utils/haptics_utils.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
@@ -80,7 +79,7 @@ class _WelcomePageState extends State<WelcomePage> {
     final List<Widget> pages = pageData.map<_Page>((e) => _Page(data: e)).toList();
 
     return DefaultTextColor(
-      color: Theme.of(context).colorScheme.onBackground,
+      color: Theme.of(context).colorScheme.onBackground, 
       child: ColoredBox(
         color: Theme.of(context).colorScheme.background,
         child: SafeArea(
@@ -89,7 +88,7 @@ class _WelcomePageState extends State<WelcomePage> {
             effects: const <Effect<dynamic>>[FadeEffect()],
             child: PreviousNextNavigation(
               maxWidth: 600,
-              nextButtonColor:  _isOnLastPage ? Theme.of(context).primaryColor : null,
+              nextButtonColor: _isOnLastPage ? Theme.of(context).primaryColor : null,
               onPreviousPressed: _isOnFirstPage ? null : () => _incrementPage(-1),
               onNextPressed: () {
                 if (_isOnLastPage) {
@@ -97,10 +96,10 @@ class _WelcomePageState extends State<WelcomePage> {
                 } else {
                   _incrementPage(1);
                 }
-              },              
+              },
               child: Stack(
                 children: <Widget>[
-                  // PÁGINA CON TITULO Y CONTENIDO:
+                  // VISTA DE PÁGINA CON TITULO Y CONTENIDO:
                   MergeSemantics(
                     child: Semantics(
                       onIncrease: () => _handleSemanticSwipe(1),
@@ -119,17 +118,20 @@ class _WelcomePageState extends State<WelcomePage> {
                       children: <Widget>[
                         const Spacer(),
 
-                        // LOGO:
+                        // NOMBRE DE LA APLICACIÓN / LOGO
                         Semantics(
                           header: true,
                           child: Container(
                             height: Constants.kDefaultLogoHeight,
                             alignment: Alignment.center,
-                            child: const Text('EOS Mobile'),
+                            child: Text(
+                              $strings.defaultAppName,
+                              style: $styles.textStyles.title1,
+                            ),
                           ),
                         ),
 
-                        // IMAGEN:
+                        // IMAGEN
                         SizedBox(
                           height: Constants.kDefaultImageSize,
                           width: Constants.kDefaultImageSize,
@@ -137,9 +139,9 @@ class _WelcomePageState extends State<WelcomePage> {
                             valueListenable: _currentPage,
                             builder: (_, value, __) {
                               return AnimatedSwitcher(
-                                duration: $styles.times.slow,
+                                duration: $styles.times.fast,
                                 child: KeyedSubtree(
-                                  key: ValueKey<int>(value),   // para que AnimatedSwitcher lo vea como un child diferente.
+                                  key: ValueKey<int>(value),    // para que AnimatedSwitcher lo vea como un child diferente.
                                   child: _PageImage(data: pageData[value]),
                                 ),
                               );
@@ -171,7 +173,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
                   // TEXTO NAV HELP:
                   if (PlatformInfo.isMobile) ...[
-                    // BOTON DE FINALIZACION:
+                    // BOTÓN DE FINALIZAR LA PÁGIAN DE BIENVENIDA:
                     Positioned(
                       right: $styles.insets.lg,
                       bottom: $styles.insets.lg,
@@ -221,8 +223,8 @@ class _WelcomePageState extends State<WelcomePage> {
           child: Transform.scale(
             scaleX: left ? -1 : 1,
             child: HorizontalGradient(<Color>[
-              const Color(0xFF1E1B18).withOpacity(0),
-              const Color(0xFF1E1B18),
+              Theme.of(context).colorScheme.background.withOpacity(0),
+              Theme.of(context).colorScheme.background,
             ], const <double>[
               0,
               .2,
@@ -243,10 +245,7 @@ class _WelcomePageState extends State<WelcomePage> {
           child: Semantics(
             onTapHint: $strings.welcomeSemanticNavigate,
             onTap: _isOnLastPage ? null : _handleNavTextSemanticTap,
-            child: Text(
-              $strings.welcomeSemanticSwipeLeft,
-              style: $styles.textStyles.bodySmall,
-            ),
+            child: Text($strings.welcomeSemanticSwipeLeft, style: $styles.textStyles.bodySmall),
           ),
         );
       },
@@ -268,9 +267,7 @@ class _Page extends StatelessWidget {
         child: Column(
           children: <Widget>[
             const Spacer(),
-            const Gap(
-              Constants.kDefaultImageSize + Constants.kDefaultLogoHeight,
-            ),
+            const Gap(Constants.kDefaultImageSize + Constants.kDefaultLogoHeight),
             SizedBox(
               height: Constants.kDefaultTextHeight,
               width: 400,
@@ -278,16 +275,9 @@ class _Page extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(
-                      data.title,
-                      style: $styles.textStyles.eosTitleFont.copyWith(fontSize: 24 * $styles.scale),
-                    ),
+                    Text(data.title, style: $styles.textStyles.eosTitleFont.copyWith(fontSize: 24 * $styles.scale)),
                     Gap($styles.insets.sm),
-                    Text(
-                      data.content,
-                      style: $styles.textStyles.bodySmall,
-                      textAlign: TextAlign.center,
-                    ),
+                    Text(data.content, style: $styles.textStyles.bodySmall, textAlign: TextAlign.center),
                   ],
                 ),
               ),
@@ -316,7 +306,7 @@ class _PageImage extends StatelessWidget {
             fit: BoxFit.cover,
             alignment: Alignment.centerRight,
           ),
-        ),
+        ),        
       ],
     );
   }

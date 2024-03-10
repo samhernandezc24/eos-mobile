@@ -19,8 +19,9 @@ class CategoriaRepositoryImpl implements CategoriaRepository {
 
   @override
   Future<DataState<ApiResponseEntity>> createCategoria(
-      CategoriaEntity categoria) {
-    // TODO: implement createCategoria
+    CategoriaEntity categoria,
+  ) {
+    // TODO(samhernandezc24): implement createCategoria.
     throw UnimplementedError();
   }
 

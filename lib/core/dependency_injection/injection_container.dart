@@ -1,4 +1,3 @@
-import 'package:eos_mobile/config/logic/settings_logic.dart';
 import 'package:eos_mobile/features/auth/data/datasources/remote/auth_remote_api_service.dart';
 import 'package:eos_mobile/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:eos_mobile/features/auth/domain/repositories/auth_repository.dart';
