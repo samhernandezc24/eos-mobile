@@ -45,6 +45,7 @@ class MainApp extends StatelessWidget {
           create: (context) => sl<RemoteCategoriasBloc>(),
         ),
       ],
+      
       child: MaterialApp.router(
         title: 'EOS Mobile',
         debugShowCheckedModeBanner: false,
@@ -61,6 +62,7 @@ class MainApp extends StatelessWidget {
 
 /// Agregar syntactic sugar para acceder rápidamente a los principales controladores
 /// "lógicos" de la aplicación.
+/// 
 /// Deliberadamente no se crean shortcuts para los servicios, para desalentar su uso
 /// directamente en la capa de presentación.
 AppLogic get appLogic             =>  sl<AppLogic>();
@@ -69,3 +71,4 @@ SettingsLogic get settingsLogic   =>  sl<SettingsLogic>();
 /// Helpers globales para facilitar la lectura de código
 AppStrings get $strings   =>  AppStrings.instance;
 AppStyles get $styles     =>  AppScaffold.style;
+Logger get $logger        => Logger();

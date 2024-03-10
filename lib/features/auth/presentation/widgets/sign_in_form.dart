@@ -1,5 +1,4 @@
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
-import 'package:eos_mobile/core/validators/form_validators.dart';
 import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/remote/remote_sign_in_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/remote/remote_sign_in_event.dart';
@@ -7,21 +6,18 @@ import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/remote/remote
 import 'package:eos_mobile/features/auth/presentation/pages/forgot_password/forgot_password_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
-class SignInForm extends StatefulWidget {
-  const SignInForm({Key? key}) : super(key: key);
+class AuthSignInForm extends StatefulWidget {
+  const AuthSignInForm({Key? key}) : super(key: key);
 
   @override
-  State<SignInForm> createState() => _SignInFormState();
+  State<AuthSignInForm> createState() => _AuthSignInFormState();
 }
 
-class _SignInFormState extends State<SignInForm> {
+class _AuthSignInFormState extends State<AuthSignInForm> {
   // LISTENERS
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
-  // STATES
-  bool _isPasswordVisible = false;
+  final GlobalKey<FormState> _formKey               = GlobalKey<FormState>();
+  final TextEditingController _emailController      = TextEditingController();
+  final TextEditingController _passwordController   = TextEditingController();
 
   @override
   void dispose() {
@@ -36,53 +32,34 @@ class _SignInFormState extends State<SignInForm> {
     return Form(
       key: _formKey,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all($styles.insets.sm),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // Form Control: Usuario
-            const Text('Usuario'),
-            const Gap(6),
-            TextFormField(
+            // USUARIO
+            LabeledTextField(
               controller: _emailController,
-              decoration: const InputDecoration(
-                hintText: 'ejem@plo.com',
-                isDense: true,
-              ),
+              hintText: 'ejem@plo.com',
+              labelText: 'Usuario',
               keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
               validator: FormValidators.emailValidator,
             ),
-            const Gap(24),
-            // Form Control: Contraseña
-            const Text('Contraseña'),
-            const Gap(6),
-            TextFormField(
+
+            Gap($styles.insets.md),
+
+            // CONTRASEÑA
+            LabeledTextField(
               controller: _passwordController,
-              decoration: InputDecoration(
-                isDense: true,
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
-                    });
-                  },
-                  color: Theme.of(context).hintColor,
-                  icon: Icon(
-                    _isPasswordVisible
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                  ),
-                ),
-              ),
+              labelText: 'Contraseña',
+              isPassword: true,
               keyboardType: TextInputType.visiblePassword,
-              obscureText: !_isPasswordVisible,
               textInputAction: TextInputAction.done,
               validator: FormValidators.passwordValidator,
             ),
+            
             GestureDetector(
               onTap: () {
-                Navigator.push(
+                Navigator.push<void>(
                   context,
                   MaterialPageRoute<void>(
                     builder: (context) => const ForgotPasswordPage(),
@@ -100,6 +77,7 @@ class _SignInFormState extends State<SignInForm> {
                 ),
               ),
             ),
+
             BlocConsumer<RemoteSignInBloc, RemoteSignInState>(
               listener: (context, state) {
                 if (state is RemoteSignInFailure) {
@@ -124,7 +102,7 @@ class _SignInFormState extends State<SignInForm> {
                   return FilledButton(
                     onPressed: null,
                     style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all(
+                      minimumSize: MaterialStateProperty.all<Size?>(
                         const Size(double.infinity, 48),
                       ),
                     ),

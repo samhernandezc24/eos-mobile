@@ -1,7 +1,6 @@
 import 'package:eos_mobile/core/common/data/modules_data.dart';
 import 'package:eos_mobile/core/common/widgets/card_view.dart';
 import 'package:eos_mobile/features/auth/presentation/pages/sign_in/sign_in_page.dart';
-import 'package:eos_mobile/features/configuraciones/presentation/pages/index/index_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class HomePage extends StatefulWidget {
@@ -121,131 +120,166 @@ class _HomePageState extends State<HomePage> {
       ),
     ];
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'EOS Mobile',
-          style: $styles.textStyles.h3,
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                ),
-                itemCount: modulesData.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return CardViewIcon(
-                    icon: modulesData[index].icon,
-                    title: modulesData[index].name,
-                    onTap: () {
-                      switch (index) {
-                        case 0:
-                          GoRouter.of(context).go('/home/inspecciones');
-
-                        /// se agregaran las demás rutas para los módulos
-                        /// una vez se haya finalizado el módulo principal.
-                      }
-                    },
-                  );
-                },
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
               ),
-            ],
-          ),
-        ),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            _buildDrawerHeader(),
-            _buildDrawerItem(
-              icon: Icons.home,
-              text: 'Inicio',
-              onTap: () => {},
-            ),
-            _buildDrawerItem(
-              icon: Icons.dashboard,
-              text: 'Dashboard',
-              onTap: () => {},
-            ),
-            _buildDrawerItem(
-              icon: Icons.format_list_bulleted,
-              text: 'Actividad',
-              onTap: () => {},
-            ),
-            _buildDrawerItem(
-              icon: Icons.account_circle,
-              text: 'Cuenta',
-              onTap: () => {},
-            ),
-            const Divider(),
-            _buildDrawerItem(
-              icon: Icons.settings,
-              text: 'Configuración',
-              onTap: () {
-                // Cerrar el drawer
-                Navigator.pop(context);
-                // Actualizar el estado en la app
-                Future.delayed(const Duration(milliseconds: 300), () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (context) => const ConfiguracionIndexPage(),
-                    ),
-                  );
-                });
+              itemCount: modulesData.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return CardViewIcon(
+                  icon: modulesData[index].icon,
+                  title: modulesData[index].name,
+                  onTap: () {
+                    switch (index) {
+                      case 0:
+                        GoRouter.of(context).go('/home/inspecciones');
+
+                      /// se agregaran las demás rutas para los módulos
+                      /// una vez se haya finalizado el módulo principal.
+                    }
+                  },
+                );
               },
-            ),
-            const Divider(),
-            _buildDrawerItem(
-              iconColor: Theme.of(context).colorScheme.error,
-              textColor: Theme.of(context).colorScheme.error,
-              icon: Icons.logout,
-              text: 'Cerrar sesión',
-              onTap: (){},
-              // onTap: _showLogoutConfirmationDialog,
             ),
           ],
         ),
       ),
-      bottomNavigationBar: NavigationBar(
-        destinations: const <NavigationDestination>[
-          NavigationDestination(
-            icon: Icon(Icons.home),
-            label: 'Inicio',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.format_list_bulleted),
-            label: 'Actividad',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.account_circle),
-            label: 'Cuenta',
-          ),
-        ],
-        // selectedIndex: widget.navigationShell.currentIndex,
-        // onDestinationSelected: (int index) => _onTap(context, index),
-      ),
     );
+
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: Text(
+    //       'EOS Mobile',
+    //       style: $styles.textStyles.h3,
+    //     ),
+    //     actions: [
+    //       IconButton(
+    //         onPressed: () {},
+    //         icon: const Icon(Icons.notifications),
+    //       ),
+    //     ],
+    //   ),
+    //   body: Padding(
+    //     padding: const EdgeInsets.all(16),
+    //     child: SingleChildScrollView(
+    //       child: Column(
+    //         children: [
+    //           GridView.builder(
+    //             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    //               crossAxisCount: 2,
+    //               mainAxisSpacing: 16,
+    //               crossAxisSpacing: 16,
+    //             ),
+    //             itemCount: modulesData.length,
+    //             shrinkWrap: true,
+    //             physics: const NeverScrollableScrollPhysics(),
+    //             itemBuilder: (context, index) {
+    //               return CardViewIcon(
+    //                 icon: modulesData[index].icon,
+    //                 title: modulesData[index].name,
+    //                 onTap: () {
+    //                   switch (index) {
+    //                     case 0:
+    //                       GoRouter.of(context).go('/home/inspecciones');
+
+    //                     /// se agregaran las demás rutas para los módulos
+    //                     /// una vez se haya finalizado el módulo principal.
+    //                   }
+    //                 },
+    //               );
+    //             },
+    //           ),
+    //         ],
+    //       ),
+    //     ),
+    //   ),
+    //   drawer: Drawer(
+    //     child: ListView(
+    //       padding: EdgeInsets.zero,
+    //       children: <Widget>[
+    //         _buildDrawerHeader(),
+    //         _buildDrawerItem(
+    //           icon: Icons.home,
+    //           text: 'Inicio',
+    //           onTap: () => {},
+    //         ),
+    //         _buildDrawerItem(
+    //           icon: Icons.dashboard,
+    //           text: 'Dashboard',
+    //           onTap: () => {},
+    //         ),
+    //         _buildDrawerItem(
+    //           icon: Icons.format_list_bulleted,
+    //           text: 'Actividad',
+    //           onTap: () => {},
+    //         ),
+    //         _buildDrawerItem(
+    //           icon: Icons.account_circle,
+    //           text: 'Cuenta',
+    //           onTap: () => {},
+    //         ),
+    //         const Divider(),
+    //         _buildDrawerItem(
+    //           icon: Icons.settings,
+    //           text: 'Configuración',
+    //           onTap: () {
+    //             // Cerrar el drawer
+    //             Navigator.pop(context);
+    //             // Actualizar el estado en la app
+    //             Future.delayed(const Duration(milliseconds: 300), () {
+    //               Navigator.push(
+    //                 context,
+    //                 MaterialPageRoute<void>(
+    //                   builder: (context) => const ConfiguracionIndexPage(),
+    //                 ),
+    //               );
+    //             });
+    //           },
+    //         ),
+    //         const Divider(),
+    //         _buildDrawerItem(
+    //           iconColor: Theme.of(context).colorScheme.error,
+    //           textColor: Theme.of(context).colorScheme.error,
+    //           icon: Icons.logout,
+    //           text: 'Cerrar sesión',
+    //           onTap: (){},
+    //           // onTap: _showLogoutConfirmationDialog,
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    //   bottomNavigationBar: NavigationBar(
+    //     destinations: const <NavigationDestination>[
+    //       NavigationDestination(
+    //         icon: Icon(Icons.home),
+    //         label: 'Inicio',
+    //       ),
+    //       NavigationDestination(
+    //         icon: Icon(Icons.dashboard),
+    //         label: 'Dashboard',
+    //       ),
+    //       NavigationDestination(
+    //         icon: Icon(Icons.format_list_bulleted),
+    //         label: 'Actividad',
+    //       ),
+    //       NavigationDestination(
+    //         icon: Icon(Icons.account_circle),
+    //         label: 'Cuenta',
+    //       ),
+    //     ],
+    //     // selectedIndex: widget.navigationShell.currentIndex,
+    //     // onDestinationSelected: (int index) => _onTap(context, index),
+    //   ),
+    // );
   }
 
   Widget _buildDrawerHeader() {

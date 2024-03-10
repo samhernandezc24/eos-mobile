@@ -11,11 +11,13 @@ export 'package:eos_mobile/config/router/app_router.dart';
 export 'package:eos_mobile/config/styles/app_styles.dart';
 
 // CORE
+export 'package:eos_mobile/core/common/widgets/controls/labeled_text_field.dart';
 export 'package:eos_mobile/core/constants/app_strings.dart';
 export 'package:eos_mobile/core/constants/assets.dart';
 export 'package:eos_mobile/core/enums/app_icons_enums.dart';
 export 'package:eos_mobile/core/extensions/alignments_extension.dart';
 export 'package:eos_mobile/core/extensions/string_extension.dart';
+export 'package:eos_mobile/core/validators/form_validators.dart';
 
 // LAYOUTS
 export 'package:eos_mobile/layouts/app_scaffold.dart';

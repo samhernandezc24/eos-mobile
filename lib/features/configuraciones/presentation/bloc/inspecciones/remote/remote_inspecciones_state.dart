@@ -3,8 +3,7 @@ import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_e
 import 'package:eos_mobile/shared/shared.dart';
 
 abstract class RemoteInspeccionesState extends Equatable {
-  const RemoteInspeccionesState(
-      {this.inspecciones, this.response, this.failure});
+  const RemoteInspeccionesState({this.inspecciones, this.response, this.failure});
 
   final List<InspeccionEntity>? inspecciones;
   final ApiResponseEntity? response;

@@ -9,8 +9,8 @@ class ForgotPasswordPage extends StatefulWidget {
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   // LISTENERS
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
+  final GlobalKey<FormState> _formKey           = GlobalKey<FormState>();
+  final TextEditingController _emailController  = TextEditingController();
 
   @override
   void dispose() {
@@ -21,17 +21,13 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          '¿Has olvidado tu contraseña?',
-          style: TextStyle(fontWeight: FontWeight.w600),
-        ),
+        title: Text($strings.forgotPasswordAppBarText,style: $styles.textStyles.h3),
       ),
-      body: Container(
-        margin: EdgeInsets.zero,
+      body: SizedBox(
         height: size.height,
         child: Stack(
           children: <Widget>[
@@ -42,14 +38,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SvgPicture.asset(
-                      'assets/images/pages/forgot_password.svg',
+                      SvgPaths.forgotPassword,
                       fit: BoxFit.cover,
                       width: size.width,
-                      semanticsLabel: 'Olvidaste tu contraseña',
+                      semanticsLabel: $strings.forgotPasswordSemanticImage,
                     ),
-                    const Text(
-                      'Completa el formulario para restablecer su contraseña',
-                    ),
+                    Text($strings.forgotPasswordMessage),
                     Form(
                       key: _formKey,
                       child: Container(
@@ -57,29 +51,26 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            const Text('Correo electrónico'),
-                            const Gap(6),
-                            TextFormField(
-                              controller: _emailController,
-                              decoration: const InputDecoration(
-                                hintText: 'ejem@plo.com',
-                                isDense: true,
-                              ),
+                            // CORREO ELECTRÓNICO
+                            LabeledTextField(
+                              controller: _emailController, 
+                              labelText: 'Correo electrónico',
+                              hintText: 'ejem@plo.com',
                               keyboardType: TextInputType.emailAddress,
                               textInputAction: TextInputAction.done,
+                              validator: FormValidators.emailValidator,
                             ),
-                            const Gap(32),
+
+                            Gap($styles.insets.lg),
+
                             FilledButton(
                               onPressed: () {},
                               style: ButtonStyle(
-                                minimumSize: MaterialStateProperty.all(
+                                minimumSize: MaterialStateProperty.all<Size?>(
                                   const Size(double.infinity, 48),
                                 ),
                               ),
-                              child: const Text(
-                                'Enviar enlace',
-                                style: TextStyle(fontSize: 16),
-                              ),
+                              child: Text($strings.forgotPasswordButtonText, style: $styles.textStyles.button),
                             ),
                           ],
                         ),

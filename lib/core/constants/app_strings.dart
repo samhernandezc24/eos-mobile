@@ -11,6 +11,11 @@ class AppStrings {
   String error404SemanticLabel        = 'Error 404';
   String error404Title                = '¡Oops! 404';
 
+  String forgotPasswordAppBarText     = '¿Has olvidado tu contraseña?';
+  String forgotPasswordButtonText     = 'Enviar Enlace';
+  String forgotPasswordMessage        = 'Completa el formulario para restablecer su contraseña';
+  String forgotPasswordSemanticImage  = 'Se te ha olvidado la contraseña';
+
   String module1                      = 'Inspecciones';
   String module2                      = 'Compras';
   String module3                      = 'Embarques';
@@ -23,6 +28,8 @@ class AppStrings {
   String searchInputHint              = 'Buscar por No. Económico o Folio';
   String searchInputSemanticClear     = 'Limpiar Búsqueda';
   String searchInputSuggestionsTitle  = 'Sugerencias';
+
+  String signInTitleHeading           = 'Iniciar Sesión';
 
   String welcomeContentOne            = 'Accede a los datos del EOS desde cualquier lugar, sincroniza cambios automáticamente.';
   String welcomeContentTwo            = 'Navega de manera rápida entre los módulos para optimizar el proceso de revisión de servicios.';

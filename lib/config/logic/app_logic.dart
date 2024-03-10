@@ -53,7 +53,7 @@ class AppLogic {
     if (showIntro) {
       appRouter.go('/welcome');
     } else {
-      appRouter.go(initialDeeplink ?? '/');
+      appRouter.go(initialDeeplink ?? '/sign-in');
     }
   }
 
