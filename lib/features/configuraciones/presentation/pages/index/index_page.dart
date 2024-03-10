@@ -26,8 +26,8 @@ class _ConfiguracionIndexPageState extends State<ConfiguracionIndexPage> {
         ),
         actions: <Widget>[
           PopupMenuButton(
-            icon: const FaIcon(
-              FontAwesomeIcons.ellipsisVertical,
+            icon: const Icon(
+              Icons.more_vert,
               size: 20,
             ),
             itemBuilder: (context) => [
@@ -57,8 +57,8 @@ class _ConfiguracionIndexPageState extends State<ConfiguracionIndexPage> {
                     );
                 }
               },
-              trailing: const FaIcon(
-                FontAwesomeIcons.angleRight,
+              trailing: const Icon(
+                Icons.navigate_next,
                 size: 18,
               ),
             );

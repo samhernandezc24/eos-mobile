@@ -1,4 +1,4 @@
-import 'package:eos_mobile/config/logic/app_logic.dart';
+import 'package:eos_mobile/config/logic/settings_logic.dart';
 import 'package:eos_mobile/features/auth/data/datasources/remote/auth_remote_api_service.dart';
 import 'package:eos_mobile/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:eos_mobile/features/auth/domain/repositories/auth_repository.dart';
@@ -28,6 +28,9 @@ Future<void> initializeDependencies() async {
   // Controlador Top Level de la App
   // ignore: unnecessary_lambdas
   ..registerLazySingleton<AppLogic>(() => AppLogic())
+
+  // ignore: unnecessary_lambdas
+  ..registerLazySingleton<SettingsLogic>(() => SettingsLogic())
 
   // Depdendencias
   ..registerSingleton<AuthRemoteApiService>(AuthRemoteApiService(sl()))

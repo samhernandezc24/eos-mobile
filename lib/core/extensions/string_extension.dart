@@ -1,4 +1,4 @@
-import 'package:eos_mobile/core/utils/style_strings_utils.dart';
+import 'package:eos_mobile/core/utils/string_utils.dart';
 
 extension StringExtension on String {
   /// Retorna el String con el primer carácter en mayúscula 
@@ -9,7 +9,7 @@ extension StringExtension on String {
   ///   print("IVANA".toCapitalized());
   ///   => "Ivana"
   /// ```
-  String toCapitalized() => StyleStringsUtils.toCapitalized(this);
+  String toCapitalized() => StringUtils.capitalize(this);
 
   /// Convierte el String a mayúsculas y minúsculas poniendo 
   /// en mayúscula la primera letra de cada palabra y forzando 
@@ -20,5 +20,5 @@ extension StringExtension on String {
   ///   print("foo bar".toProperCase());
   ///   => "Foo Bar"
   /// ```
-  String toProperCase() => StyleStringsUtils.toProperCase(this);
+  String toProperCase() => StringUtils.toProperCase(this);
 }

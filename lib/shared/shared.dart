@@ -6,6 +6,7 @@ export 'package:dio/dio.dart';
 
 // CONFIGURATION
 export 'package:eos_mobile/config/logic/app_logic.dart';
+export 'package:eos_mobile/config/logic/settings_logic.dart';
 export 'package:eos_mobile/config/router/app_router.dart';
 export 'package:eos_mobile/config/styles/app_styles.dart';
 
@@ -43,9 +44,6 @@ export 'package:flutter_secure_storage/flutter_secure_storage.dart';
 // FLUTTER SVG
 export 'package:flutter_svg/flutter_svg.dart';
 
-// FONTAWESOME FLUTTER
-export 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 // GAP (FLEX)
 export 'package:gap/gap.dart';
 
@@ -55,6 +53,9 @@ export 'package:get_it_mixin/get_it_mixin.dart';
 
 // ROUTING
 export 'package:go_router/go_router.dart';
+
+// LOGGER
+export 'package:logger/logger.dart';
 
 // PROVIDER
 export 'package:provider/provider.dart';

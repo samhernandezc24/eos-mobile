@@ -90,8 +90,8 @@ class _ConfiguracionInspeccionPageState extends State<ConfiguracionInspeccionPag
                       ),
                     );
                   },
-                  icon: const FaIcon(
-                    FontAwesomeIcons.plus,
+                  icon: const Icon(
+                    Icons.add,
                     size: 16,
                   ),
                   label: const Text(

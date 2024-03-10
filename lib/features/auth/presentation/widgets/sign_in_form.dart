@@ -68,10 +68,10 @@ class _SignInFormState extends State<SignInForm> {
                     });
                   },
                   color: Theme.of(context).hintColor,
-                  icon: FaIcon(
+                  icon: Icon(
                     _isPasswordVisible
-                        ? FontAwesomeIcons.eyeSlash
-                        : FontAwesomeIcons.eye,
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                   ),
                 ),
               ),

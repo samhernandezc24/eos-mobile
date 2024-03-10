@@ -68,8 +68,8 @@ class CircleIconBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color defaultColor = Theme.of(context).dialogBackgroundColor;
-    final Color iconColor = color ?? Theme.of(context).unselectedWidgetColor;
+    final Color defaultColor = Theme.of(context).primaryColor;
+    final Color iconColor = color ?? Colors.white;
     return CircleBtn(
       onPressed: onPressed,
       border: border,

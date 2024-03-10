@@ -44,13 +44,13 @@ class InspeccionTile extends StatelessWidget {
           );
         });
       },
-      leading: const FaIcon(
-        FontAwesomeIcons.layerGroup,
+      leading: const Icon(
+        Icons.layers,
         size: 20,
       ),
       trailing: IconButton(
-        icon: const FaIcon(
-          FontAwesomeIcons.ellipsisVertical,
+        icon: const Icon(
+          Icons.more_vert,
           size: 18,
         ),
         onPressed: () {
@@ -73,8 +73,8 @@ class InspeccionTile extends StatelessWidget {
                     ),
                     const Divider(),
                     ListTile(
-                      leading: const FaIcon(
-                        FontAwesomeIcons.circlePlus,
+                      leading: const Icon(
+                        Icons.add_circle,
                         size: 18,
                       ),
                       title: const Text('Crear categoría'),
@@ -92,16 +92,16 @@ class InspeccionTile extends StatelessWidget {
                       },
                     ),
                     ListTile(
-                      leading: const FaIcon(
-                        FontAwesomeIcons.penToSquare,
+                      leading: const Icon(
+                        Icons.edit_square,
                         size: 18,
                       ),
                       title: const Text('Editar'),
                       onTap: () {},
                     ),
                     ListTile(
-                      leading: FaIcon(
-                        FontAwesomeIcons.trash,
+                      leading: Icon(
+                        Icons.delete,
                         size: 18,
                         color: Theme.of(context).colorScheme.error,
                       ),

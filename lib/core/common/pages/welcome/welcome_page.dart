@@ -19,15 +19,13 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  late final PageController _pageController = PageController()
-    ..addListener(_handlePageChanged);
-  late final ValueNotifier<int> _currentPage = ValueNotifier(0)
-    ..addListener(() => setState(() {}));
+  late final PageController _pageController   = PageController()..addListener(_handlePageChanged);
+  late final ValueNotifier<int> _currentPage  = ValueNotifier<int>(0)..addListener(() => setState(() {}));
 
-  static List<PageData> pageData = [];
+  static List<PageData> pageData = <PageData>[];
 
-  bool get _isOnLastPage => _currentPage.value == pageData.length - 1;
-  bool get _isOnFirstPage => _currentPage.value == 0;
+  bool get _isOnLastPage    => _currentPage.value == pageData.length - 1;
+  bool get _isOnFirstPage   => _currentPage.value == 0;
 
   @override
   void dispose() {
@@ -39,6 +37,7 @@ class _WelcomePageState extends State<WelcomePage> {
   void _handleWelcomeCompletePressed() {
     if (_currentPage.value == pageData.length - 1) {
       context.go('/');
+      settingsLogic.hasCompletedOnboarding.value = true;
     }
   }
 
@@ -48,11 +47,10 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   void _handleSemanticSwipe(int direction) {
-    _pageController.animateToPage(
-      (_pageController.page ?? 0).round() + direction,
-      duration: $styles.times.fast,
-      curve: Curves.easeOut,
-    );
+    _pageController.animateToPage((_pageController.page ?? 0).round() + direction,
+        duration: $styles.times.fast, 
+        curve: Curves.easeOut,
+      );
   }
 
   void _handleNavTextSemanticTap() => _incrementPage(1);
@@ -61,32 +59,16 @@ class _WelcomePageState extends State<WelcomePage> {
     final int current = _pageController.page!.round();
     if (_isOnLastPage && direction > 0) return;
     if (_isOnFirstPage && direction < 0) return;
-    _pageController.animateToPage(
-      current + direction,
-      duration: $styles.times.pageTransition,
-      curve: Curves.easeIn,
-    );
+    _pageController.animateToPage(current + direction, duration: 250.ms, curve: Curves.easeIn);
   }
 
   @override
   Widget build(BuildContext context) {
     // Establecer los datos de la página.
-    pageData = [
-      PageData(
-        $strings.welcomeTitleOne,
-        $strings.welcomeContentOne,
-        'one',
-      ),
-      PageData(
-        $strings.welcomeTitleTwo,
-        $strings.welcomeContentTwo,
-        'two',
-      ),
-      PageData(
-        $strings.welcomeTitleThree,
-        $strings.welcomeContentThree,
-        'three',
-      ),
+    pageData = <PageData>[
+      PageData($strings.welcomeTitleOne, $strings.welcomeContentOne, 'one'),
+      PageData($strings.welcomeTitleTwo, $strings.welcomeContentTwo, 'two'),
+      PageData($strings.welcomeTitleThree, $strings.welcomeContentThree, 'three'),
     ];
 
     // Esta vista utiliza un PageView a pantalla completa para permitir
@@ -95,113 +77,115 @@ class _WelcomePageState extends State<WelcomePage> {
     // Sin embargo, sólo queremos el título / contenido para deslizar,
     // así que apilamos un PageView con ese contenido sobre el resto de
     // contenido, y alineamos sus layouts.
-    final List<Widget> pages = pageData.map((e) => _Page(data: e)).toList();
+    final List<Widget> pages = pageData.map<_Page>((e) => _Page(data: e)).toList();
 
-    return Scaffold(
-      body: DefaultTextColor(
-        color: Theme.of(context).colorScheme.onBackground,
-        child: ColoredBox(
-          color: Theme.of(context).colorScheme.background,
-          child: SafeArea(
-            child: Animate(
-              delay: 500.ms,
-              effects: const [FadeEffect()],
-              child: PreviousNextNavigation(
-                maxWidth: 600,
-                nextButtonColor:
-                    _isOnLastPage ? Theme.of(context).primaryColor : null,
-                onPreviousPressed:
-                    _isOnFirstPage ? null : () => _incrementPage(-1),
-                onNextPressed: () {
-                  if (_isOnLastPage) {
-                    _handleWelcomeCompletePressed();
-                  } else {
-                    _incrementPage(1);
-                  }
-                },
-                child: Stack(
-                  children: <Widget>[
-                    // PÁGINA CON TITULO Y CONTENIDO:
-                    MergeSemantics(
-                      child: Semantics(
-                        onIncrease: () => _handleSemanticSwipe(1),
-                        onDecrease: () => _handleSemanticSwipe(-1),
-                        child: PageView(
-                          controller: _pageController,
-                          children: pages,
-                          onPageChanged: (_) => HapticsUtils.lightImpact(),
-                        ),
+    return DefaultTextColor(
+      color: Theme.of(context).colorScheme.onBackground,
+      child: ColoredBox(
+        color: Theme.of(context).colorScheme.background,
+        child: SafeArea(
+          child: Animate(
+            delay: 500.ms,
+            effects: const <Effect<dynamic>>[FadeEffect()],
+            child: PreviousNextNavigation(
+              maxWidth: 600,
+              nextButtonColor:  _isOnLastPage ? Theme.of(context).primaryColor : null,
+              onPreviousPressed: _isOnFirstPage ? null : () => _incrementPage(-1),
+              onNextPressed: () {
+                if (_isOnLastPage) {
+                  _handleWelcomeCompletePressed();
+                } else {
+                  _incrementPage(1);
+                }
+              },              
+              child: Stack(
+                children: <Widget>[
+                  // PÁGINA CON TITULO Y CONTENIDO:
+                  MergeSemantics(
+                    child: Semantics(
+                      onIncrease: () => _handleSemanticSwipe(1),
+                      onDecrease: () => _handleSemanticSwipe(-1),
+                      child: PageView(
+                        controller: _pageController,
+                        children: pages,
+                        onPageChanged: (_) => HapticsUtils.lightImpact(),
                       ),
                     ),
-                    ExcludeSemantics(
-                      excluding: false,
-                      child: Column(
-                        children: [
-                          const Spacer(),
-                          // LOGO:
-                          Semantics(
-                            header: true,
-                            child: Container(
-                              height: Constants.kDefaultLogoHeight,
-                              alignment: Alignment.center,
-                              child: const Text('EOS Mobile'),
-                            ),
-                          ),
-                          // IMAGEN CON MASK:
-                          SizedBox(
-                            height: Constants.kDefaultImageSize,
-                            width: Constants.kDefaultImageSize,
-                            child: ValueListenableBuilder<int>(
-                              valueListenable: _currentPage,
-                              builder: (_, value, __) {
-                                return AnimatedSwitcher(
-                                  duration: $styles.times.slow,
-                                  child: KeyedSubtree(
-                                    key: ValueKey(value),
-                                    child: _PageImage(data: pageData[value]),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          // ESPACIO PARA EL TEXTO:
-                          const Gap(Constants.kDefaultTextHeight * 2),
-                          // INDICADOR DE PÁGINA:
-                          Container(
-                            height: Constants.kDefaultPageIndicatorHeight,
+                  ),
+
+                  ExcludeSemantics(
+                    excluding: false,
+                    child: Column(
+                      children: <Widget>[
+                        const Spacer(),
+
+                        // LOGO:
+                        Semantics(
+                          header: true,
+                          child: Container(
+                            height: Constants.kDefaultLogoHeight,
                             alignment: Alignment.center,
-                            child: AppPageIndicator(
-                              count: pageData.length,
-                              pageController: _pageController,
-                            ),
+                            child: const Text('EOS Mobile'),
                           ),
-                          const Spacer(flex: 2),
-                        ],
-                      ),
+                        ),
+
+                        // IMAGEN:
+                        SizedBox(
+                          height: Constants.kDefaultImageSize,
+                          width: Constants.kDefaultImageSize,
+                          child: ValueListenableBuilder<int>(
+                            valueListenable: _currentPage,
+                            builder: (_, value, __) {
+                              return AnimatedSwitcher(
+                                duration: $styles.times.slow,
+                                child: KeyedSubtree(
+                                  key: ValueKey<int>(value),   // para que AnimatedSwitcher lo vea como un child diferente.
+                                  child: _PageImage(data: pageData[value]),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+
+                        // ESPACIO PARA EL TEXTO:
+                        const Gap(Constants.kDefaultTextHeight * 2),
+
+                        // INDICADOR DE PÁGINA:
+                        Container(
+                          height: Constants.kDefaultPageIndicatorHeight,
+                          alignment: Alignment.center,
+                          child: AppPageIndicator(
+                            count: pageData.length,
+                            pageController: _pageController,
+                          ),
+                        ),
+                        const Spacer(flex: 2),
+                      ],
+                    ),
+                  ),
+
+                  // CONSTRUIR LOS OVERLAYS PARA OCULTAR EL CONTENIDO AL DESLIZAR EN PANTALLAS
+                  // MUY ANCHAS.
+                  _buildHorizontalGradientOverlay(left: true),
+                  _buildHorizontalGradientOverlay(),
+
+                  // TEXTO NAV HELP:
+                  if (PlatformInfo.isMobile) ...[
+                    // BOTON DE FINALIZACION:
+                    Positioned(
+                      right: $styles.insets.lg,
+                      bottom: $styles.insets.lg,
+                      child: _buildFinishButton(context),
                     ),
 
-                    // CONSTRUIR LOS OVERLAYS PARA OCULTAR EL CONTENIDO AL DESLIZAR EN PANTALLAS
-                    // MUY ANCHAS.
-                    _buildHorizontalGradientOverlay(left: true),
-                    _buildHorizontalGradientOverlay(),
-
-                    if (PlatformInfo.isMobile) ...[
-                      // BOTON DE FINALIZACION:
-                      Positioned(
-                        right: $styles.insets.lg,
-                        bottom: $styles.insets.lg,
-                        child: _buildFinishButton(context),
+                    BottomCenter(
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: $styles.insets.lg),
+                        child: _buildNavText(context),
                       ),
-
-                      BottomCenter(
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: $styles.insets.lg),
-                          child: _buildNavText(context),
-                        ),
-                      ),
-                    ],
+                    ),
                   ],
-                ),
+                ],
               ),
             ),
           ),
@@ -219,7 +203,6 @@ class _WelcomePageState extends State<WelcomePage> {
           duration: $styles.times.fast,
           child: CircleIconBtn(
             icon: AppIconsEnums.next_large,
-            backgroundColor: Theme.of(context).colorScheme.primary,
             onPressed: _handleWelcomeCompletePressed,
             semanticLabel: $strings.welcomeSemanticEnterApp,
           ),
@@ -237,10 +220,10 @@ class _WelcomePageState extends State<WelcomePage> {
           padding: EdgeInsets.only(left: left ? 0 : 200, right: left ? 200 : 0),
           child: Transform.scale(
             scaleX: left ? -1 : 1,
-            child: HorizontalGradient([
+            child: HorizontalGradient(<Color>[
               const Color(0xFF1E1B18).withOpacity(0),
               const Color(0xFF1E1B18),
-            ], const [
+            ], const <double>[
               0,
               .2,
             ]),
@@ -251,7 +234,7 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   Widget _buildNavText(BuildContext context) {
-    return ValueListenableBuilder(
+    return ValueListenableBuilder<int>(
       valueListenable: _currentPage,
       builder: (_, pageIndex, __) {
         return AnimatedOpacity(
@@ -283,7 +266,7 @@ class _Page extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: $styles.insets.md),
         child: Column(
-          children: [
+          children: <Widget>[
             const Spacer(),
             const Gap(
               Constants.kDefaultImageSize + Constants.kDefaultLogoHeight,
@@ -294,11 +277,10 @@ class _Page extends StatelessWidget {
               child: StaticTextScale(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: <Widget>[
                     Text(
                       data.title,
-                      style: $styles.textStyles.eosTitleFont
-                          .copyWith(fontSize: 24 * $styles.scale),
+                      style: $styles.textStyles.eosTitleFont.copyWith(fontSize: 24 * $styles.scale),
                     ),
                     Gap($styles.insets.sm),
                     Text(

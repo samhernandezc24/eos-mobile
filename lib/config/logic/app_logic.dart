@@ -41,8 +41,19 @@ class AppLogic {
       await FlutterDisplayMode.setHighRefreshRate();
     }
 
+    // Configuraciones
+    await settingsLogic.load();
+
     // Marcar bootstrap como completado.
     isBootstrapComplete = true;
+
+    // Load initial view (replace empty initial view which is covered by a native splash screen)
+    final bool showIntro = settingsLogic.hasCompletedOnboarding.value == false;
+    if (showIntro) {
+      appRouter.go('/welcome');
+    } else {
+      appRouter.go(initialDeeplink ?? '/');
+    }
   }
 
   /// Evento de llamado desde la capa UI una vez se ha obtenido un MediaQuery.

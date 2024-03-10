@@ -3,14 +3,16 @@ import 'package:eos_mobile/shared/shared.dart';
 @immutable
 class AppStyles {
   AppStyles({Size? screenSize}) {
+    // Escala de la aplicación basada en el tamaño de la pantalla.
     if (screenSize == null) {
       scale = 1;
       return;
     }
 
-    final shortesSide = screenSize.shortestSide;
-    const tabletXl    = 1000;
-    const tabletLg    = 800;
+    // Determinar la escala basada en el tamaño mas pequeño de la pantalla.
+    final double shortesSide  = screenSize.shortestSide;
+    const int tabletXl        = 1000;
+    const int tabletLg        = 800;
 
     if (shortesSide > tabletXl) {
       scale = 1.2;
@@ -23,18 +25,16 @@ class AppStyles {
 
   late final double scale;
 
-  /// Radios de esquina con bordes redondeados.
-  late final _Corners corners = _Corners();
-
-  /// Valores de los padding y margin.
-  late final _Insets insets = _Insets(scale);
-
-  /// Estilos de los textos.
-  late final _TextStyles textStyles = _TextStyles(scale);
-
-  /// Las velocidades de las duraciones o transiciones
-  /// de la aplicación.
-  final _Times times = _Times();
+  /// Clase para definir radios de esquina con bordes redondeados.
+  late final _Corners corners         = _Corners();
+  /// Clase para definir sombras en elementos.
+  late final _Shadows shadow          = _Shadows();
+  /// Clase para definir valores de padding y margin.
+  late final _Insets insets           = _Insets(scale);
+  /// Clase para definir estilos de texto.
+  late final _TextStyles textStyles   = _TextStyles(scale);
+  /// Clase para definir las velocidades de las animaciones y transiciones en la aplicación.
+  final _Times times                  = _Times();
 }
 
 @immutable
@@ -68,9 +68,9 @@ class _TextStyles {
   late final TextStyle label          = _createFont(contentFont, sizePx: 14, heightPx: 20,  spacingPc: 2);
 
   TextStyle _createFont(TextStyle style, {required double sizePx, double? heightPx, double? spacingPc, FontWeight? weight}) {
-    final scaledSizePx    = sizePx * _scale;
-    final scaledHeightPx  = heightPx != null ? heightPx * _scale : null;
-    final letterSpacing   = spacingPc != null ? scaledSizePx * spacingPc * 0.01 : style.letterSpacing;
+    final double scaledSizePx     = sizePx * _scale;
+    final double? scaledHeightPx  = heightPx != null ? heightPx * _scale : null;
+    final double? letterSpacing   = spacingPc != null ? scaledSizePx * spacingPc * 0.01 : style.letterSpacing;
 
     return style.copyWith(
       fontSize: scaledSizePx,
@@ -83,17 +83,18 @@ class _TextStyles {
 
 @immutable
 class _Times {
-  final Duration fast           = const Duration(milliseconds: 300);
-  final Duration medium         = const Duration(milliseconds: 600);
-  final Duration slow           = const Duration(milliseconds: 900);
-  final Duration pageTransition = const Duration(milliseconds: 200);
+  final Duration fastest          = const Duration(milliseconds: 150);
+  final Duration fast             = const Duration(milliseconds: 250);
+  final Duration medium           = const Duration(milliseconds: 350);
+  final Duration slow             = const Duration(milliseconds: 700);
+  final Duration pageTransition   = const Duration(milliseconds: 200);
 }
 
 @immutable
 class _Corners {
-  late final double sm = 4;
-  late final double md = 8;
-  late final double lg = 32;
+  late final double sm  = 4;
+  late final double md  = 8;
+  late final double lg  = 32;
 }
 
 @immutable
@@ -109,4 +110,19 @@ class _Insets {
   late final double xl      = 48 * _scale;
   late final double xxl     = 56 * _scale;
   late final double offset  = 80 * _scale;
+}
+
+@immutable
+class _Shadows {
+  final List<Shadow> textSoft = <Shadow>[
+    Shadow(color: Colors.black.withOpacity(.25), offset: const Offset(0, 2), blurRadius: 4),
+  ];
+
+  final List<Shadow> text = <Shadow>[
+    Shadow(color: Colors.black.withOpacity(.6), offset: const Offset(0, 2), blurRadius: 2),
+  ];
+
+  final List<Shadow> textStrong = <Shadow>[
+    Shadow(color: Colors.black.withOpacity(.6), offset: const Offset(0, 4), blurRadius: 6),
+  ];
 }

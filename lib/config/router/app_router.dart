@@ -1,12 +1,11 @@
 import 'package:eos_mobile/core/common/pages/errors/error_404_page.dart';
+import 'package:eos_mobile/core/common/pages/welcome/welcome_page.dart';
 import 'package:eos_mobile/features/home/presentation/home_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
 
-final GlobalKey<NavigatorState> _rootNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'root');
-final GlobalKey<NavigatorState> _shellNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shell');
+final GlobalKey<NavigatorState> _rootNavigatorKey   = GlobalKey<NavigatorState>(debugLabel: 'root');
+final GlobalKey<NavigatorState> _shellNavigatorKey  = GlobalKey<NavigatorState>(debugLabel: 'shell');
 
 /// Tabla de enrutamiento, compara las rutas de las cadenas con las pantallas de la UI y,
 /// opcionalmente, analiza los parámetros de las rutas.
@@ -30,18 +29,24 @@ final GoRouter appRouter = GoRouter(
             return const HomePage();
           },
         ),
+        GoRoute(
+          path: '/welcome',
+          builder: (BuildContext context, GoRouterState state) {
+            return const WelcomePage();
+          },
+        ),
       ],
     ),
   ],
-  redirect: (BuildContext context, GoRouterState state) {
-    final bool isAuthenticated;
+  // redirect: (BuildContext context, GoRouterState state) {
+  //   final bool isAuthenticated;
 
-    // if (isAuthenticated) {
-    //   return '/home';
-    // } else {
-    //   return '/login';
-    // }
-  },
+  //   // if (isAuthenticated) {
+  //   //   return '/home';
+  //   // } else {
+  //   //   return '/login';
+  //   // }
+  // },
   // refreshListenable: _loginInfo,
 );
 
@@ -87,6 +92,9 @@ class AppRoute extends GoRoute {
         );
   final bool useFade;
 }
+
+String? get initialDeeplink => _initialDeeplink;
+String? _initialDeeplink;
 
 // final GoRouter appRouter = GoRouter(
 //   navigatorKey: _rootNavigatorKey,
