@@ -3,7 +3,7 @@ import 'package:eos_mobile/shared/shared.dart';
 class AppIcon extends StatelessWidget {
   const AppIcon(this.icon, {super.key, this.size = 22, this.color});
 
-  final AppIconsEnums icon;
+  final AppIcons icon;
   final double size;
   final Color? color;
 

@@ -6,7 +6,6 @@ import 'package:eos_mobile/core/common/widgets/gradient_container.dart';
 import 'package:eos_mobile/core/common/widgets/previous_next_navigation.dart';
 import 'package:eos_mobile/core/common/widgets/static_text_scale.dart';
 import 'package:eos_mobile/core/common/widgets/themed_text.dart';
-import 'package:eos_mobile/core/constants/constants.dart';
 import 'package:eos_mobile/core/utils/haptics_utils.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
@@ -204,7 +203,7 @@ class _WelcomePageState extends State<WelcomePage> {
           opacity: pageIndex == pageData.length - 1 ? 1 : 0,
           duration: $styles.times.fast,
           child: CircleIconBtn(
-            icon: AppIconsEnums.next_large,
+            icon: AppIcons.next_large,
             onPressed: _handleWelcomeCompletePressed,
             semanticLabel: $strings.welcomeSemanticEnterApp,
           ),

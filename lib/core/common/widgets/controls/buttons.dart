@@ -2,7 +2,7 @@ import 'package:eos_mobile/core/common/widgets/app_icons.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 /// Métodos compartidos entre tipos de botones
-Widget _buildIcon(BuildContext context, AppIconsEnums icon,
+Widget _buildIcon(BuildContext context, AppIcons icon,
         {required bool isSecondary, required double? size}) =>
     AppIcon(icon,
         color: isSecondary ? Colors.black : Colors.white, size: size ?? 18);
@@ -43,7 +43,7 @@ class AppBtn extends StatelessWidget {
     this.onFocusChanged,
     String? semanticLabel,
     String? text,
-    AppIconsEnums? icon,
+    AppIcons? icon,
     double? iconSize,
   })  : child = null,
         circular = false {

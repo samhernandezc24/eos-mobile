@@ -56,13 +56,25 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
               textInputAction: TextInputAction.done,
               validator: FormValidators.passwordValidator,
             ),
-            
+
             GestureDetector(
               onTap: () {
                 Navigator.push<void>(
                   context,
-                  MaterialPageRoute<void>(
-                    builder: (context) => const ForgotPasswordPage(),
+                  PageRouteBuilder<void>(
+                    transitionDuration: $styles.times.pageTransition,
+                    pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+                      const Offset begin    = Offset(0, 1);
+                      const Offset end      = Offset.zero;
+                      const Cubic curve     = Curves.ease;
+
+                      final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                      return SlideTransition(
+                        position: animation.drive<Offset>(tween),
+                        child: const ForgotPasswordPage(),
+                      );
+                    },
                   ),
                 );
               },

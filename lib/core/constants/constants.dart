@@ -1,7 +1,7 @@
 class Constants {
   Constants._();
 
-  // Medidas y tamaños para la aplicación
+  // Medidas y tamaños para la aplicación.
   static const double kDefaultSize                  = 48;
 
   static const double kDefaultImageSize             = 250;

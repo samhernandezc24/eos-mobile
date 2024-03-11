@@ -7,8 +7,7 @@ class AppScrollBehavior extends ScrollBehavior {
   // Añade el arrastre del ratón en el escritorio para facilitar el responsive testing.
   @override
   Set<PointerDeviceKind> get dragDevices {
-    final devices = Set<PointerDeviceKind>.from(super.dragDevices);
-    devices.add(PointerDeviceKind.mouse);
+    final devices = Set<PointerDeviceKind>.from(super.dragDevices)..add(PointerDeviceKind.mouse);
     return devices;
   }
 

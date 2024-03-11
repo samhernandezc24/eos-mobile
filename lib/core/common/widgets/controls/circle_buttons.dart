@@ -56,7 +56,7 @@ class CircleIconBtn extends StatelessWidget {
   // TODO(samhernandezc24): Reducir el tamaño si el diseño reexporta imágenes-icono sin padding.
   static double defaultSize = 28;
 
-  final AppIconsEnums icon;
+  final AppIcons icon;
   final VoidCallback? onPressed;
   final BorderSide? border;
   final Color? backgroundColor;
@@ -89,7 +89,7 @@ class CircleIconBtn extends StatelessWidget {
 class BackBtn extends StatelessWidget {
   const BackBtn({
     super.key,
-    this.icon = AppIconsEnums.prev,
+    this.icon = AppIcons.prev,
     this.onPressed,
     this.semanticLabel,
     this.backgroundColor,
@@ -103,7 +103,7 @@ class BackBtn extends StatelessWidget {
     Color? iconColor,
   }) : this(
           key: key,
-          icon: AppIconsEnums.close,
+          icon: AppIcons.close,
           onPressed: onPressed,
           semanticLabel: $strings.circleButtonsSemanticClose,
           backgroundColor: bgColor,
@@ -120,7 +120,7 @@ class BackBtn extends StatelessWidget {
 
   final Color? backgroundColor;
   final Color? iconColor;
-  final AppIconsEnums icon;
+  final AppIcons icon;
   final VoidCallback? onPressed;
   final String? semanticLabel;
 

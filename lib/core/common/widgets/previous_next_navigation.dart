@@ -81,15 +81,15 @@ class _PreviousNextNavigation extends State<PreviousNextNavigation> {
                   child: Row(
                     children: <Widget>[
                       CircleIconBtn(
-                        icon: AppIconsEnums.prev, 
-                        onPressed: widget.onPreviousPressed, 
+                        icon: AppIcons.prev,
+                        onPressed: widget.onPreviousPressed,
                         semanticLabel: 'Anterior',
                         backgroundColor: widget.previousButtonColor,
                       ),
                       const Spacer(),
                       CircleIconBtn(
-                        icon: AppIconsEnums.prev, 
-                        onPressed: widget.onNextPressed, 
+                        icon: AppIcons.prev,
+                        onPressed: widget.onNextPressed,
                         semanticLabel: 'Siguiente',
                         flipIcon: true,
                         backgroundColor: widget.nextButtonColor,

@@ -1,5 +1,5 @@
 // ignore_for_file: constant_identifier_names
-enum AppIconsEnums {
+enum AppIcons {
   close,
   close_large,
   download,
