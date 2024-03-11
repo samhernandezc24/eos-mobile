@@ -47,13 +47,18 @@ class AppLogic {
     // Marcar bootstrap como completado.
     isBootstrapComplete = true;
 
-    // Cargar vista inicial (sustituir la vista inicial vacía que está cubierta 
+    // Cargar vista inicial (sustituir la vista inicial vacía que está cubierta
     // por una pantalla de inicio nativa).
-    final bool showIntro = settingsLogic.hasCompletedOnboarding.value == false;
+    final bool showIntro        = settingsLogic.hasCompletedOnboarding.value == false;
+    final bool isAuthenticated  = settingsLogic.isLoggedIn.value == false;
     if (showIntro) {
       appRouter.go('/welcome');
     } else {
-      appRouter.go(initialDeeplink ?? '/sign-in');
+      if (isAuthenticated) {
+        appRouter.go(initialDeeplink ?? '/sign-in');
+      } else {
+        appRouter.go(initialDeeplink ?? '/home');
+      }
     }
   }
 

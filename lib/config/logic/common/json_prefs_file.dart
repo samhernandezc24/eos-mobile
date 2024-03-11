@@ -15,7 +15,7 @@ class JsonPrefsFile {
   }
 
   Future<void> save(Map<String, dynamic> data) async {
-    print('saving $data');
+    print('Guardando $data');
     await (await SharedPreferences.getInstance()).setString(name, jsonEncode(data));
   }
 }

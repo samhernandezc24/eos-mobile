@@ -33,7 +33,7 @@ dependencies:
   # Widget para bordear con puntos un contenedor en Flutter
   dotted_border: ^2.1.0
 
-  # Widget de búsqueda de Flutter con dropdown  
+  # Widget de búsqueda de Flutter con dropdown
   dropdown_search: ^5.0.6
 
   # Simplifica la comparación de objetos en Dart
@@ -118,7 +118,7 @@ dependencies:
   syncfusion_flutter_signaturepad: ^24.2.9
 
   # Plugin de Flutter para lanzar URL
-  url_launcher: ^6.2.4  
+  url_launcher: ^6.2.4
 
 dev_dependencies:
   flutter_test:
@@ -154,7 +154,7 @@ flutter_native_splash:
 
 # ejecutar: flutter pub run flutter_launcher_icons
 flutter_launcher_icons:
-  image_path: "assets/marketing/app-icon-1024.png"
+  image_path: assets/marketing/app-icon-1024.png
   remove_alpha_ios: true
   android: true
   ios: true

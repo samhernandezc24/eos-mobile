@@ -47,7 +47,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   void _handleSemanticSwipe(int direction) {
     _pageController.animateToPage((_pageController.page ?? 0).round() + direction,
-        duration: $styles.times.fast, 
+        duration: $styles.times.fast,
         curve: Curves.easeOut,
       );
   }
@@ -79,7 +79,7 @@ class _WelcomePageState extends State<WelcomePage> {
     final List<Widget> pages = pageData.map<_Page>((e) => _Page(data: e)).toList();
 
     return DefaultTextColor(
-      color: Theme.of(context).colorScheme.onBackground, 
+      color: Theme.of(context).colorScheme.onBackground,
       child: ColoredBox(
         color: Theme.of(context).colorScheme.background,
         child: SafeArea(
@@ -306,7 +306,7 @@ class _PageImage extends StatelessWidget {
             fit: BoxFit.cover,
             alignment: Alignment.centerRight,
           ),
-        ),        
+        ),
       ],
     );
   }
