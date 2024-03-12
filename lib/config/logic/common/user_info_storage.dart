@@ -5,7 +5,7 @@ import 'package:eos_mobile/shared/shared.dart';
 
 class UserInfoStorage {
   static const _keyId           = 'id';
-  static const _keyUserModel    = 'user';
+  static const _keyUser         = 'user';
   static const _keyPrivilegies  = 'privilegies';
   static const _keyExpiration   = 'expiration';
   static const _keyFoto         = 'foto';
@@ -24,7 +24,7 @@ class UserInfoStorage {
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.setString(_keyId, id);
-    await prefs.setString(_keyUserModel, jsonEncode(user.toJson()));
+    await prefs.setString(_keyUser, jsonEncode(user.toJson()));
     await prefs.setString(_keyPrivilegies, privilegies ?? '');
     await prefs.setString(_keyExpiration, expiration.toIso8601String());
     await prefs.setString(_keyFoto, foto ?? '');
@@ -37,7 +37,7 @@ class UserInfoStorage {
 
     return {
       'id'            : prefs.getString(_keyId),
-      'userModel'     : prefs.getString(_keyUserModel),
+      'user'          : prefs.getString(_keyUser),
       'privilegies'   : prefs.getString(_keyPrivilegies),
       'expiration'    : prefs.getString(_keyExpiration),
       'foto'          : prefs.getString(_keyFoto),
@@ -50,7 +50,7 @@ class UserInfoStorage {
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.remove(_keyId);
-    await prefs.remove(_keyUserModel);
+    await prefs.remove(_keyUser);
     await prefs.remove(_keyPrivilegies);
     await prefs.remove(_keyExpiration);
     await prefs.remove(_keyFoto);

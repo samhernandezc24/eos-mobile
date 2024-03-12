@@ -4,6 +4,7 @@ import 'package:eos_mobile/core/network/data_state.dart';
 import 'package:eos_mobile/features/auth/data/datasources/remote/auth_remote_api_service.dart';
 import 'package:eos_mobile/features/auth/data/models/account_model.dart';
 import 'package:eos_mobile/features/auth/data/models/sign_in_model.dart';
+import 'package:eos_mobile/features/auth/domain/entities/account_entity.dart';
 import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
 import 'package:eos_mobile/features/auth/domain/repositories/auth_repository.dart';
 import 'package:eos_mobile/shared/shared.dart';
@@ -37,5 +38,11 @@ class AuthRepositoryImpl implements AuthRepository {
     } on DioException catch (e) {
       return DataFailed(e);
     }
+  }
+
+  @override
+  Future<DataState<AccountEntity>> refreshToken(SignInEntity signIn) {
+    // TODO: implement refreshToken
+    throw UnimplementedError();
   }
 }

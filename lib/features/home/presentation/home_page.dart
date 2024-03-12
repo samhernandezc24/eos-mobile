@@ -1,6 +1,10 @@
+import 'dart:convert';
+
+import 'package:eos_mobile/config/logic/common/session_manager.dart';
+import 'package:eos_mobile/config/logic/common/user_info_storage.dart';
 import 'package:eos_mobile/core/common/data/modules_data.dart';
+import 'package:eos_mobile/core/common/widgets/avatar_profile_name.dart';
 import 'package:eos_mobile/core/common/widgets/card_view.dart';
-import 'package:eos_mobile/features/auth/presentation/pages/sign_in/sign_in_page.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/pages/index/index_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
@@ -12,9 +16,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final storage = const FlutterSecureStorage();
-  final prefs = SharedPreferences.getInstance();
-
   static List<ModulesData> modulesData = [];
 
   Future<void> _showLogoutConfirmationDialog() async {
@@ -34,7 +35,6 @@ class _HomePageState extends State<HomePage> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                _logout();
               },
               child: const Text('Aceptar'),
             ),
@@ -44,16 +44,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> _logout() async {
-    await storage.deleteAll();
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-    await Navigator.push(
-      context,
-      MaterialPageRoute<void>(
-        builder: (context) => const AuthSignInPage(),
-      ),
-    );
+  Future<void> testTokenExpiration() async {
+    $logger.d('Comprobando la expiracion del token');
+    final sessionManager = SessionManager();
+    await sessionManager.checkTokenExpiration();
+    $logger.i('Comprobacion de la expiracion del token completada.');
   }
 
   @override
@@ -97,7 +92,7 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: testTokenExpiration,
             icon: const Icon(Icons.notifications),
           ),
         ],
@@ -168,7 +163,7 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 // Cerrar el drawer
                 Navigator.pop(context);
-                
+
                 // Actualizar el estado en la app
                 Future.delayed($styles.times.fast, () {
                   Navigator.push(
@@ -186,7 +181,7 @@ class _HomePageState extends State<HomePage> {
               textColor: Theme.of(context).colorScheme.error,
               icon: Icons.logout,
               text: 'Cerrar sesión',
-              onTap: (){},
+              onTap: () {},
               // onTap: _showLogoutConfirmationDialog,
             ),
           ],
@@ -218,30 +213,107 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildDrawerHeader() {
-    return const UserAccountsDrawerHeader(
-      currentAccountPicture: CircleAvatar(
-        backgroundImage: NetworkImage(
-          'https://images.unsplash.com/photo-1584999734482-0361aecad844?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA&ixlib=rb-1.2.1&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=300',
-        ),
-      ),
-      accountEmail: Text(
-        'mauricio.santiago@heavy-lift.com.mx',
-        style: TextStyle(
-          color: Colors.white,
-        ),
-      ),
-      accountName: Text(
-        'Mauricio Santiago',
-        style: TextStyle(
-          color: Colors.white,
-        ),
-      ),
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.fill,
-          image: AssetImage(ImagePaths.background1),
-        ),
-      ),
+    return FutureBuilder<Map<String, String?>>(
+      future: Future<Map<String, String?>>.delayed($styles.times.slow, UserInfoStorage.getUserInfo),
+      builder:
+          (BuildContext context, AsyncSnapshot<Map<String, String?>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return DrawerHeader(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: <Color>[
+                  Theme.of(context).colorScheme.inverseSurface.withOpacity(0.2),
+                  Theme.of(context).colorScheme.inverseSurface.withOpacity(0.3),
+                  Theme.of(context).colorScheme.inverseSurface.withOpacity(0.2),
+                ],
+                stops: const <double>[0, 0.5, 1],
+              ),
+            ),
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey.shade300,
+              highlightColor: Colors.grey.shade100,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    width: 70,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  Gap($styles.insets.xs),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        width: 125,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius:
+                              BorderRadius.circular($styles.insets.sm),
+                        ),
+                      ),
+                      Gap($styles.insets.xs),
+                      Container(
+                        width: 225,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius:
+                              BorderRadius.circular($styles.insets.sm),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return const DrawerHeader(
+            child: Text('Error al cargar la información del usuario'),
+          );
+        } else {
+          final Map<String, dynamic> userObjData = jsonDecode(snapshot.data?['user'] ?? '{}') as Map<String, dynamic>;
+          final String email = userObjData['email'] as String? ?? '';
+          final String name = userObjData['name'] as String? ?? '';
+
+          return UserAccountsDrawerHeader(
+            currentAccountPicture: AvatarProfileName(
+              backgroundColor: Theme.of(context).chipTheme.backgroundColor,
+              child: Text(
+                'A',
+                // 'Mauricio Alejandro Santiago Gonzalez',
+                style: $styles.textStyles.h2.copyWith(color: Colors.white),
+              ),
+            ),
+            accountEmail: Text(
+              email,
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            accountName: Text(
+              name.toProperCase(),
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.fill,
+                image: AssetImage(ImagePaths.background1),
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:eos_mobile/config/logic/common/auth_token_storage.dart';
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:flutter/foundation.dart';
@@ -51,6 +52,7 @@ class AppLogic {
     // por una pantalla de inicio nativa).
     final bool showIntro        = settingsLogic.hasCompletedOnboarding.value == false;
     final bool isAuthenticated  = settingsLogic.isLoggedIn.value == true;
+
     if (showIntro) {
       appRouter.go(ScreenPaths.welcome);
     } else {

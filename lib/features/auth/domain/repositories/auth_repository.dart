@@ -5,4 +5,5 @@ import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
 abstract class AuthRepository {
   /// API METHODS
   Future<DataState<AccountEntity>> signIn(SignInEntity signIn);
+  Future<DataState<AccountEntity>> refreshToken(SignInEntity signIn);
 }

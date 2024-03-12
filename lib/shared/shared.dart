@@ -66,3 +66,6 @@ export 'package:provider/provider.dart';
 
 // SHARED PREFERENCES
 export 'package:shared_preferences/shared_preferences.dart';
+
+// SHIMMER
+export 'package:shimmer/shimmer.dart';
