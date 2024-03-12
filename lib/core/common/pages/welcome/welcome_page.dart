@@ -34,7 +34,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   void _handleWelcomeCompletePressed() {
     if (_currentPage.value == pageData.length - 1) {
-      context.go('/sign-in');
+      context.go(ScreenPaths.signIn);
       settingsLogic.hasCompletedOnboarding.value = true;
     }
   }

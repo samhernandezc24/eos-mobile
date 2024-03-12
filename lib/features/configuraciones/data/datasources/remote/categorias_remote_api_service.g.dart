@@ -13,7 +13,7 @@ class _CategoriasRemoteApiService implements CategoriasRemoteApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://10.0.2.2:7018/api/Inspecciones/Categorias';
+    baseUrl ??= 'http://10.0.2.2:7000/api/Categorias';
   }
 
   final Dio _dio;
@@ -62,7 +62,7 @@ class _CategoriasRemoteApiService implements CategoriasRemoteApiService {
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(idInspeccion.toJson());
-    final _result = await _dio.fetch<Map<String, dynamic>>(
+    final _result = await _dio.fetch<List<dynamic>>(
         _setStreamType<HttpResponse<List<CategoriaModel>>>(Options(
       method: 'POST',
       headers: _headers,
@@ -79,9 +79,9 @@ class _CategoriasRemoteApiService implements CategoriasRemoteApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    List<CategoriaModel> value = _result.data!['result']['inspeccionesCategorias']
-        .map<CategoriaModel>((dynamic i) => CategoriaModel.fromJson(i as Map<String, dynamic>))
-        .toList() as List<CategoriaModel>;
+    var value = _result.data!
+        .map((dynamic i) => CategoriaModel.fromJson(i as Map<String, dynamic>))
+        .toList();
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

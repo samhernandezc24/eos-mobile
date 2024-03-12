@@ -48,16 +48,16 @@ Future<void> initializeDependencies() async {
   // Casos de uso
   ..registerSingleton<SignInUseCase>(SignInUseCase(sl()))
 
-  ..registerSingleton<GetInspeccionesUseCase>(GetInspeccionesUseCase(sl()))
-  ..registerSingleton<CreateInspeccionUseCase>(CreateInspeccionUseCase(sl()))
-  ..registerSingleton<RemoveInspeccionUseCase>(RemoveInspeccionUseCase(sl()))
+  // ..registerSingleton<GetInspeccionesUseCase>(GetInspeccionesUseCase(sl()))
+  // ..registerSingleton<CreateInspeccionUseCase>(CreateInspeccionUseCase(sl()))
+  // ..registerSingleton<RemoveInspeccionUseCase>(RemoveInspeccionUseCase(sl()))
 
   ..registerSingleton<GetCategoriasByIdUseCase>(GetCategoriasByIdUseCase(sl()))
 
   // Blocs
   ..registerFactory<RemoteSignInBloc>(() => RemoteSignInBloc(sl()))
 
-  ..registerFactory<RemoteInspeccionesBloc>(() => RemoteInspeccionesBloc(sl(),sl(),sl()))
+  // ..registerFactory<RemoteInspeccionesBloc>(() => RemoteInspeccionesBloc(sl(),sl(),sl()))
 
   ..registerFactory<RemoteCategoriasBloc>(() => RemoteCategoriasBloc(sl()));
 }

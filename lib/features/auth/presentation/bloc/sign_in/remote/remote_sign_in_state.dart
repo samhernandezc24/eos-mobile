@@ -1,28 +1,30 @@
-import 'package:eos_mobile/features/auth/domain/entities/account_entity.dart';
-import 'package:eos_mobile/shared/shared.dart';
+part of 'remote_sign_in_bloc.dart';
 
-abstract class RemoteSignInState extends Equatable {
-  const RemoteSignInState({this.account, this.failure, });
-
-  final AccountEntity? account;
-  final DioException? failure;
+class RemoteSignInState extends Equatable {
+  const RemoteSignInState();
 
   @override
-  List<Object?> get props => [account, failure];
+  List<Object?> get props => [];
 }
 
-class RemoteSignInInitial extends RemoteSignInState {
-  const RemoteSignInInitial();
-}
+class RemoteSignInInitial extends RemoteSignInState { }
 
-class RemoteSignInLoading extends RemoteSignInState {
-  const RemoteSignInLoading();
-}
+class RemoteSignInLoading extends RemoteSignInState { }
 
 class RemoteSignInSuccess extends RemoteSignInState {
-  const RemoteSignInSuccess(AccountEntity account) : super(account: account);
+  const RemoteSignInSuccess(this.account);
+
+  final AccountEntity? account;
+
+  @override
+  List<Object?> get props => [ account ];
 }
 
 class RemoteSignInFailure extends RemoteSignInState {
-  const RemoteSignInFailure(DioException failure) : super(failure: failure);
+  const RemoteSignInFailure(this.failure);
+
+  final DioException? failure;
+
+  @override
+  List<Object?> get props => [ failure ];
 }

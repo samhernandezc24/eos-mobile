@@ -1,12 +1,13 @@
+import 'package:flutter/foundation.dart';
+
 class ListAPI {
   ListAPI._();
 
-  /// BASE URLs: Developer Mode
-  static const String androidEmulatorHost = 'http://10.0.2.2';
-  static const String localhost           = 'http://localhost';
+  static const String releaseModeUrl  = 'http://35.193.90.143:7000';
+  static const String debugModeUrl    = 'http://10.0.2.2:7000';
 
-  /// API.GATEWAY
-  static const String apiBaseUrl      = '$androidEmulatorHost:7000';
+  static const String baseUrl         = kReleaseMode ? releaseModeUrl : debugModeUrl;
+  static const String apiBaseUrl      = baseUrl;
 
   /// ASPNETUSER
   static const String aspNetUser      = '$apiBaseUrl/api/AspNetUser';

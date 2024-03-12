@@ -52,12 +52,12 @@ class AppLogic {
     final bool showIntro        = settingsLogic.hasCompletedOnboarding.value == false;
     final bool isAuthenticated  = settingsLogic.isLoggedIn.value == false;
     if (showIntro) {
-      appRouter.go('/welcome');
+      appRouter.go(ScreenPaths.welcome);
     } else {
       if (isAuthenticated) {
-        appRouter.go(initialDeeplink ?? '/sign-in');
+        appRouter.go(initialDeeplink ?? ScreenPaths.signIn);
       } else {
-        appRouter.go(initialDeeplink ?? '/home');
+        appRouter.go(initialDeeplink ?? ScreenPaths.home);
       }
     }
   }

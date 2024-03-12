@@ -18,8 +18,8 @@ class ConfiguracionInspeccionPage extends StatefulWidget {
 class _ConfiguracionInspeccionPageState extends State<ConfiguracionInspeccionPage> {
 
   Future<void> refresh() async {
-    BlocProvider.of<RemoteInspeccionesBloc>(context)
-        .add(const RefreshInspecciones());
+    // BlocProvider.of<RemoteInspeccionesBloc>(context)
+    //     .add(const RefreshInspecciones());
   }
 
   @override
@@ -39,114 +39,115 @@ class _ConfiguracionInspeccionPageState extends State<ConfiguracionInspeccionPag
   }
 
   Widget _buildBody() {
-    return BlocBuilder<RemoteInspeccionesBloc, RemoteInspeccionesState>(
-      builder: (_, state) {
-        if (state is RemoteInspeccionesLoading) {
-          return Center(
-            child: LoadingIndicator(
-              color: Theme.of(context).primaryColor,
-              strokeWidth: 2,
-            ),
-          );
-        }
+    return Container();
+    // return BlocBuilder<RemoteInspeccionesBloc, RemoteInspeccionesState>(
+    //   builder: (_, state) {
+    //     if (state is RemoteInspeccionesLoading) {
+    //       return Center(
+    //         child: LoadingIndicator(
+    //           color: Theme.of(context).primaryColor,
+    //           strokeWidth: 2,
+    //         ),
+    //       );
+    //     }
 
-        if (state is RemoteInspeccionesFailure) {
-          final jsonResponse = state.failure?.response?.data as Map<String, dynamic>?;
-          final errorMessage = jsonResponse != null ? jsonResponse['message'] : 'Ha ocurrido un error inesperado.';
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('$errorMessage'),
-                const Gap(30),
-                FilledButton(
-                  onPressed: refresh,
-                  child: const Text('Reintentar'),
-                ),
-              ],
-            ),
-          );
-        }
+    //     if (state is RemoteInspeccionesFailure) {
+    //       final jsonResponse = state.failure?.response?.data as Map<String, dynamic>?;
+    //       final errorMessage = jsonResponse != null ? jsonResponse['message'] : 'Ha ocurrido un error inesperado.';
+    //       return Center(
+    //         child: Column(
+    //           mainAxisAlignment: MainAxisAlignment.center,
+    //           children: [
+    //             Text('$errorMessage'),
+    //             const Gap(30),
+    //             FilledButton(
+    //               onPressed: refresh,
+    //               child: const Text('Reintentar'),
+    //             ),
+    //           ],
+    //         ),
+    //       );
+    //     }
 
-        if (state is RemoteInspeccionesDone) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Container(
-                height: 100,
-                alignment: Alignment.center,
-                color: Theme.of(context).highlightColor,
-                child: FilledButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (BuildContext context) {
-                          return const BasicModal(
-                            title: 'Nueva Inspección',
-                            child: CreateInspeccionForm(),
-                          );
-                        },
-                        fullscreenDialog: true,
-                      ),
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.add,
-                    size: 16,
-                  ),
-                  label: const Text(
-                    'Crear inspección',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Listado de Inspecciones',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      'Crea una inspección para agrupar las inspecciones de unidades.',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Theme.of(context).hintColor,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: refresh,
-                  child: ListView.separated(
-                    itemBuilder: (BuildContext context, int index) {
-                      return InspeccionTile(
-                        inspeccion: state.inspecciones![index],
-                      );
-                    },
-                    itemCount: state.inspecciones!.length,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const Divider();
-                    },
-                  ),
-                ),
-              ),
-            ],
-          );
-        }
-        return const SizedBox();
-      },
-    );
+    //     if (state is RemoteInspeccionesDone) {
+    //       return Column(
+    //         crossAxisAlignment: CrossAxisAlignment.stretch,
+    //         children: <Widget>[
+    //           Container(
+    //             height: 100,
+    //             alignment: Alignment.center,
+    //             color: Theme.of(context).highlightColor,
+    //             child: FilledButton.icon(
+    //               onPressed: () {
+    //                 Navigator.of(context).push(
+    //                   MaterialPageRoute<void>(
+    //                     builder: (BuildContext context) {
+    //                       return const BasicModal(
+    //                         title: 'Nueva Inspección',
+    //                         child: CreateInspeccionForm(),
+    //                       );
+    //                     },
+    //                     fullscreenDialog: true,
+    //                   ),
+    //                 );
+    //               },
+    //               icon: const Icon(
+    //                 Icons.add,
+    //                 size: 16,
+    //               ),
+    //               label: const Text(
+    //                 'Crear inspección',
+    //                 style: TextStyle(
+    //                   fontWeight: FontWeight.w600,
+    //                 ),
+    //               ),
+    //             ),
+    //           ),
+    //           Container(
+    //             padding:
+    //                 const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+    //             child: Column(
+    //               crossAxisAlignment: CrossAxisAlignment.start,
+    //               children: [
+    //                 const Text(
+    //                   'Listado de Inspecciones',
+    //                   style: TextStyle(
+    //                     fontSize: 18,
+    //                     fontWeight: FontWeight.w500,
+    //                   ),
+    //                 ),
+    //                 Text(
+    //                   'Crea una inspección para agrupar las inspecciones de unidades.',
+    //                   style: TextStyle(
+    //                     fontSize: 14,
+    //                     color: Theme.of(context).hintColor,
+    //                     fontWeight: FontWeight.w500,
+    //                   ),
+    //                 ),
+    //               ],
+    //             ),
+    //           ),
+    //           Expanded(
+    //             child: RefreshIndicator(
+    //               onRefresh: refresh,
+    //               child: ListView.separated(
+    //                 itemBuilder: (BuildContext context, int index) {
+    //                   return InspeccionTile(
+    //                     inspeccion: state.inspecciones![index],
+    //                   );
+    //                 },
+    //                 itemCount: state.inspecciones!.length,
+    //                 separatorBuilder: (BuildContext context, int index) {
+    //                   return const Divider();
+    //                 },
+    //               ),
+    //             ),
+    //           ),
+    //         ],
+    //       );
+    //     }
+    //     return const SizedBox();
+    //   },
+    // );
   }
 }

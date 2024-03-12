@@ -2,10 +2,9 @@ import 'package:eos_mobile/config/themes/app_theme.dart';
 import 'package:eos_mobile/core/dependency_injection/injection_container.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/remote/remote_sign_in_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/categorias/remote/remote_categorias_bloc.dart';
-import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_bloc.dart';
-import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspecciones/remote/remote_inspecciones_event.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:provider/single_child_widget.dart';
 
 Future<void> main() async {
   final WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -31,21 +30,21 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
+      providers: <SingleChildWidget>[
         BlocProvider<RemoteSignInBloc>(
-          create: (context) => sl<RemoteSignInBloc>(),
+          create: (BuildContext context) => sl<RemoteSignInBloc>(),
         ),
-        BlocProvider<RemoteInspeccionesBloc>(
-          create: (context) =>
-              sl<RemoteInspeccionesBloc>()..add(
-                const GetInspecciones(),
-              ),
-        ),
+        // BlocProvider<RemoteInspeccionesBloc>(
+        //   create: (BuildContext context) =>
+        //       sl<RemoteInspeccionesBloc>()..add(
+        //         const GetInspecciones(),
+        //       ),
+        // ),
         BlocProvider<RemoteCategoriasBloc>(
-          create: (context) => sl<RemoteCategoriasBloc>(),
+          create: (BuildContext context) => sl<RemoteCategoriasBloc>(),
         ),
       ],
-      
+
       child: MaterialApp.router(
         title: 'EOS Mobile',
         debugShowCheckedModeBanner: false,
@@ -62,7 +61,7 @@ class MainApp extends StatelessWidget {
 
 /// Agregar syntactic sugar para acceder rápidamente a los principales controladores
 /// "lógicos" de la aplicación.
-/// 
+///
 /// Deliberadamente no se crean shortcuts para los servicios, para desalentar su uso
 /// directamente en la capa de presentación.
 AppLogic get appLogic             =>  sl<AppLogic>();

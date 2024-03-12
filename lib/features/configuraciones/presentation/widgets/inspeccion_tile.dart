@@ -19,8 +19,8 @@ class InspeccionTile extends StatelessWidget {
     BuildContext context,
     InspeccionReqEntity inspeccion,
   ) {
-    BlocProvider.of<RemoteInspeccionesBloc>(context)
-        .add(RemoveInspeccion(inspeccion));
+    // BlocProvider.of<RemoteInspeccionesBloc>(context)
+    //     .add(RemoveInspeccion(inspeccion));
   }
 
   @override

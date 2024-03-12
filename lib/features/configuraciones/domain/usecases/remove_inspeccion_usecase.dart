@@ -4,13 +4,13 @@ import 'package:eos_mobile/core/usecases/usecase.dart';
 import 'package:eos_mobile/features/configuraciones/domain/entities/inspecciones_req_entity.dart';
 import 'package:eos_mobile/features/configuraciones/domain/repositories/inspeccion_repository.dart';
 
-class RemoveInspeccionUseCase implements UseCase<DataState<ApiResponseEntity>, InspeccionReqEntity> {
-  RemoveInspeccionUseCase(this._inspeccionRepository);
+// class RemoveInspeccionUseCase implements UseCase<DataState<ApiResponseEntity>, InspeccionReqEntity> {
+//   RemoveInspeccionUseCase(this._inspeccionRepository);
 
-  final InspeccionRepository _inspeccionRepository;
+//   final InspeccionRepository _inspeccionRepository;
 
-  @override
-  Future<DataState<ApiResponseEntity>> call({InspeccionReqEntity? params}) {
-    return _inspeccionRepository.removeInspeccion(params!);
-  }
-}
+//   @override
+//   Future<DataState<ApiResponseEntity>> call({InspeccionReqEntity? params}) {
+//     return _inspeccionRepository.removeInspeccion(params!);
+//   }
+// }

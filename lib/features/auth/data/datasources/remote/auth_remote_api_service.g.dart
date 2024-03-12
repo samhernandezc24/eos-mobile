@@ -13,7 +13,7 @@ class _AuthRemoteApiService implements AuthRemoteApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://10.0.2.2:7001/api/AspNetUser';
+    baseUrl ??= 'http://10.0.2.2:7000/api/AspNetUser';
   }
 
   final Dio _dio;
@@ -46,34 +46,6 @@ class _AuthRemoteApiService implements AuthRemoteApiService {
             ))));
     final value = AccountModel.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<void>> signOut(String token) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'authorization': token};
-    _headers.removeWhere((k, v) => v == null);
-    const Map<String, dynamic>? _data = null;
-    final _result =
-        await _dio.fetch<void>(_setStreamType<HttpResponse<void>>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/Logout',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final httpResponse = HttpResponse(null, _result);
     return httpResponse;
   }
 

@@ -9,6 +9,6 @@ class SignInUseCase {
   final AuthRepository _authRepository;
 
   Future<DataState<AccountEntity>> call(SignInEntity signIn) async {
-    return await _authRepository.signIn(signIn);
+    return _authRepository.signIn(signIn);
   }
 }

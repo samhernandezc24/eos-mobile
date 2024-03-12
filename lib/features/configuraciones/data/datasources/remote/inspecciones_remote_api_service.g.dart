@@ -13,7 +13,7 @@ class _InspeccionesRemoteApiService implements InspeccionesRemoteApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://10.0.2.2:7018/api/Inspecciones/Tipos';
+    baseUrl ??= 'http://10.0.2.2:7000/api/Inspecciones/Tipos';
   }
 
   final Dio _dio;
@@ -28,7 +28,7 @@ class _InspeccionesRemoteApiService implements InspeccionesRemoteApiService {
     final _headers = <String, dynamic>{r'authorization': token};
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
+    final _result = await _dio.fetch<List<dynamic>>(
         _setStreamType<HttpResponse<List<InspeccionModel>>>(Options(
       method: 'POST',
       headers: _headers,
@@ -45,9 +45,9 @@ class _InspeccionesRemoteApiService implements InspeccionesRemoteApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    List<InspeccionModel> value = _result.data!['result']['inspecciones']
-        .map<InspeccionModel>((dynamic i) => InspeccionModel.fromJson(i as Map<String, dynamic>))
-        .toList() as List<InspeccionModel>;
+    var value = _result.data!
+        .map((dynamic i) => InspeccionModel.fromJson(i as Map<String, dynamic>))
+        .toList();
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
