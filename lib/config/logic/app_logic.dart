@@ -33,7 +33,7 @@ class AppLogic {
 
   /// Inicializa la aplicación y toda la lógica de negocio.
   Future<void> bootstrap() async {
-    debugPrint('bootstrap start...');
+    $logger.d('Bootstrap start 🚀');
 
     // Ajustar la frecuencia de refresh deseada al máximo posible
     // (el sistema operativo puede ignorar esto).
@@ -50,12 +50,12 @@ class AppLogic {
     // Cargar vista inicial (sustituir la vista inicial vacía que está cubierta
     // por una pantalla de inicio nativa).
     final bool showIntro        = settingsLogic.hasCompletedOnboarding.value == false;
-    final bool isAuthenticated  = settingsLogic.isLoggedIn.value == false;
+    final bool isAuthenticated  = settingsLogic.isLoggedIn.value == true;
     if (showIntro) {
       appRouter.go(ScreenPaths.welcome);
     } else {
-      if (isAuthenticated) {
-        appRouter.go(initialDeeplink ?? ScreenPaths.signIn);
+      if (!isAuthenticated) {
+        appRouter.go(initialDeeplink ?? ScreenPaths.authSignIn);
       } else {
         appRouter.go(initialDeeplink ?? ScreenPaths.home);
       }

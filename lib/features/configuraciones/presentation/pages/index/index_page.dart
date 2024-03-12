@@ -24,6 +24,13 @@ class _ConfiguracionIndexPageState extends State<ConfiguracionIndexPage> {
             fontWeight: FontWeight.w600,
           ),
         ),
+        leading: GestureDetector(
+          child: Icon(
+            Icons.arrow_back, color: Colors.black,  ),
+          onTap: () {
+            Navigator.pop(context);
+          } ,
+        ),
         actions: <Widget>[
           PopupMenuButton(
             icon: const Icon(

@@ -26,6 +26,12 @@ class _InspeccionIndexPageState extends State<InspeccionIndexPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Índice de Inspecciones',
+          style: $styles.textStyles.h3,
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: ListView.separated(
@@ -37,36 +43,57 @@ class _InspeccionIndexPageState extends State<InspeccionIndexPage> {
               onTap: () {
                 switch (index) {
                   case 0:
-                    GoRouter.of(context).go('/home/inspecciones/list');
+                    context.go('/home/inspecciones/list');
                   case 1:
-                    GoRouter.of(context)
-                        .go('/home/inspecciones/conrequerimiento');
+                    context.go('/home/inspecciones/conrequerimiento');
                   case 2:
-                    showGeneralDialog<void>(
-                      transitionBuilder: (context, animation, secondaryAnimation, child) {
-                        final double scale = Curves.easeInOut.transform(animation.value);
-                        final double opacity = Curves.easeInOut.transform(animation.value);
-                        return Opacity(
-                          opacity: opacity,
-                          child: Transform.scale(
-                            scale: scale,
-                            child: child,
-                          ),
-                        );
-                      },
-                      transitionDuration: $styles.times.fast,
-                      context: context,
-                      pageBuilder: (context, animation, secondaryAnimation) {
-                        return const Center(
-                          child: Dialog(
-                            insetPadding: EdgeInsets.zero,
-                            child: InspeccionUnidadSinRequerimientoPage(),
-                          ),
-                        );
-                      },
+                    Navigator.push<void>(
+                      context,
+                      PageRouteBuilder<void>(
+                        transitionDuration: $styles.times.pageTransition,
+                        pageBuilder: (BuildContext context,
+                            Animation<double> animation,
+                            Animation<double> secondaryAnimation) {
+                          const Offset begin = Offset(0, 1);
+                          const Offset end = Offset.zero;
+                          const Cubic curve = Curves.ease;
+
+                          final Animatable<Offset> tween =
+                              Tween<Offset>(begin: begin, end: end)
+                                  .chain(CurveTween(curve: curve));
+
+                          return SlideTransition(
+                            position: animation.drive<Offset>(tween),
+                            child: const InspeccionUnidadSinRequerimientoPage(),
+                          );
+                        },
+                      ),
                     );
+                    // showGeneralDialog<void>(
+                    //   transitionBuilder: (context, animation, secondaryAnimation, child) {
+                    //     final double scale = Curves.easeInOut.transform(animation.value);
+                    //     final double opacity = Curves.easeInOut.transform(animation.value);
+                    //     return Opacity(
+                    //       opacity: opacity,
+                    //       child: Transform.scale(
+                    //         scale: scale,
+                    //         child: child,
+                    //       ),
+                    //     );
+                    //   },
+                    //   transitionDuration: $styles.times.fast,
+                    //   context: context,
+                    //   pageBuilder: (context, animation, secondaryAnimation) {
+                    //     return const Center(
+                    //       child: Dialog(
+                    //         insetPadding: EdgeInsets.zero,
+                    //         child: InspeccionUnidadSinRequerimientoPage(),
+                    //       ),
+                    //     );
+                    //   },
+                    // );
                   case 3:
-                    GoRouter.of(context).go('/home/inspecciones/searchunidad');
+                    context.go('/home/inspecciones/searchunidad');
                 }
               },
               leading: itemIcons[index],

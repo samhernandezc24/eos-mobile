@@ -13,6 +13,12 @@ class _InspeccionSearchUnidadPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Buscar Unidad',
+          style: $styles.textStyles.h3,
+        ),
+      ),
       body: Container(),
     );
   }

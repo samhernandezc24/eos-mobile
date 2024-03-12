@@ -13,6 +13,12 @@ class _InspeccionUnidadConRequerimientoPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Unidades con Requerimientos',
+          style: $styles.textStyles.h3,
+        ),
+      ),
       body: Container(),
     );
   }
