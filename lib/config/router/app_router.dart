@@ -44,7 +44,7 @@ final GoRouter appRouter = GoRouter(
       },
       routes: <RouteBase>[
         AppRoute(ScreenPaths.splash, 'splash', (_) => Container()),    // Esto se ocultará
-        AppRoute(ScreenPaths.home, 'home', (_) => const HomePage()),
+        AppRoute(ScreenPaths.home, 'home', (_) => const HomePage(), showAppBar: true),
         AppRoute(ScreenPaths.signIn, 'signIn', (_) => const AuthSignInPage()),
         AppRoute(ScreenPaths.welcome, 'welcome', (_) => const WelcomePage()),
       ],
@@ -60,12 +60,14 @@ class AppRoute extends GoRoute {
     Widget Function(GoRouterState s) builder, {
     List<GoRoute> routes = const <GoRoute>[],
     this.useFade = false,
+    this.showAppBar = false,
   }) : super(
           path: path,
           name: name,
           routes: routes,
           pageBuilder: (BuildContext context, GoRouterState state) {
             final Scaffold pageContent = Scaffold(
+              appBar: showAppBar ? AppBar(title: Text('wfwefwef'),) : null,
               body: builder(state),
               resizeToAvoidBottomInset: false,
             );
@@ -93,6 +95,7 @@ class AppRoute extends GoRoute {
           },
         );
   final bool useFade;
+  final bool showAppBar;
 }
 
 String? get initialDeeplink => _initialDeeplink;
