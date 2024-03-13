@@ -30,6 +30,8 @@ class _HomePageState extends State<HomePage> {
     // Definiendo el color de los iconos al primario.
     final Color moduleIconColor = Theme.of(context).primaryColor;
 
+    int currentPageIndex = 0;
+
     // Establecer los módulos de la aplicación.
     modulesData = [
       ModulesData(
@@ -59,6 +61,18 @@ class _HomePageState extends State<HomePage> {
     ];
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'EOS Mobile',
+          style: $styles.textStyles.h3,
+        ),
+        actions: [
+          IconButton(
+            onPressed: testTokenExpiration,
+            icon: const Icon(Icons.notifications),
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
@@ -92,6 +106,21 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: NavigationBar(
+        destinations: const <NavigationDestination>[
+          NavigationDestination(icon: Icon(Icons.home), label: 'Inicio'),
+          NavigationDestination(icon: Icon(Icons.dashboard), label: 'Dashboard'),
+          NavigationDestination(icon: Icon(Icons.format_list_bulleted), label: 'Actividad'),
+          NavigationDestination(icon: Icon(Icons.account_circle), label: 'Cuenta'),
+        ],
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+          _navigateToPage(index);
+        },
+        selectedIndex: currentPageIndex,
       ),
       drawer: Drawer(
         child: ListView(
@@ -152,9 +181,23 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _navigateToPage(int index) {
+    switch (index) {
+      case 0:
+        GoRouter.of(context).go(ScreenPaths.home);
+      case 1:
+        GoRouter.of(context).go(ScreenPaths.dashboard);
+      case 2:
+        GoRouter.of(context).go(ScreenPaths.actividad);
+      case 3:
+        GoRouter.of(context).go(ScreenPaths.cuenta);
+    }
+  }
+
   Widget _buildDrawerHeader() {
     return FutureBuilder<Map<String, String?>>(
-      future: Future<Map<String, String?>>.delayed($styles.times.slow, UserInfoStorage.getUserInfo),
+      future: Future<Map<String, String?>>.delayed(
+          $styles.times.slow, UserInfoStorage.getUserInfo),
       builder:
           (BuildContext context, AsyncSnapshot<Map<String, String?>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -220,7 +263,9 @@ class _HomePageState extends State<HomePage> {
             child: Text('Error al cargar la información del usuario'),
           );
         } else {
-          final Map<String, dynamic> userObjData = jsonDecode(snapshot.data?['user'] ?? '{}') as Map<String, dynamic>;
+          final Map<String, dynamic> userObjData =
+              jsonDecode(snapshot.data?['user'] ?? '{}')
+                  as Map<String, dynamic>;
           final String email = userObjData['email'] as String? ?? '';
           final String name = userObjData['name'] as String? ?? '';
 

@@ -55,21 +55,8 @@ final GoRouter appRouter = GoRouter(
     /// Application Shell
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
-      builder: (BuildContext context, GoRouterState state, Widget child) {
-        final String? routeName = GoRouterState.of(context).topRoute?.name;
-        final String title = switch (routeName) {
-          'home'                                => 'EOS Mobile',
-          'dashboard'                           => 'Dashboard',
-          'actividad'                           => 'Actividad',
-          'cuenta'                              => 'Cuenta',
-          'home.inspecciones'                   => 'Índice de Inspecciones',
-          'home.inspecciones.list'              => 'Lista de Inspecciones',
-          'home.inspecciones.conrequerimiento'  => 'Unidades con Requerimientos',
-          'home.inspecciones.searchunidad'      => 'Buscar Unidad',
-          _                                     => 'Empty Page',
-        };
-
-        return AppScaffold(title: title, child: child);
+      builder: (BuildContext context, GoRouterState state, Widget navigator) {
+        return AppScaffold(child: navigator);
       },
       routes: <RouteBase>[
         AppRoute(ScreenPaths.splash, 'splash', (_) => Container()),
@@ -126,10 +113,8 @@ class AppRoute extends GoRoute {
           name: name,
           routes: routes,
           pageBuilder: (BuildContext context, GoRouterState state) {
-            final Scaffold pageContent = Scaffold(
-              body: builder(state),
-              resizeToAvoidBottomInset: false,
-            );
+            final Widget pageContent = builder(state);
+
             if (useFade) {
               return CustomTransitionPage<void>(
                 key: state.pageKey,
