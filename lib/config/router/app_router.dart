@@ -1,6 +1,9 @@
 import 'package:eos_mobile/core/common/pages/errors/error_404_page.dart';
 import 'package:eos_mobile/core/common/pages/welcome/welcome_page.dart';
+import 'package:eos_mobile/features/actividad/actividad_page.dart';
 import 'package:eos_mobile/features/auth/presentation/pages/sign_in/sign_in_page.dart';
+import 'package:eos_mobile/features/cuenta/cuenta_profile_page.dart';
+import 'package:eos_mobile/features/dashboard/dashboard_page.dart';
 import 'package:eos_mobile/features/home/presentation/home_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/pages/index/index_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/pages/list/list_page.dart';
@@ -16,6 +19,9 @@ class ScreenPaths {
   static String welcome                       = '/welcome';
   static String authSignIn                    = '/sign-in';
   static String home                          = '/home';
+  static String dashboard                     = '/dashboard';
+  static String actividad                     = '/actividad';
+  static String cuenta                        = '/cuenta';
   
   static String inspecciones                  = 'inspecciones';
   static String inspeccionesList              = 'list';
@@ -85,6 +91,9 @@ final GoRouter appRouter = GoRouter(
             ),
           ],
         ),
+        AppRoute(ScreenPaths.dashboard, 'dashboard', (_) => const DashboardPage()),
+        AppRoute(ScreenPaths.actividad, 'actividad', (_) => const ActividadPage()),
+        AppRoute(ScreenPaths.cuenta, 'cuenta', (_) => const CuentaProfilePage()),
       ],
     ),
   ],

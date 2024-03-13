@@ -1,7 +1,7 @@
 import 'package:eos_mobile/shared/shared.dart';
 
-class ActividadesPage extends StatelessWidget {
-  const ActividadesPage({super.key});
+class CuentaProfilePage extends StatelessWidget {
+  const CuentaProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
