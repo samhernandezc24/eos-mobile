@@ -18,32 +18,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   static List<ModulesData> modulesData = [];
 
-  Future<void> _showLogoutConfirmationDialog() async {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Cerrar sesión'),
-          content: const Text(
-            '¿Está seguro que desea cerrar la sesión?',
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Aceptar'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   Future<void> testTokenExpiration() async {
     $logger.d('Comprobando la expiracion del token');
     final sessionManager = SessionManager();
@@ -85,18 +59,6 @@ class _HomePageState extends State<HomePage> {
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'EOS Mobile',
-          style: $styles.textStyles.h3,
-        ),
-        actions: [
-          IconButton(
-            onPressed: testTokenExpiration,
-            icon: const Icon(Icons.notifications),
-          ),
-        ],
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
@@ -139,12 +101,12 @@ class _HomePageState extends State<HomePage> {
             _buildDrawerItem(
               icon: Icons.home,
               text: 'Inicio',
-              onTap: () => {},
+              onTap: () => context.go('/home'),
             ),
             _buildDrawerItem(
               icon: Icons.dashboard,
               text: 'Dashboard',
-              onTap: () => {},
+              onTap: () => context.go('/dashboard'),
             ),
             _buildDrawerItem(
               icon: Icons.format_list_bulleted,
@@ -186,28 +148,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: NavigationBar(
-        destinations: const <NavigationDestination>[
-          NavigationDestination(
-            icon: Icon(Icons.home),
-            label: 'Inicio',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.format_list_bulleted),
-            label: 'Actividad',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.account_circle),
-            label: 'Cuenta',
-          ),
-        ],
-        // selectedIndex: widget.navigationShell.currentIndex,
-        // onDestinationSelected: (int index) => _onTap(context, index),
       ),
     );
   }

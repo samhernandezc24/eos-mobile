@@ -1,28 +1,23 @@
+import 'package:eos_mobile/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
 
 class PageRoutesUtils {
-  static const Duration kDefaultDuration = Duration(milliseconds: 300);
-
-  static Route<T> dialog<T>(
-    Widget child, {
-    Duration duration = kDefaultDuration,
-    bool opaque = false,
-  }) {
-    // Utilizar las rutas de Cupertino en todos los diálogos para obtener 
-    // el comportamiento "deslizar a la derecha para volver".
+  static Route<T> dialog<T>(Widget child, {Duration duration = Constants.kDefaultDuration, bool opaque = false}) {
+    // Utilizar las rutas de Cupertino en todos los diálogos para obtener el comportamiento
+    // "deslizar a la derecha para volver".
     if (opaque) {
-      return CupertinoPageRoute(builder: (_) => child);
+      return CupertinoPageRoute<T>(builder: (_) => child);
     }
 
-    // SB: Elimina esto en favor de las rutas de Cupertino, podríamos 
-    // restaurar con una opción `useFade`.
-    return PageRouteBuilder(
+    // SB: Eliminar esto en favor de las rutas de Cupertino, podríamos restaurar con una opción `useFade`.
+    // Aún no estoy seguro si esto sería viable o al menos útil.
+    return PageRouteBuilder<T>(
       transitionDuration: duration,
       reverseTransitionDuration: duration,
-      pageBuilder: (context, animation, secondaryAnimation) => child,
+      pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) => child,
       opaque: opaque,
       fullscreenDialog: true,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+      transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) =>
           FadeTransition(opacity: animation, child: child),
     );
   }

@@ -22,11 +22,13 @@ class ScreenPaths {
   static String dashboard                     = '/dashboard';
   static String actividad                     = '/actividad';
   static String cuenta                        = '/cuenta';
-  
+
   static String inspecciones                  = 'inspecciones';
   static String inspeccionesList              = 'list';
   static String inspeccionesConRequerimiento  = 'conrequerimiento';
   static String inspeccionesSearchUnidad      = 'searchunidad';
+
+  /// Dynamically nested pages, always added on to the existing path
 
   static String _appendToCurrentPath(String newPath) {
     final Uri newPathUri = Uri.parse(newPath);
@@ -48,14 +50,26 @@ final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   redirect: _handleRedirect,
   debugLogDiagnostics: true,
-  errorPageBuilder: (BuildContext context, GoRouterState state) =>
-      const MaterialPage<dynamic>(child: Error404Page()),
+  errorPageBuilder: (BuildContext context, GoRouterState state) => const MaterialPage<dynamic>(child: Error404Page()),
   routes: <RouteBase>[
     /// Application Shell
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
-      builder: (BuildContext context, GoRouterState state, Widget navigator) {
-        return AppScaffold(child: navigator);
+      builder: (BuildContext context, GoRouterState state, Widget child) {
+        final String? routeName = GoRouterState.of(context).topRoute?.name;
+        final String title = switch (routeName) {
+          'home'                                => 'EOS Mobile',
+          'dashboard'                           => 'Dashboard',
+          'actividad'                           => 'Actividad',
+          'cuenta'                              => 'Cuenta',
+          'home.inspecciones'                   => 'Índice de Inspecciones',
+          'home.inspecciones.list'              => 'Lista de Inspecciones',
+          'home.inspecciones.conrequerimiento'  => 'Unidades con Requerimientos',
+          'home.inspecciones.searchunidad'      => 'Buscar Unidad',
+          _                                     => 'Empty Page',
+        };
+
+        return AppScaffold(title: title, child: child);
       },
       routes: <RouteBase>[
         AppRoute(ScreenPaths.splash, 'splash', (_) => Container()),
@@ -67,24 +81,24 @@ final GoRouter appRouter = GoRouter(
           (_) => const HomePage(),
           routes: <GoRoute>[
             AppRoute(
-              ScreenPaths.inspecciones, 
+              ScreenPaths.inspecciones,
               'home.inspecciones',
               (_) => const InspeccionIndexPage(),
               useFade: true,
               routes: <GoRoute>[
                 AppRoute(
-                  ScreenPaths.inspeccionesList, 
-                  'home.inspecciones.list', 
+                  ScreenPaths.inspeccionesList,
+                  'home.inspecciones.list',
                   (_) => const InspeccionListPage(),
                 ),
                 AppRoute(
-                  ScreenPaths.inspeccionesConRequerimiento, 
-                  'home.inspecciones.conrequerimiento', 
+                  ScreenPaths.inspeccionesConRequerimiento,
+                  'home.inspecciones.conrequerimiento',
                   (_) => const InspeccionUnidadConRequerimientoPage(),
                 ),
                 AppRoute(
-                  ScreenPaths.inspeccionesSearchUnidad, 
-                  'home.inspecciones.searchunidad', 
+                  ScreenPaths.inspeccionesSearchUnidad,
+                  'home.inspecciones.searchunidad',
                   (_) => const InspeccionSearchUnidadPage(),
                 ),
               ],

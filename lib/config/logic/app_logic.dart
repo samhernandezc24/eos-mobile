@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:eos_mobile/config/logic/common/auth_token_storage.dart';
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
+import 'package:eos_mobile/core/utils/page_routes_utils.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
@@ -59,9 +60,21 @@ class AppLogic {
       if (!isAuthenticated) {
         appRouter.go(initialDeeplink ?? ScreenPaths.authSignIn);
       } else {
-        appRouter.go(initialDeeplink ?? ScreenPaths.home);
+        final authToken = await AuthTokenStorage.getAuthToken();
+        if (authToken == null) {
+          appRouter.go(initialDeeplink ?? ScreenPaths.authSignIn);
+          settingsLogic.isLoggedIn.value = false;
+        } else {
+          appRouter.go(initialDeeplink ?? ScreenPaths.home);
+        }
       }
     }
+  }
+
+  Future<T?> showFullscreenDialogRoute<T>(BuildContext context, Widget child, {bool transparent = false}) async {
+    return Navigator.of(context).push<T>(
+      PageRoutesUtils.dialog<T>(child, duration: $styles.times.pageTransition),
+    );
   }
 
   /// Evento de llamado desde la capa UI una vez se ha obtenido un MediaQuery.

@@ -8,4 +8,6 @@ class Constants {
   static const double kDefaultLogoHeight            = 126;
   static const double kDefaultTextHeight            = 110;
   static const double kDefaultPageIndicatorHeight   = 55;
+
+  static const Duration kDefaultDuration            = Duration(milliseconds: 300);
 }
