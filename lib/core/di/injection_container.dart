@@ -6,6 +6,7 @@ import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/remote/remote
 import 'package:eos_mobile/features/configuraciones/data/datasources/remote/inspeccion_tipo_api_service.dart';
 import 'package:eos_mobile/features/configuraciones/data/repositories/inspeccion_tipo_repository_impl.dart';
 import 'package:eos_mobile/features/configuraciones/domain/repositories/inspeccion_tipo_repository.dart';
+import 'package:eos_mobile/features/configuraciones/domain/usecases/create_inspeccion_tipo.dart';
 import 'package:eos_mobile/features/configuraciones/domain/usecases/fetch_inspeccion_tipo.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/shared/shared.dart';
@@ -38,9 +39,10 @@ Future<void> initializeDependencies() async {
   ..registerSingleton<SignInUseCase>(SignInUseCase(sl()))
 
   ..registerSingleton<FetchInspeccionTipoUseCase>(FetchInspeccionTipoUseCase(sl()))
+  ..registerSingleton<CreateInspeccionTipoUseCase>(CreateInspeccionTipoUseCase(sl()))
 
   // Blocs
   ..registerFactory<RemoteSignInBloc>(() => RemoteSignInBloc(sl()))
 
-  ..registerFactory<RemoteInspeccionTipoBloc>(() => RemoteInspeccionTipoBloc(sl()));
+  ..registerFactory<RemoteInspeccionTipoBloc>(() => RemoteInspeccionTipoBloc(sl(), sl()));
 }

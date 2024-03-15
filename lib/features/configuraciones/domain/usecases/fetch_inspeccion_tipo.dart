@@ -9,7 +9,7 @@ class FetchInspeccionTipoUseCase implements UseCase<DataState<List<InspeccionTip
   final InspeccionTipoRepository _inspeccionTipoRepository;
 
   @override
-  Future<DataState<List<InspeccionTipoEntity>>> call(NoParams params) {
+  Future<DataState<List<InspeccionTipoEntity>>> call(NoParams params) async {
     return _inspeccionTipoRepository.fetchInspeccionesTipos();
   }
 }
