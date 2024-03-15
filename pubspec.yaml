@@ -90,6 +90,12 @@ dependencies:
   # Renderiza animaciones de After Effects en Flutter
   lottie: ^3.0.0
 
+  # Base de datos local persistente NoSQL
+  objectbox: ^2.5.1
+
+  # Plugin de ObjectBox para trabajar con Flutter
+  objectbox_flutter_libs: any
+
   # Abre archivos con resultados de cadenas en Flutter
   open_file: ^3.3.2
 
@@ -134,6 +140,9 @@ dev_dependencies:
 
   # Genera código convertido a JSON
   json_serializable: ^6.6.2
+
+  # Generador de ObjectBox
+  objectbox_generator: any
 
   # Generador de retrofit
   retrofit_generator: ^8.1.0

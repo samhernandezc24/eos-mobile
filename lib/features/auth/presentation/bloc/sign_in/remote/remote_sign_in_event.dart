@@ -7,7 +7,7 @@ sealed class RemoteSignInEvent extends Equatable {
   List<Object> get props => [];
 }
 
-final class SignInSubmitted extends RemoteSignInEvent {
+class SignInSubmitted extends RemoteSignInEvent {
   const SignInSubmitted(this.signIn);
 
   final SignInEntity signIn;

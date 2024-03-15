@@ -15,54 +15,57 @@ class _AuthSignInPageState extends State<AuthSignInPage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    return SizedBox(
-      height: size.height,
-      child: Stack(
-        children: <Widget>[
-          ClipPath(
-            clipper: WaveClipper(),
-            child: Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.only(bottom: 450),
-              color: Theme.of(context).primaryColor.withOpacity(.8),
-              height: 220,
-            ),
-          ),
-          ClipPath(
-            clipper: WaveClipper(reverse: true),
-            child: Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.only(bottom: 50),
-              color: Theme.of(context).primaryColor.withOpacity(.6),
-              height: 180,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Gap(size.height * .2),
-                  
-                  const EOSMobileLogo(width: 96),
-
-                  Gap($styles.insets.md),
-
-                  Text(
-                    $strings.signInTitleHeading,
-                    style: $styles.textStyles.h1.copyWith(fontSize: 30, fontWeight: FontWeight.w600),
-                  ),
-
-                  Gap($styles.insets.md),
-
-                  // FORMULARIO DE INICIO DE SESIÓN
-                  const AuthSignInForm(),
-                ],
+    return Scaffold(
+      body: SizedBox(
+        height: size.height,
+        child: Stack(
+          children: <Widget>[
+            ClipPath(
+              clipper: WaveClipper(),
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(bottom: 450),
+                color: Theme.of(context).primaryColor.withOpacity(.8),
+                height: 220,
               ),
             ),
-          ),
-        ],
+            ClipPath(
+              clipper: WaveClipper(reverse: true),
+              child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(bottom: 50),
+                color: Theme.of(context).primaryColor.withOpacity(.6),
+                height: 180,
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Gap(size.height * .2),
+
+                    const EOSMobileLogo(width: 96),
+
+                    Gap($styles.insets.md),
+
+                    Text(
+                      $strings.signInTitleHeading,
+                      style: $styles.textStyles.h1
+                          .copyWith(fontSize: 30, fontWeight: FontWeight.w600),
+                    ),
+
+                    Gap($styles.insets.md),
+
+                    // FORMULARIO DE INICIO DE SESIÓN
+                    const AuthSignInForm(),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

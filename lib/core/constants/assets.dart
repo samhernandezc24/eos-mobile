@@ -10,6 +10,7 @@ class ImagePaths {
   static const String appLogo       = '$logo/app-logo.png';
 
   static const String crane         = '$root/pages/crane.png';
+  static const String circleVehicle = '$root/pages/circle_vehicle_config.png';
 
   static const String background1   = '$backgrounds/background-001.jpg';
 

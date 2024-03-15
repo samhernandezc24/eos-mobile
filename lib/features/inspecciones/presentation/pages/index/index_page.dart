@@ -1,4 +1,4 @@
-import 'package:eos_mobile/features/inspecciones/presentation/pages/unidad_sin_requerimiento/unidad_sin_requerimiento_page.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/pages/unidad_sin_requerimiento/unidad_sin_requerimiento_finish_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class InspeccionIndexPage extends StatefulWidget {
@@ -64,7 +64,7 @@ class _InspeccionIndexPageState extends State<InspeccionIndexPage> {
 
                           return SlideTransition(
                             position: animation.drive<Offset>(tween),
-                            child: const InspeccionUnidadSinRequerimientoPage(),
+                            child: const InspeccionUnidadSinRequerimientoFinishPage(),
                           );
                         },
                       ),

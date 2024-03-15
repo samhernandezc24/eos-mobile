@@ -31,7 +31,9 @@ class SessionManager {
         $logger..w('El token ha expirado: $expiration')
         ..w('Token expirado: $value');
       } else if (diffInSeconds <= 600) {
-        $logger.i('La sesión está a punto de expirar, ingrese la contraseña para renovar o seleccione cancelar.');
+        $logger..i('La sesión está a punto de expirar, ingrese la contraseña para renovar o seleccione cancelar.')
+        ..d('tiempo restante para la expiracion del token: ${diffInSeconds ~/ 60} minutos.')
+        ..d('tiempo restante para la expiracion del token: $diffInSeconds segundos.');
       } else {
         $logger..d('el token todavia tiene tiempo antes de expirar.')
         ..d('tiempo restante para la expiracion del token: ${diffInSeconds ~/ 60} minutos.')

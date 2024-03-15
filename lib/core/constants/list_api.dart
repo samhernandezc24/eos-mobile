@@ -9,14 +9,11 @@ class ListAPI {
   static const String apiBaseUrl      = kReleaseMode ? releaseModeUrl : debugModeUrl;
 
   /// ASPNETUSER
-  static const String aspNetUser      = '$apiBaseUrl/api/AspNetUser';
-
+  static const String aspNetUser          = '$apiBaseUrl/api/AspNetUser';
   /// INSPECCIONES TIPOS
-  static const String inspecciones    = '$apiBaseUrl/api/Inspecciones/Tipos';
-
-  /// CATEGORIAS (INSPECCIONES)
-  static const String categorias      = '$apiBaseUrl/api/Categorias';
-
-  /// CATEGORIAS ITEMS (INSPECCIONES)
-  static const String categoriasItems = '$apiBaseUrl/api/Categorias/Items';
+  static const String inspeccionesTipos   = '$apiBaseUrl/api/Inspecciones/Tipos';
+  /// CATEGORIAS (INSPECCIONES TIPOS)
+  static const String categorias          = '$apiBaseUrl/api/Inspecciones/Tipos/Categorias';
+  /// CATEGORIAS ITEMS (INSPECCIONES TIPOS)
+  static const String categoriasItems     = '$apiBaseUrl/api/Inspecciones/Tipos/Categorias/Items';
 }

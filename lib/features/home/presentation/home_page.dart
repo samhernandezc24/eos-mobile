@@ -1,11 +1,15 @@
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:eos_mobile/config/logic/common/session_manager.dart';
 import 'package:eos_mobile/config/logic/common/user_info_storage.dart';
 import 'package:eos_mobile/core/common/data/modules_data.dart';
 import 'package:eos_mobile/core/common/widgets/avatar_profile_name.dart';
 import 'package:eos_mobile/core/common/widgets/card_view.dart';
+import 'package:eos_mobile/core/network/dio_connectivity_request_retrier.dart';
+import 'package:eos_mobile/core/network/retry_interceptor.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/pages/index/index_page.dart';
+// import 'package:eos_mobile/features/configuraciones/presentation/pages/index/index_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class HomePage extends StatefulWidget {
@@ -110,9 +114,12 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: NavigationBar(
         destinations: const <NavigationDestination>[
           NavigationDestination(icon: Icon(Icons.home), label: 'Inicio'),
-          NavigationDestination(icon: Icon(Icons.dashboard), label: 'Dashboard'),
-          NavigationDestination(icon: Icon(Icons.format_list_bulleted), label: 'Actividad'),
-          NavigationDestination(icon: Icon(Icons.account_circle), label: 'Cuenta'),
+          NavigationDestination(
+              icon: Icon(Icons.dashboard), label: 'Dashboard'),
+          NavigationDestination(
+              icon: Icon(Icons.format_list_bulleted), label: 'Actividad'),
+          NavigationDestination(
+              icon: Icon(Icons.account_circle), label: 'Cuenta'),
         ],
         onDestinationSelected: (int index) {
           setState(() {
@@ -156,11 +163,11 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pop(context);
 
                 // Actualizar el estado en la app
-                Future.delayed($styles.times.fast, () {
+                Future.delayed($styles.times.pageTransition, () {
                   Navigator.push(
                     context,
                     MaterialPageRoute<void>(
-                      builder: (context) => const ConfiguracionIndexPage(),
+                      builder: (context) => const ConfiguracionesIndexPage(),
                     ),
                   );
                 });
