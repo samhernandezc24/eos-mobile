@@ -1,7 +1,7 @@
 import 'package:eos_mobile/config/themes/app_theme.dart';
-import 'package:eos_mobile/core/dependency_injection/injection_container.dart';
+import 'package:eos_mobile/core/di/injection_container.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/remote/remote_sign_in_bloc.dart';
-// import 'package:eos_mobile/features/configuraciones/presentation/bloc/categorias/remote/remote_categorias_bloc.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/single_child_widget.dart';
@@ -34,15 +34,10 @@ class MainApp extends StatelessWidget {
         BlocProvider<RemoteSignInBloc>(
           create: (BuildContext context) => sl<RemoteSignInBloc>(),
         ),
-        // BlocProvider<RemoteInspeccionesBloc>(
-        //   create: (BuildContext context) =>
-        //       sl<RemoteInspeccionesBloc>()..add(
-        //         const GetInspecciones(),
-        //       ),
-        // ),
-        // BlocProvider<RemoteCategoriasBloc>(
-        //   create: (BuildContext context) => sl<RemoteCategoriasBloc>(),
-        // ),
+        BlocProvider<RemoteInspeccionTipoBloc>(
+          create: (BuildContext context) => sl<RemoteInspeccionTipoBloc>()
+              ..add(const FetcInspeccionesTipos()),
+        ),
       ],
 
       child: MaterialApp.router(

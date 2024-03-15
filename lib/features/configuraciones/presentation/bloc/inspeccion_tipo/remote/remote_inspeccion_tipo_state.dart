@@ -14,7 +14,7 @@ class RemoteInspeccionTipoLoading extends RemoteInspeccionTipoState { }
 class RemoteInspeccionTipoDone extends RemoteInspeccionTipoState {
   const RemoteInspeccionTipoDone(this.inspeccionesTipos);
 
-  final List<InspeccionTipoEntity> inspeccionesTipos;
+  final List<InspeccionTipoEntity>? inspeccionesTipos;
 
   @override
   List<Object?> get props => [ inspeccionesTipos ];
