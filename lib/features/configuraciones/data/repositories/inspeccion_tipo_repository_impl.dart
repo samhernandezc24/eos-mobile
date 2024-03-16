@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
 import 'package:eos_mobile/core/network/errors/failures.dart';
 import 'package:eos_mobile/features/configuraciones/data/datasources/remote/inspeccion_tipo_api_service.dart';
@@ -14,46 +13,44 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
 
   final InspeccionTipoApiService _inspeccionTipoApiService;
 
-  final _secureStorage = const FlutterSecureStorage();
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   @override
   Future<Either<Failure, DataState<List<InspeccionTipoModel>>>> fetchInspeccionesTipos() async {
     try {
       final String? retrieveToken = await _secureStorage.read(key: 'access_token');
-      final httpResponse  = await _inspeccionTipoApiService.fetchInspeccionesTipos(
+      final httpResponse = await _inspeccionTipoApiService.fetchInspeccionesTipos(
         'Bearer $retrieveToken',
         'application/json',
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        final ApiResponse apiResponse = httpResponse.data;
-        final Map<String, dynamic>? resultMap = apiResponse.result as Map<String, dynamic>?;
-
-        final List<dynamic> lstResult =
-            resultMap!['inspeccionesTipos'] as List<dynamic>;
+        final Map<String, dynamic>? resultMap = httpResponse.data.result as Map<String, dynamic>?;
+        final List<dynamic> lstResult         = resultMap!['inspeccionesTipos'] as List<dynamic>;
 
         final List<InspeccionTipoModel> objInspeccionesTipos = lstResult
-            .map<InspeccionTipoModel>((dynamic json) =>
-                InspeccionTipoModel.fromJson(json as Map<String, dynamic>))
-            .toList();
+            .map<InspeccionTipoModel>(
+              (dynamic json) =>
+                  InspeccionTipoModel.fromJson(json as Map<String, dynamic>),
+            ).toList();
 
-        return Right(DataSuccess(objInspeccionesTipos));
+        return Right(DataSuccess(objInspeccionesTipos));        
       } else {
         return Left(
           ServerFailure(
-            dataFailed: DataFailed(
+            dataFailed: DataFailed<DioException>(
               DioException(
-                error: httpResponse.response.statusMessage,
-                response: httpResponse.response,
-                type: DioExceptionType.badResponse,
-                requestOptions: httpResponse.response.requestOptions,
+                error           : httpResponse.response.statusMessage,
+                response        : httpResponse.response,
+                type            : DioExceptionType.badResponse,
+                requestOptions  : httpResponse.response.requestOptions,
               ),
             ),
           ),
         );
       }
-    } on DioException catch (e) {
-      return Left(ServerFailure(dataFailed: DataFailed(e)));
+    } on DioException catch (ex) {
+      return Left(ServerFailure(dataFailed: DataFailed(ex)));
     }
   }
   //   if (await isconnected) {
