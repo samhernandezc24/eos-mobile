@@ -1,22 +1,32 @@
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_req_entity.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
-class CreateInspeccionTipoForm extends StatefulWidget {
-  const CreateInspeccionTipoForm({Key? key}) : super(key: key);
+class UpdateInspeccionTipoForm extends StatefulWidget {
+  const UpdateInspeccionTipoForm({Key? key, this.inspeccionTipo}) : super(key: key);
+
+  final InspeccionTipoEntity? inspeccionTipo;
 
   @override
-  State<CreateInspeccionTipoForm> createState() =>
-      _CreateInspeccionTipoFormState();
+  State<UpdateInspeccionTipoForm> createState() => _UpdateInspeccionTipoFormState();
 }
 
-class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
+class _UpdateInspeccionTipoFormState extends State<UpdateInspeccionTipoForm> {
   // LISTENERS
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _folioController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _correoController = TextEditingController();
+  late TextEditingController _folioController;
+  late TextEditingController _nameController;
+  late TextEditingController _correoController;
+
+  @override
+  void initState() {
+    _folioController = TextEditingController(text: widget.inspeccionTipo?.folio ?? '');
+    _nameController = TextEditingController(text: widget.inspeccionTipo?.name ?? '');
+    _correoController = TextEditingController(text: widget.inspeccionTipo?.correo ?? '');
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -27,7 +37,7 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
     super.dispose();
   }
 
-  void _handleCreateInspeccionTipoSubmitted() {
+  void _handleUpdateInspeccionTipoSubmitted() {
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -37,13 +47,14 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
       );
     } else {
       final inspeccionTipoData = InspeccionTipoReqEntity(
+        idInspeccionTipo: widget.inspeccionTipo?.idInspeccionTipo,
         folio: _folioController.text,
         name: _nameController.text,
         correo: _correoController.text,
       );
       context
           .read<RemoteInspeccionTipoBloc>()
-          .add(CreateInspeccionTipo(inspeccionTipoData));
+          .add(UpdateInspeccionTipo(inspeccionTipoData));
     }
   }
 
@@ -57,7 +68,7 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
             ..showSnackBar(
               SnackBar(
                 content: Text(
-                  state.failure?.response?.data.toString() ?? 'Ha ocurrido un error al crear el tipo de inspección.',
+                  state.failure?.response?.data.toString() ?? 'Ha ocurrido un error al actualizar el tipo de inspección.',
                 ),
                 backgroundColor: Theme.of(context).colorScheme.error,
               ),
@@ -139,10 +150,10 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
 
                 Gap($styles.insets.lg),
 
-                // CREAR TIPO DE INSPECCIÓN BOTON:
-                _CreateInspeccionTipoButton(
-                  handleCreateInspeccionTipoSubmitted:
-                      _handleCreateInspeccionTipoSubmitted,
+                // ACTUALIZAR TIPO DE INSPECCIÓN BOTON:
+                _UpdateInspeccionTipoButton(
+                  handleUpdateInspeccionTipoSubmitted:
+                      _handleUpdateInspeccionTipoSubmitted,
                 ),
               ],
             ),
@@ -153,13 +164,13 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
   }
 }
 
-class _CreateInspeccionTipoButton extends StatelessWidget {
-  const _CreateInspeccionTipoButton({
-    required this.handleCreateInspeccionTipoSubmitted,
+class _UpdateInspeccionTipoButton extends StatelessWidget {
+  const _UpdateInspeccionTipoButton({
+    required this.handleUpdateInspeccionTipoSubmitted,
     Key? key,
   }) : super(key: key);
 
-  final VoidCallback handleCreateInspeccionTipoSubmitted;
+  final VoidCallback handleUpdateInspeccionTipoSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +192,7 @@ class _CreateInspeccionTipoButton extends StatelessWidget {
                 ),
               )
             : FilledButton(
-                onPressed: handleCreateInspeccionTipoSubmitted,
+                onPressed: handleUpdateInspeccionTipoSubmitted,
                 style: const ButtonStyle(
                   minimumSize: MaterialStatePropertyAll(
                     Size(double.infinity, 48),

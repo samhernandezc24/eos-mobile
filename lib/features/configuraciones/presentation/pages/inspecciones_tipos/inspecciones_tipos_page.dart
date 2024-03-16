@@ -1,31 +1,18 @@
 import 'package:eos_mobile/core/common/widgets/controls/basic_modal.dart';
+import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/widgets/create_inspeccion_tipo_form.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/widgets/inspeccion_tipo_tile.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class ConfiguracionesInspeccionesTiposPage extends StatefulWidget {
   const ConfiguracionesInspeccionesTiposPage({super.key});
 
   @override
-  State<ConfiguracionesInspeccionesTiposPage> createState() =>
-      _ConfiguracionesInspeccionesTiposPageState();
+  State<ConfiguracionesInspeccionesTiposPage> createState() => _ConfiguracionesInspeccionesTiposPageState();
 }
 
-class _ConfiguracionesInspeccionesTiposPageState
-    extends State<ConfiguracionesInspeccionesTiposPage> {
-  final List<String> _inspeccionesTipos = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _generateFakeInspeccionesTipos();
-  }
-
-  void _generateFakeInspeccionesTipos() {
-    for (int i = 0; i < 20; i++) {
-      _inspeccionesTipos.add('Inspeccion Tipo $i');
-    }
-  }
-
+class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesInspeccionesTiposPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +31,7 @@ class _ConfiguracionesInspeccionesTiposPageState
             color: Theme.of(context).colorScheme.background,
             child: FilledButton.icon(
               onPressed: () {
-                Navigator.of(context).push(
+                Navigator.of(context).push<void>(
                   MaterialPageRoute<void>(
                     builder: (BuildContext context) {
                       return const BasicModal(
@@ -84,71 +71,101 @@ class _ConfiguracionesInspeccionesTiposPageState
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
-                return Future<void>.delayed($styles.times.slow);
+                BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(const FetcInspeccionesTipos());
               },
-              child: ListView.separated(
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      child: Image.asset(
-                        ImagePaths.circleVehicle,
-                      ),
-                    ),
-                    title: Text(
-                      _inspeccionesTipos[index],
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: const Text('Folio: INST-24-000001'),
-                    onTap: () {},
-                    trailing: IconButton(
-                      icon: const Icon(Icons.more_vert),
-                      onPressed: () {
-                        showModalBottomSheet<void>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Container(
-                              padding: EdgeInsets.symmetric(vertical: $styles.insets.sm),
-                              height: 250,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text(
-                                    'Folio: INST-24-000001',
-                                    textAlign: TextAlign.center,
-                                    style: $styles.textStyles.h3,
-                                  ),
-                                  Gap($styles.insets.sm),
-                                  ListTile(
-                                    leading: const Icon(Icons.add),
-                                    title: const Text('Crear categoría'),
-                                    onTap: (){},
-                                  ),
-                                  ListTile(
-                                    leading: const Icon(Icons.edit),
-                                    title: const Text('Editar'),
-                                    onTap: (){},
-                                  ),
-                                   ListTile(
-                                    textColor: Theme.of(context).colorScheme.error,
-                                    iconColor: Theme.of(context).colorScheme.error,
-                                    leading: const Icon(Icons.delete),
-                                    title: const Text('Eliminar'),
-                                    onTap: (){},
-                                  ),
-                                ],
+              child: BlocBuilder<RemoteInspeccionTipoBloc, RemoteInspeccionTipoState>(
+                builder: (BuildContext context, RemoteInspeccionTipoState state) {
+                  if (state is RemoteInspeccionTipoInitial) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.info_outline,
+                              color: Theme.of(context).colorScheme.secondary,
+                              size: 64,
+                            ),
+                            Gap($styles.insets.sm),
+                            Text(
+                              'Aún no hay tipos de inspecciones registrados.',
+                              textAlign: TextAlign.center,
+                              style: $styles.textStyles.h4,
+                            ),
+                            Gap($styles.insets.md),
+                            FilledButton(
+                              onPressed: () {
+                                BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(const FetcInspeccionesTipos());
+                              },
+                              child: Text(
+                                'Actualizar página',
+                                style: $styles.textStyles.button,
                               ),
-                            );
-                          },
-                        );
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  if (state is RemoteInspeccionTipoLoading) {
+                    return Center(
+                      child: LoadingIndicator(
+                        color: Theme.of(context).primaryColor,
+                        strokeWidth: 2,
+                      ),
+                    );
+                  }
+
+                  if (state is RemoteInspeccionTipoFailure) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.error_outline,
+                              color: Theme.of(context).colorScheme.error,
+                              size: 64,
+                            ),
+                            Gap($styles.insets.xxs),
+                            Text('Oops, algo salió mal...', style: $styles.textStyles.h4),
+                            Gap($styles.insets.xxs),
+                            Text(
+                              '${state.failure!.message}',
+                              textAlign: TextAlign.center,
+                              style: $styles.textStyles.bodySmall,
+                            ),
+                            Gap($styles.insets.md),
+                            FilledButton(
+                              onPressed: () {
+                                BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(const FetcInspeccionesTipos());
+                              },
+                              child: Text(
+                                'Volver a intentar',
+                                style: $styles.textStyles.button,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  if (state is RemoteInspeccionTipoDone) {
+                    return ListView.separated(
+                      itemBuilder: (BuildContext context, int index) {
+                        return InspeccionTipoTile(inspeccionTipo: state.inspeccionesTipos![index]);
                       },
-                    ),
-                  );
+                      separatorBuilder: (BuildContext context, int index) => const Divider(),
+                      itemCount: state.inspeccionesTipos!.length,
+                    );
+                  }
+
+                  return const SizedBox();
                 },
-                separatorBuilder: (BuildContext context, int index) =>
-                    const Divider(),
-                itemCount: _inspeccionesTipos.length,
               ),
             ),
           ),

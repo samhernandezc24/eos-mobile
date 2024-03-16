@@ -4,7 +4,7 @@ class ApiResponse extends ApiResponseEntity {
   const ApiResponse({
     required bool session,
     required bool action,
-    required List<dynamic> result,
+    required dynamic result,
     required String title,
     required String message,
     required String code,
@@ -23,7 +23,7 @@ class ApiResponse extends ApiResponseEntity {
     return ApiResponse(
       session   : jsonMap['session'] as bool,
       action    : jsonMap['action'] as bool,
-      result    : jsonMap['result'] as List<dynamic>,
+      result    : jsonMap['result'] as dynamic,
       title     : jsonMap['title'] as String,
       message   : jsonMap['message'] as String,
       code      : jsonMap['code'] as String,
@@ -56,7 +56,7 @@ class ApiResponseEntity extends Equatable {
 
   final bool session;
   final bool action;
-  final List<dynamic> result;
+  final dynamic result;
   final String title;
   final String message;
   final String code;

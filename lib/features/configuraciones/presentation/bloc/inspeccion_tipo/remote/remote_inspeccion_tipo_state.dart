@@ -14,10 +14,28 @@ class RemoteInspeccionTipoLoading extends RemoteInspeccionTipoState { }
 class RemoteInspeccionTipoDone extends RemoteInspeccionTipoState {
   const RemoteInspeccionTipoDone(this.inspeccionesTipos);
 
-  final List<InspeccionTipoEntity> inspeccionesTipos;
+  final List<InspeccionTipoEntity>? inspeccionesTipos;
 
   @override
   List<Object?> get props => [ inspeccionesTipos ];
+}
+
+class RemoteInspeccionTipoCreateDone extends RemoteInspeccionTipoState {
+  const RemoteInspeccionTipoCreateDone(this.apiResponse);
+
+  final ApiResponse apiResponse;
+
+  @override
+  List<Object?> get props => [ apiResponse ];
+}
+
+class RemiteInspeccionTipoFailedMessage extends RemoteInspeccionTipoState {
+  const RemiteInspeccionTipoFailedMessage(this.errorMessage);
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [ errorMessage ];
 }
 
 class RemoteInspeccionTipoFailure extends RemoteInspeccionTipoState {

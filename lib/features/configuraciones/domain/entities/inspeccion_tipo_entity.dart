@@ -9,12 +9,14 @@ class InspeccionTipoEntity extends Equatable {
     required this.idInspeccionTipo,
     required this.folio,
     required this.name,
+    this.correo,
   });
 
   final String idInspeccionTipo;
   final String folio;
   final String name;
+  final String? correo;
 
   @override
-  List<Object?> get props => [ idInspeccionTipo, folio, name ];
+  List<Object?> get props => [ idInspeccionTipo, folio, name, correo ];
 }
