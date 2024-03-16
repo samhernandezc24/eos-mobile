@@ -20,8 +20,8 @@ class RemoteInspeccionTipoDone extends RemoteInspeccionTipoState {
   List<Object?> get props => [ inspeccionesTipos ];
 }
 
-class RemoteInspeccionTipoCreateDone extends RemoteInspeccionTipoState {
-  const RemoteInspeccionTipoCreateDone(this.apiResponse);
+class RemoteInspeccionResponseDone extends RemoteInspeccionTipoState {
+  const RemoteInspeccionResponseDone(this.apiResponse);
 
   final ApiResponse apiResponse;
 

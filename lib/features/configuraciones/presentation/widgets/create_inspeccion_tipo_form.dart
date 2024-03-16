@@ -41,9 +41,7 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
         name: _nameController.text,
         correo: _correoController.text,
       );
-      context
-          .read<RemoteInspeccionTipoBloc>()
-          .add(CreateInspeccionTipo(inspeccionTipoData));
+      context.read<RemoteInspeccionTipoBloc>().add(CreateInspeccionTipo(inspeccionTipoData));
     }
   }
 
@@ -83,7 +81,7 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
           context.read<RemoteInspeccionTipoBloc>().add(const FetcInspeccionesTipos());
         }
 
-        if (state is RemoteInspeccionTipoCreateDone) {
+        if (state is RemoteInspeccionResponseDone) {
           ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(

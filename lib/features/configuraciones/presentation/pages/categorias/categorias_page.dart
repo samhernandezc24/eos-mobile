@@ -1,24 +1,28 @@
 import 'package:eos_mobile/core/common/widgets/controls/basic_modal.dart';
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_req_entity.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/widgets/categoria_tile.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/widgets/create_inspeccion_tipo_form.dart';
-import 'package:eos_mobile/features/configuraciones/presentation/widgets/inspeccion_tipo_tile.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
-class ConfiguracionesInspeccionesTiposPage extends StatefulWidget {
-  const ConfiguracionesInspeccionesTiposPage({super.key});
+class ConfiguracionesCategoriasPage extends StatefulWidget {
+  const ConfiguracionesCategoriasPage({Key? key, this.idInspeccionTipo}) : super(key: key);
+
+  final InspeccionTipoReqEntity? idInspeccionTipo;
 
   @override
-  State<ConfiguracionesInspeccionesTiposPage> createState() => _ConfiguracionesInspeccionesTiposPageState();
+  State<ConfiguracionesCategoriasPage> createState() => _ConfiguracionesCategoriasPageState();
 }
 
-class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesInspeccionesTiposPage> {
+class _ConfiguracionesCategoriasPageState extends State<ConfiguracionesCategoriasPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Configuración de Inspecciones',
+          'Configuración de Categorías',
           style: $styles.textStyles.h3,
         ),
       ),
@@ -35,7 +39,7 @@ class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesIn
                   MaterialPageRoute<void>(
                     builder: (BuildContext context) {
                       return const BasicModal(
-                        title: 'Nuevo Tipo de Inspección',
+                        title: 'Nueva Categoría',
                         child: CreateInspeccionTipoForm(),
                       );
                     },
@@ -45,7 +49,7 @@ class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesIn
               },
               icon: const Icon(Icons.add),
               label: Text(
-                'Crear Tipo Inspección',
+                'Crear Categoría',
                 style: $styles.textStyles.button,
               ),
             ),
@@ -56,13 +60,13 @@ class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesIn
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'Listado de Tipos de Inspecciones',
+                  'Listado de Categorías',
                   style: $styles.textStyles.title1
                       .copyWith(fontWeight: FontWeight.w600),
                 ),
                 Gap($styles.insets.xxs),
                 Text(
-                  'Crear un tipo de inspección para agrupar los formularios de las inspecciones.',
+                  'Crear categorías para agrupar los formularios de las inspecciones.',
                   style: $styles.textStyles.bodySmall.copyWith(height: 1.5),
                 ),
               ],
@@ -71,11 +75,16 @@ class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesIn
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
-                BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(const FetcInspeccionesTipos());
+                BlocProvider.of<RemoteCategoriaBloc>(context)
+                  .add(
+                      FetchCategoriasByIdInspeccionTipo(
+                      InspeccionTipoReqEntity(idInspeccionTipo: '40be6681-6b71-4b3f-9ce6-7c02f37009b8'),
+                    ),
+                  );
               },
-              child: BlocBuilder<RemoteInspeccionTipoBloc, RemoteInspeccionTipoState>(
-                builder: (BuildContext context, RemoteInspeccionTipoState state) {
-                  if (state is RemoteInspeccionTipoInitial) {
+              child: BlocBuilder<RemoteCategoriaBloc, RemoteCategoriaState>(
+                builder: (BuildContext context, RemoteCategoriaState state) {
+                  if (state is RemoteCategoriaInitial) {
                     return Center(
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg),
@@ -89,14 +98,18 @@ class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesIn
                             ),
                             Gap($styles.insets.sm),
                             Text(
-                              'Aún no hay tipos de inspecciones registrados.',
+                              'Aún no hay categorías registradas.',
                               textAlign: TextAlign.center,
                               style: $styles.textStyles.h4,
                             ),
                             Gap($styles.insets.md),
                             FilledButton(
                               onPressed: () {
-                                BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(const FetcInspeccionesTipos());
+                                BlocProvider.of<RemoteCategoriaBloc>(context)
+                                  .add(FetchCategoriasByIdInspeccionTipo(
+                                    InspeccionTipoReqEntity(idInspeccionTipo: '40be6681-6b71-4b3f-9ce6-7c02f37009b8'),
+                                  ),
+                                );
                               },
                               child: Text(
                                 'Actualizar página',
@@ -118,7 +131,7 @@ class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesIn
                     );
                   }
 
-                  if (state is RemoteInspeccionTipoFailure) {
+                  if (state is RemoteCategoriaFailure) {
                     return Center(
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg),
@@ -135,15 +148,17 @@ class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesIn
                             Gap($styles.insets.xxs),
                             Text(
                               '${state.failure!.message}',
-                              textAlign: TextAlign.start,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 6,
+                              textAlign: TextAlign.center,
                               style: $styles.textStyles.bodySmall,
                             ),
                             Gap($styles.insets.md),
                             FilledButton(
                               onPressed: () {
-                                BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(const FetcInspeccionesTipos());
+                                BlocProvider.of<RemoteCategoriaBloc>(context)
+                                  .add(FetchCategoriasByIdInspeccionTipo(
+                                    InspeccionTipoReqEntity(idInspeccionTipo: '40be6681-6b71-4b3f-9ce6-7c02f37009b8'),
+                                  ),
+                                );
                               },
                               child: Text(
                                 'Volver a intentar',
@@ -156,15 +171,15 @@ class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesIn
                     );
                   }
 
-                  if (state is RemoteInspeccionTipoDone) {
+                  if (state is RemoteCategoriaDone) {
                     return ListView.separated(
                       itemBuilder: (BuildContext context, int index) {
-                        return InspeccionTipoTile(inspeccionTipo: state.inspeccionesTipos![index]);
+                        return CategoriaTile(categoria: state.categorias![index]);
                       },
                       separatorBuilder: (BuildContext context, int index) => const Divider(),
-                      itemCount: state.inspeccionesTipos!.length,
+                      itemCount: state.categorias!.length,
                     );
-                }
+                  }
 
                   return const SizedBox();
                 },

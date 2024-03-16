@@ -2,27 +2,30 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
-import 'package:eos_mobile/features/configuraciones/data/datasources/remote/inspecciones_tipos/inspeccion_tipo_api_service.dart';
-import 'package:eos_mobile/features/configuraciones/data/models/inspeccion_tipo_model.dart';
+import 'package:eos_mobile/features/configuraciones/data/datasources/remote/categorias/categoria_api_service.dart';
+import 'package:eos_mobile/features/configuraciones/data/models/categoria_model.dart';
+import 'package:eos_mobile/features/configuraciones/data/models/categoria_req_model.dart';
 import 'package:eos_mobile/features/configuraciones/data/models/inspeccion_tipo_req_model.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/categoria_req_entity.dart';
 import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_req_entity.dart';
-import 'package:eos_mobile/features/configuraciones/domain/repositories/inspeccion_tipo_repository.dart';
+import 'package:eos_mobile/features/configuraciones/domain/repositories/categoria_repository.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
-class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
-  InspeccionTipoRepositoryImpl(this._inspeccionTipoApiService);
+class CategoriaRepositoryImpl implements CategoriaRepository {
+  CategoriaRepositoryImpl(this._categoriaApiService);
 
-  final InspeccionTipoApiService _inspeccionTipoApiService;
+  final CategoriaApiService _categoriaApiService;
 
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   @override
-  Future<DataState<List<InspeccionTipoModel>>> fetchInspeccionesTipos() async {
+  Future<DataState<List<CategoriaModel>>> fetchCategoriasByIdInspeccionTipo(InspeccionTipoReqEntity inspeccionTipoReq) async {
     try {
       final String? retrieveToken = await _secureStorage.read(key: 'access_token');
-      final httpResponse = await _inspeccionTipoApiService.fetchInspeccionesTipos(
+      final httpResponse = await _categoriaApiService.fetchCategoriasByIdInspeccionTipo(
         'Bearer $retrieveToken',
         'application/json',
+        InspeccionTipoReqModel.fromEntity(inspeccionTipoReq),
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
@@ -30,16 +33,14 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
         final dynamic resultMap = apiResponse.result;
 
         // ignore: avoid_dynamic_calls
-        final List<dynamic> lstResult = resultMap['inspeccionesTipos'] as List<dynamic>;
+        final List<dynamic> lstResult = resultMap['categorias'] as List<dynamic>;
 
-        final List<InspeccionTipoModel> objInspeccionestipos = lstResult
-            .map<InspeccionTipoModel>(
-              (dynamic i) =>
-                  InspeccionTipoModel.fromJson(i as Map<String, dynamic>),
-            )
-            .toList();
+        final List<CategoriaModel> objCategorias = lstResult
+            .map<CategoriaModel>((dynamic i) =>
+                CategoriaModel.fromJson(i as Map<String, dynamic>),
+            ).toList();
 
-        return DataSuccess(objInspeccionestipos);
+        return DataSuccess(objCategorias);
       } else {
         return DataFailed(
           DioException(
@@ -56,13 +57,13 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
   }
 
   @override
-  Future<DataState<ApiResponse>> createInspeccionTipo(InspeccionTipoReqEntity inspeccionTipoReq) async {
+  Future<DataState<ApiResponse>> createCategoria(CategoriaReqEntity categoriaReq) async {
     try {
       final String? retrieveToken = await _secureStorage.read(key: 'access_token');
-      final httpResponse = await _inspeccionTipoApiService.createInspeccionTipo(
+      final httpResponse = await _categoriaApiService.createCategoria(
         'Bearer $retrieveToken',
         'application/json',
-        InspeccionTipoReqModel.fromEntity(inspeccionTipoReq),
+        CategoriaReqModel.fromEntity(categoriaReq),
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
@@ -91,13 +92,13 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
   }
 
   @override
-  Future<DataState<ApiResponse>> updateInspeccionTipo(InspeccionTipoReqEntity inspeccionTipoReq) async {
+  Future<DataState<ApiResponse>> updateCategoria(CategoriaReqEntity categoriaReq) async {
     try {
       final String? retrieveToken = await _secureStorage.read(key: 'access_token');
-      final httpResponse = await _inspeccionTipoApiService.updateInspeccionTipo(
+      final httpResponse = await _categoriaApiService.updateCategoria(
         'Bearer $retrieveToken',
         'application/json',
-        InspeccionTipoReqModel.fromEntity(inspeccionTipoReq),
+        CategoriaReqModel.fromEntity(categoriaReq),
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
@@ -126,13 +127,13 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
   }
 
   @override
-  Future<DataState<ApiResponse>> deleteInspeccionTipo(InspeccionTipoReqEntity inspeccionTipoReq) async {
+  Future<DataState<ApiResponse>> deleteCategoria(CategoriaReqEntity categoriaReq) async {
     try {
       final String? retrieveToken = await _secureStorage.read(key: 'access_token');
-      final httpResponse = await _inspeccionTipoApiService.deleteInspeccionTipo(
+      final httpResponse = await _categoriaApiService.deleteCategoria(
         'Bearer $retrieveToken',
         'application/json',
-        InspeccionTipoReqModel.fromEntity(inspeccionTipoReq),
+        CategoriaReqModel.fromEntity(categoriaReq),
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {

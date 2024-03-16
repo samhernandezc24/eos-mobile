@@ -94,7 +94,7 @@ class _UpdateInspeccionTipoFormState extends State<UpdateInspeccionTipoForm> {
           context.read<RemoteInspeccionTipoBloc>().add(const FetcInspeccionesTipos());
         }
 
-        if (state is RemoteInspeccionTipoCreateDone) {
+        if (state is RemoteInspeccionResponseDone) {
           ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
