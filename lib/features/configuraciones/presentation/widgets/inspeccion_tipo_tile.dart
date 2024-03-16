@@ -1,4 +1,7 @@
+import 'package:eos_mobile/core/common/widgets/controls/basic_modal.dart';
 import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_entity.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/widgets/update_inspeccion_tipo_form.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class InspeccionTipoTile extends StatelessWidget {
@@ -51,14 +54,29 @@ class InspeccionTipoTile extends StatelessWidget {
                     ListTile(
                       leading: const Icon(Icons.edit),
                       title: const Text('Editar'),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.of(context).push<void>(
+                          MaterialPageRoute<void>(
+                            builder: (BuildContext context) {
+                              return BasicModal(
+                                title: 'Editar: ${inspeccionTipo!.folio}',
+                                child: UpdateInspeccionTipoForm(inspeccionTipo: inspeccionTipo),
+                              );
+                            },
+                            fullscreenDialog: true,
+                          ),
+                        );
+                      },
                     ),
                     ListTile(
                       textColor: Theme.of(context).colorScheme.error,
                       iconColor: Theme.of(context).colorScheme.error,
                       leading: const Icon(Icons.delete),
                       title: const Text('Eliminar'),
-                      onTap: () {},
+                      onTap: () {
+                        // context.read<RemoteInspeccionTipoBloc>().add(DeleteInspeccionTipo(inspeccionTipo.idInspeccionTipo));
+                      },
                     ),
                   ],
                 ),

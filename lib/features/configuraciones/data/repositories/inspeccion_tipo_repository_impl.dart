@@ -93,14 +93,72 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
   }
 
   @override
-  Future<DataState<ApiResponse>> deleteInspeccionTipo(InspeccionTipoReqEntity inspeccionTipoReq) {
-    // TODO: implement deleteInspeccionTipo
-    throw UnimplementedError();
+  Future<DataState<ApiResponse>> updateInspeccionTipo(InspeccionTipoReqEntity inspeccionTipoReq) async {
+    try {
+      final String? retrieveToken = await _secureStorage.read(key: 'access_token');
+      final httpResponse = await _inspeccionTipoApiService.updateInspeccionTipo(
+        'Bearer $retrieveToken',
+        'application/json',
+        InspeccionTipoReqModel.fromEntity(inspeccionTipoReq),
+      );
+
+      if (httpResponse.response.statusCode == HttpStatus.ok) {
+        if (httpResponse.data.session) {
+          if (httpResponse.data.action) {
+            return DataSuccess(httpResponse.data);
+          } else {
+            return DataFailedMessage(httpResponse.data.message);
+          }
+        } else {
+          return DataFailedMessage(httpResponse.data.message);
+        }
+      } else {
+        return DataFailed(
+          DioException(
+            error: httpResponse.response.statusMessage,
+            response: httpResponse.response,
+            type: DioExceptionType.badResponse,
+            requestOptions: httpResponse.response.requestOptions,
+          ),
+        );
+      }
+    } on DioException catch (ex) {
+      return DataFailed(ex);
+    }
   }
 
   @override
-  Future<DataState<ApiResponse>> updateInspeccionTipo(InspeccionTipoReqEntity inspeccionTipoReq) {
-    // TODO: implement updateInspeccionTipo
-    throw UnimplementedError();
+  Future<DataState<ApiResponse>> deleteInspeccionTipo(InspeccionTipoReqEntity inspeccionTipoReq) async {
+    try {
+      final String? retrieveToken = await _secureStorage.read(key: 'access_token');
+      final httpResponse = await _inspeccionTipoApiService.deleteInspeccionTipo(
+        'Bearer $retrieveToken',
+        'application/json',
+        InspeccionTipoReqModel.fromEntity(inspeccionTipoReq),
+      );
+
+      if (httpResponse.response.statusCode == HttpStatus.ok) {
+        if (httpResponse.data.session) {
+          if (httpResponse.data.action) {
+            return DataSuccess(httpResponse.data);
+          } else {
+            return DataFailedMessage(httpResponse.data.message);
+          }
+        } else {
+          return DataFailedMessage(httpResponse.data.message);
+        }
+      } else {
+        return DataFailed(
+          DioException(
+            error: httpResponse.response.statusMessage,
+            response: httpResponse.response,
+            type: DioExceptionType.badResponse,
+            requestOptions: httpResponse.response.requestOptions,
+          ),
+        );
+      }
+    } on DioException catch (ex) {
+      return DataFailed(ex);
+    }
   }
 }

@@ -19,3 +19,21 @@ class CreateInspeccionTipo extends RemoteInspeccionTipoEvent {
   @override
   List<Object?> get props => [ inspeccionTipoReq ];
 }
+
+class UpdateInspeccionTipo extends RemoteInspeccionTipoEvent {
+  const UpdateInspeccionTipo(this.inspeccionTipoReq);
+
+  final InspeccionTipoReqEntity inspeccionTipoReq;
+
+  @override
+  List<Object?> get props => [ inspeccionTipoReq ];
+}
+
+class DeleteInspeccionTipo extends RemoteInspeccionTipoEvent {
+  const DeleteInspeccionTipo(this.inspeccionTipoReq);
+
+  final InspeccionTipoReqEntity inspeccionTipoReq;
+
+  @override
+  List<Object?> get props => [ inspeccionTipoReq ];
+}
