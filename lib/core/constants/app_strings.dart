@@ -4,6 +4,10 @@ class AppStrings {
   String defaultAppName               = 'EOS Mobile';
   String defaultPageTitle             = 'Página';
 
+  String categoryDescription          = 'Crea categorías para agrupar los formularios de las inspecciones.';
+  String categoryEmptyTitle           = 'No hay categorías';
+  String categoryTitle                = 'Listado de Categorías';
+
   String circleButtonsSemanticBack    = 'Volver';
   String circleButtonsSemanticClose   = 'Cerrar';
 

@@ -54,7 +54,7 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
     }
 
     if (dataState is DataFailedMessage) {
-      emit(RemiteInspeccionTipoFailedMessage(dataState.errorMessage));
+      emit(RemoteInspeccionTipoFailedMessage(dataState.errorMessage));
     }
 
     if (dataState is DataFailed) {
@@ -72,7 +72,7 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
     }
 
     if (dataState is DataFailedMessage) {
-      emit(RemiteInspeccionTipoFailedMessage(dataState.errorMessage));
+      emit(RemoteInspeccionTipoFailedMessage(dataState.errorMessage));
     }
 
     if (dataState is DataFailed) {
@@ -90,7 +90,7 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
     }
 
     if (dataState is DataFailedMessage) {
-      emit(RemiteInspeccionTipoFailedMessage(dataState.errorMessage));
+      emit(RemoteInspeccionTipoFailedMessage(dataState.errorMessage));
     }
 
     if (dataState is DataFailed) {

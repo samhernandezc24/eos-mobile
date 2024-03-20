@@ -24,7 +24,7 @@ class _CategoriaApiService implements CategoriaApiService {
   Future<HttpResponse<ApiResponse>> fetchCategoriasByIdInspeccionTipo(
     String token,
     String contentType,
-    InspeccionTipoReqModel inspeccionTipoReq,
+    InspeccionTipoModel inspeccionTipo,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -34,7 +34,7 @@ class _CategoriaApiService implements CategoriaApiService {
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(inspeccionTipoReq.toJson());
+    _data.addAll(inspeccionTipo.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ApiResponse>>(Options(
       method: 'POST',
@@ -138,7 +138,7 @@ class _CategoriaApiService implements CategoriaApiService {
   Future<HttpResponse<ApiResponse>> deleteCategoria(
     String token,
     String contentType,
-    CategoriaReqModel categoriaReq,
+    CategoriaModel categoria,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -148,7 +148,7 @@ class _CategoriaApiService implements CategoriaApiService {
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(categoriaReq.toJson());
+    _data.addAll(categoria.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ApiResponse>>(Options(
       method: 'POST',

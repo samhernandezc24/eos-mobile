@@ -2,6 +2,7 @@ import 'package:eos_mobile/core/common/widgets/controls/basic_modal.dart';
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/pages/categorias/categorias_page.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/widgets/inspecciones_tipos/create_inspeccion_tipo_form.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/widgets/inspecciones_tipos/inspeccion_tipo_tile.dart';
 import 'package:eos_mobile/shared/shared.dart';
@@ -14,6 +15,16 @@ class ConfiguracionesInspeccionesTiposPage extends StatefulWidget {
 }
 
 class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesInspeccionesTiposPage> {
+  void _onInspeccionTipoPressed(BuildContext context, InspeccionTipoEntity inspeccionTipo) {
+    Future.delayed($styles.times.pageTransition, () {
+      Navigator.push<void>(
+        context,
+        MaterialPageRoute<void>(
+          builder: (BuildContext context) => ConfiguracionesCategoriasPage(inspeccionTipo: inspeccionTipo),
+        ),
+      );
+    });
+  }
 
   void _onRemoveInspeccionTipo(BuildContext context, InspeccionTipoEntity inspeccionTipo) {
     BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(DeleteInspeccionTipo(inspeccionTipo));
@@ -100,6 +111,7 @@ class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesIn
                         itemBuilder: (BuildContext context, int index) {
                           return InspeccionTipoTile(
                             inspeccionTipo: state.inspeccionesTipos![index],
+                            onInspeccionTipoPressed: (inspeccionTipo) => _onInspeccionTipoPressed(context, inspeccionTipo),
                             onRemove: (inspeccionTipo) => _onRemoveInspeccionTipo(context, inspeccionTipo),
                           );
                         },

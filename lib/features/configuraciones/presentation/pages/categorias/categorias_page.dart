@@ -1,22 +1,42 @@
 import 'package:eos_mobile/core/common/widgets/controls/basic_modal.dart';
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/categoria_entity.dart';
 import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_entity.dart';
-import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
-import 'package:eos_mobile/features/configuraciones/presentation/widgets/inspecciones_tipos/create_inspeccion_tipo_form.dart';
-import 'package:eos_mobile/features/configuraciones/presentation/widgets/inspecciones_tipos/inspeccion_tipo_tile.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/pages/categorias_items/categorias_items_page.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/widgets/categorias/categoria_tile.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/widgets/categorias/create_categoria_form.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class ConfiguracionesCategoriasPage extends StatefulWidget {
-  const ConfiguracionesCategoriasPage({Key? key}) : super(key: key);
+  const ConfiguracionesCategoriasPage({Key? key, this.inspeccionTipo}) : super(key: key);
+
+  final InspeccionTipoEntity? inspeccionTipo;
 
   @override
   State<ConfiguracionesCategoriasPage> createState() => _ConfiguracionesCategoriasPageState();
 }
 
 class _ConfiguracionesCategoriasPageState extends State<ConfiguracionesCategoriasPage> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<RemoteCategoriaBloc>(context).add(FetchCategoriasByIdInspeccionTipo(widget.inspeccionTipo!));
+  }
 
-  void _onRemoveInspeccionTipo(BuildContext context, InspeccionTipoEntity inspeccionTipo) {
-    BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(DeleteInspeccionTipo(inspeccionTipo));
+  void _onCategoriaPressed(BuildContext context, CategoriaEntity categoria) {
+    Future.delayed($styles.times.pageTransition, () {
+      Navigator.push<void>(
+        context,
+        MaterialPageRoute<void>(
+          builder: (BuildContext context) => ConfiguracionesCategoriasItemsPage(categoria: categoria),
+        ),
+      );
+    });
+  }
+
+  void _onRemoveCategoria(BuildContext context, CategoriaEntity categoria) {
+    BlocProvider.of<RemoteCategoriaBloc>(context).add(DeleteCategoria(categoria));
   }
 
   @override
@@ -45,9 +65,9 @@ class _ConfiguracionesCategoriasPageState extends State<ConfiguracionesCategoria
 
                       return SlideTransition(
                         position: animation.drive<Offset>(tween),
-                        child: const BasicModal(
-                          title: 'Nuevo Categoría',
-                          child: CreateInspeccionTipoForm(),
+                        child: BasicModal(
+                          title: 'Nueva Categoría',
+                          child: CreateCategoriaForm(inspeccionTipo: widget.inspeccionTipo),
                         ),
                       );
                     },
@@ -64,21 +84,23 @@ class _ConfiguracionesCategoriasPageState extends State<ConfiguracionesCategoria
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text($strings.inspectionTypeTitle, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600)),
+                Text($strings.categoryTitle, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600)),
                 Gap($styles.insets.xxs),
-                Text($strings.inspectionTypeDescription, style: $styles.textStyles.bodySmall),
+                Text($strings.categoryDescription, style: $styles.textStyles.bodySmall),
               ],
             ),
           ),
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
-                BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(FetcInspeccionesTipos());
+                BlocProvider.of<RemoteCategoriaBloc>(context).add(
+                  FetchCategoriasByIdInspeccionTipo(widget.inspeccionTipo!),
+                );
               },
-              child: BlocBuilder<RemoteInspeccionTipoBloc, RemoteInspeccionTipoState>(
-                builder: (BuildContext context, RemoteInspeccionTipoState state) {
+              child: BlocBuilder<RemoteCategoriaBloc, RemoteCategoriaState>(
+                builder: (BuildContext context, RemoteCategoriaState state) {
                   // ESTADO DE CARGA DEL LISTADO
-                  if (state is RemoteInspeccionTipoLoading) {
+                  if (state is RemoteCategoriaLoading) {
                     return Center(
                       child: LoadingIndicator(
                         color: Theme.of(context).primaryColor,
@@ -87,24 +109,26 @@ class _ConfiguracionesCategoriasPageState extends State<ConfiguracionesCategoria
                     );
                   }
                   // ESTADO DE FALLO AL RECUPERAR EL LISTADO
-                  if (state is RemoteInspeccionTipoFailure) {
-                    return _buildFailureInspeccionTipo(context, state);
+                  if (state is RemoteCategoriaFailure) {
+                    return _buildFailureCategoria(context, state);
                   }
                   // ESTADO DE ÉXITO AL RECUPERAR EL LISTADO
-                  if (state is RemoteInspeccionTipoDone) {
+                  if (state is RemoteCategoriaDone) {
                     // SI NO HAY ITEMS EN EL SERVIDOR, MOSTRAMOS UN WIDGET
-                    if (state.inspeccionesTipos!.isEmpty) {
-                      return _buildEmptyInspeccionTipo(context);
+                    if (state.categorias!.isEmpty) {
+                      return _buildEmptyCategoria(context);
                     } else {
                       return ListView.separated(
                         itemBuilder: (BuildContext context, int index) {
-                          return InspeccionTipoTile(
-                            inspeccionTipo: state.inspeccionesTipos![index],
-                            onRemove: (inspeccionTipo) => _onRemoveInspeccionTipo(context, inspeccionTipo),
+                          return CategoriaTile(
+                            categoria: state.categorias![index],
+                            inspeccionTipo: widget.inspeccionTipo,
+                            onCategoriaPressed: (categoria) => _onCategoriaPressed(context, categoria),
+                            onRemove: (categoria) => _onRemoveCategoria(context, categoria),
                           );
                         },
                         separatorBuilder: (BuildContext context, int index) => const Divider(),
-                        itemCount: state.inspeccionesTipos!.length,
+                        itemCount: state.categorias!.length,
                       );
                     }
                   }
@@ -120,7 +144,7 @@ class _ConfiguracionesCategoriasPageState extends State<ConfiguracionesCategoria
   }
 
   /// EXTRACCIÓN DE WIDGETS
-  Widget _buildFailureInspeccionTipo(BuildContext context, RemoteInspeccionTipoFailure state) {
+  Widget _buildFailureCategoria(BuildContext context, RemoteCategoriaFailure state) {
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg),
@@ -141,7 +165,7 @@ class _ConfiguracionesCategoriasPageState extends State<ConfiguracionesCategoria
             Gap($styles.insets.md),
             FilledButton(
               onPressed: () {
-                BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(FetcInspeccionesTipos());
+                BlocProvider.of<RemoteCategoriaBloc>(context).add(FetchCategoriasByIdInspeccionTipo(widget.inspeccionTipo!));
               },
               child: Text($strings.retryButtonText, style: $styles.textStyles.button),
             ),
@@ -151,7 +175,7 @@ class _ConfiguracionesCategoriasPageState extends State<ConfiguracionesCategoria
     );
   }
 
-  Center _buildEmptyInspeccionTipo(BuildContext context) {
+  Center _buildEmptyCategoria(BuildContext context) {
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg),
@@ -161,7 +185,7 @@ class _ConfiguracionesCategoriasPageState extends State<ConfiguracionesCategoria
             Icon(Icons.info_outline, color: Theme.of(context).colorScheme.secondary, size: 64),
             Gap($styles.insets.sm),
             Text(
-              $strings.inspectionTypeEmptyTitle,
+              $strings.categoryEmptyTitle,
               textAlign: TextAlign.center,
               style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600),
             ),
@@ -176,7 +200,7 @@ class _ConfiguracionesCategoriasPageState extends State<ConfiguracionesCategoria
             Gap($styles.insets.sm),
             FilledButton.icon(
               onPressed: () {
-                BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(FetcInspeccionesTipos());
+                BlocProvider.of<RemoteCategoriaBloc>(context).add(FetchCategoriasByIdInspeccionTipo(widget.inspeccionTipo!));
               },
               icon: const Icon(Icons.refresh),
               label: Text($strings.refreshButtonText, style: $styles.textStyles.button),

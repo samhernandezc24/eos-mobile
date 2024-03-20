@@ -1,16 +1,16 @@
 import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
 import 'package:eos_mobile/core/usecases/usecase.dart';
-import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_req_entity.dart';
-import 'package:eos_mobile/features/configuraciones/domain/repositories/inspeccion_tipo_repository.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/categoria_req_entity.dart';
+import 'package:eos_mobile/features/configuraciones/domain/repositories/categoria_repository.dart';
 
-class CreateInspeccionTipoUseCase implements UseCase<DataState<ApiResponse>, InspeccionTipoReqEntity> {
-  CreateInspeccionTipoUseCase(this._inspeccionTipoRepository);
+class CreateCategoriaUseCase implements UseCase<DataState<ApiResponseEntity>, CategoriaReqEntity> {
+  CreateCategoriaUseCase(this._categoriaRepository);
 
-  final InspeccionTipoRepository _inspeccionTipoRepository;
+  final CategoriaRepository _categoriaRepository;
 
   @override
-  Future<DataState<ApiResponse>> call(InspeccionTipoReqEntity params) async {
-    return _inspeccionTipoRepository.createInspeccionTipo(params);
+  Future<DataState<ApiResponseEntity>> call(CategoriaReqEntity params) async {
+    return _categoriaRepository.createCategoria(params);
   }
 }

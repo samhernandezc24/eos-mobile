@@ -18,17 +18,17 @@ class RemoteCategoriaDone extends RemoteCategoriaState {
   List<Object?> get props => [ categorias ];
 }
 
-class RemoteCategoriaCreateDone extends RemoteCategoriaState {
-  const RemoteCategoriaCreateDone(this.apiResponse);
+class RemoteCategoriaResponseSuccess extends RemoteCategoriaState {
+  const RemoteCategoriaResponseSuccess(this.apiResponse);
 
-  final ApiResponse apiResponse;
+  final ApiResponseEntity apiResponse;
 
   @override
   List<Object?> get props => [ apiResponse ];
 }
 
-class RemiteCategoriaFailedMessage extends RemoteCategoriaState {
-  const RemiteCategoriaFailedMessage(this.errorMessage);
+class RemoteCategoriaFailedMessage extends RemoteCategoriaState {
+  const RemoteCategoriaFailedMessage(this.errorMessage);
 
   final String? errorMessage;
 

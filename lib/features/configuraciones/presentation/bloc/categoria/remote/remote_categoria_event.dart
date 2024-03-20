@@ -8,12 +8,12 @@ sealed class RemoteCategoriaEvent extends Equatable {
 }
 
 class FetchCategoriasByIdInspeccionTipo extends RemoteCategoriaEvent {
-  const FetchCategoriasByIdInspeccionTipo(this.inspeccionTipoReq);
+  const FetchCategoriasByIdInspeccionTipo(this.inspeccionTipo);
 
-  final InspeccionTipoReqEntity inspeccionTipoReq;
+  final InspeccionTipoEntity inspeccionTipo;
 
   @override
-  List<Object?> get props => [ inspeccionTipoReq ];
+  List<Object?> get props => [ inspeccionTipo ];
 }
 
 class CreateCategoria extends RemoteCategoriaEvent {
@@ -35,10 +35,10 @@ class UpdateCategoria extends RemoteCategoriaEvent {
 }
 
 class DeleteCategoria extends RemoteCategoriaEvent {
-  const DeleteCategoria(this.categoriaReq);
+  const DeleteCategoria(this.categoria);
 
-  final CategoriaReqEntity categoriaReq;
+  final CategoriaEntity categoria;
 
   @override
-  List<Object?> get props => [ categoriaReq ];
+  List<Object?> get props => [ categoria ];
 }

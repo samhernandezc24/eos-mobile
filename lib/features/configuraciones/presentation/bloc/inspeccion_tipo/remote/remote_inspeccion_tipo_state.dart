@@ -27,8 +27,8 @@ class RemoteInspeccionResponseSuccess extends RemoteInspeccionTipoState {
   List<Object?> get props => [ apiResponse ];
 }
 
-class RemiteInspeccionTipoFailedMessage extends RemoteInspeccionTipoState {
-  const RemiteInspeccionTipoFailedMessage(this.errorMessage);
+class RemoteInspeccionTipoFailedMessage extends RemoteInspeccionTipoState {
+  const RemoteInspeccionTipoFailedMessage(this.errorMessage);
 
   final String? errorMessage;
 

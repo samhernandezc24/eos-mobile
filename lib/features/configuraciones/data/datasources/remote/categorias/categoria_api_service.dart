@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/core/network/api_response.dart';
+import 'package:eos_mobile/features/configuraciones/data/models/categoria_model.dart';
 import 'package:eos_mobile/features/configuraciones/data/models/categoria_req_model.dart';
-import 'package:eos_mobile/features/configuraciones/data/models/inspeccion_tipo_req_model.dart';
+import 'package:eos_mobile/features/configuraciones/data/models/inspeccion_tipo_model.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -18,7 +19,7 @@ abstract class CategoriaApiService {
   Future<HttpResponse<ApiResponse>> fetchCategoriasByIdInspeccionTipo(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Body() InspeccionTipoReqModel inspeccionTipoReq,
+    @Body() InspeccionTipoModel inspeccionTipo,
   );
 
   // CREACIÓN DE CATEGORÍAS
@@ -42,6 +43,6 @@ abstract class CategoriaApiService {
   Future<HttpResponse<ApiResponse>> deleteCategoria(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Body() CategoriaReqModel categoriaReq,
+    @Body() CategoriaModel categoria,
   );
 }

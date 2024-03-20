@@ -1,16 +1,19 @@
 import 'package:eos_mobile/core/common/widgets/controls/basic_modal.dart';
 import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
-import 'package:eos_mobile/features/configuraciones/presentation/pages/categorias/categorias_page.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/widgets/inspecciones_tipos/update_inspeccion_tipo_form.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class InspeccionTipoTile extends StatelessWidget {
-  const InspeccionTipoTile({Key? key, this.inspeccionTipo, this.onRemove})
-      : super(key: key);
+  const InspeccionTipoTile({Key? key, this.inspeccionTipo, this.onRemove, this.onInspeccionTipoPressed}) : super(key: key);
 
   final InspeccionTipoEntity? inspeccionTipo;
   final void Function(InspeccionTipoEntity inspeccionTipo)? onRemove;
+  final void Function(InspeccionTipoEntity inspeccionTipo)? onInspeccionTipoPressed;
+
+  void _onTap() {
+    if (onInspeccionTipoPressed != null) return onInspeccionTipoPressed!(inspeccionTipo!);
+  }
 
   void _onRemove() {
     if (onRemove != null) return onRemove!(inspeccionTipo!);
@@ -23,10 +26,9 @@ class InspeccionTipoTile extends StatelessWidget {
         backgroundColor: Colors.transparent,
         child: Image.asset(ImagePaths.circleVehicle),
       ),
-      title: Text(inspeccionTipo!.name.toProperCase(),
-          overflow: TextOverflow.ellipsis),
+      title: Text(inspeccionTipo!.name.toProperCase(), overflow: TextOverflow.ellipsis),
       subtitle: Text('Folio: ${inspeccionTipo!.folio}'),
-      onTap: () {},
+      onTap: _onTap,
       trailing: IconButton(
         icon: const Icon(Icons.more_vert),
         onPressed: () => _showModalBottomSheet(context),
@@ -53,7 +55,7 @@ class InspeccionTipoTile extends StatelessWidget {
               context.read<RemoteInspeccionTipoBloc>().add(FetcInspeccionesTipos());
             }
 
-            if (state is RemiteInspeccionTipoFailedMessage) {
+            if (state is RemoteInspeccionTipoFailedMessage) {
               ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
@@ -95,16 +97,7 @@ class InspeccionTipoTile extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.add),
                   title: const Text('Crear categorías'),
-                  onTap: () {
-                    Future.delayed($styles.times.pageTransition, () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (context) => const ConfiguracionesCategoriasPage(),
-                        ),
-                      );
-                    });
-                  },
+                  onTap: _onTap,
                 ),
                 ListTile(
                   leading: const Icon(Icons.edit),
