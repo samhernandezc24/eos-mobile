@@ -1,5 +1,5 @@
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
-import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_req_entity.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/inspecciones_tipos/inspeccion_tipo_req_entity.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/shared/shared.dart';
 

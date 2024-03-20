@@ -1,6 +1,6 @@
 import 'package:eos_mobile/core/common/widgets/controls/basic_modal.dart';
-import 'package:eos_mobile/features/configuraciones/domain/entities/categoria_entity.dart';
-import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_entity.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/categorias/categoria_entity.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/inspecciones_tipos/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/widgets/categorias/update_categoria_form.dart';
 import 'package:eos_mobile/shared/shared.dart';

@@ -5,8 +5,8 @@ import 'package:eos_mobile/core/network/data_state.dart';
 import 'package:eos_mobile/features/configuraciones/data/datasources/remote/inspecciones_tipos/inspeccion_tipo_api_service.dart';
 import 'package:eos_mobile/features/configuraciones/data/models/inspeccion_tipo_model.dart';
 import 'package:eos_mobile/features/configuraciones/data/models/inspeccion_tipo_req_model.dart';
-import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_entity.dart';
-import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_req_entity.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/inspecciones_tipos/inspeccion_tipo_entity.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/inspecciones_tipos/inspeccion_tipo_req_entity.dart';
 import 'package:eos_mobile/features/configuraciones/domain/repositories/inspeccion_tipo_repository.dart';
 import 'package:eos_mobile/shared/shared.dart';
 

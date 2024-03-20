@@ -1,8 +1,8 @@
 import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
-import 'package:eos_mobile/features/configuraciones/domain/entities/categoria_entity.dart';
-import 'package:eos_mobile/features/configuraciones/domain/entities/categoria_req_entity.dart';
-import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_entity.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/categorias/categoria_entity.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/categorias/categoria_req_entity.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/inspecciones_tipos/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/configuraciones/domain/usecases/categorias/create_categoria.dart';
 import 'package:eos_mobile/features/configuraciones/domain/usecases/categorias/delete_categoria.dart';
 import 'package:eos_mobile/features/configuraciones/domain/usecases/categorias/fetch_categoria_by_id_inspeccion_tipo.dart';

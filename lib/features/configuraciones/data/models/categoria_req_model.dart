@@ -1,4 +1,4 @@
-import 'package:eos_mobile/features/configuraciones/domain/entities/categoria_req_entity.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/categorias/categoria_req_entity.dart';
 
 /// [CategoriaReqModel]
 ///

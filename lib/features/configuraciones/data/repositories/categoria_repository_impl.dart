@@ -6,9 +6,9 @@ import 'package:eos_mobile/features/configuraciones/data/datasources/remote/cate
 import 'package:eos_mobile/features/configuraciones/data/models/categoria_model.dart';
 import 'package:eos_mobile/features/configuraciones/data/models/categoria_req_model.dart';
 import 'package:eos_mobile/features/configuraciones/data/models/inspeccion_tipo_model.dart';
-import 'package:eos_mobile/features/configuraciones/domain/entities/categoria_entity.dart';
-import 'package:eos_mobile/features/configuraciones/domain/entities/categoria_req_entity.dart';
-import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_entity.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/categorias/categoria_entity.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/categorias/categoria_req_entity.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/inspecciones_tipos/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/configuraciones/domain/repositories/categoria_repository.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
