@@ -83,7 +83,7 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
   Future<void> _onDeleteInspeccionTipo(DeleteInspeccionTipo event, Emitter<RemoteInspeccionTipoState> emit) async {
     emit(RemoteInspeccionTipoLoading());
 
-    final dataState = await _deleteInspeccionTipoUseCase(event.inspeccionTipoReq);
+    final dataState = await _deleteInspeccionTipoUseCase(event.inspeccionTipo);
 
     if (dataState is DataSuccess) {
       emit(RemoteInspeccionResponseSuccess(dataState.data!));

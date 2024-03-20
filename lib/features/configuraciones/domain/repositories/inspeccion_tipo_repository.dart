@@ -8,5 +8,5 @@ abstract class InspeccionTipoRepository {
   Future<DataState<List<InspeccionTipoEntity>>> fetchInspeccionesTipos();
   Future<DataState<ApiResponse>> createInspeccionTipo(InspeccionTipoReqEntity inspeccionTipoReq);
   Future<DataState<ApiResponse>> updateInspeccionTipo(InspeccionTipoReqEntity inspeccionTipoReq);
-  Future<DataState<ApiResponse>> deleteInspeccionTipo(InspeccionTipoReqEntity inspeccionTipoReq);
+  Future<DataState<ApiResponse>> deleteInspeccionTipo(InspeccionTipoEntity inspeccionTipo);
 }

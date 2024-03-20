@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/core/network/api_response.dart';
+import 'package:eos_mobile/features/configuraciones/data/models/inspeccion_tipo_model.dart';
 import 'package:eos_mobile/features/configuraciones/data/models/inspeccion_tipo_req_model.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:retrofit/retrofit.dart';
@@ -40,6 +41,6 @@ abstract class InspeccionTipoApiService {
   Future<HttpResponse<ApiResponse>> deleteInspeccionTipo(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Body() InspeccionTipoReqModel inspeccionTipoReq,
+    @Body() InspeccionTipoModel inspeccionTipo,
   );
 }

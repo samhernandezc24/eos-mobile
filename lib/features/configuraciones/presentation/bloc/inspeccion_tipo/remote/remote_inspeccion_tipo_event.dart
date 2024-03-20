@@ -28,10 +28,10 @@ class UpdateInspeccionTipo extends RemoteInspeccionTipoEvent {
 }
 
 class DeleteInspeccionTipo extends RemoteInspeccionTipoEvent {
-  const DeleteInspeccionTipo(this.inspeccionTipoReq);
+  const DeleteInspeccionTipo(this.inspeccionTipo);
 
-  final InspeccionTipoReqEntity inspeccionTipoReq;
+  final InspeccionTipoEntity inspeccionTipo;
 
   @override
-  List<Object?> get props => [ inspeccionTipoReq ];
+  List<Object?> get props => [ inspeccionTipo ];
 }

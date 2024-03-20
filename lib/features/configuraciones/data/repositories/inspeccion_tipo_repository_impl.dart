@@ -5,6 +5,7 @@ import 'package:eos_mobile/core/network/data_state.dart';
 import 'package:eos_mobile/features/configuraciones/data/datasources/remote/inspecciones_tipos/inspeccion_tipo_api_service.dart';
 import 'package:eos_mobile/features/configuraciones/data/models/inspeccion_tipo_model.dart';
 import 'package:eos_mobile/features/configuraciones/data/models/inspeccion_tipo_req_model.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_req_entity.dart';
 import 'package:eos_mobile/features/configuraciones/domain/repositories/inspeccion_tipo_repository.dart';
 import 'package:eos_mobile/shared/shared.dart';
@@ -126,13 +127,13 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
   }
 
   @override
-  Future<DataState<ApiResponse>> deleteInspeccionTipo(InspeccionTipoReqEntity inspeccionTipoReq) async {
+  Future<DataState<ApiResponse>> deleteInspeccionTipo(InspeccionTipoEntity inspeccionTipo) async {
     try {
       final String? retrieveToken = await _secureStorage.read(key: 'access_token');
       final httpResponse = await _inspeccionTipoApiService.deleteInspeccionTipo(
         'Bearer $retrieveToken',
         'application/json',
-        InspeccionTipoReqModel.fromEntity(inspeccionTipoReq),
+        InspeccionTipoModel.fromEntity(inspeccionTipo),
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {

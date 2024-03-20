@@ -1,5 +1,6 @@
 import 'package:eos_mobile/core/common/widgets/controls/basic_modal.dart';
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
+import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/widgets/inspecciones_tipos/create_inspeccion_tipo_form.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/widgets/inspecciones_tipos/inspeccion_tipo_tile.dart';
@@ -13,6 +14,11 @@ class ConfiguracionesInspeccionesTiposPage extends StatefulWidget {
 }
 
 class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesInspeccionesTiposPage> {
+
+  void _onRemoveInspeccionTipo(BuildContext context, InspeccionTipoEntity inspeccionTipo) {
+    BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(DeleteInspeccionTipo(inspeccionTipo));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,7 +98,10 @@ class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesIn
                     } else {
                       return ListView.separated(
                         itemBuilder: (BuildContext context, int index) {
-                          return InspeccionTipoTile(inspeccionTipo: state.inspeccionesTipos![index]);
+                          return InspeccionTipoTile(
+                            inspeccionTipo: state.inspeccionesTipos![index],
+                            onRemove: (inspeccionTipo) => _onRemoveInspeccionTipo(context, inspeccionTipo),
+                          );
                         },
                         separatorBuilder: (BuildContext context, int index) => const Divider(),
                         itemCount: state.inspeccionesTipos!.length,

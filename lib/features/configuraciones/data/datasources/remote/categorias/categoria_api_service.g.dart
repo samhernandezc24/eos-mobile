@@ -13,7 +13,7 @@ class _CategoriaApiService implements CategoriaApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= ListAPI.categorias;
+    baseUrl ??= 'http://10.0.2.2:7000/api/Inspecciones/Tipos/Categorias';
   }
 
   final Dio _dio;

@@ -136,7 +136,7 @@ class _InspeccionTipoApiService implements InspeccionTipoApiService {
   Future<HttpResponse<ApiResponse>> deleteInspeccionTipo(
     String token,
     String contentType,
-    InspeccionTipoReqModel inspeccionTipoReq,
+    InspeccionTipoModel inspeccionTipo,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -146,7 +146,7 @@ class _InspeccionTipoApiService implements InspeccionTipoApiService {
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(inspeccionTipoReq.toJson());
+    _data.addAll(inspeccionTipo.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ApiResponse>>(Options(
       method: 'POST',
