@@ -1,34 +1,33 @@
 // import 'package:eos_mobile/core/common/widgets/controls/basic_modal.dart';
 // import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 // import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_req_entity.dart';
-// import 'package:eos_mobile/features/configuraciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
-// import 'package:eos_mobile/features/configuraciones/presentation/widgets/categoria_tile.dart';
+// import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
+// import 'package:eos_mobile/features/configuraciones/presentation/pages/categorias/categorias_page.dart';
 // import 'package:eos_mobile/features/configuraciones/presentation/widgets/create_inspeccion_tipo_form.dart';
+// import 'package:eos_mobile/features/configuraciones/presentation/widgets/inspeccion_tipo_tile.dart';
 // import 'package:eos_mobile/shared/shared.dart';
 
-// class ConfiguracionesCategoriasPage extends StatefulWidget {
-//   const ConfiguracionesCategoriasPage({Key? key, this.inspeccionTipoReq})
-//       : super(key: key);
-
-//   final InspeccionTipoReqEntity? inspeccionTipoReq;
+// class ConfiguracionesInspeccionesTiposPage extends StatefulWidget {
+//   const ConfiguracionesInspeccionesTiposPage({super.key});
 
 //   @override
-//   State<ConfiguracionesCategoriasPage> createState() =>
-//       _ConfiguracionesCategoriasPageState();
+//   State<ConfiguracionesInspeccionesTiposPage> createState() =>
+//       _ConfiguracionesInspeccionesTiposPageState();
 // }
 
-// class _ConfiguracionesCategoriasPageState
-//     extends State<ConfiguracionesCategoriasPage> {
-//   @override
-//   void initState() {
-//     super.initState();
-//     BlocProvider.of<RemoteCategoriaBloc>(context).add(
-//       FetchCategoriasByIdInspeccionTipo(
-//         InspeccionTipoReqEntity(
-//           idInspeccionTipo: widget.inspeccionTipoReq!.idInspeccionTipo,
+// class _ConfiguracionesInspeccionesTiposPageState
+//     extends State<ConfiguracionesInspeccionesTiposPage> {
+//   Future<void> _onInspeccionTipoPressed(
+//       BuildContext context, InspeccionTipoReqEntity inspeccionTipoReq) async {
+//     Future.delayed($styles.times.pageTransition, () {
+//       Navigator.of(context).push<void>(
+//         MaterialPageRoute<void>(
+//           builder: (BuildContext context) => ConfiguracionesCategoriasPage(
+//             inspeccionTipoReq: inspeccionTipoReq,
+//           ),
 //         ),
-//       ),
-//     );
+//       );
+//     });
 //   }
 
 //   @override
@@ -36,7 +35,7 @@
 //     return Scaffold(
 //       appBar: AppBar(
 //         title: Text(
-//           'Configuración de Categorías',
+//           'Configuración de Inspecciones',
 //           style: $styles.textStyles.h3,
 //         ),
 //       ),
@@ -53,7 +52,7 @@
 //                   MaterialPageRoute<void>(
 //                     builder: (BuildContext context) {
 //                       return const BasicModal(
-//                         title: 'Nueva Categoría',
+//                         title: 'Nuevo Tipo de Inspección',
 //                         child: CreateInspeccionTipoForm(),
 //                       );
 //                     },
@@ -63,7 +62,7 @@
 //               },
 //               icon: const Icon(Icons.add),
 //               label: Text(
-//                 'Crear Categoría',
+//                 'Crear Tipo Inspección',
 //                 style: $styles.textStyles.button,
 //               ),
 //             ),
@@ -74,13 +73,13 @@
 //               crossAxisAlignment: CrossAxisAlignment.start,
 //               children: <Widget>[
 //                 Text(
-//                   'Listado de Categorías',
+//                   'Listado de Tipos de Inspecciones',
 //                   style: $styles.textStyles.title1
 //                       .copyWith(fontWeight: FontWeight.w600),
 //                 ),
 //                 Gap($styles.insets.xxs),
 //                 Text(
-//                   'Crear categorías para agrupar los formularios de las inspecciones.',
+//                   'Crear un tipo de inspección para agrupar los formularios de las inspecciones.',
 //                   style: $styles.textStyles.bodySmall.copyWith(height: 1.5),
 //                 ),
 //               ],
@@ -89,16 +88,14 @@
 //           Expanded(
 //             child: RefreshIndicator(
 //               onRefresh: () async {
-//                 // BlocProvider.of<RemoteCategoriaBloc>(context)
-//                 //   .add(
-//                 //       FetchCategoriasByIdInspeccionTipo(
-//                 //       InspeccionTipoReqEntity(idInspeccionTipo: '40be6681-6b71-4b3f-9ce6-7c02f37009b8'),
-//                 //     ),
-//                 //   );
+//                 BlocProvider.of<RemoteInspeccionTipoBloc>(context)
+//                     .add(FetcInspeccionesTipos());
 //               },
-//               child: BlocBuilder<RemoteCategoriaBloc, RemoteCategoriaState>(
-//                 builder: (BuildContext context, RemoteCategoriaState state) {
-//                   if (state is RemoteCategoriaLoading) {
+//               child: BlocBuilder<RemoteInspeccionTipoBloc,
+//                   RemoteInspeccionTipoState>(
+//                 builder:
+//                     (BuildContext context, RemoteInspeccionTipoState state) {
+//                   if (state is RemoteInspeccionTipoLoading) {
 //                     return Center(
 //                       child: LoadingIndicator(
 //                         color: Theme.of(context).primaryColor,
@@ -107,7 +104,7 @@
 //                     );
 //                   }
 
-//                   if (state is RemoteCategoriaFailure) {
+//                   if (state is RemoteInspeccionTipoFailure) {
 //                     return Center(
 //                       child: Padding(
 //                         padding:
@@ -126,21 +123,17 @@
 //                             Gap($styles.insets.xxs),
 //                             Text(
 //                               '${state.failure!.message}',
-//                               textAlign: TextAlign.center,
+//                               textAlign: TextAlign.start,
+//                               overflow: TextOverflow.ellipsis,
+//                               maxLines: 6,
 //                               style: $styles.textStyles.bodySmall,
 //                             ),
 //                             Gap($styles.insets.md),
 //                             FilledButton(
 //                               onPressed: () {
-//                                 BlocProvider.of<RemoteCategoriaBloc>(context)
-//                                     .add(
-//                                   FetchCategoriasByIdInspeccionTipo(
-//                                     InspeccionTipoReqEntity(
-//                                       idInspeccionTipo: widget
-//                                           .inspeccionTipoReq!.idInspeccionTipo,
-//                                     ),
-//                                   ),
-//                                 );
+//                                 BlocProvider.of<RemoteInspeccionTipoBloc>(
+//                                   context,
+//                                 ).add(FetcInspeccionesTipos());
 //                               },
 //                               child: Text(
 //                                 'Volver a intentar',
@@ -153,13 +146,12 @@
 //                     );
 //                   }
 
-//                   if (state is RemoteCategoriaDone) {
-//                     if (state.categorias!.isEmpty) {
+//                   if (state is RemoteInspeccionTipoDone) {
+//                     if (state.inspeccionesTipos!.isEmpty) {
 //                       return Center(
 //                         child: Padding(
 //                           padding: EdgeInsets.symmetric(
-//                             horizontal: $styles.insets.lg,
-//                           ),
+//                               horizontal: $styles.insets.lg),
 //                           child: Column(
 //                             mainAxisAlignment: MainAxisAlignment.center,
 //                             children: <Widget>[
@@ -170,19 +162,16 @@
 //                               ),
 //                               Gap($styles.insets.sm),
 //                               Text(
-//                                 'Aún no hay categorías registradas.',
+//                                 'Aún no hay tipos de inspecciones registrados.',
 //                                 textAlign: TextAlign.center,
 //                                 style: $styles.textStyles.h4,
 //                               ),
 //                               Gap($styles.insets.md),
 //                               FilledButton(
 //                                 onPressed: () {
-//                                   BlocProvider.of<RemoteCategoriaBloc>(
+//                                   BlocProvider.of<RemoteInspeccionTipoBloc>(
 //                                     context,
-//                                   ).add(const FetchCategoriasByIdInspeccionTipo(
-//                                       InspeccionTipoReqEntity(
-//                                           idInspeccionTipo:
-//                                               '40be6681-6b71-4b3f-9ce6-7c02f37009b8')));
+//                                   ).add(FetcInspeccionesTipos());
 //                                 },
 //                                 child: Text(
 //                                   'Actualizar página',
@@ -196,12 +185,18 @@
 //                     } else {
 //                       return ListView.separated(
 //                         itemBuilder: (BuildContext context, int index) {
-//                           return CategoriaTile(
-//                               categoria: state.categorias![index]);
+//                           return InspeccionTipoTile(
+//                             inspeccionTipo: state.inspeccionesTipos![index],
+//                             onInspeccionTipoPressed: (inspeccionTipoReq) =>
+//                                 _onInspeccionTipoPressed(
+//                               context,
+//                               inspeccionTipoReq,
+//                             ),
+//                           );
 //                         },
 //                         separatorBuilder: (BuildContext context, int index) =>
 //                             const Divider(),
-//                         itemCount: state.categorias!.length,
+//                         itemCount: state.inspeccionesTipos!.length,
 //                       );
 //                     }
 //                   }

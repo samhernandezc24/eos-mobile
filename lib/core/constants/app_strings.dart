@@ -11,10 +11,17 @@ class AppStrings {
   String error404SemanticLabel        = 'Error 404';
   String error404Title                = '¡Oops! 404';
 
+  String error500Title                = '¡Oops, algo ha salido mal!';
+
   String forgotPasswordAppBarText     = '¿Has olvidado tu contraseña?';
   String forgotPasswordButtonText     = 'Enviar Enlace';
   String forgotPasswordMessage        = 'Completa el formulario para restablecer su contraseña';
   String forgotPasswordSemanticImage  = 'Se te ha olvidado la contraseña';
+
+  String inspectionTypeDescription    = 'Crea un tipo de inspección para agrupar los formularios de las inspecciones.';
+  String inspectionTypeEmptyTitle     = 'No hay tipos de inspecciones';
+  String inspectionTypeSyncText       = 'Intenta actualizar el listado para sincronizar los últimos cambios en el servidor.';
+  String inspectionTypeTitle          = 'Listado de Tipos de Inspecciones';
 
   String module1                      = 'Inspecciones';
   String module2                      = 'Compras';
@@ -24,6 +31,11 @@ class AppStrings {
   String module6                      = 'Unidades';
 
   String homeGoBackButtonText         = 'Volver a Inicio';
+
+  String refreshButtonText            = 'Actualizar';
+  String retryButtonText              = 'Volver a Intentar';
+
+  String saveButtonText               = 'Guardar';
 
   String searchInputHint              = 'Buscar por No. Económico o Folio';
   String searchInputSemanticClear     = 'Limpiar Búsqueda';

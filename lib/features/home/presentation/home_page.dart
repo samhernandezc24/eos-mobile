@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:eos_mobile/config/logic/common/auth_token_storage.dart';
 import 'package:eos_mobile/config/logic/common/session_manager.dart';
 import 'package:eos_mobile/config/logic/common/user_info_storage.dart';
 import 'package:eos_mobile/core/common/data/modules_data.dart';
@@ -23,6 +24,27 @@ class _HomePageState extends State<HomePage> {
     final sessionManager = SessionManager();
     await sessionManager.checkTokenExpiration();
     $logger.i('Comprobacion de la expiracion del token completada.');
+  }
+
+  Future<void> logout() async {
+    await AuthTokenStorage.destroyAuthToken();
+    appRouter.go(initialDeeplink ?? ScreenPaths.authSignIn);
+  }
+
+  String _getInitials(String fullName) {
+    final List<String> nameParts      = fullName.split(' ');
+    final StringBuffer initialsBuffer = StringBuffer();
+
+    int initialsCount = 0;
+
+    for (final part in nameParts) {
+      if (initialsCount < 2) {
+        initialsBuffer.write(part[0]);
+        initialsCount++;
+      }
+    }
+
+    return initialsBuffer.toString().toUpperCase();
   }
 
   @override
@@ -175,8 +197,7 @@ class _HomePageState extends State<HomePage> {
               textColor: Theme.of(context).colorScheme.error,
               icon: Icons.logout,
               text: 'Cerrar sesión',
-              onTap: () {},
-              // onTap: _showLogoutConfirmationDialog,
+              onTap: _showLogoutConfirmationDialog,
             ),
           ],
         ),
@@ -276,8 +297,7 @@ class _HomePageState extends State<HomePage> {
             currentAccountPicture: AvatarProfileName(
               backgroundColor: Theme.of(context).chipTheme.backgroundColor,
               child: Text(
-                'A',
-                // 'Mauricio Alejandro Santiago Gonzalez',
+                _getInitials(name),
                 style: $styles.textStyles.h2.copyWith(color: Colors.white),
               ),
             ),
@@ -327,5 +347,32 @@ class _HomePageState extends State<HomePage> {
       ),
       onTap: onTap,
     );
+  }
+
+  void _showLogoutConfirmationDialog() {
+    Future.delayed($styles.times.fast, () {
+      showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Confirmación', style: $styles.textStyles.h3),
+            content: Text('¿Estás seguro de que deseas cerrar sesión?', style: $styles.textStyles.body.copyWith(height: 1.5)),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('Cancelar', style: $styles.textStyles.button),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  logout();
+                },
+                child: Text('Cerrar Sesión', style: $styles.textStyles.button),
+              ),
+            ],
+          );
+        },
+      );
+    });
   }
 }

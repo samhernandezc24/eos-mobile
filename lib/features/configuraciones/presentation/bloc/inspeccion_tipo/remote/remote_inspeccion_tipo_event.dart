@@ -7,9 +7,7 @@ sealed class RemoteInspeccionTipoEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class FetcInspeccionesTipos extends RemoteInspeccionTipoEvent {
-  const FetcInspeccionesTipos();
-}
+class FetcInspeccionesTipos extends RemoteInspeccionTipoEvent { }
 
 class CreateInspeccionTipo extends RemoteInspeccionTipoEvent {
   const CreateInspeccionTipo(this.inspeccionTipoReq);

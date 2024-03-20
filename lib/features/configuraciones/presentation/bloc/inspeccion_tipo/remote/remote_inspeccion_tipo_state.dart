@@ -7,8 +7,6 @@ class RemoteInspeccionTipoState extends Equatable {
   List<Object?> get props => [];
 }
 
-class RemoteInspeccionTipoInitial extends RemoteInspeccionTipoState { }
-
 class RemoteInspeccionTipoLoading extends RemoteInspeccionTipoState { }
 
 class RemoteInspeccionTipoDone extends RemoteInspeccionTipoState {
@@ -20,10 +18,10 @@ class RemoteInspeccionTipoDone extends RemoteInspeccionTipoState {
   List<Object?> get props => [ inspeccionesTipos ];
 }
 
-class RemoteInspeccionResponseDone extends RemoteInspeccionTipoState {
-  const RemoteInspeccionResponseDone(this.apiResponse);
+class RemoteInspeccionResponseSuccess extends RemoteInspeccionTipoState {
+  const RemoteInspeccionResponseSuccess(this.apiResponse);
 
-  final ApiResponse apiResponse;
+  final ApiResponseEntity apiResponse;
 
   @override
   List<Object?> get props => [ apiResponse ];

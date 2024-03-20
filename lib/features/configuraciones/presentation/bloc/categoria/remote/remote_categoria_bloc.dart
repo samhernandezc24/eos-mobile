@@ -15,7 +15,7 @@ class RemoteCategoriaBloc extends Bloc<RemoteCategoriaEvent, RemoteCategoriaStat
     // this._createCategoriaUseCase,
     // this._updateCategoriaUseCase,
     // this._deleteCategoriaUseCase,
-  ) : super(RemoteCategoriaInitial()) {
+  ) : super(RemoteCategoriaLoading()) {
     on<FetchCategoriasByIdInspeccionTipo>(_onFetchCategoriasByIdInspeccionTipo);
     // on<CreateCategoria>(_onCreateCategoria);
     // on<UpdateCategoria>(_onUpdateCategoria);
@@ -33,14 +33,12 @@ class RemoteCategoriaBloc extends Bloc<RemoteCategoriaEvent, RemoteCategoriaStat
     final dataState = await _fetchCategoriaByIdInspeccionTipoUseCase(event.inspeccionTipoReq);
 
     if (dataState is DataSuccess) {
-      if (dataState.data!.isEmpty) {
-        emit(RemoteCategoriaInitial());
-      } else {
-        emit(RemoteCategoriaDone(dataState.data));
-      }
+      print(dataState.data);
+      emit(RemoteCategoriaDone(dataState.data));
     }
 
     if (dataState is DataFailed) {
+      print(dataState.exception!.message);
       emit(RemoteCategoriaFailure(dataState.exception));
     }
   }

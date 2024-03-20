@@ -46,5 +46,6 @@ class SessionManager {
 
   static Future<void> logout() async {
     await AuthTokenStorage.destroyAuthToken();
+    appRouter.go(initialDeeplink ?? ScreenPaths.authSignIn);
   }
 }

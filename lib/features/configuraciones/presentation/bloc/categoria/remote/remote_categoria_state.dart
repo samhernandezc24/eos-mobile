@@ -7,8 +7,6 @@ class RemoteCategoriaState extends Equatable {
   List<Object?> get props => [];
 }
 
-class RemoteCategoriaInitial extends RemoteCategoriaState { }
-
 class RemoteCategoriaLoading extends RemoteCategoriaState { }
 
 class RemoteCategoriaDone extends RemoteCategoriaState {

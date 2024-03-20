@@ -18,7 +18,7 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
     this._createInspeccionTipoUseCase,
     this._updateInspeccionTipoUseCase,
     this._deleteInspeccionTipoUseCase,
-  ) : super(RemoteInspeccionTipoInitial()) {
+  ) : super(RemoteInspeccionTipoLoading()) {
     on<FetcInspeccionesTipos>(_onFetchInspeccionesTipos);
     on<CreateInspeccionTipo>(_onCreateInspeccionTipo);
     on<UpdateInspeccionTipo>(_onUpdateInspeccionTipo);
@@ -36,11 +36,7 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
     final dataState = await _fetchInspeccionTipoUseCase(NoParams());
 
     if (dataState is DataSuccess) {
-      if (dataState.data!.isEmpty) {
-        emit(RemoteInspeccionTipoInitial());
-      } else {
-        emit(RemoteInspeccionTipoDone(dataState.data));
-      }
+      emit(RemoteInspeccionTipoDone(dataState.data));
     }
 
     if (dataState is DataFailed) {
@@ -54,7 +50,7 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
     final dataState = await _createInspeccionTipoUseCase(event.inspeccionTipoReq);
 
     if (dataState is DataSuccess) {
-      emit(RemoteInspeccionResponseDone(dataState.data!));
+      emit(RemoteInspeccionResponseSuccess(dataState.data!));
     }
 
     if (dataState is DataFailedMessage) {
@@ -72,7 +68,7 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
     final dataState = await _updateInspeccionTipoUseCase(event.inspeccionTipoReq);
 
     if (dataState is DataSuccess) {
-      emit(RemoteInspeccionResponseDone(dataState.data!));
+      emit(RemoteInspeccionResponseSuccess(dataState.data!));
     }
 
     if (dataState is DataFailedMessage) {
@@ -85,10 +81,12 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
   }
 
   Future<void> _onDeleteInspeccionTipo(DeleteInspeccionTipo event, Emitter<RemoteInspeccionTipoState> emit) async {
+    emit(RemoteInspeccionTipoLoading());
+
     final dataState = await _deleteInspeccionTipoUseCase(event.inspeccionTipoReq);
 
     if (dataState is DataSuccess) {
-      emit(RemoteInspeccionResponseDone(dataState.data!));
+      emit(RemoteInspeccionResponseSuccess(dataState.data!));
     }
 
     if (dataState is DataFailedMessage) {

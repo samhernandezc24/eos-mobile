@@ -37,7 +37,7 @@ class MainApp extends StatelessWidget {
         ),
         BlocProvider<RemoteInspeccionTipoBloc>(
           create: (BuildContext context) => sl<RemoteInspeccionTipoBloc>()
-              ..add(const FetcInspeccionesTipos()),
+              ..add(FetcInspeccionesTipos()),
         ),
         BlocProvider<RemoteCategoriaBloc>(
           create: (BuildContext context) => sl<RemoteCategoriaBloc>(),
