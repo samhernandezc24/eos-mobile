@@ -167,7 +167,7 @@ class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesIn
             ),
             Gap($styles.insets.xs),
             Text(
-              $strings.inspectionTypeSyncText,
+              $strings.emptyListMessage,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               maxLines: 6,

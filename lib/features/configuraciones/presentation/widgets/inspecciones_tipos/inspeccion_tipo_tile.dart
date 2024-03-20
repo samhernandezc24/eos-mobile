@@ -1,6 +1,7 @@
 import 'package:eos_mobile/core/common/widgets/controls/basic_modal.dart';
 import 'package:eos_mobile/features/configuraciones/domain/entities/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/pages/categorias/categorias_page.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/widgets/inspecciones_tipos/update_inspeccion_tipo_form.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
@@ -89,13 +90,21 @@ class InspeccionTipoTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text('Folio: ${inspeccionTipo!.folio}',
-                    textAlign: TextAlign.center, style: $styles.textStyles.h3),
+                Text('Folio: ${inspeccionTipo!.folio}', textAlign: TextAlign.center, style: $styles.textStyles.h3),
                 Gap($styles.insets.sm),
                 ListTile(
                   leading: const Icon(Icons.add),
                   title: const Text('Crear categorías'),
-                  onTap: () {},
+                  onTap: () {
+                    Future.delayed($styles.times.pageTransition, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (context) => const ConfiguracionesCategoriasPage(),
+                        ),
+                      );
+                    });
+                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.edit),

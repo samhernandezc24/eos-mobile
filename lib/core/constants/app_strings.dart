@@ -7,6 +7,8 @@ class AppStrings {
   String circleButtonsSemanticBack    = 'Volver';
   String circleButtonsSemanticClose   = 'Cerrar';
 
+  String emptyListMessage             = 'Intenta actualizar el listado para sincronizar los últimos cambios en el servidor.';
+
   String error404Message              = 'Nos hemos perdido en el vasto desierto digital y has llegado a una página que no existe.';
   String error404SemanticLabel        = 'Error 404';
   String error404Title                = '¡Oops! 404';
@@ -20,7 +22,6 @@ class AppStrings {
 
   String inspectionTypeDescription    = 'Crea un tipo de inspección para agrupar los formularios de las inspecciones.';
   String inspectionTypeEmptyTitle     = 'No hay tipos de inspecciones';
-  String inspectionTypeSyncText       = 'Intenta actualizar el listado para sincronizar los últimos cambios en el servidor.';
   String inspectionTypeTitle          = 'Listado de Tipos de Inspecciones';
 
   String module1                      = 'Inspecciones';
