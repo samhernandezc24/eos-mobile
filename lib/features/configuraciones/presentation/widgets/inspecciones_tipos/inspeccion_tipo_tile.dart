@@ -1,6 +1,7 @@
 import 'package:eos_mobile/core/common/widgets/controls/basic_modal.dart';
 import 'package:eos_mobile/features/configuraciones/domain/entities/inspecciones_tipos/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/widgets/categorias/create_categoria_form.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/widgets/inspecciones_tipos/update_inspeccion_tipo_form.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
@@ -97,7 +98,30 @@ class InspeccionTipoTile extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.add),
                   title: const Text('Crear categorías'),
-                  onTap: _onTap,
+                  onTap: () {
+                    Navigator.push<void>(
+                      context,
+                      PageRouteBuilder<void>(
+                        transitionDuration: $styles.times.pageTransition,
+                        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+                          const Offset begin  = Offset(0, 1);
+                          const Offset end    = Offset.zero;
+                          const Cubic curve   = Curves.ease;
+
+                          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                          return SlideTransition(
+                            position: animation.drive<Offset>(tween),
+                            child: BasicModal(
+                              title: 'Nueva Categoría',
+                              child: CreateCategoriaForm(inspeccionTipo: inspeccionTipo),
+                            ),
+                          );
+                        },
+                        fullscreenDialog: true,
+                      ),
+                    );
+                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.edit),
