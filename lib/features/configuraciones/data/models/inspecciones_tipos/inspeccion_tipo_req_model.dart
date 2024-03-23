@@ -13,11 +13,13 @@ class InspeccionTipoReqModel extends InspeccionTipoReqEntity {
     String? folio,
     String? name,
     String? correo,
+    int? orden,
   }) : super(
         idInspeccionTipo  : idInspeccionTipo,
         folio             : folio,
         name              : name,
         correo            : correo,
+        orden             : orden,
       );
 
   /// Constructor factory para convertir la instancia de [InspeccionTipoReqEntity]
@@ -28,6 +30,7 @@ class InspeccionTipoReqModel extends InspeccionTipoReqEntity {
       folio             : entity.folio,
       name              : entity.name,
       correo            : entity.correo,
+      orden             : entity.orden,
     );
   }
 
@@ -38,6 +41,7 @@ class InspeccionTipoReqModel extends InspeccionTipoReqEntity {
       'folio'            : folio,
       'name'             : name,
       'correo'           : correo,
+      'orden'            : orden,
     };
   }
 }

@@ -13,7 +13,7 @@ class _InspeccionTipoApiService implements InspeccionTipoApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= ListAPI.inspeccionesTipos;
+    baseUrl ??= 'http://10.0.2.2:7000/api/Inspecciones/Tipos';
   }
 
   final Dio _dio;
@@ -119,6 +119,44 @@ class _InspeccionTipoApiService implements InspeccionTipoApiService {
             .compose(
               _dio.options,
               '/Update',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ApiResponse.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<ApiResponse>> updateOrdenInspeccionTipo(
+    String token,
+    String contentType,
+    List<Map<String, dynamic>> inspeccionesTipos,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'authorization': token,
+      r'content-type': contentType,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = inspeccionesTipos;
+    // final _data = inspeccionesTipos.map((e) => e.toJson()).toList();
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<ApiResponse>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+            .compose(
+              _dio.options,
+              '/UpdateOrden',
               queryParameters: queryParameters,
               data: _data,
             )

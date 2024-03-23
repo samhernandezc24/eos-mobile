@@ -13,7 +13,7 @@ class _AuthRemoteApiService implements AuthRemoteApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= ListAPI.aspNetUser;
+    baseUrl ??= 'http://10.0.2.2:7000/api/AspNetUser';
   }
 
   final Dio _dio;

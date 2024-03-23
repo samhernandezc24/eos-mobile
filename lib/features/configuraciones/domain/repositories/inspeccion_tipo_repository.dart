@@ -6,7 +6,8 @@ import 'package:eos_mobile/features/configuraciones/domain/entities/inspecciones
 abstract class InspeccionTipoRepository {
   /// API METHODS
   Future<DataState<List<InspeccionTipoEntity>>> fetchInspeccionesTipos();
-  Future<DataState<ApiResponse>> createInspeccionTipo(InspeccionTipoReqEntity inspeccionTipoReq);
-  Future<DataState<ApiResponse>> updateInspeccionTipo(InspeccionTipoReqEntity inspeccionTipoReq);
-  Future<DataState<ApiResponse>> deleteInspeccionTipo(InspeccionTipoEntity inspeccionTipo);
+  Future<DataState<ApiResponseEntity>> createInspeccionTipo(InspeccionTipoReqEntity inspeccionTipoReq);
+  Future<DataState<ApiResponseEntity>> updateInspeccionTipo(InspeccionTipoReqEntity inspeccionTipoReq);
+  Future<DataState<ApiResponseEntity>> deleteInspeccionTipo(InspeccionTipoEntity inspeccionTipo);
+  Future<DataState<ApiResponseEntity>> updateOrdenInspeccionTipo(List<Map<String, dynamic>> inspeccionesTipos);
 }

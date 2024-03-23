@@ -18,6 +18,7 @@ import 'package:eos_mobile/features/configuraciones/domain/usecases/inspecciones
 import 'package:eos_mobile/features/configuraciones/domain/usecases/inspecciones_tipos/delete_inspeccion_tipo.dart';
 import 'package:eos_mobile/features/configuraciones/domain/usecases/inspecciones_tipos/fetch_inspeccion_tipo.dart';
 import 'package:eos_mobile/features/configuraciones/domain/usecases/inspecciones_tipos/update_inspeccion_tipo.dart';
+import 'package:eos_mobile/features/configuraciones/domain/usecases/inspecciones_tipos/update_orden_inspeccion_tipo.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 
@@ -57,6 +58,7 @@ Future<void> initializeDependencies() async {
   ..registerSingleton<FetchInspeccionTipoUseCase>(FetchInspeccionTipoUseCase(sl()))
   ..registerSingleton<CreateInspeccionTipoUseCase>(CreateInspeccionTipoUseCase(sl()))
   ..registerSingleton<UpdateInspeccionTipoUseCase>(UpdateInspeccionTipoUseCase(sl()))
+  ..registerSingleton<UpdateOrdenInspeccionTipoUseCase>(UpdateOrdenInspeccionTipoUseCase(sl()))
   ..registerSingleton<DeleteInspeccionTipoUseCase>(DeleteInspeccionTipoUseCase(sl()))
 
   ..registerSingleton<FetchCategoriasByIdInspeccionTipoUseCase>(FetchCategoriasByIdInspeccionTipoUseCase(sl()))
@@ -67,7 +69,7 @@ Future<void> initializeDependencies() async {
   // Blocs
   ..registerFactory<RemoteSignInBloc>(() => RemoteSignInBloc(sl()))
 
-  ..registerFactory<RemoteInspeccionTipoBloc>(() => RemoteInspeccionTipoBloc(sl(), sl(), sl(), sl()))
+  ..registerFactory<RemoteInspeccionTipoBloc>(() => RemoteInspeccionTipoBloc(sl(), sl(), sl(), sl(), sl()))
 
   ..registerFactory<RemoteCategoriaBloc>(() => RemoteCategoriaBloc(sl(), sl(), sl(), sl()));
 }

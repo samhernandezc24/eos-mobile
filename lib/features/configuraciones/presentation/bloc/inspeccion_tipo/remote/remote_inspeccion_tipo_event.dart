@@ -27,6 +27,15 @@ class UpdateInspeccionTipo extends RemoteInspeccionTipoEvent {
   List<Object?> get props => [ inspeccionTipoReq ];
 }
 
+class UpdateOrdenInspeccionTipo extends RemoteInspeccionTipoEvent {
+  const UpdateOrdenInspeccionTipo(this.inspeccionesTipos);
+
+  final List<Map<String, dynamic>> inspeccionesTipos;
+
+  @override
+  List<Object?> get props => [ inspeccionesTipos ];
+}
+
 class DeleteInspeccionTipo extends RemoteInspeccionTipoEvent {
   const DeleteInspeccionTipo(this.inspeccionTipo);
 

@@ -107,17 +107,49 @@ class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesIn
                     if (state.inspeccionesTipos!.isEmpty) {
                       return _buildEmptyInspeccionTipo(context);
                     } else {
-                      return ListView.separated(
-                        itemBuilder: (BuildContext context, int index) {
-                          return InspeccionTipoTile(
-                            inspeccionTipo: state.inspeccionesTipos![index],
+                      return ReorderableListView(
+                        onReorder: (int oldIndex, int newIndex) {
+                          setState(() {
+                            if (oldIndex < newIndex) {
+                              newIndex -= 1;
+                            }
+                            final InspeccionTipoEntity movedItem = state.inspeccionesTipos!.removeAt(oldIndex);
+                            state.inspeccionesTipos!.insert(newIndex, movedItem);
+                          });
+
+                          final updatedInspeccionesTipos = state.inspeccionesTipos!;
+                          final List<Map<String, dynamic>> objData = updatedInspeccionesTipos.map((inspeccionTipo) {
+                            return {
+                              'idInspeccionTipo' : inspeccionTipo.idInspeccionTipo,
+                              'folio' : inspeccionTipo.idInspeccionTipo,
+                              'name' : inspeccionTipo.idInspeccionTipo,
+                              'correo' : inspeccionTipo.idInspeccionTipo,
+                              'orden' : inspeccionTipo.idInspeccionTipo,
+                            };
+                          }).toList();
+
+                          BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(UpdateOrdenInspeccionTipo(objData));
+                        },
+                        children: state.inspeccionesTipos!.map((inspeccionTipo) {
+                           return InspeccionTipoTile(
+                            key: Key('${inspeccionTipo.orden}'),
+                            inspeccionTipo: inspeccionTipo,
                             onInspeccionTipoPressed: (inspeccionTipo) => _onInspeccionTipoPressed(context, inspeccionTipo),
                             onRemove: (inspeccionTipo) => _onRemoveInspeccionTipo(context, inspeccionTipo),
                           );
-                        },
-                        separatorBuilder: (BuildContext context, int index) => const Divider(),
-                        itemCount: state.inspeccionesTipos!.length,
+                        }).toList(),
                       );
+                      // return ListView.separated(
+                      //   itemBuilder: (BuildContext context, int index) {
+                      //     return InspeccionTipoTile(
+                      //       inspeccionTipo: state.inspeccionesTipos![index],
+                      //       onInspeccionTipoPressed: (inspeccionTipo) => _onInspeccionTipoPressed(context, inspeccionTipo),
+                      //       onRemove: (inspeccionTipo) => _onRemoveInspeccionTipo(context, inspeccionTipo),
+                      //     );
+                      //   },
+                      //   separatorBuilder: (BuildContext context, int index) => const Divider(),
+                      //   itemCount: state.inspeccionesTipos!.length,
+                      // );
                     }
                   }
                   // ESTADO POR DEFECTO

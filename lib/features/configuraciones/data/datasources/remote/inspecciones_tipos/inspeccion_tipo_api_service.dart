@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/core/network/api_response.dart';
-import 'package:eos_mobile/features/configuraciones/data/models/inspeccion_tipo_model.dart';
-import 'package:eos_mobile/features/configuraciones/data/models/inspeccion_tipo_req_model.dart';
+import 'package:eos_mobile/features/configuraciones/data/models/inspecciones_tipos/inspeccion_tipo_model.dart';
+import 'package:eos_mobile/features/configuraciones/data/models/inspecciones_tipos/inspeccion_tipo_req_model.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -34,6 +34,14 @@ abstract class InspeccionTipoApiService {
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
     @Body() InspeccionTipoReqModel inspeccionTipoReq,
+  );
+
+  // ACTUALIZACIÓN EL ORDEN DE INSPECCIONES TIPOS
+  @POST('/UpdateOrden')
+  Future<HttpResponse<ApiResponse>> updateOrdenInspeccionTipo(
+    @Header(HttpHeaders.authorizationHeader) String token,
+    @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Body() List<Map<String, dynamic>> inspeccionesTipos,
   );
 
   // ELIMINACIÓN DE INSPECCIONES TIPOS

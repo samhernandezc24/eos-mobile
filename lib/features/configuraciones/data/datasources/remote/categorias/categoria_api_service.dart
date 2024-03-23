@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/core/network/api_response.dart';
-import 'package:eos_mobile/features/configuraciones/data/models/categoria_model.dart';
-import 'package:eos_mobile/features/configuraciones/data/models/categoria_req_model.dart';
-import 'package:eos_mobile/features/configuraciones/data/models/inspeccion_tipo_model.dart';
+import 'package:eos_mobile/features/configuraciones/data/models/categorias/categoria_model.dart';
+import 'package:eos_mobile/features/configuraciones/data/models/categorias/categoria_req_model.dart';
+import 'package:eos_mobile/features/configuraciones/data/models/inspecciones_tipos/inspeccion_tipo_model.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:retrofit/retrofit.dart';
 

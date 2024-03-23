@@ -18,6 +18,13 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
   final TextEditingController _correoController = TextEditingController();
 
   final int currentYear = DateTime.now().year;
+  int _currentOrder     = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCurrentOrder();
+  }
 
   @override
   void dispose() {
@@ -25,6 +32,13 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
     _nameController.dispose();
     _correoController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadCurrentOrder() async {
+    final currentOrder = await context.read<RemoteInspeccionTipoBloc>().getCurrentOrder();
+    setState(() {
+      _currentOrder = currentOrder;
+    });
   }
 
   void _handleSubmitInspeccionTipo() {
@@ -40,6 +54,7 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
         folio   : _folioController.text,
         name    : _nameController.text,
         correo  : _correoController.text,
+        orden   : _currentOrder,
       );
       // EVENTO DE GUARDADO
       context.read<RemoteInspeccionTipoBloc>().add(CreateInspeccionTipo(objInspeccionData));

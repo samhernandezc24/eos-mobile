@@ -13,11 +13,13 @@ class InspeccionTipoModel extends InspeccionTipoEntity {
     required String folio,
     required String name,
     String? correo,
+    int? orden,
   }) : super(
           idInspeccionTipo  : idInspeccionTipo,
           folio             : folio,
           name              : name,
           correo            : correo,
+          orden             : orden,
         );
 
   /// Constructor factory para crear la instancia de [InspeccionTipoModel]
@@ -28,6 +30,7 @@ class InspeccionTipoModel extends InspeccionTipoEntity {
       folio             : jsonMap['folio'] as String,
       name              : jsonMap['name'] as String,
       correo            : jsonMap['correo'] as String,
+      orden             : jsonMap['orden'] as int,
     );
   }
 
@@ -39,6 +42,7 @@ class InspeccionTipoModel extends InspeccionTipoEntity {
       folio             : entity.folio,
       name              : entity.name,
       correo            : entity.correo,
+      orden             : entity.orden,
     );
   }
 
@@ -49,6 +53,7 @@ class InspeccionTipoModel extends InspeccionTipoEntity {
       'folio'             : folio,
       'name'              : name,
       'correo'            : correo,
+      'orden'             : orden,
     };
   }
 }
