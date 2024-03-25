@@ -34,7 +34,6 @@ class UserInfoStorage {
 
   static Future<Map<String, String?>> getUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
-
     return {
       'id'            : prefs.getString(_keyId),
       'user'          : prefs.getString(_keyUser),

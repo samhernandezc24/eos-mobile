@@ -5,8 +5,8 @@ import 'package:eos_mobile/shared/shared.dart';
 class SettingsLogic with ThrottledSaveLoadMixin {
   late final ValueNotifier<bool> hasCompletedOnboarding     = ValueNotifier<bool>(false)..addListener(scheduleSave);
   late final ValueNotifier<bool> hasDismissedSearchMessage  = ValueNotifier<bool>(false)..addListener(scheduleSave);
-  late final ValueNotifier<bool> isLoggedIn                 = ValueNotifier(false)..addListener(scheduleSave);
-  late final ValueNotifier<bool> isDarkModeEnabled          = ValueNotifier(false)..addListener(scheduleSave);
+  late final ValueNotifier<bool> isLoggedIn                 = ValueNotifier<bool>(false)..addListener(scheduleSave);
+  late final ValueNotifier<bool> isDarkModeEnabled          = ValueNotifier<bool>(false)..addListener(scheduleSave);
 
   final bool useBlurs = !PlatformInfo.isAndroid;
 

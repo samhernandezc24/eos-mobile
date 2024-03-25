@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:eos_mobile/config/logic/common/auth_token_storage.dart';
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
 import 'package:eos_mobile/core/utils/page_routes_utils.dart';
 import 'package:eos_mobile/shared/shared.dart';
@@ -18,7 +17,7 @@ class AppLogic {
   /// Sólo afecta a dispositivos Android/iOS.
   ///
   /// Por defecto tanto horizontal como vertical.
-  List<Axis> supportedOrientations = [Axis.vertical, Axis.horizontal];
+  List<Axis> supportedOrientations = <Axis>[Axis.vertical, Axis.horizontal];
 
   /// Permitir que una vista anule las orientaciones actualmente soportadas.
   ///
@@ -35,7 +34,7 @@ class AppLogic {
 
   /// Inicializa la aplicación y toda la lógica de negocio.
   Future<void> bootstrap() async {
-    $logger.d('Bootstrap start 🚀');
+    $logger.d('Bootstrap start...🚀');
 
     // Ajustar la frecuencia de refresh deseada al máximo posible
     // (el sistema operativo puede ignorar esto).
@@ -43,32 +42,38 @@ class AppLogic {
       await FlutterDisplayMode.setHighRefreshRate();
     }
 
-    // Configuraciones
+    // Configuraciones (Settings):
     await settingsLogic.load();
+
+    // Autenticaciones, Sesiones (Authentications):
+    // await authLogic.load();
 
     // Marcar bootstrap como completado.
     isBootstrapComplete = true;
 
     // Cargar vista inicial (sustituir la vista inicial vacía que está cubierta
     // por una pantalla de inicio nativa).
-    final bool showIntro        = settingsLogic.hasCompletedOnboarding.value == false;
-    final bool isAuthenticated  = settingsLogic.isLoggedIn.value == true;
-
-    if (showIntro) {
+    final bool showWelcomePage = settingsLogic.hasCompletedOnboarding.value == false;
+    // final bool isAuthenticated  = settingsLogic.isLoggedIn.value == true;
+    if (showWelcomePage) {
       appRouter.go(ScreenPaths.welcome);
-    } else {
-      if (!isAuthenticated) {
-        appRouter.go(initialDeeplink ?? ScreenPaths.authSignIn);
-      } else {
-        final authToken = await AuthTokenStorage.getAuthToken();
-        if (authToken == null) {
-          appRouter.go(initialDeeplink ?? ScreenPaths.authSignIn);
-          settingsLogic.isLoggedIn.value = false;
-        } else {
-          appRouter.go(initialDeeplink ?? ScreenPaths.home);
-        }
-      }
     }
+
+    // if (showIntro) {
+    //   appRouter.go(ScreenPaths.welcome);
+    // } else {
+    //   if (!isAuthenticated) {
+    //     appRouter.go(initialDeeplink ?? ScreenPaths.authSignIn);
+    //   } else {
+    //     final String? authToken = await AuthTokenStorage.getAuthToken();
+    //     if (authToken == null) {
+    //       appRouter.go(initialDeeplink ?? ScreenPaths.authSignIn);
+    //       settingsLogic.isLoggedIn.value = false;
+    //     } else {
+    //       appRouter.go(initialDeeplink ?? ScreenPaths.home);
+    //     }
+    //   }
+    // }
   }
 
   Future<T?> showFullscreenDialogRoute<T>(BuildContext context, Widget child, {bool transparent = false}) async {
@@ -81,7 +86,7 @@ class AppLogic {
   void handleAppSizeChanged(Size appSize) {
     /// Desactivar la disposición horizontal en formatos pequeños.
     final bool isSmall    = display.size.shortestSide / display.devicePixelRatio < 600;
-    supportedOrientations = isSmall ? [Axis.vertical] : [Axis.vertical, Axis.horizontal];
+    supportedOrientations = isSmall ? <Axis>[Axis.vertical] : <Axis>[Axis.vertical, Axis.horizontal];
 
     _updateSystemOrientation();
     _appSize = appSize;
@@ -92,10 +97,10 @@ class AppLogic {
   bool shouldUseNavRail() => _appSize.width > _appSize.height && _appSize.height > 250;
 
   void _updateSystemOrientation() {
-    final lstAxis = _supportedOrientationsOverride ?? supportedOrientations;
-    debugPrint('updateDeviceOrientation, supportedAxis: $lstAxis');
+    final List<Axis> lstAxis = _supportedOrientationsOverride ?? supportedOrientations;
+    // debugPrint('updateDeviceOrientation, supportedAxis: $lstAxis');
+    final List<DeviceOrientation> orientations = <DeviceOrientation>[];
 
-    final orientations = <DeviceOrientation>[];
     if (lstAxis.contains(Axis.vertical)) {
       orientations.addAll([
         DeviceOrientation.portraitUp,

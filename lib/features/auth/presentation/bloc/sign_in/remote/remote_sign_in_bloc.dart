@@ -25,7 +25,6 @@ class RemoteSignInBloc extends Bloc<RemoteSignInEvent, RemoteSignInState> {
     if (dataState is DataSuccess) {
       // Guardar el token de autenticación en local para recordar la sesión del usuario.
       await AuthTokenStorage.saveAuthToken(dataState.data!.token);
-      await AuthTokenStorage.saveAuthAccessToken(dataState.data!.token);
 
       // Guardar la información del usuario en local.
       await _saveUserDataToLocal(dataState.data!);

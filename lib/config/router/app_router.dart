@@ -135,6 +135,7 @@ class AppRoute extends GoRoute {
                 },
               );
             }
+            
             return CupertinoPage<dynamic>(child: pageContent);
           },
         );
