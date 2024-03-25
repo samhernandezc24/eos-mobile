@@ -25,18 +25,13 @@ class CategoriaTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title:
-          Text(categoria!.name.toProperCase(), overflow: TextOverflow.ellipsis),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text('Folio: ${categoria!.inspeccionTipoFolio}'),
-          Text(
-            'Tipo de Inspección: ${categoria!.inspeccionTipoName.toProperCase()}',
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+      leading: CircleAvatar(
+        child: Text(
+          categoria!.orden.toString(),
+          style: $styles.textStyles.h4,
+        ),
       ),
+      title: Text(categoria!.name.toProperCase(), softWrap: true),
       onTap: _onTap,
       trailing: IconButton(
         icon: const Icon(Icons.more_vert),
@@ -82,7 +77,7 @@ class CategoriaTile extends StatelessWidget {
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(
-                  content: Text(state.apiResponse.message),
+                  content: Text('¡La categoria ha sido eliminada exitosamente!', style: $styles.textStyles.bodySmall),
                   backgroundColor: Colors.green,
                 ),
               );

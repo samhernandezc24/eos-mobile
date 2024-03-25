@@ -74,7 +74,7 @@ class InspeccionTipoTile extends StatelessWidget {
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(
-                  content: Text(state.apiResponse.message),
+                  content: Text('¡El tipo de inspección ha sido eliminado exitosamente!', style: $styles.textStyles.bodySmall),
                   backgroundColor: Colors.green,
                 ),
               );

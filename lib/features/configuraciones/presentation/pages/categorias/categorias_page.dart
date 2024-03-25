@@ -79,6 +79,7 @@ class _ConfiguracionesCategoriasPageState extends State<ConfiguracionesCategoria
               label: Text('Crear Categoría', style: $styles.textStyles.button),
             ),
           ),
+
           Container(
             padding: EdgeInsets.all($styles.insets.sm),
             child: Column(
@@ -86,10 +87,48 @@ class _ConfiguracionesCategoriasPageState extends State<ConfiguracionesCategoria
               children: <Widget>[
                 Text($strings.categoryTitle, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600)),
                 Gap($styles.insets.xxs),
-                Text($strings.categoryDescription, style: $styles.textStyles.bodySmall),
+                RichText(
+                  text: TextSpan(
+                    style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                    children: [
+                      const TextSpan(
+                        text: 'Tipo de Inspección',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      TextSpan(text: ': ${widget.inspeccionTipo!.name.toProperCase()}'),
+                    ],
+                  ),
+                ),
+                Gap($styles.insets.xxs),
+                RichText(
+                  text: TextSpan(
+                    style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                    children: [
+                      const TextSpan(
+                        text: 'Folio',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      TextSpan(text: ': ${widget.inspeccionTipo!.folio}'),
+                    ],
+                  ),
+                ),
+                Gap($styles.insets.xxs),
+                RichText(
+                  text: TextSpan(
+                    style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                    children: [
+                      const TextSpan(
+                        text: 'Sugerencia',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      TextSpan(text: ': ${$strings.categoryDescription}'),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
+
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
@@ -175,7 +214,7 @@ class _ConfiguracionesCategoriasPageState extends State<ConfiguracionesCategoria
     );
   }
 
-  Center _buildEmptyCategoria(BuildContext context) {
+  Widget _buildEmptyCategoria(BuildContext context) {
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg),

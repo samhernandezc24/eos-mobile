@@ -9,15 +9,40 @@ class CategoriaItemEntity extends Equatable {
     required this.idCategoriaItem,
     required this.name,
     required this.idInspeccionTipo,
-    this.descripcion,
+    required this.inspeccionTipoName,
+    required this.idCategoria,
+    required this.categoriaName,
+    required this.idFormularioTipo,
+    required this.formularioTipoName,
+    this.orden,
+    this.formularioValor,
   });
 
   final String idCategoriaItem;
   final String name;
-  final String? descripcion;
+  final int? orden;
 
   final String idInspeccionTipo;
+  final String inspeccionTipoName;
+
+  final String idCategoria;
+  final String categoriaName;
+
+  final String idFormularioTipo;
+  final String formularioTipoName;
+  final String? formularioValor;
 
   @override
-  List<Object?> get props => [ idCategoriaItem ];
+  List<Object?> get props => [
+        idCategoriaItem,
+        name,
+        orden,
+        idInspeccionTipo,
+        inspeccionTipoName,
+        idCategoria,
+        categoriaName,
+        idFormularioTipo,
+        formularioTipoName,
+        formularioValor,
+      ];
 }

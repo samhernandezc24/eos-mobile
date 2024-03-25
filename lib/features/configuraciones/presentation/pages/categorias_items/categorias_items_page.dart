@@ -1,5 +1,8 @@
+import 'package:eos_mobile/core/common/widgets/controls/basic_modal.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_field.dart';
 import 'package:eos_mobile/features/configuraciones/domain/entities/categorias/categoria_entity.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/widgets/categorias/create_categoria_form.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/widgets/categorias_items/create_categoria_item_form.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class ConfiguracionesCategoriasItemsPage extends StatefulWidget {
@@ -30,54 +33,41 @@ class _ConfiguracionesCategoriasItemsPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title:
-              Text('Configuración de Preguntas', style: $styles.textStyles.h3)),
+      appBar: AppBar(title: Text('Configuración de Preguntas', style: $styles.textStyles.h3)),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Container(
-            padding: EdgeInsets.fromLTRB(
-                $styles.insets.sm, 0, $styles.insets.sm, $styles.insets.sm + 4),
+            height: 100,
+            alignment: Alignment.center,
             color: Theme.of(context).colorScheme.background,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                RichText(
-                  text: TextSpan(
-                    style: $styles.textStyles.title1.copyWith(
-                      color: Theme.of(context).colorScheme.onBackground,
-                      fontSize: 16,
-                    ),
-                    children: [
-                      const TextSpan(
-                        text: 'Tipo de Inspección',
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      TextSpan(
-                          text:
-                              ': ${widget.categoria!.inspeccionTipoName.toProperCase()}'),
-                    ],
+            child: FilledButton.icon(
+              onPressed: () {
+                Navigator.push<void>(
+                  context,
+                  PageRouteBuilder<void>(
+                    transitionDuration: $styles.times.pageTransition,
+                    pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+                      const Offset begin  = Offset(0, 1);
+                      const Offset end    = Offset.zero;
+                      const Cubic curve   = Curves.ease;
+
+                      final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                      return SlideTransition(
+                        position: animation.drive<Offset>(tween),
+                        child: BasicModal(
+                          title: 'Nueva Pregunta',
+                          child: CreateCategoriaItemForm(categoria: widget.categoria),
+                        ),
+                      );
+                    },
+                    fullscreenDialog: true,
                   ),
-                ),
-                Gap($styles.insets.xs),
-                RichText(
-                  text: TextSpan(
-                    style: $styles.textStyles.title1.copyWith(
-                      color: Theme.of(context).colorScheme.onBackground,
-                      fontSize: 16,
-                    ),
-                    children: [
-                      const TextSpan(
-                        text: 'Categoría',
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      TextSpan(
-                          text: ': ${widget.categoria!.name.toProperCase()}'),
-                    ],
-                  ),
-                ),
-              ],
+                );
+              },
+              icon: const Icon(Icons.add),
+              label: Text('Crear Pregunta', style: $styles.textStyles.button),
             ),
           ),
 
@@ -86,84 +76,117 @@ class _ConfiguracionesCategoriasItemsPageState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text($strings.categoryItemTitle,
-                    style: $styles.textStyles.title1
-                        .copyWith(fontWeight: FontWeight.w600)),
+                Text($strings.categoryTitle, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600)),
                 Gap($styles.insets.xxs),
-                Text($strings.categoryItemDescription,
-                    style: $styles.textStyles.bodySmall),
+                RichText(
+                  text: TextSpan(
+                    style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                    children: [
+                      const TextSpan(
+                        text: 'Tipo de Inspección',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      TextSpan(text: ': ${widget.categoria!.inspeccionTipoName.toProperCase()}'),
+                    ],
+                  ),
+                ),
+                Gap($styles.insets.xxs),
+                RichText(
+                  text: TextSpan(
+                    style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                    children: [
+                      const TextSpan(
+                        text: 'Categoría',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      TextSpan(text: ': ${widget.categoria!.name.toProperCase()}'),
+                    ],
+                  ),
+                ),
+                Gap($styles.insets.xxs),
+                RichText(
+                  text: TextSpan(
+                    style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                    children: [
+                      const TextSpan(
+                        text: 'Sugerencia',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      TextSpan(text: ': ${$strings.categoryItemDescription}'),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
 
           // LISTADO DE PREGUNTAS
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async {},
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Card(
-                      elevation: 4,
-                      child: Padding(
-                        padding: EdgeInsets.all($styles.insets.sm),
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              LabeledTextField(
-                                controller: _nameController,
-                                labelText: 'Pregunta',
-                                hintText: 'Escribe la pregunta',
-                              ),
-
-                              Gap($styles.insets.sm),
-
-                              // Selector de tipo de pregunta
-                              LabeledDropdownField(
-                                labelText: 'Tipo de Formulario',
-                                onChanged: (_) {},
-                                items: lstOptions,
-                                hintText: 'Seleccione el tipo de formulario',
-                              ),
-
-                              Gap($styles.insets.sm),
-
-                              const Divider(),
-
-                              Gap($styles.insets.sm),
-
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  IconButton(
-                                    onPressed: (){},
-                                    icon: const Icon(Icons.copy),
-                                    tooltip: 'Duplicar elemento',
-                                  ),
-                                  IconButton(
-                                    onPressed: (){},
-                                    icon: Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
-                                    tooltip: 'Quitar',
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          Container(),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
+    );
+  }
+
+  /// EXTRACCIÓN DE WIDGETS
+  // Widget _buildFailureCategoria(BuildContext context, RemoteCategoriaFailure state) {
+  //   return Center(
+  //     child: Padding(
+  //       padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg),
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: <Widget>[
+  //           Icon(Icons.error_outline, color: Theme.of(context).colorScheme.error, size: 64),
+  //           Gap($styles.insets.xs),
+  //           Text($strings.error500Title, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600)),
+  //           Gap($styles.insets.xs),
+  //           Text(
+  //             '${state.failure!.message}',
+  //             textAlign: TextAlign.center,
+  //             overflow: TextOverflow.ellipsis,
+  //             maxLines: 8,
+  //             style: $styles.textStyles.bodySmall,
+  //           ),
+  //           Gap($styles.insets.md),
+  //           FilledButton(
+  //             onPressed: () {},
+  //             child: Text($strings.retryButtonText, style: $styles.textStyles.button),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  Widget _buildEmptyCategoria(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(Icons.info_outline, color: Theme.of(context).colorScheme.secondary, size: 64),
+            Gap($styles.insets.sm),
+            Text(
+              $strings.categoryEmptyTitle,
+              textAlign: TextAlign.center,
+              style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600),
+            ),
+            Gap($styles.insets.xs),
+            Text(
+              $strings.emptyListMessage,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 6,
+              style: $styles.textStyles.bodySmall.copyWith(height: 1.5),
+            ),
+            Gap($styles.insets.sm),
+            FilledButton.icon(
+              onPressed: () {},
+              icon: const Icon(Icons.refresh),
+              label: Text($strings.refreshButtonText, style: $styles.textStyles.button),
+            ),
+          ],
+        ),
       ),
     );
   }

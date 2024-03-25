@@ -3,8 +3,7 @@ import 'package:eos_mobile/config/logic/common/throttler.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 
-/// Mixin para proporcionar funcionalidad de carga y guardado con
-/// throttle.
+/// Mixin para proporcionar funcionalidad de carga y guardado con throttle.
 mixin ThrottledSaveLoadMixin {
   late final JsonPrefsFile _file  = JsonPrefsFile(fileName);
   final Throttler _throttle       = Throttler(const Duration(seconds: 2));
@@ -13,9 +12,9 @@ mixin ThrottledSaveLoadMixin {
   /// Carga de información.
   Future<void> load() async {
     try {
-      final results = await _file.load();
+      final Map<String, dynamic> results = await _file.load();
       copyFromJson(results);
-    } catch (e, stackTrace) {
+    } on Exception catch (e, stackTrace) {
       _logger.e('Error al cargar datos', error: e, stackTrace: stackTrace);
     }
   }
@@ -25,7 +24,7 @@ mixin ThrottledSaveLoadMixin {
     if (!kIsWeb) _logger.d('Guardando...');
     try {
       await _file.save(toJson());
-    } catch (e, stackTrace) {
+    } on Exception catch (e, stackTrace) {
       _logger.e('Error al guardar datos', error: e, stackTrace: stackTrace);
     }
   }

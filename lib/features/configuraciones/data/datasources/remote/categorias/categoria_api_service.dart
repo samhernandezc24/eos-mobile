@@ -15,7 +15,7 @@ abstract class CategoriaApiService {
   factory CategoriaApiService(Dio dio) = _CategoriaApiService;
 
   // LISTADO DE CATEGORÍAS POR EL ID DE INSPECCIÓN TIPO
-  @POST('/ListByIdInspeccionTipo')
+  @POST('/List')
   Future<HttpResponse<ApiResponse>> fetchCategoriasByIdInspeccionTipo(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,

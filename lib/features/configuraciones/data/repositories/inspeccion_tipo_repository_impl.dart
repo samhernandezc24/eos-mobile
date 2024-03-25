@@ -20,7 +20,7 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
   @override
   Future<DataState<List<InspeccionTipoModel>>> fetchInspeccionesTipos() async {
     try {
-      final String? retrieveToken = await _secureStorage.read(key: 'access_token');
+      final String? retrieveToken = await _secureStorage.read(key: 'token');
       final httpResponse = await _inspeccionTipoApiService.fetchInspeccionesTipos(
         'Bearer $retrieveToken',
         'application/json',
@@ -59,7 +59,7 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
   @override
   Future<DataState<ApiResponse>> createInspeccionTipo(InspeccionTipoReqEntity inspeccionTipoReq) async {
     try {
-      final String? retrieveToken = await _secureStorage.read(key: 'access_token');
+      final String? retrieveToken = await _secureStorage.read(key: 'token');
       final httpResponse = await _inspeccionTipoApiService.createInspeccionTipo(
         'Bearer $retrieveToken',
         'application/json',
@@ -94,7 +94,7 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
   @override
   Future<DataState<ApiResponse>> updateInspeccionTipo(InspeccionTipoReqEntity inspeccionTipoReq) async {
     try {
-      final String? retrieveToken = await _secureStorage.read(key: 'access_token');
+      final String? retrieveToken = await _secureStorage.read(key: 'token');
 
       final httpResponse = await _inspeccionTipoApiService.updateInspeccionTipo(
         'Bearer $retrieveToken',
@@ -130,7 +130,7 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
   @override
   Future<DataState<ApiResponse>> updateOrdenInspeccionTipo(List<Map<String, dynamic>> inspeccionesTipos) async {
     try {
-      final String? retrieveToken = await _secureStorage.read(key: 'access_token');
+      final String? retrieveToken = await _secureStorage.read(key: 'token');
 
       final httpResponse = await _inspeccionTipoApiService.updateOrdenInspeccionTipo(
         'Bearer $retrieveToken',
@@ -166,7 +166,7 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
   @override
   Future<DataState<ApiResponse>> deleteInspeccionTipo(InspeccionTipoEntity inspeccionTipo) async {
     try {
-      final String? retrieveToken = await _secureStorage.read(key: 'access_token');
+      final String? retrieveToken = await _secureStorage.read(key: 'token');
       final httpResponse = await _inspeccionTipoApiService.deleteInspeccionTipo(
         'Bearer $retrieveToken',
         'application/json',

@@ -122,16 +122,12 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
 
   // METODOS
   Future<int> getCurrentOrder() async {
-    try {
-      final dataState = await _fetchInspeccionTipoUseCase(NoParams());
-      if (dataState is DataSuccess<List<InspeccionTipoEntity>>) {
-        final currentOrder = dataState.data!.length + 1;
-        return currentOrder;
-      } else {
-        throw Exception('Error al obtener el número actual de registros');
-      }
-    } catch (e) {
-      throw Exception('Error al obtener el número actual de registros: $e');
+    final dataState = await _fetchInspeccionTipoUseCase(NoParams());
+
+    if (dataState is DataSuccess<List<InspeccionTipoEntity>>) {
+      return dataState.data!.length + 1;
+    } else {
+      return 0;
     }
   }
 }

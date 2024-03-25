@@ -18,10 +18,25 @@ class _CreateCategoriaFormState extends State<CreateCategoriaForm> {
 
   final TextEditingController _nameController = TextEditingController();
 
+  int _currentOrder = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCurrentOrder();
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadCurrentOrder() async {
+    final currentOrder = await context.read<RemoteCategoriaBloc>().getCurrentOrder(widget.inspeccionTipo!);
+    setState(() {
+      _currentOrder = currentOrder;
+    });
   }
 
   void _handleSubmitCategoria() {
@@ -38,6 +53,7 @@ class _CreateCategoriaFormState extends State<CreateCategoriaForm> {
         idInspeccionTipo      : widget.inspeccionTipo!.idInspeccionTipo,
         inspeccionTipoFolio   : widget.inspeccionTipo!.folio,
         inspeccionTipoName    : widget.inspeccionTipo!.name,
+        orden                 : _currentOrder,
       );
       // EVENTO DE GUARDADO
       context.read<RemoteCategoriaBloc>().add(CreateCategoria(objInspeccionData));
@@ -79,7 +95,7 @@ class _CreateCategoriaFormState extends State<CreateCategoriaForm> {
           ..hideCurrentSnackBar()
           ..showSnackBar(
             SnackBar(
-              content: Text(state.apiResponse.message),
+              content: Text('¡La categoria ha sido creada exitosamente!', style: $styles.textStyles.bodySmall),
               backgroundColor: Colors.green,
             ),
           );

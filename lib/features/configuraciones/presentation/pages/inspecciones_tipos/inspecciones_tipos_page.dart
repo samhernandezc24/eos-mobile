@@ -70,6 +70,7 @@ class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesIn
               label: Text('Crear Tipo Inspección', style: $styles.textStyles.button),
             ),
           ),
+
           Container(
             padding: EdgeInsets.all($styles.insets.sm),
             child: Column(
@@ -77,10 +78,22 @@ class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesIn
               children: <Widget>[
                 Text($strings.inspectionTypeTitle, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600)),
                 Gap($styles.insets.xxs),
-                Text($strings.inspectionTypeDescription, style: $styles.textStyles.bodySmall),
+                RichText(
+                  text: TextSpan(
+                    style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                    children: [
+                      const TextSpan(
+                        text: 'Sugerencia',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      TextSpan(text: ': ${$strings.inspectionTypeDescription}'),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
+
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
@@ -116,19 +129,6 @@ class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesIn
                             final InspeccionTipoEntity movedItem = state.inspeccionesTipos!.removeAt(oldIndex);
                             state.inspeccionesTipos!.insert(newIndex, movedItem);
                           });
-
-                          final updatedInspeccionesTipos = state.inspeccionesTipos!;
-                          final List<Map<String, dynamic>> objData = updatedInspeccionesTipos.map((inspeccionTipo) {
-                            return {
-                              'idInspeccionTipo' : inspeccionTipo.idInspeccionTipo,
-                              'folio' : inspeccionTipo.idInspeccionTipo,
-                              'name' : inspeccionTipo.idInspeccionTipo,
-                              'correo' : inspeccionTipo.idInspeccionTipo,
-                              'orden' : inspeccionTipo.idInspeccionTipo,
-                            };
-                          }).toList();
-
-                          BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(UpdateOrdenInspeccionTipo(objData));
                         },
                         children: state.inspeccionesTipos!.map((inspeccionTipo) {
                            return InspeccionTipoTile(
@@ -139,17 +139,6 @@ class _ConfiguracionesInspeccionesTiposPageState extends State<ConfiguracionesIn
                           );
                         }).toList(),
                       );
-                      // return ListView.separated(
-                      //   itemBuilder: (BuildContext context, int index) {
-                      //     return InspeccionTipoTile(
-                      //       inspeccionTipo: state.inspeccionesTipos![index],
-                      //       onInspeccionTipoPressed: (inspeccionTipo) => _onInspeccionTipoPressed(context, inspeccionTipo),
-                      //       onRemove: (inspeccionTipo) => _onRemoveInspeccionTipo(context, inspeccionTipo),
-                      //     );
-                      //   },
-                      //   separatorBuilder: (BuildContext context, int index) => const Divider(),
-                      //   itemCount: state.inspeccionesTipos!.length,
-                      // );
                     }
                   }
                   // ESTADO POR DEFECTO

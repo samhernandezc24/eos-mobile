@@ -88,7 +88,7 @@ class _UpdateCategoriaFormState extends State<UpdateCategoriaForm> {
           ..hideCurrentSnackBar()
           ..showSnackBar(
             SnackBar(
-              content: Text(state.apiResponse.message),
+              content: Text('¡La categoria ha sido actualizada exitosamente!', style: $styles.textStyles.bodySmall),
               backgroundColor: Colors.green,
             ),
           );

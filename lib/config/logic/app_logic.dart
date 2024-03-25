@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:eos_mobile/config/logic/common/auth_token_storage.dart';
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
 import 'package:eos_mobile/core/utils/page_routes_utils.dart';
 import 'package:eos_mobile/shared/shared.dart';
@@ -54,26 +55,24 @@ class AppLogic {
     // Cargar vista inicial (sustituir la vista inicial vacía que está cubierta
     // por una pantalla de inicio nativa).
     final bool showWelcomePage = settingsLogic.hasCompletedOnboarding.value == false;
-    // final bool isAuthenticated  = settingsLogic.isLoggedIn.value == true;
+    final bool isAuthenticated = settingsLogic.isLoggedIn.value == true;
+
     if (showWelcomePage) {
       appRouter.go(ScreenPaths.welcome);
-    }
+    } else {
+      if (!isAuthenticated) {
+        appRouter.go(initialDeeplink ?? ScreenPaths.authSignIn);
+      } else {
+        final String? authToken = await AuthTokenStorage.getAuthToken();
 
-    // if (showIntro) {
-    //   appRouter.go(ScreenPaths.welcome);
-    // } else {
-    //   if (!isAuthenticated) {
-    //     appRouter.go(initialDeeplink ?? ScreenPaths.authSignIn);
-    //   } else {
-    //     final String? authToken = await AuthTokenStorage.getAuthToken();
-    //     if (authToken == null) {
-    //       appRouter.go(initialDeeplink ?? ScreenPaths.authSignIn);
-    //       settingsLogic.isLoggedIn.value = false;
-    //     } else {
-    //       appRouter.go(initialDeeplink ?? ScreenPaths.home);
-    //     }
-    //   }
-    // }
+        if (authToken == null) {
+          appRouter.go(initialDeeplink ?? ScreenPaths.authSignIn);
+          settingsLogic.isLoggedIn.value = false;
+        } else {
+          appRouter.go(initialDeeplink ?? ScreenPaths.home);
+        }
+      }
+    }
   }
 
   Future<T?> showFullscreenDialogRoute<T>(BuildContext context, Widget child, {bool transparent = false}) async {

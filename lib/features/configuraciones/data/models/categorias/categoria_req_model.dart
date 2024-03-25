@@ -14,12 +14,14 @@ class CategoriaReqModel extends CategoriaReqEntity {
     String? idInspeccionTipo,
     String? inspeccionTipoFolio,
     String? inspeccionTipoName,
+    int? orden,
   }) : super(
           idCategoria         : idCategoria,
           name                : name,
           idInspeccionTipo    : idInspeccionTipo,
           inspeccionTipoFolio : inspeccionTipoFolio,
           inspeccionTipoName  : inspeccionTipoName,
+          orden               : orden,
         );
 
   /// Constructor factory para convertir la instancia de [CategoriaReqEntity]
@@ -31,6 +33,7 @@ class CategoriaReqModel extends CategoriaReqEntity {
       idInspeccionTipo    : entity.idInspeccionTipo,
       inspeccionTipoFolio : entity.inspeccionTipoFolio,
       inspeccionTipoName  : entity.inspeccionTipoName,
+      orden               : entity.orden,
     );
   }
 
@@ -42,6 +45,7 @@ class CategoriaReqModel extends CategoriaReqEntity {
       'idInspeccionTipo'    : idInspeccionTipo,
       'inspeccionTipoFolio' : inspeccionTipoFolio,
       'inspeccionTipoName'  : inspeccionTipoName,
+      'orden'               : orden,
     };
   }
 }

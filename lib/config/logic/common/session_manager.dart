@@ -18,7 +18,7 @@ class SessionManager {
     final SharedPreferences prefs         = await SharedPreferences.getInstance();
     const FlutterSecureStorage storage    = FlutterSecureStorage();
     final String? expirationMilliseconds  = prefs.getString('expiration');
-    final String value                   = await storage.read(key: 'token') ?? 'Token eliminado o no almacenado';
+    final String value                    = await storage.read(key: 'token') ?? 'Token eliminado o no almacenado';
 
     if (expirationMilliseconds != null) {
       final DateTime expiration     = DateTime.parse(expirationMilliseconds);
@@ -27,7 +27,7 @@ class SessionManager {
 
       if (diffInSeconds <= 0) {
         // Token ha expirado
-        await SessionManager.logout();
+        // await SessionManager.logout();
         $logger..w('El token ha expirado: $expiration')
         ..w('Token expirado: $value');
       } else if (diffInSeconds <= 600) {

@@ -22,7 +22,7 @@ class CategoriaRepositoryImpl implements CategoriaRepository {
   @override
   Future<DataState<List<CategoriaModel>>> fetchCategoriasByIdInspeccionTipo(InspeccionTipoEntity inspeccionTipo) async {
     try {
-      final String? retrieveToken = await _secureStorage.read(key: 'access_token');
+      final String? retrieveToken = await _secureStorage.read(key: 'token');
       final httpResponse = await _categoriaApiService.fetchCategoriasByIdInspeccionTipo(
         'Bearer $retrieveToken',
         'application/json',
@@ -60,7 +60,7 @@ class CategoriaRepositoryImpl implements CategoriaRepository {
   @override
   Future<DataState<ApiResponse>> createCategoria(CategoriaReqEntity categoriaReq) async {
     try {
-      final String? retrieveToken = await _secureStorage.read(key: 'access_token');
+      final String? retrieveToken = await _secureStorage.read(key: 'token');
       final httpResponse = await _categoriaApiService.createCategoria(
         'Bearer $retrieveToken',
         'application/json',
@@ -95,7 +95,7 @@ class CategoriaRepositoryImpl implements CategoriaRepository {
   @override
   Future<DataState<ApiResponse>> updateCategoria(CategoriaReqEntity categoriaReq) async {
     try {
-      final String? retrieveToken = await _secureStorage.read(key: 'access_token');
+      final String? retrieveToken = await _secureStorage.read(key: 'token');
       final httpResponse = await _categoriaApiService.updateCategoria(
         'Bearer $retrieveToken',
         'application/json',
@@ -130,7 +130,7 @@ class CategoriaRepositoryImpl implements CategoriaRepository {
   @override
   Future<DataState<ApiResponse>> deleteCategoria(CategoriaEntity categoria) async {
     try {
-      final String? retrieveToken = await _secureStorage.read(key: 'access_token');
+      final String? retrieveToken = await _secureStorage.read(key: 'token');
       final httpResponse = await _categoriaApiService.deleteCategoria(
         'Bearer $retrieveToken',
         'application/json',

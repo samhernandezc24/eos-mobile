@@ -97,4 +97,19 @@ class RemoteCategoriaBloc extends Bloc<RemoteCategoriaEvent, RemoteCategoriaStat
       emit(RemoteCategoriaFailure(dataState.exception));
     }
   }
+
+  // METODOS
+  Future<int> getCurrentOrder(InspeccionTipoEntity inspeccionTipo) async {
+    try {
+      final dataState = await _fetchCategoriaByIdInspeccionTipoUseCase(inspeccionTipo);
+      if (dataState is DataSuccess<List<CategoriaEntity>>) {
+        final currentOrder = dataState.data!.length + 1;
+        return currentOrder;
+      } else {
+        throw Exception('Error al obtener el número actual de registros');
+      }
+    } catch (e) {
+      throw Exception('Error al obtener el número actual de registros: $e');
+    }
+  }
 }

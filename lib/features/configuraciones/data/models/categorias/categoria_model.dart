@@ -14,12 +14,14 @@ class CategoriaModel extends CategoriaEntity {
     required String idInspeccionTipo,
     required String inspeccionTipoFolio,
     required String inspeccionTipoName,
+    int? orden,
   }) : super(
           idCategoria         : idCategoria,
           name                : name,
           idInspeccionTipo    : idInspeccionTipo,
           inspeccionTipoFolio : inspeccionTipoFolio,
           inspeccionTipoName  : inspeccionTipoName,
+          orden               : orden,
         );
 
   /// Constructor factory para crear la instancia de [CategoriaModel]
@@ -31,6 +33,7 @@ class CategoriaModel extends CategoriaEntity {
       idInspeccionTipo    : jsonMap['idInspeccionTipo'] as String,
       inspeccionTipoFolio : jsonMap['inspeccionTipoFolio'] as String,
       inspeccionTipoName  : jsonMap['inspeccionTipoName'] as String,
+      orden               : jsonMap['orden'] as int,
     );
   }
 
@@ -43,6 +46,7 @@ class CategoriaModel extends CategoriaEntity {
       idInspeccionTipo    : entity.idInspeccionTipo,
       inspeccionTipoFolio : entity.inspeccionTipoFolio,
       inspeccionTipoName  : entity.inspeccionTipoName,
+      orden               : entity.orden,
     );
   }
 
@@ -54,6 +58,7 @@ class CategoriaModel extends CategoriaEntity {
       'idInspeccionTipo'    : idInspeccionTipo,
       'inspeccionTipoFolio' : inspeccionTipoFolio,
       'inspeccionTipoName'  : inspeccionTipoName,
+      'orden'               : orden,
     };
   }
 }

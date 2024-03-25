@@ -93,7 +93,7 @@ class _UpdateInspeccionTipoFormState extends State<UpdateInspeccionTipoForm> {
           ..hideCurrentSnackBar()
           ..showSnackBar(
             SnackBar(
-              content: Text(state.apiResponse.message),
+              content: Text('¡El tipo de inspección ha sido actualizado exitosamente!', style: $styles.textStyles.bodySmall),
               backgroundColor: Colors.green,
             ),
           );

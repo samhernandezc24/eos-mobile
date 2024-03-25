@@ -135,7 +135,7 @@ class AppRoute extends GoRoute {
                 },
               );
             }
-            
+
             return CupertinoPage<dynamic>(child: pageContent);
           },
         );
@@ -162,13 +162,8 @@ String? _handleRedirect(BuildContext context, GoRouterState state) {
   // redirigirlo a la página de home si tiene su sesión activa, si no, lo
   // redirigmos a la página de inicio se sesión.
   if (appLogic.isBootstrapComplete && state.uri.path == ScreenPaths.splash) {
-    if (settingsLogic.isLoggedIn.value == true) {
-      $logger.d('Redirigiendo desde ${state.uri.path} hasta ${ScreenPaths.home}.');
-      return ScreenPaths.home;
-    } else {
-      $logger.d('Redirigiendo desde ${state.uri.path} hasta ${ScreenPaths.authSignIn}.');
-      return ScreenPaths.authSignIn;
-    }
+    $logger.d('Redirigiendo desde ${state.uri.path} hasta ${ScreenPaths.authSignIn}.');
+    return ScreenPaths.authSignIn;
   }
 
   if (!kIsWeb) $logger.d('Navegando a: ${state.uri}');

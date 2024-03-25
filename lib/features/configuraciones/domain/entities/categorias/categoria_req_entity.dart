@@ -12,6 +12,7 @@ class CategoriaReqEntity extends Equatable {
     this.idInspeccionTipo,
     this.inspeccionTipoFolio,
     this.inspeccionTipoName,
+    this.orden,
   });
 
   final String? idCategoria;
@@ -19,7 +20,8 @@ class CategoriaReqEntity extends Equatable {
   final String? idInspeccionTipo;
   final String? inspeccionTipoFolio;
   final String? inspeccionTipoName;
+  final int? orden;
 
   @override
-  List<Object?> get props => [ idCategoria, name, idInspeccionTipo, inspeccionTipoFolio, inspeccionTipoName ];
+  List<Object?> get props => [ idCategoria, name, idInspeccionTipo, inspeccionTipoFolio, inspeccionTipoName, orden ];
 }
