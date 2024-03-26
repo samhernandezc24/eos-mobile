@@ -41,20 +41,15 @@ class ScreenPaths {
   }
 }
 
-final GlobalKey<NavigatorState> _rootNavigatorKey   = GlobalKey<NavigatorState>(debugLabel: 'root');
-final GlobalKey<NavigatorState> _shellNavigatorKey  = GlobalKey<NavigatorState>(debugLabel: 'shell');
-
 /// Tabla de enrutamiento, compara las rutas de las cadenas con las pantallas de la UI y,
 /// opcionalmente, analiza los parámetros de las rutas.
 final GoRouter appRouter = GoRouter(
-  navigatorKey: _rootNavigatorKey,
   redirect: _handleRedirect,
   debugLogDiagnostics: true,
   errorPageBuilder: (BuildContext context, GoRouterState state) => const MaterialPage<dynamic>(child: Error404Page()),
   routes: <RouteBase>[
     /// Application Shell
     ShellRoute(
-      navigatorKey: _shellNavigatorKey,
       builder: (BuildContext context, GoRouterState state, Widget navigator) {
         return AppScaffold(child: navigator);
       },
@@ -146,7 +141,9 @@ String? get initialDeeplink => _initialDeeplink;
 String? _initialDeeplink;
 
 String? _handleRedirect(BuildContext context, GoRouterState state) {
-  final bool isBootstrapComplete = appLogic.isBootstrapComplete;
+  final bool isBootstrapComplete    = appLogic.isBootstrapComplete;
+  final bool isLoggedIn             = settingsLogic.isLoggedIn.value;
+  final bool hasCompletedOnboarding = settingsLogic.hasCompletedOnboarding.value;
 
   // Si la aplicación no ha terminado de cargar y el usuario no está en la ruta
   // root, redirigirlo a la ruta root para completar la inicialización.
@@ -159,11 +156,22 @@ String? _handleRedirect(BuildContext context, GoRouterState state) {
   }
 
   // Si la aplicación ha terminado de cargar y el usuario está en la ruta root,
-  // redirigirlo a la página de home si tiene su sesión activa, si no, lo
-  // redirigmos a la página de inicio se sesión.
-  if (appLogic.isBootstrapComplete && state.uri.path == ScreenPaths.splash) {
-    $logger.d('Redirigiendo desde ${state.uri.path} hasta ${ScreenPaths.authSignIn}.');
-    return ScreenPaths.authSignIn;
+  // redirigirlo a la página de bienvenida si no ha completado el onboarding.
+  if (isBootstrapComplete && state.uri.path == ScreenPaths.splash && !hasCompletedOnboarding) {
+    $logger.d('Redirigiendo desde ${state.uri.path} hasta ${ScreenPaths.welcome}.');
+    return ScreenPaths.welcome;
+  }
+
+  // Si la aplicación ha terminado de cargar y el usuario está en la ruta root,
+  // verificar si el usuario está autenticado y si el token está vigente.
+  if (isBootstrapComplete && state.uri.path == ScreenPaths.splash) {
+    if (!isLoggedIn) {
+      $logger.d('El usuario no está autenticado. Redirigiendo a ${ScreenPaths.authSignIn}.');
+      return ScreenPaths.authSignIn;
+    } else {
+      $logger.d('El usuario está autenticado. Navegando a ${ScreenPaths.home}.');
+      return ScreenPaths.home;
+    }
   }
 
   if (!kIsWeb) $logger.d('Navegando a: ${state.uri}');

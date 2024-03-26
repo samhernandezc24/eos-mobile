@@ -4,7 +4,6 @@ import 'package:eos_mobile/shared/shared.dart';
 
 class SettingsLogic with ThrottledSaveLoadMixin {
   late final ValueNotifier<bool> hasCompletedOnboarding     = ValueNotifier<bool>(false)..addListener(scheduleSave);
-  late final ValueNotifier<bool> hasDismissedSearchMessage  = ValueNotifier<bool>(false)..addListener(scheduleSave);
   late final ValueNotifier<bool> isLoggedIn                 = ValueNotifier<bool>(false)..addListener(scheduleSave);
   late final ValueNotifier<bool> isDarkModeEnabled          = ValueNotifier<bool>(false)..addListener(scheduleSave);
 
@@ -12,10 +11,9 @@ class SettingsLogic with ThrottledSaveLoadMixin {
 
   @override
   void copyFromJson(Map<String, dynamic> value) {
-    hasCompletedOnboarding.value      = value['hasCompletedOnboarding']     as bool? ?? false;
-    hasDismissedSearchMessage.value   = value['hasDismissedSearchMessage']  as bool? ?? false;
-    isLoggedIn.value                  = value['isLoggedIn']                 as bool? ?? false;
-    isDarkModeEnabled.value           = value['isDarkModeEnabled']          as bool? ?? false;
+    hasCompletedOnboarding.value      = value['hasCompletedOnboarding'] as bool? ?? false;
+    isLoggedIn.value                  = value['isLoggedIn']             as bool? ?? false;
+    isDarkModeEnabled.value           = value['isDarkModeEnabled']      as bool? ?? false;
   }
 
   @override
@@ -25,7 +23,6 @@ class SettingsLogic with ThrottledSaveLoadMixin {
   Map<String, dynamic> toJson() {
     return {
       'hasCompletedOnboarding'    : hasCompletedOnboarding.value,
-      'hasDismissedSearchMessage' : hasDismissedSearchMessage.value,
       'isLoggedIn'                : isLoggedIn.value,
       'isDarkModeEnabled'         : isDarkModeEnabled.value,
     };

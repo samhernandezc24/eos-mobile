@@ -1,35 +1,18 @@
 import 'package:eos_mobile/core/common/widgets/controls/basic_modal.dart';
-import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_field.dart';
 import 'package:eos_mobile/features/configuraciones/domain/entities/categorias/categoria_entity.dart';
-import 'package:eos_mobile/features/configuraciones/presentation/widgets/categorias/create_categoria_form.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/widgets/categorias_items/create_categoria_item_form.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class ConfiguracionesCategoriasItemsPage extends StatefulWidget {
-  const ConfiguracionesCategoriasItemsPage({Key? key, this.categoria})
-      : super(key: key);
+  const ConfiguracionesCategoriasItemsPage({Key? key, this.categoria}) : super(key: key);
 
   final CategoriaEntity? categoria;
 
   @override
-  State<ConfiguracionesCategoriasItemsPage> createState() =>
-      _ConfiguracionesCategoriasItemsPageState();
+  State<ConfiguracionesCategoriasItemsPage> createState() => _ConfiguracionesCategoriasItemsPageState();
 }
 
-class _ConfiguracionesCategoriasItemsPageState
-    extends State<ConfiguracionesCategoriasItemsPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  final TextEditingController _nameController = TextEditingController();
-
-  final List<String> lstOptions = <String>['Opcion 1', 'Opcion 2', 'Opcion 3'];
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
-  }
-
+class _ConfiguracionesCategoriasItemsPageState extends State<ConfiguracionesCategoriasItemsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
