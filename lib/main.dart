@@ -1,6 +1,7 @@
 import 'package:eos_mobile/config/themes/app_theme.dart';
 import 'package:eos_mobile/core/di/injection_container.dart';
-import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/remote/remote_sign_in_bloc.dart';
+import 'package:eos_mobile/features/auth/presentation/bloc/authentication/authentication_bloc.dart';
+import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/sign_in_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/shared/shared.dart';
@@ -32,8 +33,11 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: <SingleChildWidget>[
-        BlocProvider<RemoteSignInBloc>(
-          create: (BuildContext context) => sl<RemoteSignInBloc>(),
+        BlocProvider<SignInBloc>(
+          create: (BuildContext context) => sl<SignInBloc>(),
+        ),
+        BlocProvider<AuthenticationBloc>(
+          create: (_) => sl<AuthenticationBloc>(),
         ),
         BlocProvider<RemoteInspeccionTipoBloc>(
           create: (BuildContext context) => sl<RemoteInspeccionTipoBloc>()

@@ -3,6 +3,9 @@ import 'package:eos_mobile/config/logic/common/save_load_mixin.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class SettingsLogic with ThrottledSaveLoadMixin {
+  @override
+  String get fileName => 'settings.dat';
+
   late final ValueNotifier<bool> hasCompletedOnboarding     = ValueNotifier<bool>(false)..addListener(scheduleSave);
   late final ValueNotifier<bool> isLoggedIn                 = ValueNotifier<bool>(false)..addListener(scheduleSave);
   late final ValueNotifier<bool> isDarkModeEnabled          = ValueNotifier<bool>(false)..addListener(scheduleSave);
@@ -15,9 +18,6 @@ class SettingsLogic with ThrottledSaveLoadMixin {
     isLoggedIn.value                  = value['isLoggedIn']             as bool? ?? false;
     isDarkModeEnabled.value           = value['isDarkModeEnabled']      as bool? ?? false;
   }
-
-  @override
-  String get fileName => 'settings.dat';
 
   @override
   Map<String, dynamic> toJson() {

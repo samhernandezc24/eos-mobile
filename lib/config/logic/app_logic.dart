@@ -50,13 +50,16 @@ class AppLogic {
 
     // Cargar vista inicial (sustituir la vista inicial vacía que está cubierta
     // por una pantalla de inicio nativa).
-    // final bool showWelcomePage = settingsLogic.hasCompletedOnboarding.value == false;
+    final bool hasCompletedOnboarding = settingsLogic.hasCompletedOnboarding.value;
+    final bool isAuthenticated        = settingsLogic.isLoggedIn.value;
 
-    // if (showWelcomePage) {
-    //   appRouter.go(ScreenPaths.welcome);
-    // } else {
-    //   appRouter.go(initialDeeplink ?? ScreenPaths.home);
-    // }
+    if (!hasCompletedOnboarding) {
+      appRouter.go(ScreenPaths.welcome);
+    } else if (!isAuthenticated) {
+      appRouter.go(initialDeeplink ?? ScreenPaths.authSignIn);
+    } else {
+      appRouter.go(initialDeeplink ?? ScreenPaths.home);
+    }
   }
 
   Future<T?> showFullscreenDialogRoute<T>(BuildContext context, Widget child, {bool transparent = false}) async {

@@ -125,6 +125,7 @@ dependencies:
 
   # Plugin de Flutter para lanzar URL
   url_launcher: ^6.2.4
+  encrypt: ^5.0.3
 
 dev_dependencies:
   flutter_test:

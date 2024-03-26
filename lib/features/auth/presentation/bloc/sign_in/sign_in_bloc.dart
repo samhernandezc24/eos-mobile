@@ -7,18 +7,18 @@ import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
 import 'package:eos_mobile/features/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
-part 'remote_sign_in_event.dart';
-part 'remote_sign_in_state.dart';
+part 'sign_in_event.dart';
+part 'sign_in_state.dart';
 
-class RemoteSignInBloc extends Bloc<RemoteSignInEvent, RemoteSignInState> {
-  RemoteSignInBloc(this._signInUseCase) : super(RemoteSignInInitial()) {
+class SignInBloc extends Bloc<SignInEvent, SignInState> {
+  SignInBloc(this._signInUseCase) : super(SignInInitial()) {
     on<SignInSubmitted>(_onSubmitted);
   }
 
   final SignInUseCase _signInUseCase;
 
-  Future<void> _onSubmitted(SignInSubmitted event, Emitter<RemoteSignInState> emit) async {
-    emit(RemoteSignInLoading());
+  Future<void> _onSubmitted(SignInSubmitted event, Emitter<SignInState> emit) async {
+    emit(SignInLoading());
 
     final dataState = await _signInUseCase(event.signIn);
 
@@ -29,13 +29,11 @@ class RemoteSignInBloc extends Bloc<RemoteSignInEvent, RemoteSignInState> {
       // Guardar la información del usuario en local.
       await _saveUserDataToLocal(dataState.data!);
 
-      //print(dataState.data);
-      emit(RemoteSignInSuccess(dataState.data));
+      emit(SignInSuccess(dataState.data));
     }
 
     if (dataState is DataFailed) {
-      //print(dataState.exception!.message);
-      emit(RemoteSignInFailure(dataState.exception));
+      emit(SignInFailure(dataState.exception));
     }
   }
 

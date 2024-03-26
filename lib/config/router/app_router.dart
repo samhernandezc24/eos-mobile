@@ -1,10 +1,10 @@
 import 'package:eos_mobile/core/common/pages/errors/error_404_page.dart';
 import 'package:eos_mobile/core/common/pages/welcome/welcome_page.dart';
 import 'package:eos_mobile/features/actividad/actividad_page.dart';
+import 'package:eos_mobile/features/auth/presentation/pages/home/home_page.dart';
 import 'package:eos_mobile/features/auth/presentation/pages/sign_in/sign_in_page.dart';
 import 'package:eos_mobile/features/cuenta/cuenta_profile_page.dart';
 import 'package:eos_mobile/features/dashboard/dashboard_page.dart';
-import 'package:eos_mobile/features/home/presentation/home_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/pages/index/index_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/pages/list/list_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/pages/search_unidad/search_unidad_page.dart';
@@ -27,18 +27,6 @@ class ScreenPaths {
   static String inspeccionesList              = 'list';
   static String inspeccionesConRequerimiento  = 'conrequerimiento';
   static String inspeccionesSearchUnidad      = 'searchunidad';
-
-  /// Dynamically nested pages, always added on to the existing path
-
-  static String _appendToCurrentPath(String newPath) {
-    final Uri newPathUri = Uri.parse(newPath);
-    final Uri currentUri = appRouter.routeInformationProvider.value.uri;
-
-    final Map<String, dynamic> params = Map<String, dynamic>.of(currentUri.queryParameters)..addAll(newPathUri.queryParameters);
-
-    final Uri location = Uri(path: '${currentUri.path}/${newPathUri.path}'.replaceAll('//', '/'), queryParameters: params);
-    return location.toString();
-  }
 }
 
 /// Tabla de enrutamiento, compara las rutas de las cadenas con las pantallas de la UI y,
@@ -54,14 +42,15 @@ final GoRouter appRouter = GoRouter(
         return AppScaffold(child: navigator);
       },
       routes: <RouteBase>[
-        AppRoute(ScreenPaths.splash, 'splash', (_) => Container()),
-        AppRoute(ScreenPaths.authSignIn, 'signIn', (_) => const AuthSignInPage()),
+        AppRoute(ScreenPaths.splash, 'splash', (_) => const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        ),
         AppRoute(ScreenPaths.welcome, 'welcome', (_) => const WelcomePage()),
-        AppRoute(
-          ScreenPaths.home,
-          'home',
-          (_) => const HomePage(),
-          routes: <GoRoute>[
+        AppRoute(ScreenPaths.authSignIn, 'signIn', (_) => const AuthSignInPage()),
+        AppRoute(ScreenPaths.home, 'home', (_) => const HomePage(), routes: <GoRoute>[
             AppRoute(
               ScreenPaths.inspecciones,
               'home.inspecciones',
@@ -141,37 +130,21 @@ String? get initialDeeplink => _initialDeeplink;
 String? _initialDeeplink;
 
 String? _handleRedirect(BuildContext context, GoRouterState state) {
-  final bool isBootstrapComplete    = appLogic.isBootstrapComplete;
-  final bool isLoggedIn             = settingsLogic.isLoggedIn.value;
-  final bool hasCompletedOnboarding = settingsLogic.hasCompletedOnboarding.value;
-
   // Si la aplicación no ha terminado de cargar y el usuario no está en la ruta
   // root, redirigirlo a la ruta root para completar la inicialización.
   //
   // Evita que alguien navegue fuera de `/` si la aplicación se está iniciando.
-  if (!isBootstrapComplete && state.uri.path != ScreenPaths.splash) {
+  if (!appLogic.isBootstrapComplete && state.uri.path != ScreenPaths.splash) {
     $logger.d('Redirigiendo desde ${state.uri.path} hasta ${ScreenPaths.splash}.');
     _initialDeeplink ??= state.uri.toString();
     return ScreenPaths.splash;
   }
 
   // Si la aplicación ha terminado de cargar y el usuario está en la ruta root,
-  // redirigirlo a la página de bienvenida si no ha completado el onboarding.
-  if (isBootstrapComplete && state.uri.path == ScreenPaths.splash && !hasCompletedOnboarding) {
-    $logger.d('Redirigiendo desde ${state.uri.path} hasta ${ScreenPaths.welcome}.');
-    return ScreenPaths.welcome;
-  }
-
-  // Si la aplicación ha terminado de cargar y el usuario está en la ruta root,
-  // verificar si el usuario está autenticado y si el token está vigente.
-  if (isBootstrapComplete && state.uri.path == ScreenPaths.splash) {
-    if (!isLoggedIn) {
-      $logger.d('El usuario no está autenticado. Redirigiendo a ${ScreenPaths.authSignIn}.');
-      return ScreenPaths.authSignIn;
-    } else {
-      $logger.d('El usuario está autenticado. Navegando a ${ScreenPaths.home}.');
-      return ScreenPaths.home;
-    }
+  // redirigirlo a la página de sign in si no ha iniciado sesion.
+  if (appLogic.isBootstrapComplete && state.uri.path == ScreenPaths.splash) {
+    $logger.d('Redirigiendo desde ${state.uri.path} hasta ${ScreenPaths.authSignIn}.');
+    return ScreenPaths.authSignIn;
   }
 
   if (!kIsWeb) $logger.d('Navegando a: ${state.uri}');

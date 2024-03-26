@@ -1,6 +1,6 @@
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
-import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/remote/remote_sign_in_bloc.dart';
+import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/sign_in_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/pages/forgot_password/forgot_password_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
@@ -12,20 +12,26 @@ class AuthSignInForm extends StatefulWidget {
 }
 
 class _AuthSignInFormState extends State<AuthSignInForm> {
-  // LISTENERS
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
+
+  final TextEditingController _emailController    = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    // Limpia el controlador cuando se elimina el widget.
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  void _handleSignInSubmitted() {
+  void _handleSignInComplete() {
+    context.go(ScreenPaths.home);
+    settingsLogic.isLoggedIn.value = true;
+
+    // Recuperar datos del usuario (perfil, etc).
+  }
+
+  void _handleSubmitSignIn() {
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -34,36 +40,65 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
         ),
       );
     } else {
-      final signInData = SignInEntity(
-        email: _emailController.text,
-        password: _passwordController.text,
+      final SignInEntity objSignInData = SignInEntity(
+        email     : _emailController.text,
+        password  : _passwordController.text,
       );
-      context.read<RemoteSignInBloc>().add(SignInSubmitted(signInData));
+      // EVENTO DE INICIO DE SESIÓN
+      context.read<SignInBloc>().add(SignInSubmitted(objSignInData));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<RemoteSignInBloc, RemoteSignInState>(
-      listener: (context, state) {
-        if (state is RemoteSignInFailure) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(
-                content: Text(
-                  state.failure?.response?.data.toString() ??
-                      'Ha ocurrido un error al iniciar sesión.',
+    return BlocConsumer<SignInBloc, SignInState>(
+      listener: (BuildContext context, SignInState state) {
+        if (state is SignInFailure) {
+          showDialog<void>(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(
+                  state.failure?.response?.data.toString() ?? 'Se produjo un error inesperado. Intenta iniciar sesión de nuevo.',
+                  style: $styles.textStyles.h3,
                 ),
-                backgroundColor: Theme.of(context).colorScheme.error,
-              ),
-            );
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Aceptar', style: $styles.textStyles.button),
+                  ),
+                ],
+              );
+            },
+          );
         }
 
-        if (state is RemoteSignInSuccess) {
-          context.go(ScreenPaths.home);
-          settingsLogic.isLoggedIn.value = true;
-        }
+        // if (state is SignInNoConnection) {
+        //   showDialog<void>(
+        //     context: context,
+        //     builder: (BuildContext context) {
+        //       return AlertDialog(
+        //         title: Text('No se puede iniciar sesión', style: $styles.textStyles.h3),
+        //         content: Text(
+        //           'Se produjo un error inesperado. Intenta iniciar sesión de nuevo.',
+        //           style: $styles.textStyles.body,
+        //         ),
+        //         actions: <Widget>[
+        //           TextButton(
+        //             onPressed: () {
+        //               Navigator.of(context).pop();
+        //             },
+        //             child: Text('Aceptar', style: $styles.textStyles.button),
+        //           )
+        //         ],
+        //       );
+        //     },
+        //   );
+        // }
+
+        if (state is SignInSuccess) {  _handleSignInComplete(); }
       },
       builder: (context, state) {
         return Form(
@@ -133,7 +168,7 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
                 ),
 
                 // INICIAR SESIÓN BOTON:
-                _SignInButton(handleSignInSubmitted: _handleSignInSubmitted),
+                _SignInButton(handleSubmitSignIn: _handleSubmitSignIn),
               ],
             ),
           ),
@@ -144,16 +179,16 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
 }
 
 class _SignInButton extends StatelessWidget {
-  const _SignInButton({required this.handleSignInSubmitted, Key? key})
+  const _SignInButton({required this.handleSubmitSignIn, Key? key})
       : super(key: key);
 
-  final VoidCallback handleSignInSubmitted;
+  final VoidCallback handleSubmitSignIn;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RemoteSignInBloc, RemoteSignInState>(
+    return BlocBuilder<SignInBloc, SignInState>(
       builder: (context, state) {
-        return state is RemoteSignInLoading
+        return state is SignInLoading
             ? FilledButton(
                 onPressed: null,
                 style: ButtonStyle(
@@ -169,7 +204,7 @@ class _SignInButton extends StatelessWidget {
                 ),
               )
             : FilledButton(
-                onPressed: handleSignInSubmitted,
+                onPressed: handleSubmitSignIn,
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all<Size?>(
                     const Size(double.infinity, 48),

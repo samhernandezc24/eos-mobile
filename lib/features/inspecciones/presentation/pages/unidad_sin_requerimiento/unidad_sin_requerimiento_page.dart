@@ -10,12 +10,10 @@ class InspeccionUnidadSinRequerimientoPage extends StatefulWidget {
   const InspeccionUnidadSinRequerimientoPage({Key? key}) : super(key: key);
 
   @override
-  State<InspeccionUnidadSinRequerimientoPage> createState() =>
-      _InspeccionSinRequerimientoPageState();
+  State<InspeccionUnidadSinRequerimientoPage> createState() => _InspeccionSinRequerimientoPageState();
 }
 
-class _InspeccionSinRequerimientoPageState
-    extends State<InspeccionUnidadSinRequerimientoPage> {
+class _InspeccionSinRequerimientoPageState extends State<InspeccionUnidadSinRequerimientoPage> {
   // Definir controladores para los campos de texto
   final TextEditingController _fechaInspeccionController =
       TextEditingController();

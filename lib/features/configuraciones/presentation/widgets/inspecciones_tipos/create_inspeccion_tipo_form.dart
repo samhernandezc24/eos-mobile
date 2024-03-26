@@ -64,7 +64,7 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<RemoteInspeccionTipoBloc, RemoteInspeccionTipoState>(
-      listener: (BuildContext context, state) {
+      listener: (BuildContext context, RemoteInspeccionTipoState state) {
         if (state is RemoteInspeccionTipoFailure) {
           ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()

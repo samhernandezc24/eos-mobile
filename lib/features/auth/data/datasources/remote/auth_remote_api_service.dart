@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/features/auth/data/models/account_model.dart';
 import 'package:eos_mobile/features/auth/data/models/sign_in_model.dart';
@@ -12,5 +14,8 @@ abstract class AuthRemoteApiService {
 
   // SIGN IN
   @POST('/LoginTreo')
-  Future<HttpResponse<AccountModel>> signIn(@Body() SignInModel signIn);
+  Future<HttpResponse<AccountModel>> signIn(
+    @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Body() SignInModel signIn,
+  );
 }

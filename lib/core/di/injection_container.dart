@@ -1,9 +1,11 @@
+import 'package:eos_mobile/features/auth/data/datasources/local/auth_local_service.dart';
 import 'package:eos_mobile/features/auth/data/datasources/remote/auth_remote_api_service.dart';
 import 'package:eos_mobile/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:eos_mobile/features/auth/domain/repositories/auth_repository.dart';
 import 'package:eos_mobile/features/auth/domain/usecases/sign_in_usecase.dart';
-import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/remote/remote_sign_in_bloc.dart';
-
+import 'package:eos_mobile/features/auth/domain/usecases/sign_out_usecase.dart';
+import 'package:eos_mobile/features/auth/presentation/bloc/authentication/authentication_bloc.dart';
+import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/sign_in_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/data/datasources/remote/categorias/categoria_api_service.dart';
 import 'package:eos_mobile/features/configuraciones/data/datasources/remote/inspecciones_tipos/inspeccion_tipo_api_service.dart';
 import 'package:eos_mobile/features/configuraciones/data/repositories/categoria_repository_impl.dart';
@@ -40,13 +42,14 @@ Future<void> initializeDependencies() async {
 
   // Depdendencias
   ..registerSingleton<AuthRemoteApiService>(AuthRemoteApiService(sl()))
+  ..registerSingleton<AuthLocalService>(AuthLocalService())
 
   ..registerSingleton<InspeccionTipoApiService>(InspeccionTipoApiService(sl()))
 
   ..registerSingleton<CategoriaApiService>(CategoriaApiService(sl()))
 
   // Repositorios
-  ..registerSingleton<AuthRepository>(AuthRepositoryImpl(sl()))
+  ..registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()))
 
   ..registerSingleton<InspeccionTipoRepository>(InspeccionTipoRepositoryImpl(sl()))
 
@@ -54,6 +57,7 @@ Future<void> initializeDependencies() async {
 
   // Casos de uso
   ..registerSingleton<SignInUseCase>(SignInUseCase(sl()))
+  ..registerSingleton<SignOutUseCase>(SignOutUseCase(sl()))
 
   ..registerSingleton<FetchInspeccionTipoUseCase>(FetchInspeccionTipoUseCase(sl()))
   ..registerSingleton<CreateInspeccionTipoUseCase>(CreateInspeccionTipoUseCase(sl()))
@@ -67,7 +71,8 @@ Future<void> initializeDependencies() async {
   ..registerSingleton<DeleteCategoriaUseCase>(DeleteCategoriaUseCase(sl()))
 
   // Blocs
-  ..registerFactory<RemoteSignInBloc>(() => RemoteSignInBloc(sl()))
+  ..registerFactory<SignInBloc>(() => SignInBloc(sl()))
+  ..registerFactory<AuthenticationBloc>(() => AuthenticationBloc(sl()))
 
   ..registerFactory<RemoteInspeccionTipoBloc>(() => RemoteInspeccionTipoBloc(sl(), sl(), sl(), sl(), sl()))
 

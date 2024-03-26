@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:eos_mobile/config/logic/common/auth_token_storage.dart';
 import 'package:eos_mobile/config/logic/common/session_manager.dart';
 import 'package:eos_mobile/config/logic/common/user_info_storage.dart';
 import 'package:eos_mobile/core/common/data/modules_data.dart';
 import 'package:eos_mobile/core/common/widgets/avatar_profile_name.dart';
 import 'package:eos_mobile/core/common/widgets/card_view.dart';
+import 'package:eos_mobile/features/auth/presentation/bloc/authentication/authentication_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/pages/index/index_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
@@ -24,11 +24,6 @@ class _HomePageState extends State<HomePage> {
     final sessionManager = SessionManager();
     await sessionManager.checkTokenExpiration();
     $logger.i('Comprobacion de la expiracion del token completada.');
-  }
-
-  Future<void> logout() async {
-    await AuthTokenStorage.destroyAuthToken();
-    appRouter.go(initialDeeplink ?? ScreenPaths.authSignIn);
   }
 
   String _getInitials(String fullName) {
@@ -364,8 +359,13 @@ class _HomePageState extends State<HomePage> {
               ),
               TextButton(
                 onPressed: () {
+                  context.read<AuthenticationBloc>().add(AuthenticationSignOutRequested());
                   Navigator.of(context).pop();
-                  logout();
+
+                  Future<void>.delayed($styles.times.medium, () {
+                    appRouter.go(ScreenPaths.authSignIn);
+                  });
+
                 },
                 child: Text('Cerrar Sesión', style: $styles.textStyles.button),
               ),
