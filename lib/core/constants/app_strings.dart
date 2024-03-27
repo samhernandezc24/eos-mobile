@@ -32,6 +32,8 @@ class AppStrings {
   String inspectionTypeEmptyTitle     = 'No hay tipos de inspecciones';
   String inspectionTypeTitle          = 'Listado de Tipos de Inspecciones';
 
+  String inspectionNoReqAppBarText    = 'Inspección de Unidad Sin Req.';
+
   String module1                      = 'Inspecciones';
   String module2                      = 'Compras';
   String module3                      = 'Embarques';

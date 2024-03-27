@@ -1,7 +1,7 @@
 import 'package:eos_mobile/shared/shared.dart';
 
-class LabeledDropdownField extends StatelessWidget {
-  const LabeledDropdownField({
+class LabeledDropdownFormField extends StatelessWidget {
+  const LabeledDropdownFormField({
     required this.labelText,
     required this.onChanged,
     required this.items,
@@ -12,9 +12,9 @@ class LabeledDropdownField extends StatelessWidget {
 
   final String labelText;
   final String? hintText;
-  final List<String> items;
+  final List<dynamic> items;
   final String? value;
-  final ValueChanged<String?> onChanged;
+  final ValueChanged<dynamic> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -25,21 +25,23 @@ class LabeledDropdownField extends StatelessWidget {
           labelText,
           style: $styles.textStyles.label,
         ),
+
         Gap($styles.insets.xs),
-        DropdownButtonFormField(
+
+        DropdownButtonFormField<dynamic>(
           value: value,
           menuMaxHeight: 280,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(
-              vertical: $styles.insets.sm - 6,
+              vertical: $styles.insets.sm - 3,
               horizontal: $styles.insets.xs + 2,
             ),
             hintText: hintText,
           ),
-          items: items.map<DropdownMenuItem<String>>((String item) {
+          items: items.map<DropdownMenuItem<dynamic>>((item) {
             return DropdownMenuItem<String>(
-              value: item,
-              child: Text(item),
+              value: item.toString(),
+              child: Text(item.toString()),
             );
           }).toList(),
           onChanged: onChanged,

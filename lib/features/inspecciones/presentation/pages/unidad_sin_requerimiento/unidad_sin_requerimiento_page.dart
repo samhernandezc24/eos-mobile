@@ -1,715 +1,347 @@
-import 'package:eos_mobile/core/common/widgets/controls/basic_modal.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_field.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/widgets/card_checklist.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/widgets/create_unidad_form.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/widgets/radio_group_checklist.dart';
+import 'package:eos_mobile/core/enums/unidad_inspeccion_tipo.dart';
+import 'package:eos_mobile/core/enums/view_form_control.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:intl/intl.dart';
 
 class InspeccionUnidadSinRequerimientoPage extends StatefulWidget {
-  const InspeccionUnidadSinRequerimientoPage({Key? key}) : super(key: key);
+  const InspeccionUnidadSinRequerimientoPage({super.key});
 
   @override
-  State<InspeccionUnidadSinRequerimientoPage> createState() => _InspeccionSinRequerimientoPageState();
+  State<InspeccionUnidadSinRequerimientoPage> createState() => _InspeccionUnidadSinRequerimientoPageState();
 }
 
-class _InspeccionSinRequerimientoPageState extends State<InspeccionUnidadSinRequerimientoPage> {
-  // Definir controladores para los campos de texto
-  final TextEditingController _fechaInspeccionController =
-      TextEditingController();
-  final TextEditingController _locacionController = TextEditingController();
-  final TextEditingController _modeloController = TextEditingController();
-  final TextEditingController _numeroSerieController = TextEditingController();
-  final TextEditingController _unidadNumeroEconomicoController =
-      TextEditingController();
-  final TextEditingController _placaController = TextEditingController();
-  final TextEditingController _capacidadController = TextEditingController();
-  final TextEditingController _anioEquipoController = TextEditingController();
-  final TextEditingController _horometroController = TextEditingController();
-  final TextEditingController _odometroController = TextEditingController();
+class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadSinRequerimientoPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final ScrollController _scrollController = ScrollController();
+  // CONTROLLERS
+  late final ScrollController _scrollController               = ScrollController();
+  late final TextEditingController _fechaInspeccionController = TextEditingController();
+  late final TextEditingController _numeroEconomicoController = TextEditingController();
 
-  // Propiedades
-  final List<String> lstOptions = <String>['Uno', 'Dos', 'Tres'];
-  final List<String> lstOptionsControl = <String>['Sí', 'N/A', 'No'];
-  final List<Map<String, dynamic>> myProducts = List.empty();
+  // LIST
+  static const List<(ViewFormControl, String, Icon)> _segmentItems = <(ViewFormControl, String, Icon)>[
+    (ViewFormControl.list, 'Diseño de lista', Icon(Icons.menu_sharp, size: 24)),
+    (ViewFormControl.tree, 'Diseño de árbol', Icon(Icons.account_tree, size: 24)),
+  ];
 
-  int? _selectedRadioValue;
-  bool _isVisible = false;
-  bool _showNuevaUnidadButton = false;
+  late List<dynamic> lstUnidades          = <dynamic>['A', 'B'];
+  late List<dynamic> lstInspeccionesTipos = <dynamic>['A', 'B'];
+  late List<dynamic> lstUnidadesMarcas    = <dynamic>['A', 'B'];
+  late List<dynamic> lstBases             = <dynamic>['A', 'B'];
+
+  // COLLECTIONS
+  Set<ViewFormControl> _segmentedButtonsSelection = <ViewFormControl>{ViewFormControl.list};
+
+  // PROPERTIES
+  UnidadInspeccionTipo? _unidadRadioControl = UnidadInspeccionTipo.inventario;
+
+  bool _showScrollToTopButton   = false;
+  bool _showCreateUnidadButton  = false;
 
   @override
   void initState() {
     super.initState();
-    _selectedRadioValue = 1;
-    _fechaInspeccionController.text =
-        DateFormat.yMd().add_jm().format(DateTime.now());
+    _fechaInspeccionController.text = DateFormat.yMd().add_jm().format(DateTime.now());
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
     _fechaInspeccionController.dispose();
-    _locacionController.dispose();
-    _modeloController.dispose();
-    _numeroSerieController.dispose();
-    _unidadNumeroEconomicoController.dispose();
-    _placaController.dispose();
-    _capacidadController.dispose();
-    _anioEquipoController.dispose();
-    _horometroController.dispose();
-    _odometroController.dispose();
     super.dispose();
   }
 
+  // METHODS
   void _scrollToTop() {
-    _scrollController.animateTo(
-      0,
-      duration: $styles.times.medium,
-      curve: Curves.easeInOut,
-    );
-  }
-
-  Future<void> _showDeletionConfirmationDialog() async {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            'Eliminar Foto',
-            style: $styles.textStyles.h3,
-          ),
-          content: Text(
-            '¿Está seguro que desea cerrar eliminar esta foto?',
-            style: $styles.textStyles.body.copyWith(height: 26),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: const Text('Aceptar'),
-            ),
-          ],
-        );
-      },
-    );
+    _scrollController.animateTo(0, duration: $styles.times.fast, curve: Curves.easeInOut);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          'Inspección de Unidad Sin Req.',
-          style: $styles.textStyles.h3,
-        ),
-      ),
+      appBar: AppBar(title: Text($strings.inspectionNoReqAppBarText, style: $styles.textStyles.h3)),
       body: NotificationListener<ScrollNotification>(
-        onNotification: (notification) {
-          if (notification is ScrollUpdateNotification) {
+        onNotification: (scrollNotification) {
+          if (scrollNotification is ScrollUpdateNotification) {
             setState(() {
-              _isVisible = _scrollController.offset > 100;
+              _showScrollToTopButton = _scrollController.offset > 100;
             });
           }
           return true;
         },
         child: ListView(
           controller: _scrollController,
+          padding: EdgeInsets.all($styles.insets.sm),
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all($styles.insets.sm),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  // ES UNIDAD TEMPORAL O UNIDAD DE INVENTARIO?
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Radio(
-                              value: 1,
-                              groupValue: _selectedRadioValue,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedRadioValue = value;
-                                  _showNuevaUnidadButton = false;
-                                });
-                              },
-                            ),
-                            Expanded(
-                              child: Text(
-                                'Unidad Inventario',
-                                style: $styles.textStyles.label,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Radio(
-                              value: 2,
-                              groupValue: _selectedRadioValue,
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedRadioValue = value;
-                                  _showNuevaUnidadButton = true;
-                                });
-                              },
-                            ),
-                            Expanded(
-                              child: Text(
-                                'Unidad Temporal',
-                                style: $styles.textStyles.label,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+            // CAMBIAR MODO DE VISUALIZACIÓN DEL FORMULARIO
+            _buildSegmentedButton(),
 
-                  // SELECCIONAR UNIDAD (INVENTARIO O TEMPORAL)
-                  DropdownButtonFormField<String>(
-                    items: lstOptions.map((String option) {
-                      return DropdownMenuItem(
-                        value: option,
-                        child: Text(option),
-                      );
-                    }).toList(),
-                    onChanged: (_) {},
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: $styles.insets.sm - 3,
-                        horizontal: $styles.insets.xs + 2,
-                      ),
-                      hintText: 'Seleccione una unidad',
-                    ),
-                  ),
+            Gap($styles.insets.sm),
 
-                  Gap($styles.insets.sm),
-
-                  AnimatedSwitcher(
-                    duration: $styles.times.fast,
-                    transitionBuilder:
-                        (Widget child, Animation<double> animation) {
-                      return FadeTransition(
-                        opacity: animation,
-                        child: SizeTransition(
-                          sizeFactor: animation,
-                          child: child,
-                        ),
-                      );
-                    },
-                    child: _showNuevaUnidadButton
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              FilledButton.icon(
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute<void>(
-                                      builder: (BuildContext context) {
-                                        return const BasicModal(
-                                          title: 'Nueva Unidad Temporal',
-                                          child: CreateUnidadForm(),
-                                        );
-                                      },
-                                      fullscreenDialog: true,
-                                    ),
-                                  );
-                                },
-                                icon: const Icon(Icons.add),
-                                label: const Text(
-                                  'Nueva Unidad',
+            // FORMULARIO DE LA INSPECCIÓN DE UNIDAD
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            child: Row(
+                              children: <Widget>[
+                                Radio<UnidadInspeccionTipo>(
+                                  value: UnidadInspeccionTipo.inventario,
+                                  groupValue: _unidadRadioControl,
+                                  onChanged: (UnidadInspeccionTipo? value){
+                                    setState(() {
+                                      _unidadRadioControl     = value;
+                                      _showCreateUnidadButton = false;
+                                    });
+                                  },
                                 ),
-                              ),
-                            ],
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-
-                  // FECHA DE LA INSPECCIÓN
-                  LabeledTextField(
-                    controller: _fechaInspeccionController,
-                    labelText: 'Fecha Inspección *',
-                    isReadOnly: true,
-                    textAlign: TextAlign.end,
-                  ),
-
-                  Gap($styles.insets.sm),
-
-                  // NO. ECONÓMICO
-                  LabeledTextField(
-                    controller: _unidadNumeroEconomicoController,
-                    labelText: 'No. Económico *',
-                  ),
-
-                  Gap($styles.insets.sm),
-
-                  // SelectDropList(
-                  //   itemSelected: optionItemSelected,
-                  //   dropListModel: lstBases,
-                  //   showIcon: false,
-                  //   showArrowIcon: true,
-                  //   onOptionSelected: (optionItem) {
-                  //     optionItemSelected = optionItem;
-                  //     setState(() {});
-                  //   },
-                  // ),
-
-                  // DropdownSearch<BaseData>(
-                  //   key: const Key('baseSelection'),
-                  //   popupProps: PopupProps.menu(
-                  //     showSearchBox: true,
-                  //     isFilterOnline: true,
-                  //     searchFieldProps: TextFieldProps(
-                  //       decoration: InputDecoration(
-                  //         contentPadding: EdgeInsets.symmetric(
-                  //           vertical: $styles.insets.sm - 6,
-                  //           horizontal: $styles.insets.xs + 2,
-                  //         ),
-                  //         labelText: 'Buscar base',
-                  //         helperText: 'ej. Veracruz, Villahermosa',
-                  //         helperMaxLines: 2,
-                  //       ),
-                  //     ),
-                  //     itemBuilder: (context, BaseData item, isSelected) {
-                  //       return ListTile(
-                  //         key: Key('baseSelection_${item.idBase}'),
-                  //         title:
-                  //             Text(item.name, style: $styles.textStyles.bodySmall),
-                  //       );
-                  //     },
-                  //   ),
-                  //   dropdownDecoratorProps: DropDownDecoratorProps(
-                  //     dropdownSearchDecoration: InputDecoration(
-                  //       contentPadding: EdgeInsets.symmetric(
-                  //         vertical: $styles.insets.sm - 6,
-                  //         horizontal: $styles.insets.xs + 2,
-                  //       ),
-                  //     ),
-                  //   ),
-                  //   selectedItem: BaseData.defaultBaseData(),
-                  //   itemAsString: (BaseData item) => item.name,
-                  //   items: lstBases,
-                  //   onChanged: (BaseData? data) {
-                  //     if (data != null) {
-                  //       _onChanged(context, data);
-                  //     }
-                  //   },
-                  // ),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      // MARCA
-                      Expanded(
-                        child: LabeledDropdownField(
-                          labelText: 'Marca',
-                          hintText: 'Seleccione',
-                          items: const <String>[
-                            '3MA',
-                            'AFFER',
-                            'All Pressure',
-                            'AMC',
-                            'Amida',
-                            'ASM',
-                            'Audi',
-                            'Autocar',
-                            'Braden',
-                            'Mercedes Benz',
-                            'Mitsubishi',
-                          ],
-                          onChanged: (newValue) {
-                            setState(() {});
-                          },
-                        ),
-                      ),
-                      SizedBox(width: $styles.insets.sm),
-                      // MODELO
-                      Expanded(
-                        child: LabeledTextField(
-                          controller: _modeloController,
-                          labelText: 'Modelo',
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  Gap($styles.insets.sm),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      // NO. DE SERIE
-                      Expanded(
-                        child: LabeledTextField(
-                          controller: _numeroSerieController,
-                          labelText: 'No. de Serie',
-                        ),
-                      ),
-                      SizedBox(width: $styles.insets.sm),
-                      // PLACA
-                      Expanded(
-                        child: LabeledTextField(
-                          controller: _placaController,
-                          labelText: 'Placa',
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  Gap($styles.insets.sm),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      // CAPACIDAD
-                      Expanded(
-                        child: LabeledTextField(
-                          controller: _capacidadController,
-                          keyboardType: TextInputType.number,
-                          labelText: 'Capacidad *',
-                        ),
-                      ),
-                      SizedBox(width: $styles.insets.sm),
-                      // AÑO DEL EQUIPO
-                      Expanded(
-                        child: LabeledTextField(
-                          controller: _anioEquipoController,
-                          labelText: 'Año del Equipo',
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  Gap($styles.insets.sm),
-
-                  // LOCACIÓN
-                  LabeledTextField(
-                    controller: _locacionController,
-                    labelText: 'Locación *',
-                  ),
-
-                  Gap($styles.insets.sm),
-
-                  // BASE DE LA UNIDAD
-                  LabeledDropdownField(
-                    labelText: 'Base *',
-                    hintText: 'Seleccione una base',
-                    items: const <String>[
-                      'BALANCAN',
-                      'CIUDAD ACUÑA',
-                      'CIUDAD DEL CARMEN',
-                      'LA VENTOSA',
-                      'MERIDA',
-                      'PARAISO',
-                      'POR DEFINIR',
-                      'POZA RICA',
-                      'REFORMA',
-                      'TEXAS',
-                      'TOLUCA',
-                      'VERACRUZ',
-                      'VILLAHERMOSA',
-                    ],
-                    onChanged: (newValue) {
-                      setState(() {});
-                    },
-                  ),
-
-                  Gap($styles.insets.sm),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      // HOROMETRO (SI APLICA)
-                      Expanded(
-                        child: LabeledTextField(
-                          controller: _horometroController,
-                          keyboardType: TextInputType.number,
-                          labelText: 'Horometro',
-                        ),
-                      ),
-                      SizedBox(width: $styles.insets.sm),
-                      // ODOMETRO (SI APLICA)
-                      Expanded(
-                        child: LabeledTextField(
-                          controller: _odometroController,
-                          keyboardType: TextInputType.number,
-                          labelText: 'Odometro',
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  Gap($styles.insets.sm),
-                  const Divider(),
-                  Gap($styles.insets.sm),
-
-                  // FORMULARIOS
-                  CardCheckList(
-                    title: 'Niveles y Motor',
-                    children: [
-                      RadioGroupChecklist(
-                        label: '1. Tanque de Combustible',
-                        options: lstOptionsControl,
-                        selectedValue: '',
-                        onChanged: (_) {},
-                      ),
-                      RadioGroupChecklist(
-                        label: '2. Tanque de Aceite Hidráulico',
-                        options: lstOptionsControl,
-                        selectedValue: '',
-                        onChanged: (_) {},
-                      ),
-                      RadioGroupChecklist(
-                        label: '3. Nivel de Aceite Hidráulico',
-                        options: lstOptionsControl,
-                        selectedValue: '',
-                        onChanged: (_) {},
-                      ),
-                      RadioGroupChecklist(
-                        label: '4. Nivel de Combustible',
-                        options: lstOptionsControl,
-                        selectedValue: '',
-                        onChanged: (_) {},
-                      ),
-                      RadioGroupChecklist(
-                        label: '5. Nivel de Anticongelante',
-                        options: lstOptionsControl,
-                        selectedValue: '',
-                        onChanged: (_) {},
-                      ),
-                      RadioGroupChecklist(
-                        label: '6. Batería en Buen Estado',
-                        options: lstOptionsControl,
-                        selectedValue: '',
-                        onChanged: (_) {},
-                      ),
-                      RadioGroupChecklist(
-                        label: '7. Nivel de Aceite de Motor',
-                        options: lstOptionsControl,
-                        selectedValue: '',
-                        onChanged: (_) {},
-                      ),
-                      RadioGroupChecklist(
-                        label: '8. Filtro de Aire',
-                        options: lstOptionsControl,
-                        selectedValue: '',
-                        onChanged: (_) {},
-                      ),
-                      RadioGroupChecklist(
-                        label: '9. Conexiones Eléctricas en General',
-                        options: lstOptionsControl,
-                        selectedValue: '',
-                        onChanged: (_) {},
-                      ),
-                      RadioGroupChecklist(
-                        label: '10. Conexiones Hidráulicas',
-                        options: lstOptionsControl,
-                        selectedValue: '',
-                        onChanged: (_) {},
-                      ),
-                      RadioGroupChecklist(
-                        label: '11. Estado de Soldaduras',
-                        options: lstOptionsControl,
-                        selectedValue: '',
-                        onChanged: (_) {},
-                      ),
-                      RadioGroupChecklist(
-                        label: '12. Tapa del Motor',
-                        options: lstOptionsControl,
-                        selectedValue: '',
-                        onChanged: (_) {},
-                      ),
-                      RadioGroupChecklist(
-                        label: '13. Tornillería en General',
-                        options: lstOptionsControl,
-                        selectedValue: '',
-                        onChanged: (_) {},
-                      ),
-                      RadioGroupChecklist(
-                        label: '14. Estado del Aceite de Motor',
-                        options: lstOptionsControl,
-                        selectedValue: '',
-                        onChanged: (_) {},
-                      ),
-                    ],
-                  ),
-
-                  Gap($styles.insets.sm),
-                  const Divider(),
-
-                  // EVIDENCIA FOTOGRAFICA
-                  Gap($styles.insets.sm),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Text(
-                        'Evidencia Fotográfica *',
-                        style: $styles.textStyles.label,
-                      ),
-                      Gap($styles.insets.sm),
-                      if (myProducts.isEmpty)
-                        Container(
-                          height: 150,
-                          padding: EdgeInsets.all($styles.insets.lg),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).cardColor,
-                            border: Border.all(
-                              color: Theme.of(context).primaryColor,
+                                Expanded(child: Text('Unidad Inventario', style: $styles.textStyles.label)),
+                              ],
                             ),
-                            borderRadius:
-                                BorderRadius.circular($styles.corners.md),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Aún no hay fotografías',
-                                style: $styles.textStyles.title2,
-                              ),
-                              Gap($styles.insets.xs),
-                              Text(
-                                '(Da click en el ícono de la cámara para agregar evidencias fotográficas)',
-                                textAlign: TextAlign.center,
-                                style: $styles.textStyles.caption.copyWith(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .color!
-                                      .withOpacity(0.64),
-                                  fontSize: 13,
+                          Expanded(
+                            child: Row(
+                              children: <Widget>[
+                                Radio(
+                                  value: UnidadInspeccionTipo.temporal,
+                                  groupValue: _unidadRadioControl,
+                                  onChanged: (UnidadInspeccionTipo? value) {
+                                    setState(() {
+                                      _unidadRadioControl     = value;
+                                      _showCreateUnidadButton = true;
+                                    });
+                                  },
                                 ),
-                              ),
-                            ],
-                          ),
-                        )
-                      else
-                        Container(
-                          padding: EdgeInsets.all($styles.insets.xs + 2),
-                          color: Theme.of(context).dividerColor,
-                          child: GridView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: myProducts.length,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 10,
-                              mainAxisSpacing: 10,
+                                Expanded(child: Text('Unidad Temporal', style: $styles.textStyles.label)),
+                              ],
                             ),
-                            itemBuilder: (BuildContext context, int index) {
-                              return Card(
-                                elevation: 2,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular($styles.corners.md),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Positioned.fill(
-                                      child: Ink.image(
-                                        image: NetworkImage(
-                                          myProducts[index]['path'].toString(),
-                                        ),
-                                        fit: BoxFit.cover,
-                                        child: InkWell(
-                                          onTap: () {},
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 4,
-                                      right: 4,
-                                      child: IconButton(
-                                        color:
-                                            Theme.of(context).colorScheme.error,
-                                        icon: const Icon(Icons.delete),
-                                        onPressed:
-                                            _showDeletionConfirmationDialog,
-                                      ),
-                                    ),
-                                    Positioned(
-                                      left: 0,
-                                      right: 0,
-                                      bottom: 0,
-                                      child: Container(
-                                        padding:
-                                            EdgeInsets.all($styles.insets.xxs),
-                                        decoration: BoxDecoration(
-                                          color: Theme.of(context)
-                                              .secondaryHeaderColor
-                                              .withOpacity(0.7),
-                                        ),
-                                        child: Text(
-                                          myProducts[index]['fileName']
-                                              .toString(),
-                                          textAlign: TextAlign.center,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
+                          ),
+                        ],
+                      ),
+
+                      // SELECCIONAR UNIDAD (INVENTARIO O TEMPORAL)
+                      LabeledDropdownFormField(
+                        labelText: '* Seleccione la unidad que desea inspeccionar:',
+                        hintText: 'Seleccionar',
+                        onChanged: (_){},
+                        items: lstUnidades,
+                      ),
+
+                      AnimatedSwitcher(
+                        duration: $styles.times.fast,
+                        transitionBuilder: (Widget child, Animation<double> animation) {
+                          return FadeTransition(
+                            opacity: animation,
+                            child: SizeTransition(sizeFactor: animation, child: child),
+                          );
+                        },
+                        child: _showCreateUnidadButton
+                            ? Padding(
+                                padding: EdgeInsets.only(top: $styles.insets.sm),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Widget>[
+                                    FilledButton.icon(
+                                      onPressed: (){},
+                                      icon: const Icon(Icons.add),
+                                      label: Text('Nueva Unidad', style: $styles.textStyles.button),
                                     ),
                                   ],
                                 ),
-                              );
-                            },
+                              )
+                            : const SizedBox.shrink(),
+                      ),
+
+                      Gap($styles.insets.sm),
+
+                      // SELECCIONAR TIPO DE INSPECCIÓN
+                      LabeledDropdownFormField(
+                        labelText: '* Seleccione el tipo de inspección:',
+                        hintText: 'Seleccionar',
+                        onChanged: (_){},
+                        items: lstInspeccionesTipos,
+                      ),
+
+                      Gap($styles.insets.sm),
+
+                      // FECHA DE LA INSPECCIÓN
+                      LabeledTextField(
+                        controller: _fechaInspeccionController,
+                        isReadOnly: true,
+                        labelText: 'Fecha de la inspección:',
+                        textAlign: TextAlign.end,
+                      ),
+
+                      Gap($styles.insets.sm),
+
+                      // NO. ECONÓMICO
+                      LabeledTextField(
+                        controller: _fechaInspeccionController,
+                        labelText: 'No. Económico:',
+                      ),
+
+                      Gap($styles.insets.sm),
+
+                      // MARCA / MODELO DE LA UNIDAD
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            child: LabeledDropdownFormField(
+                              labelText: '* Seleccione la marca:',
+                              hintText: 'Seleccionar',
+                              onChanged: (_){},
+                              items: lstUnidadesMarcas,
+                            ),
                           ),
-                        ),
+                          SizedBox(width: $styles.insets.sm),
+                          Expanded(
+                            child: LabeledTextField(
+                              controller: _fechaInspeccionController,
+                              labelText: 'Modelo:',
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      Gap($styles.insets.sm),
+
+                      // NO. DE SERIE / PLACA DE LA UNIDAD
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            child: LabeledTextField(
+                              controller: _fechaInspeccionController,
+                              labelText: 'Número de serie:',
+                            ),
+                          ),
+                          SizedBox(width: $styles.insets.sm),
+                          Expanded(
+                            child: LabeledTextField(
+                              controller: _fechaInspeccionController,
+                              labelText: 'Placa:',
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      Gap($styles.insets.sm),
+
+                      // CAPACIDAD / AÑO DEL EQUIPO
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            child: LabeledTextField(
+                              controller: _fechaInspeccionController,
+                              labelText: 'Capacidad:',
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                          SizedBox(width: $styles.insets.sm),
+                          Expanded(
+                            child: LabeledTextField(
+                              controller: _fechaInspeccionController,
+                              labelText: 'Año del equipo:',
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      Gap($styles.insets.sm),
+
+                      // LOCACIÓN
+                      LabeledTextField(
+                        controller: _fechaInspeccionController,
+                        labelText: '* Locación:',
+                      ),
+
+                      Gap($styles.insets.sm),
+
+                      // BASE DE LA UNIDAD
+                      LabeledDropdownFormField(
+                        labelText: '* Seleccione la base de la unidad:',
+                        hintText: 'Seleccionar',
+                        onChanged: (_){},
+                        items: lstBases,
+                      ),
+
+                      Gap($styles.insets.sm),
+
+                      // HOROMETRO / ODOMETRO (SI APLICA)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            child: LabeledTextField(
+                              controller: _fechaInspeccionController,
+                              labelText: 'Horómetro:',
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                          SizedBox(width: $styles.insets.sm),
+                          Expanded(
+                            child: LabeledTextField(
+                              controller: _fechaInspeccionController,
+                              labelText: 'Odómetro:',
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                  Gap($styles.insets.sm),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        height: 70,
-        child: Row(
-          children: <Widget>[
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.camera_alt),
-              tooltip: 'Tomar Fotografía',
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.sync),
-              tooltip: 'Sincronizar Información',
-            ),
-            const Spacer(),
-            FilledButton(
-              onPressed: null,
-              child: Text(
-                'Guardar Inspección',
-                style: $styles.textStyles.button,
-              ),
-            ),
-          ],
+      floatingActionButton: _buildFloatingActionButton(),
+    );
+  }
+
+  Widget _buildSegmentedButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        SegmentedButton<ViewFormControl>(
+          selected: _segmentedButtonsSelection,
+          style: const ButtonStyle(
+            visualDensity: VisualDensity.compact,
+          ),
+          onSelectionChanged: (Set<ViewFormControl> newSelection) {
+            setState(() {
+              _segmentedButtonsSelection = newSelection;
+            });
+          },
+          segments: _segmentItems.map<ButtonSegment<ViewFormControl>>(((ViewFormControl, String, Icon) item) {
+            return ButtonSegment<ViewFormControl>(
+              value   : item.$1,
+              tooltip : item.$2,
+              icon    : item.$3,
+            );
+          }).toList(),
         ),
-      ),
-      floatingActionButton: AnimatedOpacity(
-        opacity: _isVisible ? 1.0 : 0.0,
-        duration: $styles.times.fast,
-        child: FloatingActionButton(
-          onPressed: _scrollToTop,
-          child: const Icon(Icons.arrow_upward),
-        ),
+      ],
+    );
+  }
+
+  Widget _buildFloatingActionButton() {
+    return AnimatedOpacity(
+      opacity: _showScrollToTopButton ? 1.0 : 0.0,
+      duration: $styles.times.fast,
+      child: FloatingActionButton(
+        onPressed: _scrollToTop,
+        child: const Icon(Icons.arrow_upward),
       ),
     );
   }

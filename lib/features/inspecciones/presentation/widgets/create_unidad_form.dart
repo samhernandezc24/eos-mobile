@@ -52,7 +52,7 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
               children: <Widget>[
                 // TIPO UNIDAD
                 Expanded(
-                  child: LabeledDropdownField(
+                  child: LabeledDropdownFormField(
                     labelText: 'Tipo de Unidad *',
                     hintText: 'Seleccione',
                     items: const <String>[
@@ -76,7 +76,7 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
                 SizedBox(width: $styles.insets.sm),
                 // MARCA
                 Expanded(
-                  child: LabeledDropdownField(
+                  child: LabeledDropdownFormField(
                     labelText: 'Marca de Unidad',
                     hintText: 'Seleccione',
                     items: const <String>[

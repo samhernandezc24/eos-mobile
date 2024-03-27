@@ -51,22 +51,19 @@ class _InspeccionIndexPageState extends State<InspeccionIndexPage> {
                       context,
                       PageRouteBuilder<void>(
                         transitionDuration: $styles.times.pageTransition,
-                        pageBuilder: (BuildContext context,
-                            Animation<double> animation,
-                            Animation<double> secondaryAnimation) {
-                          const Offset begin = Offset(0, 1);
-                          const Offset end = Offset.zero;
-                          const Cubic curve = Curves.ease;
+                        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+                          const Offset begin  = Offset(0, 1);
+                          const Offset end    = Offset.zero;
+                          const Cubic curve   = Curves.ease;
 
-                          final Animatable<Offset> tween =
-                              Tween<Offset>(begin: begin, end: end)
-                                  .chain(CurveTween(curve: curve));
+                          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
 
                           return SlideTransition(
                             position: animation.drive<Offset>(tween),
                             child: const InspeccionUnidadSinRequerimientoPage(),
                           );
                         },
+                        fullscreenDialog: true,
                       ),
                     );
                   case 3:
