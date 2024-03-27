@@ -36,6 +36,9 @@ dependencies:
   # Widget de búsqueda de Flutter con dropdown
   dropdown_search: ^5.0.6
 
+  # Encriptacion
+  encrypt: ^5.0.3
+
   # Simplifica la comparación de objetos en Dart
   equatable: ^2.0.5
 
@@ -124,8 +127,7 @@ dependencies:
   syncfusion_flutter_signaturepad: ^24.2.9
 
   # Plugin de Flutter para lanzar URL
-  url_launcher: ^6.2.4
-  encrypt: ^5.0.3
+  url_launcher: ^6.2.4  
 
 dev_dependencies:
   flutter_test:
