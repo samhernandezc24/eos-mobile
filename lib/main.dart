@@ -1,5 +1,6 @@
 import 'package:eos_mobile/config/themes/app_theme.dart';
 import 'package:eos_mobile/core/di/injection_container.dart';
+import 'package:eos_mobile/core/helpers/image_helper.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/authentication/authentication_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/sign_in_bloc.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
@@ -69,6 +70,7 @@ class MainApp extends StatelessWidget {
 /// directamente en la capa de presentación.
 AppLogic get appLogic             =>  sl<AppLogic>();
 SettingsLogic get settingsLogic   =>  sl<SettingsLogic>();
+ImageHelper get imageHelper       => sl<ImageHelper>();
 
 /// Helpers globales para facilitar la lectura de código
 AppStrings get $strings   =>  AppStrings.instance;

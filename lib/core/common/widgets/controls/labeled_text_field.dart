@@ -51,7 +51,7 @@ class _LabeledTextFieldState extends State<LabeledTextField> {
           autofocus: widget.autoFocus,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(
-              vertical: $styles.insets.sm - 6,
+              vertical: $styles.insets.sm - 3,
               horizontal: $styles.insets.xs + 2,
             ),
             hintText: widget.hintText,

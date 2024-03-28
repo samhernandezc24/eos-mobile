@@ -81,6 +81,9 @@ dependencies:
   # Internacionalización, formateo de fechas, números, etc
   intl: ^0.19.0
 
+  # Recortar una imagen
+  image_cropper: ^5.0.1
+
   # Selecciona imágenes de galería y permite tomar nuevas fotografías
   image_picker: ^1.0.7
 
@@ -127,7 +130,7 @@ dependencies:
   syncfusion_flutter_signaturepad: ^24.2.9
 
   # Plugin de Flutter para lanzar URL
-  url_launcher: ^6.2.4  
+  url_launcher: ^6.2.4
 
 dev_dependencies:
   flutter_test:

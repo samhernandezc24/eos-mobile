@@ -4,16 +4,16 @@ class RadioGroupChecklist extends StatelessWidget {
   const RadioGroupChecklist({
     required this.label,
     required this.options,
-    required void Function(String?) onChanged,
+    required void Function(dynamic) onChanged,
     this.selectedValue,
     Key? key,
   })  : _onChanged = onChanged,
         super(key: key);
 
   final String label;
-  final List<String> options;
+  final List<dynamic> options;
   final String? selectedValue;
-  final void Function(String?) _onChanged;
+  final void Function(dynamic) _onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +31,13 @@ class RadioGroupChecklist extends StatelessWidget {
           children: options.map((option) {
             return Row(
               mainAxisSize: MainAxisSize.min,
-              children: [
-                Radio<String>(
+              children: <Widget>[
+                Radio<dynamic>(
                   value: option,
                   groupValue: selectedValue,
                   onChanged: _onChanged,
                 ),
-                Text(option),
+                Text(option.toString()),
               ],
             );
           }).toList(),

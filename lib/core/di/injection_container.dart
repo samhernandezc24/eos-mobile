@@ -1,3 +1,4 @@
+import 'package:eos_mobile/core/helpers/image_helper.dart';
 import 'package:eos_mobile/features/auth/data/datasources/local/auth_local_service.dart';
 import 'package:eos_mobile/features/auth/data/datasources/remote/auth_remote_api_service.dart';
 import 'package:eos_mobile/features/auth/data/repositories/auth_repository_impl.dart';
@@ -36,9 +37,10 @@ Future<void> initializeDependencies() async {
   // Controlador Top Level de la App
   // ignore: unnecessary_lambdas
   ..registerLazySingleton<AppLogic>(() => AppLogic())
-
   // ignore: unnecessary_lambdas
   ..registerLazySingleton<SettingsLogic>(() => SettingsLogic())
+  // ignore: unnecessary_lambdas
+  ..registerLazySingleton<ImageHelper>(() => ImageHelper())
 
   // Depdendencias
   ..registerSingleton<AuthRemoteApiService>(AuthRemoteApiService(sl()))
