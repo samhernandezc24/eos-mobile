@@ -21,6 +21,9 @@ dependencies:
   # Verifica el estado de la conexión a Internet
   connectivity_plus: ^5.0.2
 
+  # Conjunto de funciones de hashing criptográficas
+  crypto: ^3.0.3
+
   # Íconos Cupertino para iOS
   cupertino_icons: ^1.0.2
 

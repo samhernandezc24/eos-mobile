@@ -23,7 +23,7 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
 
   @override
   void initState() {
-    _emailController = TextEditingController();
+    _emailController    = TextEditingController();
     _passwordController = TextEditingController();
     _loadCredentials();
     super.initState();
@@ -51,8 +51,7 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
       );
     } else {
       _formKey.currentState!.save();
-      final SignInEntity objSignIn = SignInEntity(
-          email: _emailController.text, password: _passwordController.text);
+      final SignInEntity objSignIn = SignInEntity(email: _emailController.text, password: _passwordController.text);
       context.read<RemoteAuthBloc>().add(SignInSubmitted(objSignIn));
       context.read<LocalAuthBloc>().add(SaveCredentials(objSignIn));
     }
@@ -63,8 +62,7 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
     return BlocConsumer<LocalAuthBloc, LocalAuthState>(
       listener: (BuildContext context, LocalAuthState state) {
         if (state is LocalCredentialsSuccess) {
-          _emailController.text = state.credentials?['email'] ?? '';
-          _passwordController.text = state.credentials?['password'] ?? '';
+          _emailController.text     = state.credentials?['email'] ?? '';
         }
       },
       builder: (BuildContext context, LocalAuthState state) {
@@ -129,10 +127,11 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
                           ),
                         ),
                         child: LoadingIndicator(
-                            color: Theme.of(context).disabledColor,
-                            width: 20,
-                            height: 20,
-                            strokeWidth: 2),
+                          color: Theme.of(context).disabledColor,
+                          width: 20,
+                          height: 20,
+                          strokeWidth: 2,
+                        ),
                       );
                     }
 
@@ -143,8 +142,7 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
                           const Size(double.infinity, 48),
                         ),
                       ),
-                      child: Text($strings.signInButtonText,
-                          style: $styles.textStyles.button),
+                      child: Text($strings.signInButtonText, style: $styles.textStyles.button),
                     );
                   },
                 ),

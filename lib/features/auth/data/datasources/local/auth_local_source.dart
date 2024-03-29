@@ -1,3 +1,4 @@
+import 'package:eos_mobile/core/utils/password_utils.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class AuthLocalSource {
@@ -7,17 +8,29 @@ class AuthLocalSource {
   /// Guarda las credenciales del usuario en `SharedPreferences`.
   Future<void> saveCredentials(String email, String password) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_keyEmail, email);
-    await prefs.setString(_keyPassword, password);
+    final Map<String, String>? existingCredentials = await getSavedCredentials();
+
+    if (existingCredentials != null) {
+      if (existingCredentials['email'] != email || !PasswordUtils.verifyPassword(password, existingCredentials['password'] ?? '')) {
+        final String hashedPassword = PasswordUtils.createHashedPassword(password);
+
+        await prefs.setString(_keyEmail, email);
+        await prefs.setString(_keyPassword, hashedPassword);
+      }
+    } else {
+      // Si no hay credenciales guardadas, guardas las nuevas.
+      final String hashedPassword = PasswordUtils.createHashedPassword(password);
+      await prefs.setString(_keyEmail, email);
+      await prefs.setString(_keyPassword, hashedPassword);
+    }
   }
 
   /// Carga las credenciales almacenadas del usuario.
   Future<Map<String, String>?> getSavedCredentials() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? email     = prefs.getString(_keyEmail);
-    final String? password  = prefs.getString(_keyPassword);
-    if (email != null && password != null) {
-      return <String, String>{'email': email, 'password': password};
+    final String? email    = prefs.getString(_keyEmail);
+    if (email != null) {
+      return <String, String>{'email': email};
     }
     return null;
   }
