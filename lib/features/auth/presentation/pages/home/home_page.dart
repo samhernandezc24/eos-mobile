@@ -1,9 +1,5 @@
-import 'dart:convert';
-
 import 'package:eos_mobile/config/logic/common/session_manager.dart';
-import 'package:eos_mobile/config/logic/common/user_info_storage.dart';
 import 'package:eos_mobile/core/common/data/modules_data.dart';
-import 'package:eos_mobile/core/common/widgets/avatar_profile_name.dart';
 import 'package:eos_mobile/core/common/widgets/card_view.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
@@ -212,111 +208,114 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildDrawerHeader() {
-    return FutureBuilder<Map<String, String?>>(
-      future: Future<Map<String, String?>>.delayed(
-          $styles.times.slow, UserInfoStorage.getUserInfo),
-      builder:
-          (BuildContext context, AsyncSnapshot<Map<String, String?>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return DrawerHeader(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: <Color>[
-                  Theme.of(context).colorScheme.inverseSurface.withOpacity(0.2),
-                  Theme.of(context).colorScheme.inverseSurface.withOpacity(0.3),
-                  Theme.of(context).colorScheme.inverseSurface.withOpacity(0.2),
-                ],
-                stops: const <double>[0, 0.5, 1],
-              ),
-            ),
-            child: Shimmer.fromColors(
-              baseColor: Colors.grey.shade300,
-              highlightColor: Colors.grey.shade100,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    width: 70,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  Gap($styles.insets.xs),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        width: 125,
-                        height: 24,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius:
-                              BorderRadius.circular($styles.insets.sm),
-                        ),
-                      ),
-                      Gap($styles.insets.xs),
-                      Container(
-                        width: 225,
-                        height: 24,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius:
-                              BorderRadius.circular($styles.insets.sm),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return const DrawerHeader(
-            child: Text('Error al cargar la información del usuario'),
-          );
-        } else {
-          final Map<String, dynamic> userObjData =
-              jsonDecode(snapshot.data?['user'] ?? '{}')
-                  as Map<String, dynamic>;
-          final String email = userObjData['email'] as String? ?? '';
-          final String name = userObjData['name'] as String? ?? '';
-
-          return UserAccountsDrawerHeader(
-            currentAccountPicture: AvatarProfileName(
-              backgroundColor: Theme.of(context).chipTheme.backgroundColor,
-              child: Text(
-                _getInitials(name),
-                style: $styles.textStyles.h2.copyWith(color: Colors.white),
-              ),
-            ),
-            accountEmail: Text(
-              email,
-              style: const TextStyle(
-                color: Colors.white,
-              ),
-            ),
-            accountName: Text(
-              name.toProperCase(),
-              style: const TextStyle(
-                color: Colors.white,
-              ),
-            ),
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.fill,
-                image: AssetImage(ImagePaths.background1),
-              ),
-            ),
-          );
-        }
-      },
-    );
+    return const DrawerHeader(child: Column());
   }
+
+  // Widget _buildDrawerHeader() {
+  //   return FutureBuilder<Map<String, String?>>(
+  //     future: Future<Map<String, String?>>.delayed($styles.times.slow, UserInfoStorage.getUserInfo),
+  //     builder:
+  //         (BuildContext context, AsyncSnapshot<Map<String, String?>> snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return DrawerHeader(
+  //           decoration: BoxDecoration(
+  //             gradient: LinearGradient(
+  //               begin: Alignment.topLeft,
+  //               end: Alignment.bottomRight,
+  //               colors: <Color>[
+  //                 Theme.of(context).colorScheme.inverseSurface.withOpacity(0.2),
+  //                 Theme.of(context).colorScheme.inverseSurface.withOpacity(0.3),
+  //                 Theme.of(context).colorScheme.inverseSurface.withOpacity(0.2),
+  //               ],
+  //               stops: const <double>[0, 0.5, 1],
+  //             ),
+  //           ),
+  //           child: Shimmer.fromColors(
+  //             baseColor: Colors.grey.shade300,
+  //             highlightColor: Colors.grey.shade100,
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: <Widget>[
+  //                 Container(
+  //                   width: 70,
+  //                   height: 70,
+  //                   decoration: BoxDecoration(
+  //                     shape: BoxShape.circle,
+  //                     color: Theme.of(context).primaryColor,
+  //                   ),
+  //                 ),
+  //                 Gap($styles.insets.xs),
+  //                 Column(
+  //                   mainAxisSize: MainAxisSize.min,
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: <Widget>[
+  //                     Container(
+  //                       width: 125,
+  //                       height: 24,
+  //                       decoration: BoxDecoration(
+  //                         color: Theme.of(context).primaryColor,
+  //                         borderRadius:
+  //                             BorderRadius.circular($styles.insets.sm),
+  //                       ),
+  //                     ),
+  //                     Gap($styles.insets.xs),
+  //                     Container(
+  //                       width: 225,
+  //                       height: 24,
+  //                       decoration: BoxDecoration(
+  //                         color: Theme.of(context).primaryColor,
+  //                         borderRadius:
+  //                             BorderRadius.circular($styles.insets.sm),
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       } else if (snapshot.hasError) {
+  //         return const DrawerHeader(
+  //           child: Text('Error al cargar la información del usuario'),
+  //         );
+  //       } else {
+  //         final Map<String, dynamic> userObjData =
+  //             jsonDecode(snapshot.data?['user'] ?? '{}')
+  //                 as Map<String, dynamic>;
+  //         final String email = userObjData['email'] as String? ?? '';
+  //         final String name = userObjData['name'] as String? ?? '';
+
+  //         return UserAccountsDrawerHeader(
+  //           currentAccountPicture: AvatarProfileName(
+  //             backgroundColor: Theme.of(context).chipTheme.backgroundColor,
+  //             child: Text(
+  //               _getInitials(name),
+  //               style: $styles.textStyles.h2.copyWith(color: Colors.white),
+  //             ),
+  //           ),
+  //           accountEmail: Text(
+  //             email,
+  //             style: const TextStyle(
+  //               color: Colors.white,
+  //             ),
+  //           ),
+  //           accountName: Text(
+  //             name.toProperCase(),
+  //             style: const TextStyle(
+  //               color: Colors.white,
+  //             ),
+  //           ),
+  //           decoration: const BoxDecoration(
+  //             image: DecorationImage(
+  //               fit: BoxFit.fill,
+  //               image: AssetImage(ImagePaths.background1),
+  //             ),
+  //           ),
+  //         );
+  //       }
+  //     },
+  //   );
+  // }
 
   Widget _buildDrawerItem({
     required IconData icon,

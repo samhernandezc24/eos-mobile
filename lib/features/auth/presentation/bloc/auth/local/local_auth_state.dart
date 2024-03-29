@@ -20,11 +20,20 @@ class LocalCredentialsSuccess extends LocalAuthState {
   List<Object?> get props => [ credentials ];
 }
 
-class LocalCredentialsLoadFailure extends LocalAuthState {
-  const LocalCredentialsLoadFailure(this.failure);
+class LocalUserInfoSuccess extends LocalAuthState {
+  const LocalUserInfoSuccess(this.userInfo);
 
-  final String? failure;
+  final Map<String, String>? userInfo;
 
   @override
-  List<Object?> get props => [ failure ];
+  List<Object?> get props => [ userInfo ];
+}
+
+class LocalUserSessionSuccess extends LocalAuthState {
+  const LocalUserSessionSuccess(this.session);
+
+  final String? session;
+
+  @override
+  List<Object?> get props => [ session ];
 }

@@ -110,9 +110,8 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
                 BlocConsumer<RemoteAuthBloc, RemoteAuthState>(
                   listener: (BuildContext context, RemoteAuthState state) {
                     if (state is RemoteSignInSuccess) {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute<void>(
-                              builder: (context) => const HomePage()));
+                      Navigator.of(context).pushReplacement(MaterialPageRoute<void>(builder: (context) => const HomePage()));
+                      // TODO(samhernandezc24): Implementar el almacenamiento de informacion aqui...
                     } else if (state is RemoteSignInFailure) {
                       _showErrorDialog(state);
                     }
@@ -199,8 +198,7 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text($strings.acceptButtonText,
-                style: $styles.textStyles.button),
+            child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
           ),
         ],
       ),

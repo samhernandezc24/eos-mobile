@@ -5,7 +5,9 @@ import 'package:eos_mobile/features/auth/data/datasources/local/auth_local_sourc
 import 'package:eos_mobile/features/auth/data/datasources/remote/auth_remote_api_service.dart';
 import 'package:eos_mobile/features/auth/data/models/account_model.dart';
 import 'package:eos_mobile/features/auth/data/models/sign_in_model.dart';
+import 'package:eos_mobile/features/auth/data/models/user_model.dart';
 import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
+import 'package:eos_mobile/features/auth/domain/entities/user_entity.dart';
 import 'package:eos_mobile/features/auth/domain/repositories/auth_repository.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
@@ -38,21 +40,73 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
-  /// GUARDAR CREDENCIALES EN LOCAL
+  /// GUARDAR CREDENCIALES DEL USUARIO EN LOCAL
   @override
   Future<void> saveCredentials(SignInEntity signIn) async {
     return _authLocalSource.saveCredentials(signIn.email, signIn.password);
   }
 
+  /// GUARDAR LA INFORMACIÓN DEL USUARIO EN LOCAL
+  @override
+  Future<void> saveUserInfo({
+    required String id,
+    required UserEntity user,
+    required DateTime expiration,
+    required String nombre,
+    required String key,
+    String? privilegies,
+    String? foto,
+  }) async {
+    return _authLocalSource.saveUserInfo(
+      id          : id,
+      user        : UserModel.fromEntity(user),
+      privilegies : privilegies,
+      expiration  : expiration,
+      foto        : foto,
+      nombre      : nombre,
+      key         : key,
+    );
+  }
+
+  /// GUARDAR LA SESIÓN DEL USUARIO EN SECURE LOCAL
+  @override
+  Future<void> saveUserSession(String token) async {
+    return _authLocalSource.saveUserSession(token);
+  }
+
   /// OBTENER LAS CREDENCIALES ALMACENADAS EN LOCAL
   @override
-  Future<Map<String, String>?> getSavedCredentials() async {
-    return _authLocalSource.getSavedCredentials();
+  Future<Map<String, String>?> getCredentials() async {
+    return _authLocalSource.getCredentials();
+  }
+
+  /// OBTENER LA INFORMACIÓN DEL USUARIO ALMACENADAS EN LOCAL
+  @override
+  Future<Map<String, String>?> getUserInfo() async {
+    return _authLocalSource.getUserInfo();
+  }
+
+  ///  OBTENER LA SESIÓN DEL USUARIO ALMACENADA EN SECURE LOCAL
+  @override
+  Future<String?> getUserSession() async {
+    return _authLocalSource.getUserSession();
   }
 
   /// LIMPIAR LAS CREDENCIALES ALMACENADAS EN LOCAL
   @override
   Future<void> clearSavedCredentials() async {
     return _authLocalSource.clearSavedCredentials();
+  }
+
+  /// LIMPIAR LA INFORMACIÓN DEL USUARIO ALMACENADA EN LOCAL
+  @override
+  Future<void> clearUserInfo() async {
+    return _authLocalSource.clearUserInfo();
+  }
+
+  /// LIMPIAR LA SESIÓN DEL USUARIO EN SECURE LOCAL
+  @override
+  Future<void> clearUserSession() async {
+    return _authLocalSource.clearUserSession();
   }
 }
