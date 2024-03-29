@@ -1,7 +1,9 @@
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
-import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/sign_in_bloc.dart';
+import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth_bloc.dart';
+import 'package:eos_mobile/features/auth/presentation/bloc/auth/remote/remote_auth_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/pages/forgot_password/forgot_password_page.dart';
+import 'package:eos_mobile/features/auth/presentation/pages/home/home_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class AuthSignInForm extends StatefulWidget {
@@ -12,10 +14,20 @@ class AuthSignInForm extends StatefulWidget {
 }
 
 class _AuthSignInFormState extends State<AuthSignInForm> {
+  // GENERAL INSTANCES
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _emailController    = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  // CONTROLLERS
+  late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
+
+  @override
+  void initState() {
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    _loadCredentials();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -24,14 +36,12 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
     super.dispose();
   }
 
-  void _handleSignInComplete() {
-    context.go(ScreenPaths.home);
-    settingsLogic.isLoggedIn.value = true;
-
-    // Recuperar datos del usuario (perfil, etc).
+  // METHODS
+  Future<void> _loadCredentials() async {
+    context.read<LocalAuthBloc>().add(GetSavedCredentials());
   }
 
-  void _handleSubmitSignIn() {
+  void _handleSignIn() {
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -40,135 +50,104 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
         ),
       );
     } else {
-      final SignInEntity objSignInData = SignInEntity(
-        email     : _emailController.text,
-        password  : _passwordController.text,
-      );
-      // EVENTO DE INICIO DE SESIÓN
-      context.read<SignInBloc>().add(SignInSubmitted(objSignInData));
+      _formKey.currentState!.save();
+      final SignInEntity objSignIn = SignInEntity(
+          email: _emailController.text, password: _passwordController.text);
+      context.read<RemoteAuthBloc>().add(SignInSubmitted(objSignIn));
+      context.read<LocalAuthBloc>().add(SaveCredentials(objSignIn));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SignInBloc, SignInState>(
-      listener: (BuildContext context, SignInState state) {
-        if (state is SignInFailure) {
-          showDialog<void>(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text(
-                  state.failure?.response?.data.toString() ?? 'Se produjo un error inesperado. Intenta iniciar sesión de nuevo.',
-                  style: $styles.textStyles.h3,
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('Aceptar', style: $styles.textStyles.button),
-                  ),
-                ],
-              );
-            },
-          );
+    return BlocConsumer<LocalAuthBloc, LocalAuthState>(
+      listener: (BuildContext context, LocalAuthState state) {
+        if (state is LocalCredentialsSuccess) {
+          _emailController.text = state.credentials?['email'] ?? '';
+          _passwordController.text = state.credentials?['password'] ?? '';
         }
-
-        // if (state is SignInNoConnection) {
-        //   showDialog<void>(
-        //     context: context,
-        //     builder: (BuildContext context) {
-        //       return AlertDialog(
-        //         title: Text('No se puede iniciar sesión', style: $styles.textStyles.h3),
-        //         content: Text(
-        //           'Se produjo un error inesperado. Intenta iniciar sesión de nuevo.',
-        //           style: $styles.textStyles.body,
-        //         ),
-        //         actions: <Widget>[
-        //           TextButton(
-        //             onPressed: () {
-        //               Navigator.of(context).pop();
-        //             },
-        //             child: Text('Aceptar', style: $styles.textStyles.button),
-        //           )
-        //         ],
-        //       );
-        //     },
-        //   );
-        // }
-
-        if (state is SignInSuccess) {  _handleSignInComplete(); }
       },
-      builder: (context, state) {
+      builder: (BuildContext context, LocalAuthState state) {
         return Form(
           key: _formKey,
           child: Container(
             padding: EdgeInsets.all($styles.insets.sm),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                // USUARIO:
+                // USUARIO / CORREO ELECTRÓNICO:
                 LabeledTextField(
                   controller: _emailController,
                   hintText: 'ejem@plo.com',
-                  labelText: 'Usuario',
+                  labelText: 'Usuario:',
                   keyboardType: TextInputType.emailAddress,
                   validator: FormValidators.emailValidator,
                 ),
 
                 Gap($styles.insets.md),
 
-                // CONTRASEÑA:
+                // USUARIO / CORREO ELECTRÓNICO:
                 LabeledTextField(
                   controller: _passwordController,
-                  labelText: 'Contraseña',
+                  labelText: 'Contraseña:',
                   isPassword: true,
                   keyboardType: TextInputType.visiblePassword,
-                  textInputAction: TextInputAction.done,
                   validator: FormValidators.passwordValidator,
+                  textInputAction: TextInputAction.done,
                 ),
 
                 // ¿HAS OLVIDADO TU CONTRASEÑA?:
                 GestureDetector(
-                  onTap: () {
-                    Navigator.push<void>(
-                      context,
-                      PageRouteBuilder<void>(
-                        transitionDuration: $styles.times.pageTransition,
-                        pageBuilder: (BuildContext context,
-                            Animation<double> animation,
-                            Animation<double> secondaryAnimation) {
-                          const Offset begin = Offset(0, 1);
-                          const Offset end = Offset.zero;
-                          const Cubic curve = Curves.ease;
-
-                          final Animatable<Offset> tween =
-                              Tween<Offset>(begin: begin, end: end)
-                                  .chain(CurveTween(curve: curve));
-
-                          return SlideTransition(
-                            position: animation.drive<Offset>(tween),
-                            child: const ForgotPasswordPage(),
-                          );
-                        },
-                      ),
-                    );
-                  },
+                  onTap: _buildForgotPasswordPage,
                   child: Container(
                     alignment: Alignment.centerRight,
                     padding: EdgeInsets.symmetric(vertical: $styles.insets.sm),
                     child: Text(
                       '¿Has olvidado tu contraseña?',
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                      ),
+                      style: TextStyle(color: Theme.of(context).primaryColor),
                     ),
                   ),
                 ),
 
-                // INICIAR SESIÓN BOTON:
-                _SignInButton(handleSubmitSignIn: _handleSubmitSignIn),
+                // BOTÓN PARA ENVIAR LAS CREDENCIALES:
+                BlocConsumer<RemoteAuthBloc, RemoteAuthState>(
+                  listener: (BuildContext context, RemoteAuthState state) {
+                    if (state is RemoteSignInSuccess) {
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute<void>(
+                              builder: (context) => const HomePage()));
+                    } else if (state is RemoteSignInFailure) {
+                      _showErrorDialog(state);
+                    }
+                  },
+                  builder: (BuildContext context, RemoteAuthState state) {
+                    if (state is RemoteSignInLoading) {
+                      return FilledButton(
+                        onPressed: null,
+                        style: ButtonStyle(
+                          minimumSize: MaterialStateProperty.all(
+                            const Size(double.infinity, 48),
+                          ),
+                        ),
+                        child: LoadingIndicator(
+                            color: Theme.of(context).disabledColor,
+                            width: 20,
+                            height: 20,
+                            strokeWidth: 2),
+                      );
+                    }
+
+                    return FilledButton(
+                      onPressed: _handleSignIn,
+                      style: ButtonStyle(
+                        minimumSize: MaterialStateProperty.all(
+                          const Size(double.infinity, 48),
+                        ),
+                      ),
+                      child: Text($strings.signInButtonText,
+                          style: $styles.textStyles.button),
+                    );
+                  },
+                ),
               ],
             ),
           ),
@@ -176,46 +155,57 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
       },
     );
   }
-}
 
-class _SignInButton extends StatelessWidget {
-  const _SignInButton({required this.handleSubmitSignIn, Key? key})
-      : super(key: key);
+  Future<void> _buildForgotPasswordPage() {
+    return Navigator.push<void>(
+      context,
+      PageRouteBuilder<void>(
+        transitionDuration: $styles.times.pageTransition,
+        pageBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          const Offset begin = Offset(0, 1);
+          const Offset end = Offset.zero;
+          const Cubic curve = Curves.ease;
 
-  final VoidCallback handleSubmitSignIn;
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end)
+              .chain(CurveTween(curve: curve));
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<SignInBloc, SignInState>(
-      builder: (context, state) {
-        return state is SignInLoading
-            ? FilledButton(
-                onPressed: null,
-                style: ButtonStyle(
-                  minimumSize: MaterialStateProperty.all<Size?>(
-                    const Size(double.infinity, 48),
-                  ),
-                ),
-                child: LoadingIndicator(
-                  color: Theme.of(context).disabledColor,
-                  width: 20,
-                  height: 20,
-                  strokeWidth: 2,
-                ),
-              )
-            : FilledButton(
-                onPressed: handleSubmitSignIn,
-                style: ButtonStyle(
-                  minimumSize: MaterialStateProperty.all<Size?>(
-                    const Size(double.infinity, 48),
-                  ),
-                ),
-                child: Text(
-                  'Ingresar',
-                  style: $styles.textStyles.button,
-                ),
-              );
-      },
+          return SlideTransition(
+            position: animation.drive<Offset>(tween),
+            child: const ForgotPasswordPage(),
+          );
+        },
+      ),
+    );
+  }
+
+  Future<void> _showErrorDialog(RemoteSignInFailure state) {
+    return showDialog<void>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const SizedBox.shrink(),
+        content: Row(
+          children: <Widget>[
+            Icon(Icons.error, color: Theme.of(context).colorScheme.error),
+            SizedBox(width: $styles.insets.xs + 2),
+            Flexible(
+              child: Text(
+                state.failure?.response?.data.toString() ??
+                    'Se produjo un error inesperado. Intenta iniciar sesión de nuevo.',
+                style: $styles.textStyles.title2.copyWith(
+                    height: 1.5, color: Theme.of(context).colorScheme.error),
+              ),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text($strings.acceptButtonText,
+                style: $styles.textStyles.button),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,8 +1,7 @@
-import 'package:eos_mobile/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
 
 class PageRoutesUtils {
-  static Route<T> dialog<T>(Widget child, {Duration duration = Constants.kDefaultDuration, bool opaque = false}) {
+  static Route<T> dialog<T>(Widget child, {Duration duration = const Duration(milliseconds: 300), bool opaque = false}) {
     // Utilizar las rutas de Cupertino en todos los diálogos para obtener el comportamiento
     // "deslizar a la derecha para volver".
     if (opaque) {

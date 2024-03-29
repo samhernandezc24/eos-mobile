@@ -10,7 +10,7 @@ class SignInUseCase implements UseCase<DataState<AccountEntity>, SignInEntity> {
   final AuthRepository _authRepository;
 
   @override
-  Future<DataState<AccountEntity>> call(SignInEntity params) async {
+  Future<DataState<AccountEntity>> call({required SignInEntity params}) {
     return _authRepository.signIn(params);
   }
 }

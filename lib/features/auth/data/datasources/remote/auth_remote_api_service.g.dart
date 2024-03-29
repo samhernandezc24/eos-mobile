@@ -21,12 +21,13 @@ class _AuthRemoteApiService implements AuthRemoteApiService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<AccountModel>> signIn(String contentType, SignInModel signIn) async {
+  Future<HttpResponse<AccountModel>> signIn(
+    String contentType,
+    SignInModel signIn,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{
-      r'content-type': contentType,
-    };
+    final _headers = <String, dynamic>{r'content-type': contentType};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(signIn.toJson());

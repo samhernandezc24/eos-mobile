@@ -10,6 +10,8 @@ linter:
     avoid_positional_boolean_parameters: false  # Desactivar advertencia en los parámetros booleanos posicionales.
     avoid_redundant_argument_values: true       # Evitar valores argumentales redundantes.
 
+    cascade_invocations: false                  # Ignorar la advertencia de metodos consecutivos en cascada.
+
     depend_on_referenced_packages: true         # Depender de los paquetes referenciados.
     directives_ordering: true                   # Respetar las convenciones de ordenamiento de las directivas de la Guía de Flutter.
 
@@ -26,6 +28,8 @@ linter:
 
     sort_pub_dependencies: false                # No ordenar las dependencias del pub alfabéticamente.
     sort_unnamed_constructors_first: true       # Ordenar constructores sin nombre primero.
+
+    unnecessary_lambdas: false                  # Ignorar las advertencias sombre el uso inecesario de lambdas.
 
     use_build_context_synchronously: false      # No utilizar BuildContexts a través de gaps async.
     use_super_parameters: false                 # Desactivar el uso de parametros super en constructores.

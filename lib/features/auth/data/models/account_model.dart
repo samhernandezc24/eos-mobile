@@ -3,22 +3,19 @@ import 'package:eos_mobile/features/auth/domain/entities/account_entity.dart';
 
 /// [AccountModel]
 ///
-/// Representa un modelo de la cuenta de un usuario que contiene su información en general.
-///
-/// Esta clase se utiliza para transportar datos entre las capas de datos y de dominio de la
-/// aplicación, así como para la serialización y deserialización de objetos JSON.
+/// Representa la información general del usuario.
 class AccountModel extends AccountEntity {
   const AccountModel({
     required String id,
     required UserModel user,
     required String token,
     required DateTime expiration,
-    required bool action,
     required String nombre,
     required String key,
     String? rol,
     String? idRol,
     String? privilegies,
+    bool? action,
     String? foto,
   }) : super(
           id          : id,
@@ -41,12 +38,12 @@ class AccountModel extends AccountEntity {
       id          : jsonMap['id'] as String,
       user        : UserModel.fromJson(jsonMap['user'] as Map<String, dynamic>),
       token       : jsonMap['token'] as String,
-      rol         : jsonMap['rol'] as String,
-      idRol       : jsonMap['idRol'] as String,
-      privilegies : jsonMap['privilegies'] as String,
-      expiration  : DateTime.parse(jsonMap['expiration'] as String).toLocal(),
-      action      : jsonMap['action'] as bool,
-      foto        : jsonMap['foto'] as String,
+      rol         : jsonMap['rol'] as String? ?? '',
+      idRol       : jsonMap['idRol'] as String? ?? '',
+      privilegies : jsonMap['privilegies'] as String? ?? '',
+      expiration  : DateTime.parse(jsonMap['expiration'] as String),
+      action      : jsonMap['action'] as bool?,
+      foto        : jsonMap['foto'] as String? ?? '',
       nombre      : jsonMap['nombre'] as String,
       key         : jsonMap['key'] as String,
     );

@@ -1,6 +1,8 @@
 class AppStrings {
   static final AppStrings instance = AppStrings();
 
+  String acceptButtonText             = 'Aceptar';
+
   String defaultAppName               = 'EOS Mobile';
   String defaultPageTitle             = 'Página';
 
@@ -53,6 +55,7 @@ class AppStrings {
   String searchInputSuggestionsTitle  = 'Sugerencias';
 
   String signInTitleHeading           = 'Iniciar Sesión';
+  String signInButtonText             = 'Ingresar';
 
   String welcomeContentOne            = 'Accede a los datos del EOS desde cualquier lugar, sincroniza cambios automáticamente.';
   String welcomeContentTwo            = 'Navega de manera rápida entre los módulos para optimizar el proceso de revisión de servicios.';

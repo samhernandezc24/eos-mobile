@@ -20,6 +20,11 @@ class _WelcomePageState extends State<WelcomePage> {
   late final PageController _pageController   = PageController()..addListener(_handlePageChanged);
   late final ValueNotifier<int> _currentPage  = ValueNotifier<int>(0)..addListener(() => setState(() {}));
 
+  static const double _imageSize            = 250;
+  static const double _logoHeight           = 126;
+  static const double _textHeight           = 110;
+  static const double _pageIndicatorHeight  = 55;
+
   static List<PageData> pageData = <PageData>[];
 
   bool get _isOnLastPage    => _currentPage.value == pageData.length - 1;
@@ -121,7 +126,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         Semantics(
                           header: true,
                           child: Container(
-                            height: Constants.kDefaultLogoHeight,
+                            height: _logoHeight,
                             alignment: Alignment.center,
                             child: Text(
                               $strings.defaultAppName,
@@ -132,8 +137,8 @@ class _WelcomePageState extends State<WelcomePage> {
 
                         // IMAGEN
                         SizedBox(
-                          height: Constants.kDefaultImageSize,
-                          width: Constants.kDefaultImageSize,
+                          height: _imageSize,
+                          width: _imageSize,
                           child: ValueListenableBuilder<int>(
                             valueListenable: _currentPage,
                             builder: (_, value, __) {
@@ -149,11 +154,11 @@ class _WelcomePageState extends State<WelcomePage> {
                         ),
 
                         // ESPACIO PARA EL TEXTO:
-                        const Gap(Constants.kDefaultTextHeight * 2),
+                        const Gap(_textHeight * 2),
 
                         // INDICADOR DE PÁGINA:
                         Container(
-                          height: Constants.kDefaultPageIndicatorHeight,
+                          height: _pageIndicatorHeight,
                           alignment: Alignment.center,
                           child: AppPageIndicator(
                             count: pageData.length,
@@ -266,9 +271,9 @@ class _Page extends StatelessWidget {
         child: Column(
           children: <Widget>[
             const Spacer(),
-            const Gap(Constants.kDefaultImageSize + Constants.kDefaultLogoHeight),
+            const Gap(_WelcomePageState._imageSize + _WelcomePageState._logoHeight),
             SizedBox(
-              height: Constants.kDefaultTextHeight,
+              height: _WelcomePageState._textHeight,
               width: 400,
               child: StaticTextScale(
                 child: Column(
@@ -281,7 +286,7 @@ class _Page extends StatelessWidget {
                 ),
               ),
             ),
-            const Gap(Constants.kDefaultPageIndicatorHeight),
+            const Gap(_WelcomePageState._pageIndicatorHeight),
             const Spacer(flex: 2),
           ],
         ),

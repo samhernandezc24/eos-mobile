@@ -7,5 +7,7 @@ abstract class AuthRepository {
   Future<DataState<AccountEntity>> signIn(SignInEntity signIn);
 
   /// LOCAL METHODS
-  Future<void> signOut();
+  Future<void> saveCredentials(SignInEntity signIn);
+  Future<Map<String, String>?> getSavedCredentials();
+  Future<void> clearSavedCredentials();
 }

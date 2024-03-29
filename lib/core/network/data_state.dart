@@ -2,6 +2,7 @@ import 'package:eos_mobile/shared/shared.dart';
 
 abstract class DataState<T> {
   const DataState({this.data, this.exception, this.errorMessage});
+
   final T? data;
   final DioException? exception;
   final String? errorMessage;

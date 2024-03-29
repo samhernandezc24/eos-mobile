@@ -2,11 +2,8 @@ import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
 
 /// [SignInModel]
 ///
-/// Representa un modelo de inicio de sesión que contiene los datos necesarios para
-/// autenticar a un usuario en la aplicación.
-///
-/// Esta clase se utiliza para transportar datos entre las capas de datos y de dominio de la
-/// aplicación, así como para la serialización y deserialización de objetos JSON.
+/// Representa las credenciales del usuario para iniciar sesión, su propósito es transportar
+/// la información requerida para el inicio de sesión.
 class SignInModel extends SignInEntity {
   const SignInModel({required String email, required String password}) : super(email : email, password : password);
 

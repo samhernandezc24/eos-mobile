@@ -2,20 +2,16 @@ import 'package:eos_mobile/features/auth/domain/entities/user_entity.dart';
 
 /// [UserModel]
 ///
-/// Representa un modelo de usuario que contiene detalles de la sesión del
-/// usuario.
-///
-/// Esta clase se utiliza para transportar datos entre las capas de datos y de dominio de la
-/// aplicación, así como para la serialización y deserialización de objetos JSON.
+/// Representa la información personal del usuario en la aplicación.
 class UserModel extends UserEntity {
   const UserModel({
     required String id,
     required String email,
-    required String idEmpleado,
-    required String idBase,
-    required String idBaseActual,
     required String nombreCompleto,
     required String name,
+    String? idEmpleado,
+    String? idBase,
+    String? idBaseActual,
     String? status,
     String? avatar,
   }) : super(

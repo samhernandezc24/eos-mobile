@@ -5,8 +5,6 @@ import 'package:eos_mobile/config/logic/common/user_info_storage.dart';
 import 'package:eos_mobile/core/common/data/modules_data.dart';
 import 'package:eos_mobile/core/common/widgets/avatar_profile_name.dart';
 import 'package:eos_mobile/core/common/widgets/card_view.dart';
-import 'package:eos_mobile/features/auth/presentation/bloc/authentication/authentication_bloc.dart';
-import 'package:eos_mobile/features/configuraciones/presentation/pages/index/index_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class HomePage extends StatefulWidget {
@@ -168,24 +166,24 @@ class _HomePageState extends State<HomePage> {
               onTap: () => {},
             ),
             const Divider(),
-            _buildDrawerItem(
-              icon: Icons.settings,
-              text: 'Configuración',
-              onTap: () {
-                // Cerrar el drawer
-                Navigator.pop(context);
+            // _buildDrawerItem(
+            //   icon: Icons.settings,
+            //   text: 'Configuración',
+            //   onTap: () {
+            //     // Cerrar el drawer
+            //     Navigator.pop(context);
 
-                // Actualizar el estado en la app
-                Future.delayed($styles.times.pageTransition, () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (context) => const ConfiguracionesIndexPage(),
-                    ),
-                  );
-                });
-              },
-            ),
+            //     // Actualizar el estado en la app
+            //     Future.delayed($styles.times.pageTransition, () {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute<void>(
+            //           builder: (context) => const ConfiguracionesIndexPage(),
+            //         ),
+            //       );
+            //     });
+            //   },
+            // ),
             const Divider(),
             _buildDrawerItem(
               iconColor: Theme.of(context).colorScheme.error,
@@ -358,15 +356,7 @@ class _HomePageState extends State<HomePage> {
                 child: Text('Cancelar', style: $styles.textStyles.button),
               ),
               TextButton(
-                onPressed: () {
-                  context.read<AuthenticationBloc>().add(AuthenticationSignOutRequested());
-                  Navigator.of(context).pop();
-
-                  Future<void>.delayed($styles.times.medium, () {
-                    appRouter.go(ScreenPaths.authSignIn);
-                  });
-
-                },
+                onPressed: () {},
                 child: Text('Cerrar Sesión', style: $styles.textStyles.button),
               ),
             ],

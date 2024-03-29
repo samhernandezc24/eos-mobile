@@ -1,82 +1,46 @@
 import 'package:eos_mobile/core/helpers/image_helper.dart';
-import 'package:eos_mobile/features/auth/data/datasources/local/auth_local_service.dart';
+import 'package:eos_mobile/features/auth/data/datasources/local/auth_local_source.dart';
 import 'package:eos_mobile/features/auth/data/datasources/remote/auth_remote_api_service.dart';
 import 'package:eos_mobile/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:eos_mobile/features/auth/domain/repositories/auth_repository.dart';
+import 'package:eos_mobile/features/auth/domain/usecases/get_saved_credentials_usecase.dart';
+import 'package:eos_mobile/features/auth/domain/usecases/save_credentials_usecase.dart';
 import 'package:eos_mobile/features/auth/domain/usecases/sign_in_usecase.dart';
-import 'package:eos_mobile/features/auth/domain/usecases/sign_out_usecase.dart';
-import 'package:eos_mobile/features/auth/presentation/bloc/authentication/authentication_bloc.dart';
-import 'package:eos_mobile/features/auth/presentation/bloc/sign_in/sign_in_bloc.dart';
-import 'package:eos_mobile/features/configuraciones/data/datasources/remote/categorias/categoria_api_service.dart';
-import 'package:eos_mobile/features/configuraciones/data/datasources/remote/inspecciones_tipos/inspeccion_tipo_api_service.dart';
-import 'package:eos_mobile/features/configuraciones/data/repositories/categoria_repository_impl.dart';
-import 'package:eos_mobile/features/configuraciones/data/repositories/inspeccion_tipo_repository_impl.dart';
-import 'package:eos_mobile/features/configuraciones/domain/repositories/categoria_repository.dart';
-import 'package:eos_mobile/features/configuraciones/domain/repositories/inspeccion_tipo_repository.dart';
-import 'package:eos_mobile/features/configuraciones/domain/usecases/categorias/create_categoria.dart';
-import 'package:eos_mobile/features/configuraciones/domain/usecases/categorias/delete_categoria.dart';
-import 'package:eos_mobile/features/configuraciones/domain/usecases/categorias/fetch_categoria_by_id_inspeccion_tipo.dart';
-import 'package:eos_mobile/features/configuraciones/domain/usecases/categorias/update_categoria.dart';
-import 'package:eos_mobile/features/configuraciones/domain/usecases/inspecciones_tipos/create_inspeccion_tipo.dart';
-import 'package:eos_mobile/features/configuraciones/domain/usecases/inspecciones_tipos/delete_inspeccion_tipo.dart';
-import 'package:eos_mobile/features/configuraciones/domain/usecases/inspecciones_tipos/fetch_inspeccion_tipo.dart';
-import 'package:eos_mobile/features/configuraciones/domain/usecases/inspecciones_tipos/update_inspeccion_tipo.dart';
-import 'package:eos_mobile/features/configuraciones/domain/usecases/inspecciones_tipos/update_orden_inspeccion_tipo.dart';
-import 'package:eos_mobile/features/configuraciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
-import 'package:eos_mobile/features/configuraciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
-
+import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth_bloc.dart';
+import 'package:eos_mobile/features/auth/presentation/bloc/auth/remote/remote_auth_bloc.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
-final sl = GetIt.instance;
+final GetIt sl = GetIt.instance;
 
-/// Crear singletons y factories (lógica y servicios) que pueden ser compartidos a través de la aplicación.
+/// Inicializar las dependencias de la aplicación.
+///
+/// Esta implementación se encarga de registrar todas las dependencias necesarias para el
+/// funcionamiento de la aplicación, incluyendo lógicas de arranque, servicios, repositorios,
+/// manejadores de estado con BLoC, etc.
 Future<void> initializeDependencies() async {
-  // Dio
-  sl..registerSingleton<Dio>(Dio())
+  // Cliente de Dio
+  sl.registerSingleton<Dio>(Dio());
 
-  // Controlador Top Level de la App
-  // ignore: unnecessary_lambdas
-  ..registerLazySingleton<AppLogic>(() => AppLogic())
-  // ignore: unnecessary_lambdas
-  ..registerLazySingleton<SettingsLogic>(() => SettingsLogic())
-  // ignore: unnecessary_lambdas
-  ..registerLazySingleton<ImageHelper>(() => ImageHelper())
+  // Controlador de la aplicación de nivel superior
+  sl.registerLazySingleton<AppLogic>(() => AppLogic());
+  // Configuraciones de usuario
+  sl.registerLazySingleton<SettingsLogic>(() => SettingsLogic());
+  // Helper para operaciones con imágenes
+  sl.registerLazySingleton<ImageHelper>(() => ImageHelper());
 
-  // Depdendencias
-  ..registerSingleton<AuthRemoteApiService>(AuthRemoteApiService(sl()))
-  ..registerSingleton<AuthLocalService>(AuthLocalService())
-
-  ..registerSingleton<InspeccionTipoApiService>(InspeccionTipoApiService(sl()))
-
-  ..registerSingleton<CategoriaApiService>(CategoriaApiService(sl()))
+  // Servicios / Datasources
+  sl.registerSingleton<AuthRemoteApiService>(AuthRemoteApiService(sl()));
+  sl.registerSingleton<AuthLocalSource>(AuthLocalSource());
 
   // Repositorios
-  ..registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()))
-
-  ..registerSingleton<InspeccionTipoRepository>(InspeccionTipoRepositoryImpl(sl()))
-
-  ..registerSingleton<CategoriaRepository>(CategoriaRepositoryImpl(sl()))
+  sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
 
   // Casos de uso
-  ..registerSingleton<SignInUseCase>(SignInUseCase(sl()))
-  ..registerSingleton<SignOutUseCase>(SignOutUseCase(sl()))
+  sl.registerSingleton<SignInUseCase>(SignInUseCase(sl()));
+  sl.registerSingleton<SaveCredentialsUseCase>(SaveCredentialsUseCase(sl()));
+  sl.registerSingleton<GetSavedCredentialsUseCase>(GetSavedCredentialsUseCase(sl()));
 
-  ..registerSingleton<FetchInspeccionTipoUseCase>(FetchInspeccionTipoUseCase(sl()))
-  ..registerSingleton<CreateInspeccionTipoUseCase>(CreateInspeccionTipoUseCase(sl()))
-  ..registerSingleton<UpdateInspeccionTipoUseCase>(UpdateInspeccionTipoUseCase(sl()))
-  ..registerSingleton<UpdateOrdenInspeccionTipoUseCase>(UpdateOrdenInspeccionTipoUseCase(sl()))
-  ..registerSingleton<DeleteInspeccionTipoUseCase>(DeleteInspeccionTipoUseCase(sl()))
-
-  ..registerSingleton<FetchCategoriasByIdInspeccionTipoUseCase>(FetchCategoriasByIdInspeccionTipoUseCase(sl()))
-  ..registerSingleton<CreateCategoriaUseCase>(CreateCategoriaUseCase(sl()))
-  ..registerSingleton<UpdateCategoriaUseCase>(UpdateCategoriaUseCase(sl()))
-  ..registerSingleton<DeleteCategoriaUseCase>(DeleteCategoriaUseCase(sl()))
-
-  // Blocs
-  ..registerFactory<SignInBloc>(() => SignInBloc(sl()))
-  ..registerFactory<AuthenticationBloc>(() => AuthenticationBloc(sl()))
-
-  ..registerFactory<RemoteInspeccionTipoBloc>(() => RemoteInspeccionTipoBloc(sl(), sl(), sl(), sl(), sl()))
-
-  ..registerFactory<RemoteCategoriaBloc>(() => RemoteCategoriaBloc(sl(), sl(), sl(), sl()));
+  // BLoCs
+  sl.registerFactory<RemoteAuthBloc>(() => RemoteAuthBloc(sl()));
+  sl.registerFactory<LocalAuthBloc>(() => LocalAuthBloc(sl(), sl()));
 }
