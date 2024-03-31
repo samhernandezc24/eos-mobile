@@ -57,7 +57,7 @@ class AuthLocalSource {
     await prefs.setString(_keyExpiration, expiration.toIso8601String());
     await prefs.setString(_keyFoto, foto ?? '');
     await prefs.setString(_keyNombre, nombre);
-    await prefs.setString(_keyUserKey, key);
+    await prefs.setString(_keyUserKey, key);   
   }
 
   /// Guarda el token de sesión en el almacenamiento seguro de `FlutterSecureStorage`.

@@ -109,9 +109,20 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
                 // BOTÓN PARA ENVIAR LAS CREDENCIALES:
                 BlocConsumer<RemoteAuthBloc, RemoteAuthState>(
                   listener: (BuildContext context, RemoteAuthState state) {
-                    if (state is RemoteSignInSuccess) {
+                    if (state is RemoteSignInSuccess) {                      
+                      context.read<LocalAuthBloc>().add(
+                        SaveUserInfo(
+                          id          : state.account!.id,
+                          user        : state.account!.user,
+                          expiration  : state.account!.expiration,
+                          nombre      : state.account!.nombre,
+                          key         : state.account!.key,
+                          privilegies : state.account!.privilegies,
+                          foto        : state.account!.foto, 
+                        ),
+                      );
+                      context.read<LocalAuthBloc>().add(SaveUserSession(state.account!.token));
                       Navigator.of(context).pushReplacement(MaterialPageRoute<void>(builder: (context) => const HomePage()));
-                      // TODO(samhernandezc24): Implementar el almacenamiento de informacion aqui...
                     } else if (state is RemoteSignInFailure) {
                       _showErrorDialog(state);
                     }
@@ -126,7 +137,7 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
                           ),
                         ),
                         child: LoadingIndicator(
-                          color: Theme.of(context).disabledColor,
+                          color: Theme.of(context).primaryColor,
                           width: 20,
                           height: 20,
                           strokeWidth: 2,
@@ -158,8 +169,7 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
       context,
       PageRouteBuilder<void>(
         transitionDuration: $styles.times.pageTransition,
-        pageBuilder: (BuildContext context, Animation<double> animation,
-            Animation<double> secondaryAnimation) {
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
           const Offset begin = Offset(0, 1);
           const Offset end = Offset.zero;
           const Cubic curve = Curves.ease;
@@ -190,7 +200,9 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
                 state.failure?.response?.data.toString() ??
                     'Se produjo un error inesperado. Intenta iniciar sesión de nuevo.',
                 style: $styles.textStyles.title2.copyWith(
-                    height: 1.5, color: Theme.of(context).colorScheme.error),
+                  height: 1.5,
+                  color: Theme.of(context).colorScheme.error,
+                ),
               ),
             ),
           ],
