@@ -93,6 +93,9 @@ dependencies:
   # Define anotaciones utilizadas por `json_serializable`
   json_annotation: ^4.8.1
 
+  # JSON Web Tokens
+  jwt_decode: ^0.3.1
+
   # Imprime hermosos registros en el log.
   logger: ^2.1.0
 

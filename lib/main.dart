@@ -3,7 +3,6 @@ import 'package:eos_mobile/core/di/injection_container.dart';
 import 'package:eos_mobile/core/helpers/image_helper.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/remote/remote_auth_bloc.dart';
-import 'package:eos_mobile/features/auth/presentation/pages/sign_in/sign_in_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -19,7 +18,7 @@ Future<void> main() async {
 
   // Ejecutar la aplicación.
   runApp(const MainApp());
-  // await appLogic.bootstrap();
+  await appLogic.bootstrap();
 
   // Remover el splash nativo cuando la construcción de la app haya terminado.
   FlutterNativeSplash.remove();
@@ -29,32 +28,23 @@ Future<void> main() async {
 /// global `appRouter`, una instancia de [GoRouter].
 class MainApp extends StatelessWidget {
   const MainApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (BuildContext context) => sl<RemoteAuthBloc>()),
-        BlocProvider(create: (BuildContext context) => sl<LocalAuthBloc>()),
+        BlocProvider<RemoteAuthBloc>(create: (BuildContext context) => sl<RemoteAuthBloc>()),
+        BlocProvider<LocalAuthBloc>(create: (BuildContext context) => sl<LocalAuthBloc>()),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         title: $strings.defaultAppName,
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme($styles),
         darkTheme: AppTheme.darkTheme($styles),
         themeMode: ThemeMode.light,
-        home: const AuthSignInPage(),
+        routeInformationProvider: appRouter.routeInformationProvider,
+        routeInformationParser: appRouter.routeInformationParser,
+        routerDelegate: appRouter.routerDelegate,
       ),
-      // child: MaterialApp.router(
-      //   title: $strings.defaultAppName,
-      //   debugShowCheckedModeBanner: false,
-      //   theme: AppTheme.lightTheme($styles),
-      //   darkTheme: AppTheme.darkTheme($styles),
-      //   themeMode: ThemeMode.light,
-      //   routeInformationProvider: appRouter.routeInformationProvider,
-      //   routeInformationParser: appRouter.routeInformationParser,
-      //   routerDelegate: appRouter.routerDelegate,
-      // ),
     );
   }
 }

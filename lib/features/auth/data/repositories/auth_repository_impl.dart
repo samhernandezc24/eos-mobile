@@ -92,21 +92,21 @@ class AuthRepositoryImpl implements AuthRepository {
     return _authLocalSource.getUserSession();
   }
 
-  /// LIMPIAR LAS CREDENCIALES ALMACENADAS EN LOCAL
+  /// REMOVER LAS CREDENCIALES ALMACENADAS EN LOCAL
   @override
-  Future<void> clearSavedCredentials() async {
-    return _authLocalSource.clearSavedCredentials();
+  Future<void> removeCredentials() async {
+    return _authLocalSource.removeCredentials();
   }
 
-  /// LIMPIAR LA INFORMACIÓN DEL USUARIO ALMACENADA EN LOCAL
+  /// REMOVER LA INFORMACIÓN DEL USUARIO ALMACENADA EN LOCAL
   @override
-  Future<void> clearUserInfo() async {
-    return _authLocalSource.clearUserInfo();
+  Future<void> removeUserInfo() async {
+    return _authLocalSource.removeUserInfo();
   }
 
-  /// LIMPIAR LA SESIÓN DEL USUARIO EN SECURE LOCAL
+  /// REMOVER LA SESIÓN DEL USUARIO EN SECURE LOCAL
   @override
-  Future<void> clearUserSession() async {
-    return _authLocalSource.clearUserSession();
+  Future<void> removeUserSession() async {
+    return _authLocalSource.removeUserSession();
   }
 }

@@ -11,11 +11,11 @@ mixin ThrottledSaveLoadMixin {
 
   /// Carga de información.
   Future<void> load() async {
+    final Map<String, dynamic> results = await _file.load();
     try {
-      final Map<String, dynamic> results = await _file.load();
       copyFromJson(results);
-    } on Exception catch (e, stackTrace) {
-      _logger.e('Error al cargar datos', error: e, stackTrace: stackTrace);
+    } on Exception catch (e) {
+      debugPrint(e.toString());
     }
   }
 
@@ -24,8 +24,8 @@ mixin ThrottledSaveLoadMixin {
     if (!kIsWeb) _logger.d('Guardando...');
     try {
       await _file.save(toJson());
-    } on Exception catch (e, stackTrace) {
-      _logger.e('Error al guardar datos', error: e, stackTrace: stackTrace);
+    } on Exception catch (e) {
+      debugPrint(e.toString());
     }
   }
 

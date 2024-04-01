@@ -50,15 +50,17 @@ class AppLogic {
 
     // Cargar vista inicial (sustituir la vista inicial vacía que está cubierta
     // por una pantalla de inicio nativa).
-    final bool hasCompletedOnboarding = settingsLogic.hasCompletedOnboarding.value;
-    final bool isAuthenticated        = settingsLogic.isLoggedIn.value;
+    final bool showWelcomePage        = settingsLogic.hasCompletedOnboarding.value == false;
+    final bool isNotAuthenticated     = settingsLogic.hasAuthenticated.value == false;
 
-    if (!hasCompletedOnboarding) {
+    if (showWelcomePage) {
       appRouter.go(ScreenPaths.welcome);
-    } else if (!isAuthenticated) {
-      appRouter.go(initialDeeplink ?? ScreenPaths.authSignIn);
     } else {
-      appRouter.go(initialDeeplink ?? ScreenPaths.home);
+      if (isNotAuthenticated) {
+        appRouter.go(initialDeeplink ?? ScreenPaths.authSignIn);
+      } else {
+        appRouter.go(initialDeeplink ?? ScreenPaths.home);
+      }
     }
   }
 

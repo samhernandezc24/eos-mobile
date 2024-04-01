@@ -1,6 +1,10 @@
-import 'package:eos_mobile/config/logic/common/session_manager.dart';
+import 'dart:convert';
+
 import 'package:eos_mobile/core/common/data/modules_data.dart';
 import 'package:eos_mobile/core/common/widgets/card_view.dart';
+import 'package:eos_mobile/core/di/injection_container.dart';
+import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth_bloc.dart';
+import 'package:eos_mobile/features/auth/presentation/widgets/home/custom_drawer_header.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,15 +17,19 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   static List<ModulesData> modulesData = [];
 
+  @override
+  void initState() {
+    super.initState();
+  }
   Future<void> testTokenExpiration() async {
-    $logger.d('Comprobando la expiracion del token');
-    final sessionManager = SessionManager();
-    await sessionManager.checkTokenExpiration();
-    $logger.i('Comprobacion de la expiracion del token completada.');
+    // $logger.d('Comprobando la expiracion del token');
+    // final sessionManager = SessionManager();
+    // await sessionManager.checkTokenExpiration();
+    // $logger.i('Comprobacion de la expiracion del token completada.');
   }
 
   String _getInitials(String fullName) {
-    final List<String> nameParts      = fullName.split(' ');
+    final List<String> nameParts = fullName.split(' ');
     final StringBuffer initialsBuffer = StringBuffer();
 
     int initialsCount = 0;
@@ -46,9 +54,7 @@ class _HomePageState extends State<HomePage> {
     // Establecer los módulos de la aplicación.
     modulesData = [
       ModulesData(
-        $strings.module1,
-        Icon(Icons.checklist, color: moduleIconColor),
-      ),
+          $strings.module1, Icon(Icons.checklist, color: moduleIconColor)),
       ModulesData(
         $strings.module2,
         Icon(Icons.shopping_cart, color: moduleIconColor),
@@ -71,122 +77,120 @@ class _HomePageState extends State<HomePage> {
       ),
     ];
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'EOS Mobile',
-          style: $styles.textStyles.h3,
+    return BlocProvider(
+      create: (_) => sl<LocalAuthBloc>()..add(GetUserInfo()),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text($strings.defaultAppName, style: $styles.textStyles.h3),
+          actions: [
+            IconButton(onPressed: testTokenExpiration, icon: const Icon(Icons.notifications)),
+          ],
         ),
-        actions: [
-          IconButton(
-            onPressed: testTokenExpiration,
-            icon: const Icon(Icons.notifications),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                ),
-                itemCount: modulesData.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return CardViewIcon(
-                    icon: modulesData[index].icon,
-                    title: modulesData[index].name,
-                    onTap: () {
-                      switch (index) {
-                        case 0:
-                          GoRouter.of(context).go('/home/inspecciones');
+        body: _buildBody(),
+        bottomNavigationBar: NavigationBar(
+          destinations: const <NavigationDestination>[
+            NavigationDestination(icon: Icon(Icons.home), label: 'Inicio'),
+            NavigationDestination(icon: Icon(Icons.dashboard), label: 'Dashboard'),
+            NavigationDestination(icon: Icon(Icons.format_list_bulleted), label: 'Actividad'),
+            NavigationDestination(icon: Icon(Icons.account_circle), label: 'Cuenta'),
+          ],
+          onDestinationSelected: (int index) {
+            setState(() {
+              currentPageIndex = index;
+            });
+            _navigateToPage(index);
+          },
+          selectedIndex: currentPageIndex,
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              _buildDrawerHeader(context),
+              _buildDrawerItem(
+                icon: Icons.home,
+                text: 'Inicio',
+                onTap: () => context.go('/home'),
+              ),
+              _buildDrawerItem(
+                icon: Icons.dashboard,
+                text: 'Dashboard',
+                onTap: () => context.go('/dashboard'),
+              ),
+              _buildDrawerItem(
+                icon: Icons.format_list_bulleted,
+                text: 'Actividad',
+                onTap: () => {},
+              ),
+              _buildDrawerItem(
+                icon: Icons.account_circle,
+                text: 'Cuenta',
+                onTap: () => {},
+              ),
+              const Divider(),
+              // _buildDrawerItem(
+              //   icon: Icons.settings,
+              //   text: 'Configuración',
+              //   onTap: () {
+              //     // Cerrar el drawer
+              //     Navigator.pop(context);
 
-                        /// se agregaran las demás rutas para los módulos
-                        /// una vez se haya finalizado el módulo principal.
-                      }
-                    },
-                  );
-                },
+              //     // Actualizar el estado en la app
+              //     Future.delayed(.times.pageTransition, () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute<void>(
+              //           builder: (context) => const ConfiguracionesIndexPage(),
+              //         ),
+              //       );
+              //     });
+              //   },
+              // ),
+              const Divider(),
+              _buildDrawerItem(
+                iconColor: Theme.of(context).colorScheme.error,
+                textColor: Theme.of(context).colorScheme.error,
+                icon: Icons.logout,
+                text: 'Cerrar sesión',
+                onTap: _showLogoutConfirmationDialog,
               ),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: NavigationBar(
-        destinations: const <NavigationDestination>[
-          NavigationDestination(icon: Icon(Icons.home), label: 'Inicio'),
-          NavigationDestination(
-              icon: Icon(Icons.dashboard), label: 'Dashboard'),
-          NavigationDestination(
-              icon: Icon(Icons.format_list_bulleted), label: 'Actividad'),
-          NavigationDestination(
-              icon: Icon(Icons.account_circle), label: 'Cuenta'),
-        ],
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-          _navigateToPage(index);
-        },
-        selectedIndex: currentPageIndex,
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            _buildDrawerHeader(),
-            _buildDrawerItem(
-              icon: Icons.home,
-              text: 'Inicio',
-              onTap: () => context.go('/home'),
-            ),
-            _buildDrawerItem(
-              icon: Icons.dashboard,
-              text: 'Dashboard',
-              onTap: () => context.go('/dashboard'),
-            ),
-            _buildDrawerItem(
-              icon: Icons.format_list_bulleted,
-              text: 'Actividad',
-              onTap: () => {},
-            ),
-            _buildDrawerItem(
-              icon: Icons.account_circle,
-              text: 'Cuenta',
-              onTap: () => {},
-            ),
-            const Divider(),
-            // _buildDrawerItem(
-            //   icon: Icons.settings,
-            //   text: 'Configuración',
-            //   onTap: () {
-            //     // Cerrar el drawer
-            //     Navigator.pop(context);
+    );
+  }
 
-            //     // Actualizar el estado en la app
-            //     Future.delayed($styles.times.pageTransition, () {
-            //       Navigator.push(
-            //         context,
-            //         MaterialPageRoute<void>(
-            //           builder: (context) => const ConfiguracionesIndexPage(),
-            //         ),
-            //       );
-            //     });
-            //   },
-            // ),
-            const Divider(),
-            _buildDrawerItem(
-              iconColor: Theme.of(context).colorScheme.error,
-              textColor: Theme.of(context).colorScheme.error,
-              icon: Icons.logout,
-              text: 'Cerrar sesión',
-              onTap: _showLogoutConfirmationDialog,
+  Widget _buildBody() {
+    return Padding(
+      padding: EdgeInsets.all($styles.insets.sm),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+              ),
+              itemCount: modulesData.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return CardViewIcon(
+                  icon: modulesData[index].icon,
+                  title: modulesData[index].name,
+                  onTap: () {
+                    switch (index) {
+                      case 0:
+                        GoRouter.of(context).go('/home/inspecciones');
+
+                      /// se agregaran las demás rutas para los módulos
+                      /// una vez se haya finalizado el módulo principal.
+                    }
+                  },
+                );
+              },
             ),
           ],
         ),
@@ -207,115 +211,50 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Widget _buildDrawerHeader() {
-    return const DrawerHeader(child: Column());
+  Widget _buildDrawerHeader(BuildContext context) {
+    return BlocBuilder<LocalAuthBloc, LocalAuthState>(
+      builder: (BuildContext context, LocalAuthState state) {
+        if (state is LocalUserInfoSuccess) {
+          if (state.userInfo != null) {
+            final Map<String, dynamic> objUserData = jsonDecode(state.userInfo!['user'] ?? '{}') as Map<String, dynamic>;
+            final String? name = state.userInfo!['nombre'];
+            final String? email = objUserData['email'] as String?;
+
+            return UserAccountsDrawerHeader(
+              accountName: Text(name ?? '', style: const TextStyle(color: Colors.white)),
+              accountEmail: Text(email ?? '', style: const TextStyle(color: Colors.white)),
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Theme.of(context).chipTheme.backgroundColor,
+                child: Text(
+                  _getInitials(name ?? ''),
+                  style: $styles.textStyles.h2.copyWith(color: Colors.white),
+                ),
+              ),
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(ImagePaths.background1),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            );
+          } else {
+            return const UserAccountsDrawerHeader(
+              accountName: Text('John Doe'),
+              accountEmail: Text('john@doe.com'),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: NetworkImage(
+                  'https://images.unsplash.com/photo-1584999734482-0361aecad844?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA&ixlib=rb-1.2.1&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=300',
+                ),
+              ),
+            );
+          }
+        } else {
+          // Retornamos el `CustomDrawerHeader` si no se puede cargar la información correctamente.
+          return const CustomDrawerHeader();
+        }
+      },
+    );
   }
-
-  // Widget _buildDrawerHeader() {
-  //   return FutureBuilder<Map<String, String?>>(
-  //     future: Future<Map<String, String?>>.delayed($styles.times.slow, UserInfoStorage.getUserInfo),
-  //     builder:
-  //         (BuildContext context, AsyncSnapshot<Map<String, String?>> snapshot) {
-  //       if (snapshot.connectionState == ConnectionState.waiting) {
-  //         return DrawerHeader(
-  //           decoration: BoxDecoration(
-  //             gradient: LinearGradient(
-  //               begin: Alignment.topLeft,
-  //               end: Alignment.bottomRight,
-  //               colors: <Color>[
-  //                 Theme.of(context).colorScheme.inverseSurface.withOpacity(0.2),
-  //                 Theme.of(context).colorScheme.inverseSurface.withOpacity(0.3),
-  //                 Theme.of(context).colorScheme.inverseSurface.withOpacity(0.2),
-  //               ],
-  //               stops: const <double>[0, 0.5, 1],
-  //             ),
-  //           ),
-  //           child: Shimmer.fromColors(
-  //             baseColor: Colors.grey.shade300,
-  //             highlightColor: Colors.grey.shade100,
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: <Widget>[
-  //                 Container(
-  //                   width: 70,
-  //                   height: 70,
-  //                   decoration: BoxDecoration(
-  //                     shape: BoxShape.circle,
-  //                     color: Theme.of(context).primaryColor,
-  //                   ),
-  //                 ),
-  //                 Gap($styles.insets.xs),
-  //                 Column(
-  //                   mainAxisSize: MainAxisSize.min,
-  //                   crossAxisAlignment: CrossAxisAlignment.start,
-  //                   children: <Widget>[
-  //                     Container(
-  //                       width: 125,
-  //                       height: 24,
-  //                       decoration: BoxDecoration(
-  //                         color: Theme.of(context).primaryColor,
-  //                         borderRadius:
-  //                             BorderRadius.circular($styles.insets.sm),
-  //                       ),
-  //                     ),
-  //                     Gap($styles.insets.xs),
-  //                     Container(
-  //                       width: 225,
-  //                       height: 24,
-  //                       decoration: BoxDecoration(
-  //                         color: Theme.of(context).primaryColor,
-  //                         borderRadius:
-  //                             BorderRadius.circular($styles.insets.sm),
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       } else if (snapshot.hasError) {
-  //         return const DrawerHeader(
-  //           child: Text('Error al cargar la información del usuario'),
-  //         );
-  //       } else {
-  //         final Map<String, dynamic> userObjData =
-  //             jsonDecode(snapshot.data?['user'] ?? '{}')
-  //                 as Map<String, dynamic>;
-  //         final String email = userObjData['email'] as String? ?? '';
-  //         final String name = userObjData['name'] as String? ?? '';
-
-  //         return UserAccountsDrawerHeader(
-  //           currentAccountPicture: AvatarProfileName(
-  //             backgroundColor: Theme.of(context).chipTheme.backgroundColor,
-  //             child: Text(
-  //               _getInitials(name),
-  //               style: $styles.textStyles.h2.copyWith(color: Colors.white),
-  //             ),
-  //           ),
-  //           accountEmail: Text(
-  //             email,
-  //             style: const TextStyle(
-  //               color: Colors.white,
-  //             ),
-  //           ),
-  //           accountName: Text(
-  //             name.toProperCase(),
-  //             style: const TextStyle(
-  //               color: Colors.white,
-  //             ),
-  //           ),
-  //           decoration: const BoxDecoration(
-  //             image: DecorationImage(
-  //               fit: BoxFit.fill,
-  //               image: AssetImage(ImagePaths.background1),
-  //             ),
-  //           ),
-  //         );
-  //       }
-  //     },
-  //   );
-  // }
 
   Widget _buildDrawerItem({
     required IconData icon,
@@ -331,10 +270,7 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           Icon(icon),
           SizedBox(width: $styles.insets.sm),
-          Text(
-            text,
-            style: $styles.textStyles.bodySmall,
-          ),
+          Text(text, style: $styles.textStyles.bodySmall),
         ],
       ),
       onTap: onTap,
@@ -347,16 +283,21 @@ class _HomePageState extends State<HomePage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Confirmación', style: $styles.textStyles.h3),
-            content: Text('¿Estás seguro de que deseas cerrar sesión?', style: $styles.textStyles.body.copyWith(height: 1.5)),
+            title: const SizedBox.shrink(),
+            content: Text('¿Salir de tu cuenta?', style: $styles.textStyles.body.copyWith(height: 1.5)),
             actions: <Widget>[
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text('Cancelar', style: $styles.textStyles.button),
+                child: Text('Cancelar', style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.inverseSurface)),
               ),
               TextButton(
-                onPressed: () {},
-                child: Text('Cerrar Sesión', style: $styles.textStyles.button),
+                onPressed: () {
+                  context.read<LocalAuthBloc>().add(LogoutRequested());
+                  Navigator.of(context).pop();
+                  context.go(ScreenPaths.authSignIn);
+                  settingsLogic.hasAuthenticated.value = false;
+                },
+                child: Text('Salir', style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
               ),
             ],
           );

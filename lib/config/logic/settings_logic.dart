@@ -7,7 +7,7 @@ class SettingsLogic with ThrottledSaveLoadMixin {
   String get fileName => 'settings.dat';
 
   late final ValueNotifier<bool> hasCompletedOnboarding     = ValueNotifier<bool>(false)..addListener(scheduleSave);
-  late final ValueNotifier<bool> isLoggedIn                 = ValueNotifier<bool>(false)..addListener(scheduleSave);
+  late final ValueNotifier<bool> hasAuthenticated           = ValueNotifier<bool>(false)..addListener(scheduleSave);
   late final ValueNotifier<bool> isDarkModeEnabled          = ValueNotifier<bool>(false)..addListener(scheduleSave);
 
   final bool useBlurs = !PlatformInfo.isAndroid;
@@ -15,7 +15,7 @@ class SettingsLogic with ThrottledSaveLoadMixin {
   @override
   void copyFromJson(Map<String, dynamic> value) {
     hasCompletedOnboarding.value      = value['hasCompletedOnboarding'] as bool? ?? false;
-    isLoggedIn.value                  = value['isLoggedIn']             as bool? ?? false;
+    hasAuthenticated.value            = value['hasAuthenticated']       as bool? ?? false;
     isDarkModeEnabled.value           = value['isDarkModeEnabled']      as bool? ?? false;
   }
 
@@ -23,7 +23,7 @@ class SettingsLogic with ThrottledSaveLoadMixin {
   Map<String, dynamic> toJson() {
     return {
       'hasCompletedOnboarding'    : hasCompletedOnboarding.value,
-      'isLoggedIn'                : isLoggedIn.value,
+      'hasAuthenticated'          : hasAuthenticated.value,
       'isDarkModeEnabled'         : isDarkModeEnabled.value,
     };
   }

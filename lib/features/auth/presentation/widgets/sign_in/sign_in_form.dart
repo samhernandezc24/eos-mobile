@@ -1,9 +1,9 @@
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
+import 'package:eos_mobile/core/di/injection_container.dart';
 import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/remote/remote_auth_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/pages/forgot_password/forgot_password_page.dart';
-import 'package:eos_mobile/features/auth/presentation/pages/home/home_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class AuthSignInForm extends StatefulWidget {
@@ -25,7 +25,6 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
   void initState() {
     _emailController    = TextEditingController();
     _passwordController = TextEditingController();
-    _loadCredentials();
     super.initState();
   }
 
@@ -37,10 +36,6 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
   }
 
   // METHODS
-  Future<void> _loadCredentials() async {
-    context.read<LocalAuthBloc>().add(GetSavedCredentials());
-  }
-
   void _handleSignIn() {
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -53,114 +48,127 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
       _formKey.currentState!.save();
       final SignInEntity objSignIn = SignInEntity(email: _emailController.text, password: _passwordController.text);
       context.read<RemoteAuthBloc>().add(SignInSubmitted(objSignIn));
-      context.read<LocalAuthBloc>().add(SaveCredentials(objSignIn));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LocalAuthBloc, LocalAuthState>(
-      listener: (BuildContext context, LocalAuthState state) {
-        if (state is LocalCredentialsSuccess) {
-          _emailController.text     = state.credentials?['email'] ?? '';
-        }
-      },
-      builder: (BuildContext context, LocalAuthState state) {
-        return Form(
-          key: _formKey,
-          child: Container(
-            padding: EdgeInsets.all($styles.insets.sm),
-            child: Column(
-              children: <Widget>[
-                // USUARIO / CORREO ELECTRÓNICO:
-                LabeledTextField(
-                  controller: _emailController,
-                  hintText: 'ejem@plo.com',
-                  labelText: 'Usuario:',
-                  keyboardType: TextInputType.emailAddress,
-                  validator: FormValidators.emailValidator,
-                ),
+    return BlocProvider(
+      create: (_) => sl<LocalAuthBloc>()..add(GetCredentials()),
+      child: BlocConsumer<LocalAuthBloc, LocalAuthState>(
+        listener: (BuildContext context, LocalAuthState state) {
+          if (state is LocalCredentialsSuccess) {
+            _emailController.text = state.credentials?['email'] ?? '';
+          }
+        },
+        builder: (BuildContext context, LocalAuthState state) {
+          return Form(
+            key: _formKey,
+            child: Container(
+              padding: EdgeInsets.all($styles.insets.sm),
+              child: Column(
+                children: <Widget>[
+                  // USUARIO / CORREO ELECTRÓNICO:
+                  LabeledTextField(
+                    controller: _emailController,
+                    hintText: 'ejem@plo.com',
+                    labelText: 'Usuario:',
+                    keyboardType: TextInputType.emailAddress,
+                    validator: FormValidators.emailValidator,
+                  ),
 
-                Gap($styles.insets.md),
+                  Gap($styles.insets.md),
 
-                // USUARIO / CORREO ELECTRÓNICO:
-                LabeledTextField(
-                  controller: _passwordController,
-                  labelText: 'Contraseña:',
-                  isPassword: true,
-                  keyboardType: TextInputType.visiblePassword,
-                  validator: FormValidators.passwordValidator,
-                  textInputAction: TextInputAction.done,
-                ),
+                  // USUARIO / CORREO ELECTRÓNICO:
+                  LabeledTextField(
+                    controller: _passwordController,
+                    labelText: 'Contraseña:',
+                    isPassword: true,
+                    keyboardType: TextInputType.visiblePassword,
+                    validator: FormValidators.passwordValidator,
+                    textInputAction: TextInputAction.done,
+                  ),
 
-                // ¿HAS OLVIDADO TU CONTRASEÑA?:
-                GestureDetector(
-                  onTap: _buildForgotPasswordPage,
-                  child: Container(
-                    alignment: Alignment.centerRight,
-                    padding: EdgeInsets.symmetric(vertical: $styles.insets.sm),
-                    child: Text(
-                      '¿Has olvidado tu contraseña?',
-                      style: TextStyle(color: Theme.of(context).primaryColor),
+                  // ¿HAS OLVIDADO TU CONTRASEÑA?:
+                  GestureDetector(
+                    onTap: _buildForgotPasswordPage,
+                    child: Container(
+                      alignment: Alignment.centerRight,
+                      padding:
+                          EdgeInsets.symmetric(vertical: $styles.insets.sm),
+                      child: Text(
+                        '¿Has olvidado tu contraseña?',
+                        style: TextStyle(color: Theme.of(context).primaryColor),
+                      ),
                     ),
                   ),
-                ),
 
-                // BOTÓN PARA ENVIAR LAS CREDENCIALES:
-                BlocConsumer<RemoteAuthBloc, RemoteAuthState>(
-                  listener: (BuildContext context, RemoteAuthState state) {
-                    if (state is RemoteSignInSuccess) {                      
-                      context.read<LocalAuthBloc>().add(
-                        SaveUserInfo(
-                          id          : state.account!.id,
-                          user        : state.account!.user,
-                          expiration  : state.account!.expiration,
-                          nombre      : state.account!.nombre,
-                          key         : state.account!.key,
-                          privilegies : state.account!.privilegies,
-                          foto        : state.account!.foto, 
-                        ),
-                      );
-                      context.read<LocalAuthBloc>().add(SaveUserSession(state.account!.token));
-                      Navigator.of(context).pushReplacement(MaterialPageRoute<void>(builder: (context) => const HomePage()));
-                    } else if (state is RemoteSignInFailure) {
-                      _showErrorDialog(state);
-                    }
-                  },
-                  builder: (BuildContext context, RemoteAuthState state) {
-                    if (state is RemoteSignInLoading) {
+                  // BOTÓN PARA ENVIAR LAS CREDENCIALES:
+                  BlocConsumer<RemoteAuthBloc, RemoteAuthState>(
+                    listener: (BuildContext context, RemoteAuthState state) {
+                      if (state is RemoteSignInSuccess) {
+                        final SignInEntity objSignIn = SignInEntity(email: _emailController.text, password: _passwordController.text);
+                        // GUARDADO DE CREDENCIALES EN ALMACENAMIENTO LOCAL
+                        context.read<LocalAuthBloc>().add(SaveCredentials(objSignIn));
+
+                        // GUARDADO DE INFORMACIÓN DEL USUARIO EN ALMACENAMIENTO LOCAL
+                        context.read<LocalAuthBloc>().add(
+                              SaveUserInfo(
+                                id: state.account!.id,
+                                user: state.account!.user,
+                                expiration: state.account!.expiration,
+                                nombre: state.account!.nombre.toProperCase(),
+                                key: state.account!.key,
+                                privilegies: state.account!.privilegies,
+                                foto: state.account!.foto,
+                              ),
+                            );
+
+                        // GUARDADO DE SESIÓN DEL USUARIO EN ALMACENAMIENTO LOCAL
+                        context.read<LocalAuthBloc>().add(SaveUserSession(state.account!.token));
+
+                        // NAVEGAR EXITOSAMENTE AL HOMEPAGE
+                        context.go(ScreenPaths.home);
+                        settingsLogic.hasAuthenticated.value = true;
+                      } else if (state is RemoteSignInFailure) {
+                        _showErrorDialog(state);
+                      }
+                    },
+                    builder: (BuildContext context, RemoteAuthState state) {
+                      if (state is RemoteSignInLoading) {
+                        return FilledButton(
+                          onPressed: null,
+                          style: ButtonStyle(
+                            minimumSize: MaterialStateProperty.all(
+                              const Size(double.infinity, 48),
+                            ),
+                          ),
+                          child: LoadingIndicator(
+                            color: Theme.of(context).primaryColor,
+                            width: 20,
+                            height: 20,
+                            strokeWidth: 2,
+                          ),
+                        );
+                      }
+
                       return FilledButton(
-                        onPressed: null,
+                        onPressed: _handleSignIn,
                         style: ButtonStyle(
                           minimumSize: MaterialStateProperty.all(
                             const Size(double.infinity, 48),
                           ),
                         ),
-                        child: LoadingIndicator(
-                          color: Theme.of(context).primaryColor,
-                          width: 20,
-                          height: 20,
-                          strokeWidth: 2,
-                        ),
+                        child: Text($strings.signInButtonText, style: $styles.textStyles.button),
                       );
-                    }
-
-                    return FilledButton(
-                      onPressed: _handleSignIn,
-                      style: ButtonStyle(
-                        minimumSize: MaterialStateProperty.all(
-                          const Size(double.infinity, 48),
-                        ),
-                      ),
-                      child: Text($strings.signInButtonText, style: $styles.textStyles.button),
-                    );
-                  },
-                ),
-              ],
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 

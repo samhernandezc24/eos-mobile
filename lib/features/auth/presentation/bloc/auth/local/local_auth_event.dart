@@ -9,11 +9,13 @@ sealed class LocalAuthEvent extends Equatable {
 
 class LogoutRequested extends LocalAuthEvent {}
 
-class GetSavedCredentials extends LocalAuthEvent {}
+class GetCredentials extends LocalAuthEvent {}
 
 class GetUserInfo extends LocalAuthEvent {}
 
 class GetUserSession extends LocalAuthEvent {}
+
+class RemoveCredentials extends LocalAuthEvent {}
 
 class SaveCredentials extends LocalAuthEvent {
   const SaveCredentials(this.signIn);

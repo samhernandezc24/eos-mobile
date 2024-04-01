@@ -1,4 +1,5 @@
 import 'package:eos_mobile/shared/shared.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 
 class SessionManager {
   Future<void> checkTokenExpiration() async {
@@ -24,7 +25,8 @@ class SessionManager {
       } else {
         $logger..d('el token todavia tiene tiempo antes de expirar.')
         ..d('tiempo restante para la expiracion del token: ${diffInSeconds ~/ 60} minutos.')
-        ..d('Token almacenado: $value');
+        ..d('Token almacenado: $value')
+        ..d(Jwt.parseJwt(value));
       }
     } else {
       $logger.w('No se encontro informacion de expiracion del token en SharedPreferences');

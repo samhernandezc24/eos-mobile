@@ -11,6 +11,8 @@ class LocalAuthInitial extends LocalAuthState {}
 
 class LocalCredentialsLoading extends LocalAuthState {}
 
+class LocalLogoutSuccess extends LocalAuthState {}
+
 class LocalCredentialsSuccess extends LocalAuthState {
   const LocalCredentialsSuccess(this.credentials);
 

@@ -57,7 +57,7 @@ class AuthLocalSource {
     await prefs.setString(_keyExpiration, expiration.toIso8601String());
     await prefs.setString(_keyFoto, foto ?? '');
     await prefs.setString(_keyNombre, nombre);
-    await prefs.setString(_keyUserKey, key);   
+    await prefs.setString(_keyUserKey, key);
   }
 
   /// Guarda el token de sesión en el almacenamiento seguro de `FlutterSecureStorage`.
@@ -107,15 +107,15 @@ class AuthLocalSource {
     return _secureStorage.read(key: _keyToken);
   }
 
-  /// Limpia las credenciales almacenadas del usuario en `SharedPreferences`.
-  Future<void> clearSavedCredentials() async {
+  /// Remueve las credenciales almacenadas del usuario en `SharedPreferences`.
+  Future<void> removeCredentials() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove(_keyEmail);
     await prefs.remove(_keyPassword);
   }
 
-  /// Limpia la información del usuario en `SharedPreferences`.
-  Future<void> clearUserInfo() async {
+  /// Remueve la información del usuario en `SharedPreferences`.
+  Future<void> removeUserInfo() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove(_keyUserId);
     await prefs.remove(_keyUser);
@@ -126,8 +126,8 @@ class AuthLocalSource {
     await prefs.remove(_keyUserKey);
   }
 
-  /// Limpia el token de sesión del almacenamiento de `FlutterSecureStorage`.
-  Future<void> clearUserSession() async {
+  /// Remueve la sesión del usuario del almacenamiento `FlutterSecureStorage`.
+  Future<void> removeUserSession() async {
     await _secureStorage.delete(key: _keyToken);
   }
 }

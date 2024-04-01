@@ -4,7 +4,6 @@ import 'package:eos_mobile/shared/shared.dart';
 
 class JsonPrefsFile {
   JsonPrefsFile(this.name);
-
   final String name;
 
   /// Carga los datos almacenados con la clave proporcionada desde `SharedPreferences`.
