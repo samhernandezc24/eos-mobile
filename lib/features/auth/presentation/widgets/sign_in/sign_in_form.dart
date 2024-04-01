@@ -217,7 +217,7 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
         ),
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => context.pop(),
             child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
           ),
         ],

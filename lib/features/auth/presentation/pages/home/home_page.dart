@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:eos_mobile/config/logic/common/session_manager.dart';
 import 'package:eos_mobile/core/common/data/modules_data.dart';
 import 'package:eos_mobile/core/common/widgets/card_view.dart';
 import 'package:eos_mobile/core/di/injection_container.dart';
@@ -22,10 +23,10 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
   Future<void> testTokenExpiration() async {
-    // $logger.d('Comprobando la expiracion del token');
-    // final sessionManager = SessionManager();
-    // await sessionManager.checkTokenExpiration();
-    // $logger.i('Comprobacion de la expiracion del token completada.');
+    $logger.d('Comprobando la expiracion del token');
+    final sessionManager = SessionManager();
+    await sessionManager.checkTokenExpiration();
+    $logger.i('Comprobacion de la expiracion del token completada.');
   }
 
   String _getInitials(String fullName) {

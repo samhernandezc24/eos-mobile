@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'package:jwt_decode/jwt_decode.dart';
 
 class AuthUtils {
   /// Metodo que verifica si el token ya ha expirado.
@@ -21,13 +21,9 @@ class AuthUtils {
   static Map<String, dynamic>? _decodeToken(String token) {
     if (token.isEmpty) return null;
 
-    final List<String> parts = token.split('.');
-
-    if (parts.length != 3) { throw Exception('El token inspeccionado no parece ser un JWT. Compruebe que tiene tres partes y consulte https://jwt.io para obtener más información.'); }
-
-    // Decodificar el token usando un decodificador Base64.
-    final String decoded = utf8.decode(base64Url.decode(base64Url.normalize(parts[1])));
-    return jsonDecode(decoded) as Map<String, dynamic>?;
+    // Decodificar el token usando un decodificador JWT.
+    final Map<String, dynamic> decodedToken = Jwt.parseJwt(token);
+    return decodedToken;
   }
 
   /// Obtiene la fecha de expiracion del token.
