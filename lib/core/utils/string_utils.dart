@@ -8,7 +8,7 @@ class StringUtils {
   static bool isNotEmpty(String? s) => !isEmpty(s);
 
   /// Verifica si una cadena parece ser una URL válida.
-  /// 
+  ///
   /// El regex utilizado puede no cubrir todos los casos posibles de
   /// URLs válidas.
   static bool isLink(String str) {
@@ -17,10 +17,10 @@ class StringUtils {
     );
     return urlRegex.hasMatch(str);
   }
-  
-  /// Trunca una cadena a una longitud máxima y agrega puntos suspensivos si es 
+
+  /// Trunca una cadena a una longitud máxima y agrega puntos suspensivos si es
   /// necesario.
-  /// 
+  ///
   /// Si la longitud de [myString] es menor o igual a [maxLength], devuelve [myString]
   /// seguida de puntos suspensivos.
   static String truncateWithEllipsis(int maxLength, String myString) {
@@ -29,7 +29,7 @@ class StringUtils {
 
   /// Convierte un mapa en una cadena de texto, donde cada par clave-valor se concatena
   /// en formato "clave: valor".
-  /// 
+  ///
   /// Si [map] es null, devuelve una cadena vacía.
   static String printMap(Map<String, dynamic>? map) {
     String str = '';
@@ -39,7 +39,7 @@ class StringUtils {
 
   /// Capitaliza la primera letra de la cadena y convierte el resto de la
   /// cadena en minúsculas.
-  /// 
+  ///
   /// Si [value] es null o vacío, devuelve una cadena vacía.
   static String capitalize(String? value) {
     if (value == null || value.isEmpty) return '';
@@ -48,7 +48,7 @@ class StringUtils {
 
   /// Capitaliza cada palabra en la cadena a "proper case", donde la primera
   /// letra de cada palabra está en mayúsculas.
-  /// 
+  ///
   /// Si [value] es null, devuelve una cadena vacía.
   static String toProperCase(String? value) {
     if (value == null) return '';
@@ -62,7 +62,23 @@ class StringUtils {
         final proper  = '${lower.substring(0, 1).toUpperCase()}${lower.substring(1)}';
         result        = result.isEmpty ? proper : '$result $proper';
       }
-    }    
+    }
     return result;
+  }
+
+  /// Obtiene las iniciales de un valor de cadena.
+  ///
+  /// Toma un [value] que representa la cadena y devuelve las iniciales
+  /// de las primeras dos palabras del [value].
+  static String getInitials(String? value) {
+    if (value == null || value.isEmpty) return '';
+
+    final List<String> parts        = value.split(' ');
+    final StringBuffer stringBuffer = StringBuffer();
+
+    for (final part in parts.take(2)) {
+      stringBuffer.write(part[0]);
+    }
+    return stringBuffer.toString().toUpperCase();
   }
 }

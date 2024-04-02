@@ -1,12 +1,15 @@
 import 'dart:convert';
+import 'dart:math' as math;
 
-import 'package:eos_mobile/config/logic/common/session_manager.dart';
-import 'package:eos_mobile/core/common/data/modules_data.dart';
-import 'package:eos_mobile/core/common/widgets/card_view.dart';
+import 'package:eos_mobile/core/common/widgets/eos_mobile_logo.dart';
 import 'package:eos_mobile/core/di/injection_container.dart';
+import 'package:eos_mobile/core/utils/string_utils.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth_bloc.dart';
-import 'package:eos_mobile/features/auth/presentation/widgets/home/custom_drawer_header.dart';
+import 'package:eos_mobile/features/auth/presentation/widgets/home/about_dialog_content.dart';
+import 'package:eos_mobile/features/auth/presentation/widgets/home/drawer_header_effect.dart';
 import 'package:eos_mobile/shared/shared.dart';
+import 'package:flutter/rendering.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,296 +19,279 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static List<ModulesData> modulesData = [];
-
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<LocalAuthBloc>(context).add(GetUserSession());
-  }
-  Future<void> testTokenExpiration() async {
-    $logger.d('Comprobando la expiracion del token');
-    final sessionManager = SessionManager();
-    await sessionManager.checkTokenExpiration();
-    await sessionManager.renewFakeToken();
-    $logger.i('Comprobacion de la expiracion del token completada.');
-  }
-
-  String _getInitials(String fullName) {
-    final List<String> nameParts = fullName.split(' ');
-    final StringBuffer initialsBuffer = StringBuffer();
-
-    int initialsCount = 0;
-
-    for (final part in nameParts) {
-      if (initialsCount < 2) {
-        initialsBuffer.write(part[0]);
-        initialsCount++;
-      }
-    }
-
-    return initialsBuffer.toString().toUpperCase();
+  /// METHODS
+  Future<void> _handleAboutPressed(BuildContext context) async {
+    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    if (!mounted) return;
+    showAboutDialog(
+      context: context,
+      applicationName: $strings.defaultAppName,
+      applicationVersion: packageInfo.version,
+      applicationLegalese: 'Powered by Workcube © 2024',
+      children: [const AboutDialogContent()],
+      applicationIcon: Container(
+        padding: EdgeInsets.all($styles.insets.xs),
+        child: const EOSMobileLogo(width: 52),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Definiendo el color de los iconos al primario.
-    final Color moduleIconColor = Theme.of(context).primaryColor;
-
-    int currentPageIndex = 0;
-
-    // Establecer los módulos de la aplicación.
-    modulesData = [
-      ModulesData(
-          $strings.module1, Icon(Icons.checklist, color: moduleIconColor)),
-      ModulesData(
-        $strings.module2,
-        Icon(Icons.shopping_cart, color: moduleIconColor),
-      ),
-      ModulesData(
-        $strings.module3,
-        Icon(Icons.forklift, color: moduleIconColor),
-      ),
-      ModulesData(
-        $strings.module4,
-        Icon(Icons.assignment_turned_in, color: moduleIconColor),
-      ),
-      ModulesData(
-        $strings.module5,
-        Icon(Icons.folder, color: moduleIconColor),
-      ),
-      ModulesData(
-        $strings.module6,
-        Icon(Icons.local_shipping, color: moduleIconColor),
-      ),
-    ];
-
-    return BlocProvider(
+    return BlocProvider<LocalAuthBloc>(
       create: (_) => sl<LocalAuthBloc>()..add(GetUserInfo()),
       child: Scaffold(
         appBar: AppBar(
           title: Text($strings.defaultAppName, style: $styles.textStyles.h3),
-          actions: [
-            IconButton(onPressed: testTokenExpiration, icon: const Icon(Icons.notifications)),
+          actions: <Widget>[
+            IconButton(onPressed: () {}, icon: const Icon(Icons.notifications))
           ],
         ),
-        body: _buildBody(),
-        bottomNavigationBar: NavigationBar(
-          destinations: const <NavigationDestination>[
-            NavigationDestination(icon: Icon(Icons.home), label: 'Inicio'),
-            NavigationDestination(icon: Icon(Icons.dashboard), label: 'Dashboard'),
-            NavigationDestination(icon: Icon(Icons.format_list_bulleted), label: 'Actividad'),
-            NavigationDestination(icon: Icon(Icons.account_circle), label: 'Cuenta'),
-          ],
-          onDestinationSelected: (int index) {
-            setState(() {
-              currentPageIndex = index;
-            });
-            _navigateToPage(index);
-          },
-          selectedIndex: currentPageIndex,
+        body: Padding(
+          padding: EdgeInsets.all($styles.insets.sm),
+          child: GridView.builder(
+            padding: EdgeInsets.all($styles.insets.xs),
+            gridDelegate: CustomGridDelegate(dimension: 140),
+            itemBuilder: (BuildContext context, int index) {
+              final math.Random random = math.Random(index);
+              return GridTile(
+                header: GridTileBar(title: Text('$index')),
+                child: Container(
+                  margin: EdgeInsets.all($styles.insets.xs),
+                  decoration: ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    gradient: const RadialGradient(
+                        colors: <Color>[Color(0x0F88EEFF), Color(0x2F0099BB)]),
+                  ),
+                  child: FlutterLogo(
+                    style: FlutterLogoStyle
+                        .values[random.nextInt(FlutterLogoStyle.values.length)],
+                  ),
+                ),
+              );
+            },
+          ),
         ),
         drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
-              _buildDrawerHeader(context),
-              _buildDrawerItem(
-                icon: Icons.home,
-                text: 'Inicio',
-                onTap: () => context.go('/home'),
-              ),
-              _buildDrawerItem(
-                icon: Icons.dashboard,
-                text: 'Dashboard',
-                onTap: () => context.go('/dashboard'),
-              ),
-              _buildDrawerItem(
-                icon: Icons.format_list_bulleted,
-                text: 'Actividad',
-                onTap: () => {},
-              ),
-              _buildDrawerItem(
-                icon: Icons.account_circle,
-                text: 'Cuenta',
-                onTap: () => {},
-              ),
-              const Divider(),
-              // _buildDrawerItem(
-              //   icon: Icons.settings,
-              //   text: 'Configuración',
-              //   onTap: () {
-              //     // Cerrar el drawer
-              //     Navigator.pop(context);
+              BlocBuilder<LocalAuthBloc, LocalAuthState>(
+                builder: (BuildContext context, LocalAuthState state) {
+                  if (state is LocalUserInfoSuccess) {
+                    if (state.userInfo != null) {
+                      final Map<String, dynamic> objUserData = jsonDecode(state.userInfo!['user'] ?? '{}') as Map<String, dynamic>;
 
-              //     // Actualizar el estado en la app
-              //     Future.delayed(.times.pageTransition, () {
-              //       Navigator.push(
-              //         context,
-              //         MaterialPageRoute<void>(
-              //           builder: (context) => const ConfiguracionesIndexPage(),
-              //         ),
-              //       );
-              //     });
-              //   },
-              // ),
+                      final String? accountName = state.userInfo!['nombre'];
+                      final String? accountEmail = objUserData['email'] as String?;
+
+                      return UserAccountsDrawerHeader(
+                        accountName: Text(accountName ?? '', style: const TextStyle(color: Colors.white)),
+                        accountEmail: Text(accountEmail ?? '', style: const TextStyle(color: Colors.white)),
+                        currentAccountPicture: CircleAvatar(
+                          backgroundColor: Theme.of(context).chipTheme.backgroundColor,
+                          child: Text(StringUtils.getInitials(accountName ?? ''), style: $styles.textStyles.h2),
+                        ),
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(ImagePaths.background1),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return const UserAccountsDrawerHeader(
+                        accountName: Text('John Doe'),
+                        accountEmail: Text('john@doe.com'),
+                        currentAccountPicture: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            'https://images.unsplash.com/photo-1584999734482-0361aecad844?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA&ixlib=rb-1.2.1&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=300',
+                          ),
+                        ),
+                      );
+                    }
+                  } else {
+                    // Retornamos el `DrawerHeaderEffect` si no se puede cargar la información correctamente.
+                    return const DrawerHeaderEffect();
+                  }
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.home),
+                title: Text($strings.homeTitle),
+                onTap: (){
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.dashboard),
+                title: Text($strings.dashboardTitle),
+                onTap: (){
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.format_list_bulleted),
+                title: Text($strings.activityTitle),
+                onTap: (){
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.account_circle),
+                title: Text($strings.accountTitle),
+                onTap: (){
+                  Navigator.pop(context);
+                },
+              ),
               const Divider(),
-              _buildDrawerItem(
-                iconColor: Theme.of(context).colorScheme.error,
-                textColor: Theme.of(context).colorScheme.error,
-                icon: Icons.logout,
-                text: 'Cerrar sesión',
-                onTap: _showLogoutConfirmationDialog,
+              ListTile(
+                leading: const Icon(Icons.info),
+                title: Text($strings.homeMenuButtonAbout),
+                onTap: () => _handleAboutPressed(context),
               ),
             ],
           ),
         ),
+        // bottomNavigationBar: AboutDialog(),
+        resizeToAvoidBottomInset: false,
       ),
     );
   }
+}
 
-  Widget _buildBody() {
-    return Padding(
-      padding: EdgeInsets.all($styles.insets.sm),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-              ),
-              itemCount: modulesData.length,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return CardViewIcon(
-                  icon: modulesData[index].icon,
-                  title: modulesData[index].name,
-                  onTap: () {
-                    switch (index) {
-                      case 0:
-                        GoRouter.of(context).go('/home/inspecciones');
+class CustomGridDelegate extends SliverGridDelegate {
+  CustomGridDelegate({required this.dimension});
 
-                      /// se agregaran las demás rutas para los módulos
-                      /// una vez se haya finalizado el módulo principal.
-                    }
-                  },
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // This is the desired height of each row (and width of each square).
+  // When there is not enough room, we shrink this to the width of the scroll view.
+  final double dimension;
 
-  void _navigateToPage(int index) {
-    switch (index) {
-      case 0:
-        GoRouter.of(context).go(ScreenPaths.home);
-      case 1:
-        GoRouter.of(context).go(ScreenPaths.dashboard);
-      case 2:
-        GoRouter.of(context).go(ScreenPaths.actividad);
-      case 3:
-        GoRouter.of(context).go(ScreenPaths.cuenta);
+  // The layout is two rows of squares, then one very wide cell, repeat.
+
+  @override
+  SliverGridLayout getLayout(SliverConstraints constraints) {
+    // Determine how many squares we can fit per row.
+    int count = constraints.crossAxisExtent ~/ dimension;
+    if (count < 1) {
+      count = 1; // Always fit at least one regardless.
     }
-  }
-
-  Widget _buildDrawerHeader(BuildContext context) {
-    return BlocBuilder<LocalAuthBloc, LocalAuthState>(
-      builder: (BuildContext context, LocalAuthState state) {
-        if (state is LocalUserInfoSuccess) {
-          if (state.userInfo != null) {
-            final Map<String, dynamic> objUserData = jsonDecode(state.userInfo!['user'] ?? '{}') as Map<String, dynamic>;
-            final String? name = state.userInfo!['nombre'];
-            final String? email = objUserData['email'] as String?;
-
-            return UserAccountsDrawerHeader(
-              accountName: Text(name ?? '', style: const TextStyle(color: Colors.white)),
-              accountEmail: Text(email ?? '', style: const TextStyle(color: Colors.white)),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Theme.of(context).chipTheme.backgroundColor,
-                child: Text(
-                  _getInitials(name ?? ''),
-                  style: $styles.textStyles.h2.copyWith(color: Colors.white),
-                ),
-              ),
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(ImagePaths.background1),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            );
-          } else {
-            return const UserAccountsDrawerHeader(
-              accountName: Text('John Doe'),
-              accountEmail: Text('john@doe.com'),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  'https://images.unsplash.com/photo-1584999734482-0361aecad844?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA&ixlib=rb-1.2.1&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=300',
-                ),
-              ),
-            );
-          }
-        } else {
-          // Retornamos el `CustomDrawerHeader` si no se puede cargar la información correctamente.
-          return const CustomDrawerHeader();
-        }
-      },
+    final double squareDimension = constraints.crossAxisExtent / count;
+    return CustomGridLayout(
+      crossAxisCount: count,
+      fullRowPeriod:
+          3, // Number of rows per block (one of which is the full row).
+      dimension: squareDimension,
     );
   }
 
-  Widget _buildDrawerItem({
-    required IconData icon,
-    required String text,
-    required GestureTapCallback onTap,
-    Color? iconColor,
-    Color? textColor,
-  }) {
-    return ListTile(
-      iconColor: iconColor,
-      textColor: textColor,
-      title: Row(
-        children: <Widget>[
-          Icon(icon),
-          SizedBox(width: $styles.insets.sm),
-          Text(text, style: $styles.textStyles.bodySmall),
-        ],
-      ),
-      onTap: onTap,
-    );
+  @override
+  bool shouldRelayout(CustomGridDelegate oldDelegate) {
+    return dimension != oldDelegate.dimension;
+  }
+}
+
+class CustomGridLayout extends SliverGridLayout {
+  const CustomGridLayout({
+    required this.crossAxisCount,
+    required this.dimension,
+    required this.fullRowPeriod,
+  })  : assert(crossAxisCount > 0),
+        assert(fullRowPeriod > 1),
+        loopLength = crossAxisCount * (fullRowPeriod - 1) + 1,
+        loopHeight = fullRowPeriod * dimension;
+
+  final int crossAxisCount;
+  final double dimension;
+  final int fullRowPeriod;
+
+  // Computed values.
+  final int loopLength;
+  final double loopHeight;
+
+  @override
+  double computeMaxScrollOffset(int childCount) {
+    // This returns the scroll offset of the end side of the childCount'th child.
+    // In the case of this example, this method is not used, since the grid is
+    // infinite. However, if one set an itemCount on the GridView above, this
+    // function would be used to determine how far to allow the user to scroll.
+    if (childCount == 0 || dimension == 0) {
+      return 0;
+    }
+    return (childCount ~/ loopLength) * loopHeight +
+        ((childCount % loopLength) ~/ crossAxisCount) * dimension;
   }
 
-  void _showLogoutConfirmationDialog() {
-    Future.delayed($styles.times.fast, () {
-      showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const SizedBox.shrink(),
-            content: Text('¿Salir de tu cuenta?', style: $styles.textStyles.body.copyWith(height: 1.5)),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('Cancelar', style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.inverseSurface)),
-              ),
-              TextButton(
-                onPressed: () {
-                  context.read<LocalAuthBloc>().add(LogoutRequested());
-                  Navigator.of(context).pop();
-                  context.go(ScreenPaths.authSignIn);
-                  settingsLogic.hasAuthenticated.value = false;
-                },
-                child: Text('Salir', style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
-              ),
-            ],
-          );
-        },
+  @override
+  SliverGridGeometry getGeometryForChildIndex(int index) {
+    // This returns the position of the index'th tile.
+    //
+    // The SliverGridGeometry object returned from this method has four
+    // properties. For a grid that scrolls down, as in this example, the four
+    // properties are equivalent to x,y,width,height. However, since the
+    // GridView is direction agnostic, the names used for SliverGridGeometry are
+    // also direction-agnostic.
+    //
+    // Try changing the scrollDirection and reverse properties on the GridView
+    // to see how this algorithm works in any direction (and why, therefore, the
+    // names are direction-agnostic).
+    final int loop = index ~/ loopLength;
+    final int loopIndex = index % loopLength;
+    if (loopIndex == loopLength - 1) {
+      // Full width case.
+      return SliverGridGeometry(
+        scrollOffset: (loop + 1) * loopHeight - dimension, // "y"
+        crossAxisOffset: 0, // "x"
+        mainAxisExtent: dimension, // "height"
+        crossAxisExtent: crossAxisCount * dimension, // "width"
       );
-    });
+    }
+    // Square case.
+    final int rowIndex = loopIndex ~/ crossAxisCount;
+    final int columnIndex = loopIndex % crossAxisCount;
+    return SliverGridGeometry(
+      scrollOffset: (loop * loopHeight) + (rowIndex * dimension), // "y"
+      crossAxisOffset: columnIndex * dimension, // "x"
+      mainAxisExtent: dimension, // "height"
+      crossAxisExtent: dimension, // "width"
+    );
+  }
+
+  @override
+  int getMinChildIndexForScrollOffset(double scrollOffset) {
+    // This returns the first index that is visible for a given scrollOffset.
+    //
+    // The GridView only asks for the geometry of children that are visible
+    // between the scroll offset passed to getMinChildIndexForScrollOffset and
+    // the scroll offset passed to getMaxChildIndexForScrollOffset.
+    //
+    // It is the responsibility of the SliverGridLayout to ensure that
+    // getGeometryForChildIndex is consistent with getMinChildIndexForScrollOffset
+    // and getMaxChildIndexForScrollOffset.
+    //
+    // Not every child between the minimum child index and the maximum child
+    // index need be visible (some may have scroll offsets that are outside the
+    // view; this happens commonly when the grid view places tiles out of
+    // order). However, doing this means the grid view is less efficient, as it
+    // will do work for children that are not visible. It is preferred that the
+    // children are returned in the order that they are laid out.
+    final int rows = scrollOffset ~/ dimension;
+    final int loops = rows ~/ fullRowPeriod;
+    final int extra = rows % fullRowPeriod;
+    return loops * loopLength + extra * crossAxisCount;
+  }
+
+  @override
+  int getMaxChildIndexForScrollOffset(double scrollOffset) {
+    // (See commentary above.)
+    final int rows = scrollOffset ~/ dimension;
+    final int loops = rows ~/ fullRowPeriod;
+    final int extra = rows % fullRowPeriod;
+    final int count = loops * loopLength + extra * crossAxisCount;
+    if (extra == fullRowPeriod - 1) {
+      return count;
+    }
+    return count + crossAxisCount - 1;
   }
 }

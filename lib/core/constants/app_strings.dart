@@ -3,6 +3,12 @@ class AppStrings {
 
   String acceptButtonText             = 'Aceptar';
 
+  String accountTitle                 = 'Cuenta';
+
+  String activityTitle                = 'Actividad';
+
+  String dashboardTitle               = 'Dashboard';
+
   String defaultAppName               = 'EOS Mobile';
   String defaultPageTitle             = 'Página';
 
@@ -44,6 +50,11 @@ class AppStrings {
   String module6                      = 'Unidades';
 
   String homeGoBackButtonText         = 'Volver a Inicio';
+  String homeMenuAboutApp             = 'EOS Mobile agiliza los procesos internos de la empresa {heavyLiftUrl}. ';
+  String homeMenuAboutBuilt           = 'Construido con {flutterUrl} para ofrecer una experiencia nativa.';
+  String homeMenuAboutProcess         = 'Facilita la centralización de tareas y operaciones en un único lugar, mejorando la productividad.';
+  String homeMenuButtonAbout          = 'Acerca de EOS Mobile';
+  String homeTitle                    = 'Inicio';
 
   String refreshButtonText            = 'Actualizar';
   String retryButtonText              = 'Volver a Intentar';

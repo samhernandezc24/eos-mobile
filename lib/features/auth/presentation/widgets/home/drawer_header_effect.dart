@@ -1,7 +1,7 @@
 import 'package:eos_mobile/shared/shared.dart';
 
-class CustomDrawerHeader extends StatelessWidget {
-  const CustomDrawerHeader({super.key});
+class DrawerHeaderEffect extends StatelessWidget {
+  const DrawerHeaderEffect({super.key});
 
   @override
   Widget build(BuildContext context) {

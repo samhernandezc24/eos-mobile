@@ -82,116 +82,118 @@ class _WelcomePageState extends State<WelcomePage> {
     // contenido, y alineamos sus layouts.
     final List<Widget> pages = pageData.map<_Page>((e) => _Page(data: e)).toList();
 
-    return DefaultTextColor(
-      color: Theme.of(context).colorScheme.onBackground,
-      child: ColoredBox(
-        color: Theme.of(context).colorScheme.background,
-        child: SafeArea(
-          child: Animate(
-            delay: 500.ms,
-            effects: const <Effect<dynamic>>[FadeEffect()],
-            child: PreviousNextNavigation(
-              maxWidth: 600,
-              nextButtonColor: _isOnLastPage ? Theme.of(context).primaryColor : null,
-              onPreviousPressed: _isOnFirstPage ? null : () => _incrementPage(-1),
-              onNextPressed: () {
-                if (_isOnLastPage) {
-                  _handleWelcomeCompletePressed();
-                } else {
-                  _incrementPage(1);
-                }
-              },
-              child: Stack(
-                children: <Widget>[
-                  // VISTA DE PÁGINA CON TITULO Y CONTENIDO:
-                  MergeSemantics(
-                    child: Semantics(
-                      onIncrease: () => _handleSemanticSwipe(1),
-                      onDecrease: () => _handleSemanticSwipe(-1),
-                      child: PageView(
-                        controller: _pageController,
-                        children: pages,
-                        onPageChanged: (_) => HapticsUtils.lightImpact(),
+    return Scaffold(
+      body: DefaultTextColor(
+        color: Theme.of(context).colorScheme.onBackground,
+        child: ColoredBox(
+          color: Theme.of(context).colorScheme.background,
+          child: SafeArea(
+            child: Animate(
+              delay: 500.ms,
+              effects: const <Effect<dynamic>>[FadeEffect()],
+              child: PreviousNextNavigation(
+                maxWidth: 600,
+                nextButtonColor: _isOnLastPage ? Theme.of(context).primaryColor : null,
+                onPreviousPressed: _isOnFirstPage ? null : () => _incrementPage(-1),
+                onNextPressed: () {
+                  if (_isOnLastPage) {
+                    _handleWelcomeCompletePressed();
+                  } else {
+                    _incrementPage(1);
+                  }
+                },
+                child: Stack(
+                  children: <Widget>[
+                    // VISTA DE PÁGINA CON TITULO Y CONTENIDO:
+                    MergeSemantics(
+                      child: Semantics(
+                        onIncrease: () => _handleSemanticSwipe(1),
+                        onDecrease: () => _handleSemanticSwipe(-1),
+                        child: PageView(
+                          controller: _pageController,
+                          children: pages,
+                          onPageChanged: (_) => HapticsUtils.lightImpact(),
+                        ),
                       ),
                     ),
-                  ),
 
-                  ExcludeSemantics(
-                    excluding: false,
-                    child: Column(
-                      children: <Widget>[
-                        const Spacer(),
+                    ExcludeSemantics(
+                      excluding: false,
+                      child: Column(
+                        children: <Widget>[
+                          const Spacer(),
 
-                        // NOMBRE DE LA APLICACIÓN / LOGO
-                        Semantics(
-                          header: true,
-                          child: Container(
-                            height: _logoHeight,
-                            alignment: Alignment.center,
-                            child: Text(
-                              $strings.defaultAppName,
-                              style: $styles.textStyles.title1,
+                          // NOMBRE DE LA APLICACIÓN / LOGO
+                          Semantics(
+                            header: true,
+                            child: Container(
+                              height: _logoHeight,
+                              alignment: Alignment.center,
+                              child: Text(
+                                $strings.defaultAppName,
+                                style: $styles.textStyles.title1,
+                              ),
                             ),
                           ),
-                        ),
 
-                        // IMAGEN
-                        SizedBox(
-                          height: _imageSize,
-                          width: _imageSize,
-                          child: ValueListenableBuilder<int>(
-                            valueListenable: _currentPage,
-                            builder: (_, value, __) {
-                              return AnimatedSwitcher(
-                                duration: $styles.times.fast,
-                                child: KeyedSubtree(
-                                  key: ValueKey<int>(value),    // para que AnimatedSwitcher lo vea como un child diferente.
-                                  child: _PageImage(data: pageData[value]),
-                                ),
-                              );
-                            },
+                          // IMAGEN
+                          SizedBox(
+                            height: _imageSize,
+                            width: _imageSize,
+                            child: ValueListenableBuilder<int>(
+                              valueListenable: _currentPage,
+                              builder: (_, value, __) {
+                                return AnimatedSwitcher(
+                                  duration: $styles.times.fast,
+                                  child: KeyedSubtree(
+                                    key: ValueKey<int>(value),    // para que AnimatedSwitcher lo vea como un child diferente.
+                                    child: _PageImage(data: pageData[value]),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                        ),
 
-                        // ESPACIO PARA EL TEXTO:
-                        const Gap(_textHeight * 2),
+                          // ESPACIO PARA EL TEXTO:
+                          const Gap(_textHeight * 2),
 
-                        // INDICADOR DE PÁGINA:
-                        Container(
-                          height: _pageIndicatorHeight,
-                          alignment: Alignment.center,
-                          child: AppPageIndicator(
-                            count: pageData.length,
-                            pageController: _pageController,
+                          // INDICADOR DE PÁGINA:
+                          Container(
+                            height: _pageIndicatorHeight,
+                            alignment: Alignment.center,
+                            child: AppPageIndicator(
+                              count: pageData.length,
+                              pageController: _pageController,
+                            ),
                           ),
-                        ),
-                        const Spacer(flex: 2),
-                      ],
-                    ),
-                  ),
-
-                  // CONSTRUIR LOS OVERLAYS PARA OCULTAR EL CONTENIDO AL DESLIZAR EN PANTALLAS
-                  // MUY ANCHAS.
-                  _buildHorizontalGradientOverlay(left: true),
-                  _buildHorizontalGradientOverlay(),
-
-                  // TEXTO NAV HELP:
-                  if (PlatformInfo.isMobile) ...[
-                    // BOTÓN DE FINALIZAR LA PÁGIAN DE BIENVENIDA:
-                    Positioned(
-                      right: $styles.insets.lg,
-                      bottom: $styles.insets.lg,
-                      child: _buildFinishButton(context),
-                    ),
-
-                    BottomCenter(
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: $styles.insets.lg),
-                        child: _buildNavText(context),
+                          const Spacer(flex: 2),
+                        ],
                       ),
                     ),
+
+                    // CONSTRUIR LOS OVERLAYS PARA OCULTAR EL CONTENIDO AL DESLIZAR EN PANTALLAS
+                    // MUY ANCHAS.
+                    _buildHorizontalGradientOverlay(left: true),
+                    _buildHorizontalGradientOverlay(),
+
+                    // TEXTO NAV HELP:
+                    if (PlatformInfo.isMobile) ...[
+                      // BOTÓN DE FINALIZAR LA PÁGIAN DE BIENVENIDA:
+                      Positioned(
+                        right: $styles.insets.lg,
+                        bottom: $styles.insets.lg,
+                        child: _buildFinishButton(context),
+                      ),
+
+                      BottomCenter(
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: $styles.insets.lg),
+                          child: _buildNavText(context),
+                        ),
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
           ),
