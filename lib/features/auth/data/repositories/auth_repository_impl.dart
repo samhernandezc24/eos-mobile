@@ -109,4 +109,10 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> removeUserSession() async {
     return _authLocalSource.removeUserSession();
   }
+
+  /// RENOVAR EL TOKEN ALMACENADO LOCAL
+  @override
+  Future<void> renewToken() async {
+    return _authLocalSource.renewToken();
+  }
 }

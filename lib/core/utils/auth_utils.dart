@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:math';
+import 'dart:typed_data';
+
 import 'package:jwt_decode/jwt_decode.dart';
 
 class AuthUtils {
@@ -35,5 +39,25 @@ class AuthUtils {
       return DateTime.fromMillisecondsSinceEpoch(expirationTimestamp * 1000);
     }
     return null; // Devuelve null si payload no tiene un campo 'exp'
+  }
+
+  /// Obtiene el tiempo restante en minutos antes de que el token expire.
+  static int? minutesUntilTokenExpiration(String token) {
+    final DateTime? expirationDate = _getTokenExpirationDate(token);
+    if (expirationDate != null) {
+      final DateTime currentDate    = DateTime.now();
+      final Duration remainingTime  = expirationDate.difference(currentDate);
+
+      return remainingTime.inMinutes;
+    }
+    return null; // No devolver nada
+  }
+
+  /// Genera una key segura para metodos compartidos.
+  static String generateSecureSecretKey({int length = 32}) {
+    final Random random = Random.secure();
+    final Uint8List randomBytes = Uint8List.fromList(List.generate(length, (_) => random.nextInt(256)));
+    final String secureKey = base64Url.encode(randomBytes);
+    return secureKey;
   }
 }

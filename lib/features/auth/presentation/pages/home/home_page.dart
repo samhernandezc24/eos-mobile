@@ -21,11 +21,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<LocalAuthBloc>(context).add(GetUserSession());
   }
   Future<void> testTokenExpiration() async {
     $logger.d('Comprobando la expiracion del token');
     final sessionManager = SessionManager();
     await sessionManager.checkTokenExpiration();
+    await sessionManager.renewFakeToken();
     $logger.i('Comprobacion de la expiracion del token completada.');
   }
 

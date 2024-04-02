@@ -137,6 +137,8 @@ dependencies:
 
   # Plugin de Flutter para lanzar URL
   url_launcher: ^6.2.4
+  uuid: ^4.3.3
+  dart_jsonwebtoken: ^2.13.0
 
 dev_dependencies:
   flutter_test:

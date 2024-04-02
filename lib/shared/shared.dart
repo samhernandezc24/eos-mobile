@@ -69,3 +69,6 @@ export 'package:shared_preferences/shared_preferences.dart';
 
 // SHIMMER
 export 'package:shimmer/shimmer.dart';
+
+// UUID
+export 'package:uuid/uuid.dart';

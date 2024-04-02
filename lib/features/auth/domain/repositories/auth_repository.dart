@@ -27,4 +27,6 @@ abstract class AuthRepository {
   Future<void> removeCredentials();
   Future<void> removeUserInfo();
   Future<void> removeUserSession();
+
+  Future<void> renewToken();
 }
