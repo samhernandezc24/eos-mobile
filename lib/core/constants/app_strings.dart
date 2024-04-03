@@ -68,7 +68,8 @@ class AppStrings {
   String homeMenuButtonDashboard      = 'Dashboard';
   String homeMenuButtonActivity       = 'Actividad';
   String homeMenuButtonAccount        = 'Cuenta';
-  String homeMenuLogoutCancelText     = 'Cancelar';
+  String homeMenuLogoutCancelButton   = 'Cancelar';
+  String homeMenuLogoutAcceptButton   = 'Salir';
 
   String bottomNavigationHome         = 'Inicio';
 

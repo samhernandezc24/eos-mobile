@@ -120,7 +120,7 @@ class AppRoute extends GoRoute {
               );
             }
 
-            return CupertinoPage<dynamic>(child: pageContent);
+            return CupertinoPage(child: pageContent);
           },
         );
   final bool useFade;

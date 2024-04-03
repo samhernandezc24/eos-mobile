@@ -9,7 +9,9 @@ import 'package:eos_mobile/core/utils/string_utils.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/widgets/home/about_dialog_content.dart';
 import 'package:eos_mobile/features/auth/presentation/widgets/home/drawer_header_effect.dart';
+import 'package:eos_mobile/features/configuraciones/presentation/pages/index/index_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class HomePage extends StatefulWidget {
@@ -63,7 +65,7 @@ class _HomePageState extends State<HomePage> {
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text($strings.homeMenuLogoutCancelText, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.inverseSurface)),
+              child: Text($strings.homeMenuLogoutCancelButton, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.inverseSurface)),
             ),
             TextButton(
               onPressed: () {
@@ -72,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                 context.go(ScreenPaths.authSignIn);
                 settingsLogic.hasAuthenticated.value = false;
               },
-              child: Text('', style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
+              child: Text($strings.homeMenuLogoutAcceptButton, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
             ),
           ],
         );
@@ -166,7 +168,16 @@ class _HomePageState extends State<HomePage> {
               ),
               /// CONFIGURACIONES, INFORMACIÓN DE LA APLICACIÓN:
               const Divider(thickness: 1),
-              _buildDrawerItem(icon: Icons.settings, text: $strings.homeMenuButtonSettings, onTap: (){}),
+              _buildDrawerItem(
+                icon: Icons.settings,
+                text: $strings.homeMenuButtonSettings,
+                onTap: () {
+                  Navigator.pop(context);
+                  Future.delayed($styles.times.pageTransition, () {
+                    Navigator.push<void>(context, MaterialPageRoute(builder: (_) => const ConfiguracionesIndexPage()));
+                  });
+                },
+              ),
               _buildDrawerItem(icon: Icons.help, text: $strings.homeMenuButtonHelp, onTap: (){}),
               _buildDrawerItem(icon: Icons.info, text: $strings.homeMenuButtonAbout, onTap: () => _handleAboutPressed(context)),
               const Divider(thickness: 1),
