@@ -12,7 +12,7 @@ class ImagePaths {
   static const String crane         = '$root/pages/crane.png';
   static const String circleVehicle = '$root/pages/circle_vehicle_config.png';
 
-  static const String background1   = '$backgrounds/background-001.jpg';
+  static const String drawerHeaderBackground = '$backgrounds/background-001.jpg';
 
   // static const String iconCrane     = '$root/icons/crane.png';
 }

@@ -141,10 +141,10 @@ String? _handleRedirect(BuildContext context, GoRouterState state) {
   }
 
   // Si la aplicación ha terminado de cargar y el usuario está en la ruta root,
-  // redirigirlo a la página de sign in si no ha iniciado sesion.
+  // redirigirlo a la página de home si no ha iniciado sesion.
   if (appLogic.isBootstrapComplete && state.uri.path == ScreenPaths.splash) {
-    $logger.d('Redirigiendo desde ${state.uri.path} hasta ${ScreenPaths.authSignIn}.');
-    return ScreenPaths.authSignIn;
+    $logger.d('Redirigiendo desde ${state.uri.path} hasta ${ScreenPaths.home}.');
+    return ScreenPaths.home;
   }
 
   if (!kIsWeb) $logger.d('Navegando a: ${state.uri}');

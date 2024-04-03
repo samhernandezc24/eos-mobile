@@ -15,7 +15,7 @@ class AboutDialogContent extends StatelessWidget {
       if (PlatformInfo.isDesktopOrWeb) {
         launchUrl(Uri.parse(url));
       } else {
-        Navigator.push(context, CupertinoPageRoute<void>(builder: (_) => FullScreenWebView(url)));
+        Navigator.push<void>(context, CupertinoPageRoute<void>(builder: (_) => FullScreenWebView(url)));
       }
     }
 
@@ -49,6 +49,7 @@ class AboutDialogContent extends StatelessWidget {
       }
     }
 
+    /// PROPERTIES
     double fontSize = $styles.textStyles.body.fontSize!;
     fontSize *= MediaQuery.of(context).textScaler.scale(1);
 
@@ -58,7 +59,7 @@ class AboutDialogContent extends StatelessWidget {
           Gap($styles.insets.sm),
           RichText(
             text: TextSpan(
-              style: $styles.textStyles.bodySmall.copyWith(color: Colors.black, fontSize: fontSize),
+              style: $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurface, fontSize: fontSize),
               children: <InlineSpan>[
                 ...buildSpan(
                   $strings.homeMenuAboutApp,

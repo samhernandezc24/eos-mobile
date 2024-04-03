@@ -42,19 +42,35 @@ class AppStrings {
 
   String inspectionNoReqAppBarText    = 'Inspección de Unidad Sin Req.';
 
-  String module1                      = 'Inspecciones';
-  String module2                      = 'Compras';
-  String module3                      = 'Embarques';
-  String module4                      = 'Requerimientos';
-  String module5                      = 'Proyectos';
-  String module6                      = 'Unidades';
+  String homePageModule1              = 'Inspecciones';
+  String homePageModule2              = 'Compras';
+  String homePageModule3              = 'Embarques';
+  String homePageModule4              = 'Requerimientos';
+  String homePageModule5              = 'Proyectos';
+  String homePageModule6              = 'Unidades';
 
   String homeGoBackButtonText         = 'Volver a Inicio';
   String homeMenuAboutApp             = 'EOS Mobile agiliza los procesos internos de la empresa {heavyLiftUrl}. ';
   String homeMenuAboutBuilt           = 'Construido con {flutterUrl} para ofrecer una experiencia nativa.';
   String homeMenuAboutProcess         = 'Facilita la centralización de tareas y operaciones en un único lugar, mejorando la productividad.';
-  String homeMenuButtonAbout          = 'Acerca de EOS Mobile';
-  String homeTitle                    = 'Inicio';
+  String homeMenuButtonAbout          = 'Acerca de';
+  String homeMenuButtonSettings       = 'Configuración';
+  String homeMenuButtonHelp           = 'Ayuda y comentarios';
+  String homeMenuButtonLogout         = 'Cerrar sesión';
+  String homeMenuButtonModule1        = 'Inspecciones de Unidades';
+  String homeMenuButtonModule2        = 'Órdenes de Compras';
+  String homeMenuButtonModule3        = 'Órdenes de Embarques';
+  String homeMenuButtonModule4        = 'Requerimientos';
+  String homeMenuButtonModule5        = 'Proyectos';
+  String homeMenuButtonModule6        = 'Unidades';
+  String homeMenuButtonNotification   = 'Notificaciones';
+  String homeMenuButtonHome           = 'Inicio';
+  String homeMenuButtonDashboard      = 'Dashboard';
+  String homeMenuButtonActivity       = 'Actividad';
+  String homeMenuButtonAccount        = 'Cuenta';
+  String homeMenuLogoutCancelText     = 'Cancelar';
+
+  String bottomNavigationHome         = 'Inicio';
 
   String refreshButtonText            = 'Actualizar';
   String retryButtonText              = 'Volver a Intentar';
