@@ -6,7 +6,7 @@ class Error404Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mqSize = MediaQuery.of(context).size;
-    
+
     void handleHomePressed() => context.go(ScreenPaths.home);
 
     return Scaffold(

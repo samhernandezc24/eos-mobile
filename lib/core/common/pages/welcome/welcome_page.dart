@@ -39,7 +39,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   void _handleWelcomeCompletePressed() {
     if (_currentPage.value == pageData.length - 1) {
-      context.go(ScreenPaths.authSignIn);
+      // context.go(ScreenPaths.authSignIn);
       settingsLogic.hasCompletedOnboarding.value = true;
     }
   }

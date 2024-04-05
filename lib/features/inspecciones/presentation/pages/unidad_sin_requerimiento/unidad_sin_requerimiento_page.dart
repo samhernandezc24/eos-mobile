@@ -94,6 +94,50 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
     _scrollController.animateTo(0, duration: $styles.times.fast, curve: Curves.easeInOut);
   }
 
+  void _showModalBottomSheet() {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: $styles.insets.sm),
+              child: Center(
+                child: Text(
+                '¿Quieres terminar la inspección más tarde?',
+                  style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+            ListTile(
+              onTap: () {},
+              leading: const Icon(Icons.bookmark),
+              title: const Text('Guardar como borrador'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete_forever),
+              textColor: Theme.of(context).colorScheme.error,
+              iconColor: Theme.of(context).colorScheme.error,
+              title: const Text('Descartar inspección'),
+              onTap: () {
+                Navigator.pop(context);
+                GoRouter.of(context).go('/home/inspecciones');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.check),
+              textColor: Theme.of(context).colorScheme.primary,
+              iconColor: Theme.of(context).colorScheme.primary,
+              title: const Text('Seguir editando'),
+              onTap: () => context.pop(),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -105,7 +149,7 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
         _showModalBottomSheet();
       },
       child: Scaffold(
-        appBar: AppBar(title: Text($strings.inspectionNoReqAppBarText, style: $styles.textStyles.h3)),
+        appBar: AppBar(title: Text('Inspección de unidad sin req.', style: $styles.textStyles.h3)),
         body: NotificationListener<ScrollNotification>(
           onNotification: (scrollNotification) {
             if (scrollNotification is ScrollUpdateNotification) {
@@ -565,64 +609,6 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
         onPressed: _scrollToTop,
         child: const Icon(Icons.arrow_upward),
       ),
-    );
-  }
-
-  void _showModalBottomSheet() {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          padding: EdgeInsets.symmetric(vertical: $styles.insets.sm),
-          height: 250,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      '¿Quieres terminar la inspección más tarde?',
-                      style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600),
-                    ),
-                    Text('Puedes guardarla como borrador o seguir editándola.', style: $styles.textStyles.bodySmall),
-                  ],
-                ),
-              ),
-              ListTile(
-                leading: const Icon(Icons.bookmark),
-                title: const Text('Guardar como borrador'),
-                onTap: () {
-                  Navigator.pop(context);
-                  context.pop();
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.delete_forever),
-                textColor: Theme.of(context).colorScheme.error,
-                iconColor: Theme.of(context).colorScheme.error,
-                title: const Text('Descartar inspección'),
-                onTap: () {
-                  Navigator.pop(context);
-                  context.pop();
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.check),
-                textColor: Theme.of(context).colorScheme.primary,
-                iconColor: Theme.of(context).colorScheme.primary,
-                title: const Text('Seguir editando'),
-                onTap: (){
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }
