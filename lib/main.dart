@@ -1,8 +1,10 @@
 import 'package:eos_mobile/config/themes/app_theme.dart';
 import 'package:eos_mobile/core/di/injection_container.dart';
+import 'package:eos_mobile/core/helpers/auth_token_helper.dart';
 import 'package:eos_mobile/core/helpers/image_helper.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/remote/remote_auth_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -34,6 +36,7 @@ class MainApp extends StatelessWidget {
       providers: [
         BlocProvider<RemoteAuthBloc>(create: (BuildContext context) => sl<RemoteAuthBloc>()),
         BlocProvider<LocalAuthBloc>(create: (BuildContext context) => sl<LocalAuthBloc>()),
+        BlocProvider<RemoteInspeccionTipoBloc>(create: (BuildContext context) => sl<RemoteInspeccionTipoBloc>()..add(ListInspeccionesTipos())),
       ],
       child: MaterialApp.router(
         title: $strings.defaultAppName,
@@ -51,11 +54,12 @@ class MainApp extends StatelessWidget {
 
 /// Agregar "Syntactic Sugar" para acceder rápidamente a los principales controladores "lógicos" de la aplicación.
 /// Deliberadamente no se crean shortcuts para los servicios, para desalentar su uso directamente en la capa de presentación.
-AppLogic get appLogic           => sl.get<AppLogic>();
-SettingsLogic get settingsLogic => sl.get<SettingsLogic>();
-ImageHelper get imageHelper     => sl.get<ImageHelper>();
+AppLogic get appLogic               => sl.get<AppLogic>();
+SettingsLogic get settingsLogic     => sl.get<SettingsLogic>();
+ImageHelper get imageHelper         => sl.get<ImageHelper>();
+AuthTokenHelper get authTokenHelper => sl.get<AuthTokenHelper>();
 
 /// Helpers globales para facilitar la lectura del código.
-AppStrings get $strings         => AppStrings.instance;
-AppStyles get $styles           => AppScaffold.styles;
-Logger get $logger              => Logger();
+AppStrings get $strings             => AppStrings.instance;
+AppStyles get $styles               => AppScaffold.styles;
+Logger get $logger                  => Logger();

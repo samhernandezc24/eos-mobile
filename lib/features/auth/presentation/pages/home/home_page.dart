@@ -11,7 +11,6 @@ import 'package:eos_mobile/features/auth/presentation/widgets/home/about_dialog_
 import 'package:eos_mobile/features/auth/presentation/widgets/home/drawer_header_effect.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/pages/index/index_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class HomePage extends StatefulWidget {
@@ -64,17 +63,17 @@ class _HomePageState extends State<HomePage> {
           contentPadding: EdgeInsets.symmetric(horizontal: $styles.insets.sm),
           actions: <Widget>[
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text($strings.homeMenuLogoutCancelButton, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.inverseSurface)),
-            ),
-            TextButton(
               onPressed: () {
                 context.read<LocalAuthBloc>().add(LogoutRequested());
                 Navigator.of(context).pop();
                 context.go(ScreenPaths.authSignIn);
                 settingsLogic.hasAuthenticated.value = false;
               },
-              child: Text($strings.homeMenuLogoutAcceptButton, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
+              child: Text($strings.leaveButtonText, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text($strings.cancelButtonText, style: $styles.textStyles.button),
             ),
           ],
         );

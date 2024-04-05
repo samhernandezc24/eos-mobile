@@ -1,6 +1,6 @@
 import 'package:eos_mobile/core/common/widgets/app_icons.dart';
 import 'package:eos_mobile/core/common/widgets/controls/buttons.dart';
-import 'package:eos_mobile/core/common/widgets/full_screen_keyboard_listener.dart';
+import 'package:eos_mobile/core/common/widgets/modals/full_screen_keyboard_listener.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class CircleBtn extends StatelessWidget {

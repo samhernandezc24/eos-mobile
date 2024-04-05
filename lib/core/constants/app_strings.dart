@@ -12,6 +12,15 @@ class AppStrings {
   String defaultAppName               = 'EOS Mobile';
   String defaultPageTitle             = 'Página';
 
+  String deleteButtonText             = 'Eliminar';
+
+  String disableButtonText            = 'Inhabilitar';
+
+  String cancelButtonText             = 'Cancelar';
+  String leaveButtonText              = 'Salir';
+
+  String createCategoryButtonText     = 'Crear categorías';
+
   String categoryDescription          = 'Crea categorías para agrupar los formularios de las inspecciones.';
   String categoryEmptyTitle           = 'No hay categorías';
   String categoryTitle                = 'Listado de Categorías';
@@ -22,6 +31,8 @@ class AppStrings {
 
   String circleButtonsSemanticBack    = 'Volver';
   String circleButtonsSemanticClose   = 'Cerrar';
+
+  String editButtonText               = 'Editar';
 
   String emptyListMessage             = 'Intenta actualizar el listado para sincronizar los últimos cambios en el servidor.';
 
@@ -38,7 +49,14 @@ class AppStrings {
 
   String inspectionTypeDescription    = 'Crea un tipo de inspección para agrupar los formularios de las inspecciones.';
   String inspectionTypeEmptyTitle     = 'No hay tipos de inspecciones';
-  String inspectionTypeTitle          = 'Listado de Tipos de Inspecciones';
+  String inspectionTypeTitle          = 'Listado de tipos de inspecciones';
+
+  String inspectionIndexListTitle     = 'Lista de inspecciones';
+  String inspectionIndexListSubtitle  = 'Muestra inspecciones finalizadas de unidades.';
+  String inspectionIndexWithReqTitle  = 'Nueva inspección de unidad con requerimiento';
+  String inspectionIndexNoReqTitle    = 'Nueva inspección de unidad sin requerimiento';
+  String inspectionIndexSearchTitle   = 'Buscar unidad';
+  String inspectionIndexSearchSubtitle = 'Encuentra rápidamente una unidad.';
 
   String inspectionNoReqAppBarText    = 'Inspección de Unidad Sin Req.';
 
@@ -68,8 +86,6 @@ class AppStrings {
   String homeMenuButtonDashboard      = 'Dashboard';
   String homeMenuButtonActivity       = 'Actividad';
   String homeMenuButtonAccount        = 'Cuenta';
-  String homeMenuLogoutCancelButton   = 'Cancelar';
-  String homeMenuLogoutAcceptButton   = 'Salir';
 
   String bottomNavigationHome         = 'Inicio';
 
@@ -81,6 +97,15 @@ class AppStrings {
   String searchInputHint              = 'Buscar por No. Económico o Folio';
   String searchInputSemanticClear     = 'Limpiar Búsqueda';
   String searchInputSuggestionsTitle  = 'Sugerencias';
+
+  String settingsThemeAppTitle        = 'Tema';
+  String settingsThemeAppSubtitle     = 'Cambiar tema de la aplicación.';
+  String settingsUpdateAppTitle       = 'Actualizar automáticamente';
+  String settingsUpdateAppSubtitle    = 'Actualiza la app automáticamente mediante Wi-Fi.';
+  String settingsRecentUpdateTitle    = 'Actualización reciente';
+  String settingsRecentUpdateSubtitle = 'Recibe notificaciones cuando haya actualizaciones disponibles.';
+  String settingsUpdateDialogContent  = 'Después de inhabilitar la actualización automática, deberá confirmar manualmente cuando actualice a una nueva versión para poder completar la actualización. ¿Seguro que quiere inhabilitar?';
+  String settingsSuggestionsText      = 'Sugerencia';
 
   String signInTitleHeading           = 'Iniciar Sesión';
   String signInButtonText             = 'Ingresar';

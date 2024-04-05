@@ -27,6 +27,9 @@ dependencies:
   # Íconos Cupertino para iOS
   cupertino_icons: ^1.0.2
 
+  # Generador de JWT (Json Web Token)
+  dart_jsonwebtoken: ^2.13.0
+
   # Programación funcional en Dart
   dartz: ^0.10.1
 
@@ -111,6 +114,9 @@ dependencies:
   # Abre archivos con resultados de cadenas en Flutter
   open_file: ^3.3.2
 
+  # Consultar información sobre el paquete de la aplicación
+  package_info_plus: ^5.0.1
+
   # Obtiene información sobre rutas de archivos
   path: ^1.8.3
 
@@ -137,9 +143,11 @@ dependencies:
 
   # Plugin de Flutter para lanzar URL
   url_launcher: ^6.2.4
+
+  # Generador y analizador UUID para Dart
   uuid: ^4.3.3
-  dart_jsonwebtoken: ^2.13.0
-  package_info_plus: ^5.0.1
+
+  # Widget WebView en Android e iOS
   webview_flutter: ^4.5.0
 
 dev_dependencies:

@@ -57,13 +57,11 @@ class LocalAuthBloc extends Bloc<LocalAuthEvent, LocalAuthState> {
 
   Future<void> onGetUserInfo(GetUserInfo event, Emitter<LocalAuthState> emit) async {
     final userInfo = await _getUserInfoUseCase(params: NoParams());
-    // print(userInfo);
     emit(LocalUserInfoSuccess(userInfo));
   }
 
   Future<void> onGetUserSession(GetUserSession event, Emitter<LocalAuthState> emit) async {
     final userSession = await _getUserSessionUseCase(params: NoParams());
-    print(userSession);
     emit(LocalUserSessionSuccess(userSession));
   }
 

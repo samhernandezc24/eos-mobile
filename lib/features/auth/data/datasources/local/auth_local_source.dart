@@ -1,11 +1,8 @@
 import 'dart:convert';
 
-import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import 'package:eos_mobile/core/utils/auth_utils.dart';
 import 'package:eos_mobile/core/utils/password_utils.dart';
 import 'package:eos_mobile/features/auth/data/models/user_model.dart';
 import 'package:eos_mobile/shared/shared.dart';
-import 'package:jwt_decode/jwt_decode.dart';
 
 class AuthLocalSource {
   /// LOCAL STORAGE
@@ -23,7 +20,6 @@ class AuthLocalSource {
 
   /// INSTANCES
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
-  final Uuid _uuid = const Uuid();
 
   /// Guarda las credenciales del usuario en `SharedPreferences`.
   Future<void> saveCredentials(String email, String password) async {
@@ -134,33 +130,5 @@ class AuthLocalSource {
   /// Remueve la sesión del usuario del almacenamiento `FlutterSecureStorage`.
   Future<void> removeUserSession() async {
     await _secureStorage.delete(key: _keyToken);
-  }
-
-  /// Renueva (Refresh Token) el token actual por uno actualizado de manera local.
-  Future<void> renewToken() async {
-    final DateTime tokenExpiryTimestamp = DateTime.now().add(const Duration(hours: 24));
-    final String? token = await getUserSession();
-
-    if (token != null) {
-      final Map<String, dynamic> payload  = Jwt.parseJwt(token);
-      final JWT jwt = JWT(
-        {
-          'unique_name' : payload['unique_name'],
-          'Id'          : payload['Id'],
-          'Nombre'      : payload['Nombre'],
-          'Imagen'      : payload['Imagen'],
-          'IsAdmin'     : payload['IsAdmin'],
-          'jti'         : _uuid.v4(),
-          'nbf'         : DateTime.now().millisecondsSinceEpoch ~/ 1000,
-          'exp'         : tokenExpiryTimestamp.toUtc().millisecondsSinceEpoch ~/ 1000,
-          'iat'         : DateTime.now().millisecondsSinceEpoch ~/ 1000,
-        },
-      );
-
-      final String secretKey     = AuthUtils.generateSecureSecretKey();
-      final String refreshToken  = jwt.sign(SecretKey(secretKey));
-
-      await saveUserSession(refreshToken);
-    }
   }
 }
