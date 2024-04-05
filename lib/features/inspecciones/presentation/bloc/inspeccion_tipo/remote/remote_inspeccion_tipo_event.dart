@@ -8,3 +8,12 @@ sealed class RemoteInspeccionTipoEvent extends Equatable {
 }
 
 class ListInspeccionesTipos extends RemoteInspeccionTipoEvent {}
+
+class StoreInspeccionTipo extends RemoteInspeccionTipoEvent {
+  const StoreInspeccionTipo(this.data);
+
+  final InspeccionTipoReqEntity data;
+
+  @override
+  List<Object?> get props => [ data ];
+}

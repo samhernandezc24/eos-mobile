@@ -1,10 +1,14 @@
+import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class CreateInspeccionTipoForm extends StatefulWidget {
   const CreateInspeccionTipoForm({Key? key}) : super(key: key);
 
   @override
-  State<CreateInspeccionTipoForm> createState() => _CreateInspeccionTipoFormState();
+  State<CreateInspeccionTipoForm> createState() =>
+      _CreateInspeccionTipoFormState();
 }
 
 class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
@@ -16,15 +20,15 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
   late final TextEditingController _nameController;
   late final TextEditingController _correoController;
 
-  /// PROPERTIES
+  // PROPERTIES
   final int currentYear   = DateTime.now().year;
-  // int _currentOrder       = 0;
+  int _currentOrder       = 0;
 
   @override
   void initState() {
-    _folioController    = TextEditingController();
-    _nameController     = TextEditingController();
-    _correoController   = TextEditingController();
+    _folioController = TextEditingController();
+    _nameController = TextEditingController();
+    _correoController = TextEditingController();
     super.initState();
   }
 
@@ -36,7 +40,87 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
     super.dispose();
   }
 
-  /// METHODS
+  // METHODS
+  Future<void> _showFailureDialog(BuildContext context, RemoteInspeccionTipoFailure state) {
+    return showDialog<void>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const SizedBox.shrink(),
+        content: Row(
+          children: <Widget>[
+            Icon(Icons.error, color: Theme.of(context).colorScheme.error),
+            SizedBox(width: $styles.insets.xs + 2),
+            Flexible(
+              child: Text(
+                state.failure?.response?.data.toString() ?? 'Se produjo un error inesperado. Intenta crear el tipo de inspección de nuevo.',
+                style: $styles.textStyles.title2.copyWith(
+                  height: 1.5,
+                  color: Theme.of(context).colorScheme.error,
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => context.pop(),
+            child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showFailedMessageDialog(BuildContext context, RemoteInspeccionTipoFailedMessage state) {
+    return showDialog<void>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const SizedBox.shrink(),
+        content: Row(
+          children: <Widget>[
+            Icon(Icons.error, color: Theme.of(context).colorScheme.error),
+            SizedBox(width: $styles.insets.xs + 2),
+            Flexible(
+              child: Text(
+                state.errorMessage.toString(),
+                style: $styles.textStyles.title2.copyWith(
+                  height: 1.5,
+                  color: Theme.of(context).colorScheme.error,
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => context.pop(),
+            child: Text($strings.acceptButtonText,
+                style: $styles.textStyles.button),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleStoreInspeccionTipo() {
+    if (!_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Formulario incompleto'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+    } else {
+      _formKey.currentState!.save();
+
+      final InspeccionTipoReqEntity objData = InspeccionTipoReqEntity(
+        folio   : _folioController.text,
+        name    : _nameController.text,
+      );
+
+      BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(StoreInspeccionTipo(objData));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +130,11 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
         children: <Widget>[
           // FOLIO:
           LabeledTextField(
+            autoFocus: true,
             controller: _folioController,
             hintText: 'INST-$currentYear-xxxx',
             labelText: 'Folio:',
+            validator: FormValidators.textValidator,
           ),
 
           Gap($styles.insets.md),
@@ -57,6 +143,7 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
           LabeledTextField(
             controller: _nameController,
             labelText: 'Nombre:',
+            validator: FormValidators.textValidator,
           ),
 
           Gap($styles.insets.md),
@@ -72,14 +159,60 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
 
           Gap($styles.insets.lg),
 
-          FilledButton(
-            onPressed: (){},
-            style: ButtonStyle(
-              minimumSize: MaterialStateProperty.all<Size?>(
-                const Size(double.infinity, 48),
-              ),
-            ),
-            child: Text($strings.saveButtonText, style: $styles.textStyles.button),
+          BlocConsumer<RemoteInspeccionTipoBloc, RemoteInspeccionTipoState>(
+            listener: (BuildContext context, RemoteInspeccionTipoState state) {
+              if (state is RemoteInspeccionTipoFailure) {
+                _showFailureDialog(context, state);
+              }
+
+              if (state is RemoteInspeccionTipoFailedMessage) {
+                _showFailedMessageDialog(context, state);
+              }
+
+              if (state is RemoteInspeccionTipoResponseSuccess) {
+                Navigator.pop(context);
+
+                ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Tipo de inspección guardado exitosamente',
+                      style: $styles.textStyles.bodySmall,
+                    ),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              }
+            },
+            builder: (BuildContext context, RemoteInspeccionTipoState state) {
+              if (state is RemoteInspeccionTipoLoading) {
+                return FilledButton(
+                  onPressed: null,
+                  style: ButtonStyle(
+                    minimumSize: MaterialStateProperty.all<Size?>(
+                      const Size(double.infinity, 48),
+                    ),
+                  ),
+                  child: LoadingIndicator(
+                    color: Theme.of(context).primaryColor,
+                    width: 20,
+                    height: 20,
+                    strokeWidth: 2,
+                  ),
+                );
+              }
+
+              return FilledButton(
+                onPressed: _handleStoreInspeccionTipo,
+                style: ButtonStyle(
+                  minimumSize: MaterialStateProperty.all<Size?>(
+                    const Size(double.infinity, 48),
+                  ),
+                ),
+                child: Text($strings.saveButtonText, style: $styles.textStyles.button),
+              );
+            },
           ),
         ],
       ),

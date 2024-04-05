@@ -18,6 +18,15 @@ class RemoteInspeccionTipoSuccess extends RemoteInspeccionTipoState {
   List<Object?> get props => [ inspeccionesTipos ];
 }
 
+class RemoteInspeccionTipoResponseSuccess extends RemoteInspeccionTipoState {
+  const RemoteInspeccionTipoResponseSuccess(this.apiResponse);
+
+  final ApiResponseEntity apiResponse;
+
+  @override
+  List<Object?> get props => [ apiResponse ];
+}
+
 class RemoteInspeccionTipoFailure extends RemoteInspeccionTipoState {
   const RemoteInspeccionTipoFailure(this.failure);
 

@@ -36,6 +36,59 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
   }
 
   // METHODS
+  Future<void> _buildForgotPasswordPage() {
+    return Navigator.push<void>(
+      context,
+      PageRouteBuilder<void>(
+        transitionDuration: $styles.times.pageTransition,
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+          const Offset begin = Offset(0, 1);
+          const Offset end = Offset.zero;
+          const Cubic curve = Curves.ease;
+
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end)
+              .chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive<Offset>(tween),
+            child: const ForgotPasswordPage(),
+          );
+        },
+      ),
+    );
+  }
+
+  Future<void> _showErrorDialog(RemoteSignInFailure state) {
+    return showDialog<void>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const SizedBox.shrink(),
+        content: Row(
+          children: <Widget>[
+            Icon(Icons.error, color: Theme.of(context).colorScheme.error),
+            SizedBox(width: $styles.insets.xs + 2),
+            Flexible(
+              child: Text(
+                state.failure?.response?.data.toString() ??
+                    'Se produjo un error inesperado. Intenta iniciar sesión de nuevo.',
+                style: $styles.textStyles.title2.copyWith(
+                  height: 1.5,
+                  color: Theme.of(context).colorScheme.error,
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => context.pop(),
+            child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _handleSignIn() {
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -168,59 +221,6 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Future<void> _buildForgotPasswordPage() {
-    return Navigator.push<void>(
-      context,
-      PageRouteBuilder<void>(
-        transitionDuration: $styles.times.pageTransition,
-        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-          const Offset begin = Offset(0, 1);
-          const Offset end = Offset.zero;
-          const Cubic curve = Curves.ease;
-
-          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end)
-              .chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position: animation.drive<Offset>(tween),
-            child: const ForgotPasswordPage(),
-          );
-        },
-      ),
-    );
-  }
-
-  Future<void> _showErrorDialog(RemoteSignInFailure state) {
-    return showDialog<void>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const SizedBox.shrink(),
-        content: Row(
-          children: <Widget>[
-            Icon(Icons.error, color: Theme.of(context).colorScheme.error),
-            SizedBox(width: $styles.insets.xs + 2),
-            Flexible(
-              child: Text(
-                state.failure?.response?.data.toString() ??
-                    'Se produjo un error inesperado. Intenta iniciar sesión de nuevo.',
-                style: $styles.textStyles.title2.copyWith(
-                  height: 1.5,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => context.pop(),
-            child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
-          ),
-        ],
       ),
     );
   }
