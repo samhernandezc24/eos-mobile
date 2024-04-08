@@ -1,15 +1,10 @@
 import 'package:eos_mobile/core/helpers/auth_token_helper.dart';
 import 'package:eos_mobile/core/helpers/image_helper.dart';
 
-// DATASOURCES / SERVICES
 import 'package:eos_mobile/features/auth/data/datasources/local/auth_local_source.dart';
 import 'package:eos_mobile/features/auth/data/datasources/remote/auth_remote_api_service.dart';
-
-// REPOSITORIES
 import 'package:eos_mobile/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:eos_mobile/features/auth/domain/repositories/auth_repository.dart';
-
-// USECASES
 import 'package:eos_mobile/features/auth/domain/usecases/get_credentials_usecase.dart';
 import 'package:eos_mobile/features/auth/domain/usecases/get_user_info_usecase.dart';
 import 'package:eos_mobile/features/auth/domain/usecases/get_user_session_usecase.dart';
@@ -20,8 +15,6 @@ import 'package:eos_mobile/features/auth/domain/usecases/save_credentials_usecas
 import 'package:eos_mobile/features/auth/domain/usecases/save_user_info_usecase.dart';
 import 'package:eos_mobile/features/auth/domain/usecases/save_user_session_usecase.dart';
 import 'package:eos_mobile/features/auth/domain/usecases/sign_in_usecase.dart';
-
-// BLOC STATE MANAGEMENT
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/remote/remote_auth_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion_tipo/inspeccion_tipo_remote_api_service.dart';
@@ -32,6 +25,7 @@ import 'package:eos_mobile/features/inspecciones/domain/usecases/inspecciones_ti
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspecciones_tipos/store_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspecciones_tipos/update_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
+
 import 'package:eos_mobile/shared/shared.dart';
 
 final GetIt sl = GetIt.instance;
