@@ -9,12 +9,10 @@ class InspeccionTipoReqModel extends InspeccionTipoReqEntity {
     required String folio,
     required String name,
     String? correo,
-    int? orden,
   }) : super(
-          folio             : folio,
-          name              : name,
-          correo            : correo,
-          orden             : orden,
+          folio   : folio,
+          name    : name,
+          correo  : correo,
         );
 
   /// Constructor factory para crear la instancia de [InspeccionTipoReqModel]
@@ -24,7 +22,6 @@ class InspeccionTipoReqModel extends InspeccionTipoReqEntity {
       folio             : jsonMap['folio'] as String,
       name              : jsonMap['name'] as String,
       correo            : jsonMap['correo'] as String? ?? '',
-      orden             : jsonMap['orden'] as int? ?? 0,
     );
   }
 
@@ -35,7 +32,6 @@ class InspeccionTipoReqModel extends InspeccionTipoReqEntity {
       folio             : entity.folio,
       name              : entity.name,
       correo            : entity.correo,
-      orden             : entity.orden,
     );
   }
 
@@ -45,7 +41,6 @@ class InspeccionTipoReqModel extends InspeccionTipoReqEntity {
       'folio'             : folio,
       'name'              : name,
       'correo'            : correo,
-      'orden'             : orden,
     };
   }
 }

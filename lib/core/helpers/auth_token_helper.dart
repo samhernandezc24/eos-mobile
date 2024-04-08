@@ -12,6 +12,8 @@ class AuthTokenHelper {
   final FlutterSecureStorage _secureStorage;
   final Uuid _uuid = const Uuid();
 
+  static const String jwtSecurityToken = 'yPkCqn4kSWLtaJwXvN2jGzpQRyTZ3gdXkt7FeBJP';
+
   /// Obtiene el token almacenado localmente.
   Future<String?> getLocalToken() async {
     try {
@@ -74,9 +76,7 @@ class AuthTokenHelper {
         'iat'         : DateTime.now().millisecondsSinceEpoch ~/ 1000,
       },
     );
-
-    final String secretKey = AuthUtils.generateSecureSecretKey();
-    return jwt.sign(SecretKey(secretKey));
+    return jwt.sign(SecretKey(jwtSecurityToken));
   }
 
   /// Test para verificar si el token ha expirado o no.

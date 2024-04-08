@@ -2,45 +2,47 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/core/network/api_response.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria_model.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion_tipo/inspeccion_tipo_model.dart';
-import 'package:eos_mobile/features/inspecciones/data/models/inspeccion_tipo/inspeccion_tipo_req_model.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:retrofit/retrofit.dart';
 
-part 'inspeccion_tipo_remote_api_service.g.dart';
+part 'categoria_remote_api_service.g.dart';
 
-@RestApi(baseUrl: ListAPI.inspeccionesTipos)
-abstract class InspeccionTipoRemoteApiService {
-  factory InspeccionTipoRemoteApiService(Dio dio, {String baseUrl}) = _InspeccionTipoRemoteApiService;
+@RestApi(baseUrl: ListAPI.categorias)
+abstract class CategoriaRemoteApiService {
+  factory CategoriaRemoteApiService(Dio dio, {String baseUrl}) = _CategoriaRemoteApiService;
 
-  /// LISTA DE INSPECCIONES TIPOS
+  /// LISTA DE CATEGORÍAS
   @POST('/List')
-  Future<HttpResponse<ApiResponse>> listInspeccionesTipos(
+  Future<HttpResponse<ApiResponse>> listCategorias(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Body() InspeccionTipoModel inpseccionTipo,
   );
 
-  /// GUARDAR INSPECCIÓN TIPO
+  /// GUARDAR CATEGORÍA
   @POST('/Store')
-  Future<HttpResponse<ApiResponse>> storeInspeccionTipo(
+  Future<HttpResponse<ApiResponse>> storeCategoria(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Body() InspeccionTipoReqModel inspeccionTipo,
+    @Body() CategoriaReqModel categoria,
   );
 
-  /// ACTUALIZAR INSPECCIÓN TIPO
+  /// ACTUALIZAR CATEGORÍA
   @POST('/Update')
-  Future<HttpResponse<ApiResponse>> updateInspeccionTipo(
+  Future<HttpResponse<ApiResponse>> updateCategoria(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Body() InspeccionTipoModel inspeccionTipo,
+    @Body() CategoriaModel categoria,
   );
 
-  /// ELIMINAR INSPECCIÓN TIPO
+  /// ELIMINAR CATEGORÍA
   @POST('/Delete')
-  Future<HttpResponse<ApiResponse>> deleteInspeccionTipo(
+  Future<HttpResponse<ApiResponse>> deleteCategoria(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Body() InspeccionTipoModel inspeccionTipo,
+    @Body() CategoriaModel categoria,
   );
 }

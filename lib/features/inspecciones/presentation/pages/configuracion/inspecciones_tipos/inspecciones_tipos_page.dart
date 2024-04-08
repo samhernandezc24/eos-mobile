@@ -1,5 +1,6 @@
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/core/common/widgets/modals/form_modal.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion_tipo/create_inspeccion_tipo_form.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion_tipo/inspeccion_tipo_tile.dart';
@@ -26,11 +27,15 @@ class _InspeccionConfiguracionInspeccionesTiposPageState extends State<Inspeccio
 
           final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-          return SlideTransition(position: animation.drive<Offset>(tween), child: const FormModal(title: 'Nueva Inspección Tipo', child: CreateInspeccionTipoForm()));
+          return SlideTransition(position: animation.drive<Offset>(tween), child: const FormModal(title: 'Nuevo tipo de inspección', child: CreateInspeccionTipoForm()));
         },
         fullscreenDialog: true,
       ),
     );
+  }
+
+  void _handleInspeccionTipoPressed(BuildContext context) {
+    GoRouter.of(context).go('/home/inspecciones/inspeccionesTipos/categorias');
   }
 
   @override
@@ -91,7 +96,10 @@ class _InspeccionConfiguracionInspeccionesTiposPageState extends State<Inspeccio
                       return ListView.builder(
                         itemCount: state.inspeccionesTipos!.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return InspeccionTipoTile(inspeccionTipo: state.inspeccionesTipos![index]);
+                          return InspeccionTipoTile(
+                            inspeccionTipo: state.inspeccionesTipos![index],
+                            // onInspeccionTipoPressed: (inspeccionTipo) => _handleInspeccionTipoPressed(context),
+                          );
                         },
                       );
                     } else {

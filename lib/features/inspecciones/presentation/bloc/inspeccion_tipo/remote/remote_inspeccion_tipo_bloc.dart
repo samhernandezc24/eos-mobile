@@ -21,6 +21,8 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
   ) : super(RemoteInspeccionTipoLoading()) {
     on<ListInspeccionesTipos>(onListInspeccionesTipos);
     on<StoreInspeccionTipo>(onStoreInspeccionTipo);
+    on<UpdateInspeccionTipo>(onUpdateInspeccionTipo);
+    on<DeleteInspeccionTipo>(onDeleteInspeccionTipo);
   }
 
   // Casos de uso
@@ -50,7 +52,49 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
   Future<void> onStoreInspeccionTipo(StoreInspeccionTipo event, Emitter<RemoteInspeccionTipoState> emit) async {
     emit(RemoteInspeccionTipoLoading());
 
-    final objDataState = await _storeInspeccionTipoUseCase(params: event.data);
+    final objDataState = await _storeInspeccionTipoUseCase(params: event.inspeccionTipo);
+
+    if (objDataState is DataSuccess) {
+      emit(RemoteInspeccionTipoResponseSuccess(objDataState.data!));
+      await _reloadInspeccionesTipos(emit);
+    }
+
+    if (objDataState is DataFailedMessage) {
+      emit(RemoteInspeccionTipoFailedMessage(objDataState.errorMessage));
+      await _reloadInspeccionesTipos(emit);
+    }
+
+    if (objDataState is DataFailed) {
+      emit(RemoteInspeccionTipoFailure(objDataState.exception));
+      await _reloadInspeccionesTipos(emit);
+    }
+  }
+
+  Future<void> onUpdateInspeccionTipo(UpdateInspeccionTipo event, Emitter<RemoteInspeccionTipoState> emit) async {
+    emit(RemoteInspeccionTipoLoading());
+
+    final objDataState = await _updateInspeccionTipoUseCase(params: event.inspeccionTipo);
+
+    if (objDataState is DataSuccess) {
+      emit(RemoteInspeccionTipoResponseSuccess(objDataState.data!));
+      await _reloadInspeccionesTipos(emit);
+    }
+
+    if (objDataState is DataFailedMessage) {
+      emit(RemoteInspeccionTipoFailedMessage(objDataState.errorMessage));
+      await _reloadInspeccionesTipos(emit);
+    }
+
+    if (objDataState is DataFailed) {
+      emit(RemoteInspeccionTipoFailure(objDataState.exception));
+      await _reloadInspeccionesTipos(emit);
+    }
+  }
+
+  Future<void> onDeleteInspeccionTipo(DeleteInspeccionTipo event, Emitter<RemoteInspeccionTipoState> emit) async {
+    emit(RemoteInspeccionTipoLoading());
+
+    final objDataState = await _deleteInspeccionTipoUseCase(params: event.inspeccionTipo);
 
     if (objDataState is DataSuccess) {
       emit(RemoteInspeccionTipoResponseSuccess(objDataState.data!));
@@ -71,16 +115,5 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
   /// Recargar el listado de inspecciones tipos.
   Future<void> _reloadInspeccionesTipos(Emitter<RemoteInspeccionTipoState> emit) async {
     await onListInspeccionesTipos(ListInspeccionesTipos(), emit);
-  }
-
-  /// Devuelve el numero de orden para los elementos.
-  Future<int> getCurrentOrder() async {
-    final objDataState = await _listInspeccionesTiposUseCase(params: NoParams());
-
-    if (objDataState is DataSuccess<List<InspeccionTipoEntity>>) {
-      return objDataState.data!.length + 1;
-    } else {
-      return 0;
-    }
   }
 }

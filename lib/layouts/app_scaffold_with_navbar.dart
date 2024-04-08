@@ -234,7 +234,7 @@ class AppScaffoldWithNavBar extends StatelessWidget {
             ],
             onSelected: (String value) {
               if (value == 'configuracion') {
-                GoRouter.of(context).go('/home/inspecciones/inspeccionTipo');
+                GoRouter.of(context).go('/home/inspecciones/inspeccionesTipos');
               }
             },
           ),

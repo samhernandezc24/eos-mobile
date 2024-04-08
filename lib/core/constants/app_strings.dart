@@ -23,7 +23,7 @@ class AppStrings {
 
   String categoryDescription          = 'Crea categorías para agrupar los formularios de las inspecciones.';
   String categoryEmptyTitle           = 'No hay categorías';
-  String categoryTitle                = 'Listado de Categorías';
+  String categoryTitle                = 'Listado de categorías';
 
   String categoryItemDescription      = 'Configura y organiza las preguntas según tus necesidades. Arrastra y suelta las preguntas para ordenarlas como desees.';
   String categoryItemEmptyTitle       = 'No hay preguntas.';

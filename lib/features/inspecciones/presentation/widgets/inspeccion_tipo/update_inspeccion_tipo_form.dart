@@ -1,16 +1,18 @@
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
-import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
-class CreateInspeccionTipoForm extends StatefulWidget {
-  const CreateInspeccionTipoForm({Key? key}) : super(key: key);
+class UpdateInspeccionTipoForm extends StatefulWidget {
+  const UpdateInspeccionTipoForm({Key? key, this.inspeccionTipo}) : super(key: key);
+
+  final InspeccionTipoEntity? inspeccionTipo;
 
   @override
-  State<CreateInspeccionTipoForm> createState() => _CreateInspeccionTipoFormState();
+  State<UpdateInspeccionTipoForm> createState() => _UpdateInspeccionTipoFormState();
 }
 
-class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
+class _UpdateInspeccionTipoFormState extends State<UpdateInspeccionTipoForm> {
   // GENERAL INSTANCES
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -24,9 +26,9 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
 
   @override
   void initState() {
-    _folioController    = TextEditingController();
-    _nameController     = TextEditingController();
-    _correoController   = TextEditingController();
+    _folioController    = TextEditingController(text: widget.inspeccionTipo?.folio ?? '');
+    _nameController     = TextEditingController(text: widget.inspeccionTipo?.name.toProperCase() ?? '');
+    _correoController   = TextEditingController(text: widget.inspeccionTipo?.correo ?? '');
     super.initState();
   }
 
@@ -50,7 +52,7 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
             SizedBox(width: $styles.insets.xs + 2),
             Flexible(
               child: Text(
-                state.failure?.response?.data.toString() ?? 'Se produjo un error inesperado. Intenta crear el tipo de inspección de nuevo.',
+                state.failure?.response?.data.toString() ?? 'Se produjo un error inesperado. Intenta actualizar el tipo de inspección de nuevo.',
                 style: $styles.textStyles.title2.copyWith(
                   height: 1.5,
                   color: Theme.of(context).colorScheme.error,
@@ -99,7 +101,7 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
     );
   }
 
-  void _handleStoreInspeccionTipo() {
+  void _handleUpdateInspeccionTipo() {
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -109,12 +111,13 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
       );
     } else {
       _formKey.currentState!.save();
-      final InspeccionTipoReqEntity objData = InspeccionTipoReqEntity(
-        folio   : _folioController.text,
-        name    : _nameController.text,
-        correo  : _correoController.text,
+      final InspeccionTipoEntity objData = InspeccionTipoEntity(
+        idInspeccionTipo  : widget.inspeccionTipo!.idInspeccionTipo,
+        folio             : _folioController.text,
+        name              : _nameController.text,
+        correo            : _correoController.text,
       );
-      BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(StoreInspeccionTipo(objData));
+      BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(UpdateInspeccionTipo(objData));
     }
   }
 
@@ -173,7 +176,7 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
                 ..showSnackBar(
                   SnackBar(
                     content: Text(
-                      'Tipo de inspección guardado exitosamente',
+                      'Tipo de inspección actualizado exitosamente',
                       style: $styles.textStyles.bodySmall,
                     ),
                     backgroundColor: Colors.green,
@@ -200,7 +203,7 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
               }
 
               return FilledButton(
-                onPressed: _handleStoreInspeccionTipo,
+                onPressed: _handleUpdateInspeccionTipo,
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all<Size?>(
                     const Size(double.infinity, 48),

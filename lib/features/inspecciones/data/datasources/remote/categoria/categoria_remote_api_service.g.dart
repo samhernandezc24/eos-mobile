@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'inspeccion_tipo_remote_api_service.dart';
+part of 'categoria_remote_api_service.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,13 +8,12 @@ part of 'inspeccion_tipo_remote_api_service.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
-class _InspeccionTipoRemoteApiService
-    implements InspeccionTipoRemoteApiService {
-  _InspeccionTipoRemoteApiService(
+class _CategoriaRemoteApiService implements CategoriaRemoteApiService {
+  _CategoriaRemoteApiService(
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= ListAPI.inspeccionesTipos;
+    baseUrl ??= ListAPI.categorias;
   }
 
   final Dio _dio;
@@ -22,9 +21,10 @@ class _InspeccionTipoRemoteApiService
   String? baseUrl;
 
   @override
-  Future<HttpResponse<ApiResponse>> listInspeccionesTipos(
+  Future<HttpResponse<ApiResponse>> listCategorias(
     String token,
     String contentType,
+    InspeccionTipoModel inpseccionTipo,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -33,7 +33,8 @@ class _InspeccionTipoRemoteApiService
       r'content-type': contentType,
     };
     _headers.removeWhere((k, v) => v == null);
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
+    _data.addAll(inpseccionTipo.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ApiResponse>>(Options(
       method: 'POST',
@@ -58,10 +59,10 @@ class _InspeccionTipoRemoteApiService
   }
 
   @override
-  Future<HttpResponse<ApiResponse>> storeInspeccionTipo(
+  Future<HttpResponse<ApiResponse>> storeCategoria(
     String token,
     String contentType,
-    InspeccionTipoReqModel inspeccionTipo,
+    CategoriaReqModel categoria,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -71,7 +72,7 @@ class _InspeccionTipoRemoteApiService
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(inspeccionTipo.toJson());
+    _data.addAll(categoria.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ApiResponse>>(Options(
       method: 'POST',
@@ -96,10 +97,10 @@ class _InspeccionTipoRemoteApiService
   }
 
   @override
-  Future<HttpResponse<ApiResponse>> updateInspeccionTipo(
+  Future<HttpResponse<ApiResponse>> updateCategoria(
     String token,
     String contentType,
-    InspeccionTipoModel inspeccionTipo,
+    CategoriaModel categoria,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -109,7 +110,7 @@ class _InspeccionTipoRemoteApiService
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(inspeccionTipo.toJson());
+    _data.addAll(categoria.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ApiResponse>>(Options(
       method: 'POST',
@@ -134,10 +135,10 @@ class _InspeccionTipoRemoteApiService
   }
 
   @override
-  Future<HttpResponse<ApiResponse>> deleteInspeccionTipo(
+  Future<HttpResponse<ApiResponse>> deleteCategoria(
     String token,
     String contentType,
-    InspeccionTipoModel inspeccionTipo,
+    CategoriaModel categoria,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -147,7 +148,7 @@ class _InspeccionTipoRemoteApiService
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(inspeccionTipo.toJson());
+    _data.addAll(categoria.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ApiResponse>>(Options(
       method: 'POST',

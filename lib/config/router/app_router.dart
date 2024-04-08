@@ -57,18 +57,19 @@ final GoRouter appRouter = GoRouter(
       builder: (BuildContext context, GoRouterState state, StatefulNavigationShell navigationShell) {
         final String? routeName = GoRouterState.of(context).topRoute?.name;
         final String title = switch (routeName) {
-          'home'                                  => 'EOS Mobile',
-          'dashboard'                             => 'Dashboard',
-          'actividades'                           => 'Registro de actividades',
-          'notificaciones'                        => 'Notificaciones',
-          'home.inspecciones'                     => 'Índice de inspecciones',
-          'home.inspecciones.list'                => 'Lista de inspecciones',
-          'home.inspecciones.conRequerimiento'    => 'Unidades con requerimientos',
-          'home.inspecciones.sinRequerimiento'    => 'Inspección de unidad sin req.',
-          'home.inspecciones.searchUnidad'        => 'Buscar unidad',
+          'home'                                        => 'EOS Mobile',
+          'dashboard'                                   => 'Dashboard',
+          'actividades'                                 => 'Registro de actividades',
+          'notificaciones'                              => 'Notificaciones',
+          'home.inspecciones'                           => 'Índice de inspecciones',
+          'home.inspecciones.list'                      => 'Lista de inspecciones',
+          'home.inspecciones.conRequerimiento'          => 'Unidades con requerimientos',
+          'home.inspecciones.sinRequerimiento'          => 'Inspección de unidad sin req.',
+          'home.inspecciones.searchUnidad'              => 'Buscar unidad',
 
-          'home.inspecciones.config.inspeccionesTipos' => 'Configuración de inspecciones',
-          _                                       => 'Empty Page',
+          'home.inspecciones.config.inspeccionesTipos'              => 'Configuración de inspecciones',
+          'home.inspecciones.config.inspeccionesTipos.categorias'   => 'Configuración de categorías',
+          _                                                         => 'Empty Page',
         };
 
         return AppScaffoldWithNavBar(title: title, navigationShell: navigationShell);
@@ -84,10 +85,17 @@ final GoRouter appRouter = GoRouter(
                   (_) => const InspeccionIndexPage(),
                   routes: <GoRoute>[
                     AppRoute(
-                      'inspeccionTipo',
+                      'inspeccionesTipos',
                       'home.inspecciones.config.inspeccionesTipos',
                       (_) => const InspeccionConfiguracionInspeccionesTiposPage(),
                       parentKey: _rootNavigatorKey,
+                      // routes: <GoRoute>[
+                      //   AppRoute(
+                      //     'categorias',
+                      //     'home.inspecciones.config.inspeccionesTipos.categorias',
+                      //     (s) => InspeccionConfiguracionCategoriasPage(inspeccionTipoId: s.uri.queryParameters['id'] ?? ''),
+                      //   ),
+                      // ],
                     ),
                     AppRoute('list', 'home.inspecciones.list', (_) => const InspeccionListPage(), useFade: true),
                     AppRoute('conrequerimiento', 'home.inspecciones.conRequerimiento', (_) => const InspeccionUnidadConRequerimientoPage(), useFade: true),

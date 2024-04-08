@@ -10,10 +10,28 @@ sealed class RemoteInspeccionTipoEvent extends Equatable {
 class ListInspeccionesTipos extends RemoteInspeccionTipoEvent {}
 
 class StoreInspeccionTipo extends RemoteInspeccionTipoEvent {
-  const StoreInspeccionTipo(this.data);
+  const StoreInspeccionTipo(this.inspeccionTipo);
 
-  final InspeccionTipoReqEntity data;
+  final InspeccionTipoReqEntity inspeccionTipo;
 
   @override
-  List<Object?> get props => [ data ];
+  List<Object?> get props => [ inspeccionTipo ];
+}
+
+class UpdateInspeccionTipo extends RemoteInspeccionTipoEvent {
+  const UpdateInspeccionTipo(this.inspeccionTipo);
+
+  final InspeccionTipoEntity inspeccionTipo;
+
+  @override
+  List<Object?> get props => [ inspeccionTipo ];
+}
+
+class DeleteInspeccionTipo extends RemoteInspeccionTipoEvent {
+  const DeleteInspeccionTipo(this.inspeccionTipo);
+
+  final InspeccionTipoEntity inspeccionTipo;
+
+  @override
+  List<Object?> get props => [ inspeccionTipo ];
 }

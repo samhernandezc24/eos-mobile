@@ -9,14 +9,12 @@ class InspeccionTipoReqEntity extends Equatable {
     required this.folio,
     required this.name,
     this.correo,
-    this.orden,
   });
 
   final String folio;
   final String name;
   final String? correo;
-  final int? orden;
 
   @override
-  List<Object?> get props => [ folio, name, correo, orden ];
+  List<Object?> get props => [ folio, name, correo ];
 }
