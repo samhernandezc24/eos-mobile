@@ -173,7 +173,7 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
                 ..showSnackBar(
                   SnackBar(
                     content: Text(
-                      'Tipo de inspección guardado exitosamente',
+                      state.apiResponse.message,
                       style: $styles.textStyles.bodySmall,
                     ),
                     backgroundColor: Colors.green,

@@ -33,9 +33,9 @@ class _InspeccionConfiguracionInspeccionesTiposPageState extends State<Inspeccio
     );
   }
 
-  void _handleInspeccionTipoPressed(BuildContext context) {
-    GoRouter.of(context).go('/home/inspecciones/inspeccionesTipos/categorias');
-  }
+  // void _handleInspeccionTipoPressed(BuildContext context) {
+  //   GoRouter.of(context).go('/home/inspecciones/inspeccionesTipos/categorias');
+  // }
 
   @override
   Widget build(BuildContext context) {
