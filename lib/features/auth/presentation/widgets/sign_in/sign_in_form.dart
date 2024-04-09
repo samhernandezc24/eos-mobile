@@ -142,19 +142,21 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
                     textInputAction: TextInputAction.done,
                   ),
 
+                  Gap($styles.insets.md),
+
                   // ¿HAS OLVIDADO TU CONTRASEÑA?:
-                  GestureDetector(
-                    onTap: _buildForgotPasswordPage,
-                    child: Container(
-                      alignment: Alignment.centerRight,
-                      padding:
-                          EdgeInsets.symmetric(vertical: $styles.insets.sm),
-                      child: Text(
-                        '¿Has olvidado tu contraseña?',
-                        style: TextStyle(color: Theme.of(context).primaryColor),
-                      ),
-                    ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: _buildForgotPasswordPage,
+                  //   child: Container(
+                  //     alignment: Alignment.centerRight,
+                  //     padding:
+                  //         EdgeInsets.symmetric(vertical: $styles.insets.sm),
+                  //     child: Text(
+                  //       '¿Has olvidado tu contraseña?',
+                  //       style: TextStyle(color: Theme.of(context).primaryColor),
+                  //     ),
+                  //   ),
+                  // ),
 
                   // BOTÓN PARA ENVIAR LAS CREDENCIALES:
                   BlocConsumer<RemoteAuthBloc, RemoteAuthState>(
