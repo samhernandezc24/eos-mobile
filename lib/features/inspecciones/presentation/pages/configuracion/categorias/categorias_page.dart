@@ -1,7 +1,9 @@
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/core/common/widgets/modals/form_modal.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/pages/configuracion/categorias_items/categorias_items_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/categoria/categoria_tile.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/categoria/create_categoria_form.dart';
 import 'package:eos_mobile/shared/shared.dart';
@@ -47,6 +49,12 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
         fullscreenDialog: true,
       ),
     );
+  }
+
+  void _onCategoriaPressed(BuildContext context, InspeccionTipoEntity inspeccionTipo, CategoriaEntity categoria) {
+    Future.delayed($styles.times.pageTransition, () {
+      Navigator.push<void>(context, MaterialPageRoute(builder: (_) => InspeccionConfiguracionCategoriasItemsPage(inspeccionTipo: inspeccionTipo, categoria: categoria)));
+    });
   }
 
   @override
@@ -137,6 +145,7 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
                           return CategoriaTile(
                             categoria: state.categorias![index],
                             inspeccionTipo: widget.inspeccionTipo,
+                            onCategoriaPressed: (inspeccionTipo, categoria) => _onCategoriaPressed(context, inspeccionTipo, categoria),
                           );
                         },
                       );

@@ -11,7 +11,7 @@ class CategoriaTile extends StatelessWidget {
 
   final CategoriaEntity? categoria;
   final InspeccionTipoEntity? inspeccionTipo;
-  final void Function(InspeccionTipoEntity inspeccionTipo, CategoriaEntity categoria)? onCategoriaPressed;
+  final void Function(CategoriaEntity categoria)? onCategoriaPressed;
 
   /// METHODS
   Future<void> _showFailureDialog(BuildContext context, RemoteCategoriaFailure state) {
@@ -228,7 +228,7 @@ class CategoriaTile extends StatelessWidget {
   }
 
   void _onTap() {
-    if (onCategoriaPressed != null) return onCategoriaPressed!(inspeccionTipo!, categoria!);
+    if (onCategoriaPressed != null) return onCategoriaPressed!(categoria!);
   }
 
   void _onRemove(BuildContext context) {

@@ -27,9 +27,9 @@ class AppStrings {
   String categoryEmptyTitle           = 'No hay categorías';
   String categoryTitle                = 'Listado de categorías';
 
-  String categoryItemDescription      = 'Configura y organiza las preguntas según tus necesidades. Arrastra y suelta las preguntas para ordenarlas como desees.';
+  String categoryItemDescription      = 'Configura y organiza las preguntas según tus necesidades.';
   String categoryItemEmptyTitle       = 'No hay preguntas.';
-  String categoryItemTitle            = 'Preguntas Dinámicas';
+  String categoryItemTitle            = 'Preguntas dinámicas';
 
   String circleButtonsSemanticBack    = 'Volver';
   String circleButtonsSemanticClose   = 'Cerrar';
