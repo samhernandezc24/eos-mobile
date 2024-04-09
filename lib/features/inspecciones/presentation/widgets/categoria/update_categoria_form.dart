@@ -1,47 +1,40 @@
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
-class UpdateInspeccionTipoForm extends StatefulWidget {
-  const UpdateInspeccionTipoForm({Key? key, this.inspeccionTipo}) : super(key: key);
+class UpdateCategoriaForm extends StatefulWidget {
+  const UpdateCategoriaForm({Key? key, this.categoria, this.inspeccionTipo}) : super(key: key);
 
+  final CategoriaEntity? categoria;
   final InspeccionTipoEntity? inspeccionTipo;
 
   @override
-  State<UpdateInspeccionTipoForm> createState() => _UpdateInspeccionTipoFormState();
+  State<UpdateCategoriaForm> createState() => _UpdateCategoriaFormState();
 }
 
-class _UpdateInspeccionTipoFormState extends State<UpdateInspeccionTipoForm> {
+class _UpdateCategoriaFormState extends State<UpdateCategoriaForm> {
   // GENERAL INSTANCES
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // CONTROLLERS
-  late final TextEditingController _folioController;
   late final TextEditingController _nameController;
-  late final TextEditingController _correoController;
-
-  // PROPERTIES
-  final int currentYear = DateTime.now().year;
 
   @override
   void initState() {
-    _folioController    = TextEditingController(text: widget.inspeccionTipo?.folio ?? '');
-    _nameController     = TextEditingController(text: widget.inspeccionTipo?.name.toProperCase() ?? '');
-    _correoController   = TextEditingController(text: widget.inspeccionTipo?.correo ?? '');
+    _nameController     = TextEditingController(text: widget.categoria?.name.toProperCase() ?? '');
     super.initState();
   }
 
   @override
   void dispose() {
-    _folioController.dispose();
     _nameController.dispose();
-    _correoController.dispose();
     super.dispose();
   }
 
   // METHODS
-  Future<void> _showFailureDialog(BuildContext context, RemoteInspeccionTipoFailure state) {
+  Future<void> _showFailureDialog(BuildContext context, RemoteCategoriaFailure state) {
     return showDialog<void>(
       context: context,
       builder: (_) => AlertDialog(
@@ -52,7 +45,7 @@ class _UpdateInspeccionTipoFormState extends State<UpdateInspeccionTipoForm> {
             SizedBox(width: $styles.insets.xs + 2),
             Flexible(
               child: Text(
-                state.failure?.response?.data.toString() ?? 'Se produjo un error inesperado. Intenta actualizar el tipo de inspección de nuevo.',
+                state.failure?.response?.data.toString() ?? 'Se produjo un error inesperado. Intenta actualizar la categoría de nuevo.',
                 style: $styles.textStyles.title2.copyWith(
                   height: 1.5,
                   color: Theme.of(context).colorScheme.error,
@@ -71,7 +64,7 @@ class _UpdateInspeccionTipoFormState extends State<UpdateInspeccionTipoForm> {
     );
   }
 
-  Future<void> _showFailedMessageDialog(BuildContext context, RemoteInspeccionTipoFailedMessage state) {
+  Future<void> _showFailedMessageDialog(BuildContext context, RemoteCategoriaFailedMessage state) {
     return showDialog<void>(
       context: context,
       builder: (_) => AlertDialog(
@@ -101,7 +94,7 @@ class _UpdateInspeccionTipoFormState extends State<UpdateInspeccionTipoForm> {
     );
   }
 
-  void _handleUpdateInspeccionTipo() {
+  void _handleUpdateCategoria() {
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -111,13 +104,14 @@ class _UpdateInspeccionTipoFormState extends State<UpdateInspeccionTipoForm> {
       );
     } else {
       _formKey.currentState!.save();
-      final InspeccionTipoEntity objData = InspeccionTipoEntity(
-        idInspeccionTipo  : widget.inspeccionTipo!.idInspeccionTipo,
-        folio             : _folioController.text,
-        name              : _nameController.text,
-        correo            : _correoController.text,
+      final CategoriaEntity objData = CategoriaEntity(
+        idCategoria         : widget.categoria?.idCategoria ?? '',
+        name                : _nameController.text,
+        idInspeccionTipo    : widget.categoria?.idInspeccionTipo ?? '',
+        inspeccionTipoFolio : widget.categoria?.inspeccionTipoFolio ?? '',
+        inspeccionTipoName  : widget.categoria?.inspeccionTipoName ?? '',
       );
-      BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(UpdateInspeccionTipo(objData));
+      BlocProvider.of<RemoteCategoriaBloc>(context).add(UpdateCategoria(objData));
     }
   }
 
@@ -127,48 +121,29 @@ class _UpdateInspeccionTipoFormState extends State<UpdateInspeccionTipoForm> {
       key: _formKey,
       child: Column(
         children: <Widget>[
-          // FOLIO:
-          LabeledTextField(
-            autoFocus: true,
-            controller: _folioController,
-            hintText: 'INST-$currentYear-xxxx',
-            labelText: 'Folio:',
-            validator: FormValidators.textValidator,
-          ),
-
-          Gap($styles.insets.md),
-
           // NOMBRE:
           LabeledTextField(
             controller: _nameController,
+            autoFocus: true,
             labelText: 'Nombre:',
             validator: FormValidators.textValidator,
           ),
 
-          Gap($styles.insets.md),
-
-          // CORREO (OPCIONAL):
-          LabeledTextField(
-            controller: _correoController,
-            hintText: 'ejem@plo.com',
-            labelText: 'Correo (opcional):',
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.done,
-          ),
-
           Gap($styles.insets.lg),
 
-          BlocConsumer<RemoteInspeccionTipoBloc, RemoteInspeccionTipoState>(
-            listener: (BuildContext context, RemoteInspeccionTipoState state) {
-              if (state is RemoteInspeccionTipoFailure) {
+          BlocConsumer<RemoteCategoriaBloc, RemoteCategoriaState>(
+            listener: (BuildContext context, RemoteCategoriaState state) {
+              if (state is RemoteCategoriaFailure) {
                 _showFailureDialog(context, state);
+                context.read<RemoteCategoriaBloc>().add(ListCategorias(widget.inspeccionTipo!));
               }
 
-              if (state is RemoteInspeccionTipoFailedMessage) {
+              if (state is RemoteCategoriaFailedMessage) {
                 _showFailedMessageDialog(context, state);
+                context.read<RemoteCategoriaBloc>().add(ListCategorias(widget.inspeccionTipo!));
               }
 
-              if (state is RemoteInspeccionTipoResponseSuccess) {
+              if (state is RemoteCategoriaResponseSuccess) {
                 Navigator.pop(context);
 
                 ScaffoldMessenger.of(context)
@@ -182,10 +157,12 @@ class _UpdateInspeccionTipoFormState extends State<UpdateInspeccionTipoForm> {
                     backgroundColor: Colors.green,
                   ),
                 );
+
+                context.read<RemoteCategoriaBloc>().add(ListCategorias(widget.inspeccionTipo!));
               }
             },
-            builder: (BuildContext context, RemoteInspeccionTipoState state) {
-              if (state is RemoteInspeccionTipoLoading) {
+            builder: (BuildContext context, RemoteCategoriaState state) {
+              if (state is RemoteCategoriaLoading) {
                 return FilledButton(
                   onPressed: null,
                   style: ButtonStyle(
@@ -203,7 +180,7 @@ class _UpdateInspeccionTipoFormState extends State<UpdateInspeccionTipoForm> {
               }
 
               return FilledButton(
-                onPressed: _handleUpdateInspeccionTipo,
+                onPressed: _handleUpdateCategoria,
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all<Size?>(
                     const Size(double.infinity, 48),

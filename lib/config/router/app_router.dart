@@ -67,9 +67,8 @@ final GoRouter appRouter = GoRouter(
           'home.inspecciones.sinRequerimiento'          => 'Inspección de unidad sin req.',
           'home.inspecciones.searchUnidad'              => 'Buscar unidad',
 
-          'home.inspecciones.config.inspeccionesTipos'              => 'Configuración de inspecciones',
-          'home.inspecciones.config.inspeccionesTipos.categorias'   => 'Configuración de categorías',
-          _                                                         => 'Empty Page',
+          'home.inspecciones.config.inspeccionesTipos'  => 'Configuración de inspecciones',
+          _                                             => 'Empty Page',
         };
 
         return AppScaffoldWithNavBar(title: title, navigationShell: navigationShell);
@@ -89,13 +88,6 @@ final GoRouter appRouter = GoRouter(
                       'home.inspecciones.config.inspeccionesTipos',
                       (_) => const InspeccionConfiguracionInspeccionesTiposPage(),
                       parentKey: _rootNavigatorKey,
-                      // routes: <GoRoute>[
-                      //   AppRoute(
-                      //     'categorias',
-                      //     'home.inspecciones.config.inspeccionesTipos.categorias',
-                      //     (s) => InspeccionConfiguracionCategoriasPage(inspeccionTipoId: s.uri.queryParameters['id'] ?? ''),
-                      //   ),
-                      // ],
                     ),
                     AppRoute('list', 'home.inspecciones.list', (_) => const InspeccionListPage(), useFade: true),
                     AppRoute('conrequerimiento', 'home.inspecciones.conRequerimiento', (_) => const InspeccionUnidadConRequerimientoPage(), useFade: true),

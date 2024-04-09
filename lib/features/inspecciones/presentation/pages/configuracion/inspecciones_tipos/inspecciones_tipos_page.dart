@@ -1,6 +1,8 @@
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/core/common/widgets/modals/form_modal.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/pages/configuracion/categorias/categorias_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion_tipo/create_inspeccion_tipo_form.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion_tipo/inspeccion_tipo_tile.dart';
 import 'package:eos_mobile/shared/shared.dart';
@@ -33,9 +35,11 @@ class _InspeccionConfiguracionInspeccionesTiposPageState extends State<Inspeccio
     );
   }
 
-  // void _handleInspeccionTipoPressed(BuildContext context) {
-  //   GoRouter.of(context).go('/home/inspecciones/inspeccionesTipos/categorias');
-  // }
+  void _onInspeccionTipoPressed(BuildContext context, InspeccionTipoEntity inspeccionTipo) {
+    Future.delayed($styles.times.pageTransition, () {
+      Navigator.push<void>(context, MaterialPageRoute(builder: (_) => InspeccionConfiguracionCategoriasPage(inspeccionTipo: inspeccionTipo)));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +101,7 @@ class _InspeccionConfiguracionInspeccionesTiposPageState extends State<Inspeccio
                         itemBuilder: (BuildContext context, int index) {
                           return InspeccionTipoTile(
                             inspeccionTipo: state.inspeccionesTipos![index],
-                            // onInspeccionTipoPressed: (inspeccionTipo) => _handleInspeccionTipoPressed(context),
+                            onInspeccionTipoPressed: (inspeccionTipo) => _onInspeccionTipoPressed(context, inspeccionTipo),
                           );
                         },
                       );

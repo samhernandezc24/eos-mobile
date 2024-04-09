@@ -4,6 +4,7 @@ import 'package:eos_mobile/core/helpers/auth_token_helper.dart';
 import 'package:eos_mobile/core/helpers/image_helper.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/remote/remote_auth_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -37,6 +38,7 @@ class MainApp extends StatelessWidget {
         BlocProvider<RemoteAuthBloc>(create: (BuildContext context) => sl<RemoteAuthBloc>()),
         BlocProvider<LocalAuthBloc>(create: (BuildContext context) => sl<LocalAuthBloc>()),
         BlocProvider<RemoteInspeccionTipoBloc>(create: (BuildContext context) => sl<RemoteInspeccionTipoBloc>()..add(ListInspeccionesTipos())),
+        BlocProvider<RemoteCategoriaBloc>(create: (BuildContext context) => sl<RemoteCategoriaBloc>()),
       ],
       child: MaterialApp.router(
         title: $strings.defaultAppName,

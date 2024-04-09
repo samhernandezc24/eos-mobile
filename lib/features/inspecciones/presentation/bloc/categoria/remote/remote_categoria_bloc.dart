@@ -56,17 +56,14 @@ class RemoteCategoriaBloc extends Bloc<RemoteCategoriaEvent, RemoteCategoriaStat
 
     if (objDataState is DataSuccess) {
       emit(RemoteCategoriaResponseSuccess(objDataState.data!));
-      // await _reloadCategorias(emit);
     }
 
     if (objDataState is DataFailedMessage) {
       emit(RemoteCategoriaFailedMessage(objDataState.errorMessage));
-      // await _reloadCategorias(emit);
     }
 
     if (objDataState is DataFailed) {
       emit(RemoteCategoriaFailure(objDataState.exception));
-      // await _reloadCategorias(emit);
     }
   }
 
@@ -77,17 +74,14 @@ class RemoteCategoriaBloc extends Bloc<RemoteCategoriaEvent, RemoteCategoriaStat
 
     if (objDataState is DataSuccess) {
       emit(RemoteCategoriaResponseSuccess(objDataState.data!));
-      // await _reloadCategorias(emit);
     }
 
     if (objDataState is DataFailedMessage) {
       emit(RemoteCategoriaFailedMessage(objDataState.errorMessage));
-      // await _reloadCategorias(emit);
     }
 
     if (objDataState is DataFailed) {
       emit(RemoteCategoriaFailure(objDataState.exception));
-      // await _reloadCategorias(emit);
     }
   }
 
@@ -98,27 +92,14 @@ class RemoteCategoriaBloc extends Bloc<RemoteCategoriaEvent, RemoteCategoriaStat
 
     if (objDataState is DataSuccess) {
       emit(RemoteCategoriaResponseSuccess(objDataState.data!));
-      // await _reloadCategorias(emit);
     }
 
     if (objDataState is DataFailedMessage) {
       emit(RemoteCategoriaFailedMessage(objDataState.errorMessage));
-      // await _reloadCategorias(emit);
     }
 
     if (objDataState is DataFailed) {
       emit(RemoteCategoriaFailure(objDataState.exception));
-      // await _reloadCategorias(emit);
     }
   }
-
-  /// Recargar el listado de categorías.
-  // Future<void> _reloadCategorias(Emitter<RemoteCategoriaState> emit) async {
-  //   final InspeccionTipoEntity d = InspeccionTipoEntity(
-  //     idInspeccionTipo: idInspeccionTipo,
-  //     folio: folio,
-  //     name: name
-  //   );
-  //   await onListCategorias(ListCategorias(d), emit);
-  // }
 }

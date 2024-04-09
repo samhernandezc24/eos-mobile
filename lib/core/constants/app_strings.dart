@@ -21,6 +21,8 @@ class AppStrings {
 
   String createCategoryButtonText     = 'Crear categorías';
 
+  String createCategoryItemButtonText = 'Crear preguntas';
+
   String categoryDescription          = 'Crea categorías para agrupar los formularios de las inspecciones.';
   String categoryEmptyTitle           = 'No hay categorías';
   String categoryTitle                = 'Listado de categorías';
@@ -34,7 +36,7 @@ class AppStrings {
 
   String editButtonText               = 'Editar';
 
-  String emptyListMessage             = 'Intenta actualizar el listado para sincronizar los últimos cambios en el servidor.';
+  String emptyListMessage             = 'Intenta actualizar el listado para sincronizar los últimos cambios del servidor.';
 
   String error404Message              = 'Nos hemos perdido en el vasto desierto digital y has llegado a una página que no existe.';
   String error404SemanticLabel        = 'Error 404';

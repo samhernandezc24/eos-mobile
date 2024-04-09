@@ -1,18 +1,19 @@
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/core/common/widgets/modals/form_modal.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion_tipo/update_inspeccion_tipo_form.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/widgets/categoria/update_categoria_form.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
-class InspeccionTipoTile extends StatelessWidget {
-  const InspeccionTipoTile({Key? key, this.inspeccionTipo, this.onInspeccionTipoPressed}) : super(key: key);
+class CategoriaTile extends StatelessWidget {
+  const CategoriaTile({Key? key, this.categoria, this.inspeccionTipo}) : super(key : key);
 
+  final CategoriaEntity? categoria;
   final InspeccionTipoEntity? inspeccionTipo;
-  final void Function(InspeccionTipoEntity inspeccionTipo)? onInspeccionTipoPressed;
 
   /// METHODS
-  Future<void> _showFailureDialog(BuildContext context, RemoteInspeccionTipoFailure state) {
+  Future<void> _showFailureDialog(BuildContext context, RemoteCategoriaFailure state) {
     return showDialog<void>(
       context: context,
       builder: (_) => AlertDialog(
@@ -24,7 +25,7 @@ class InspeccionTipoTile extends StatelessWidget {
             Flexible(
               child: Text(
                 state.failure?.response?.data.toString() ??
-                    'Se produjo un error inesperado. Intenta eliminar el tipo de inspección de nuevo.',
+                    'Se produjo un error inesperado. Intenta eliminar la categoría de nuevo.',
                 style: $styles.textStyles.title2.copyWith(
                   height: 1.5,
                   color: Theme.of(context).colorScheme.error,
@@ -43,7 +44,7 @@ class InspeccionTipoTile extends StatelessWidget {
     );
   }
 
-  Future<void> _showFailedMessageDialog(BuildContext context, RemoteInspeccionTipoFailedMessage state) {
+  Future<void> _showFailedMessageDialog(BuildContext context, RemoteCategoriaFailedMessage state) {
     return showDialog<void>(
       context: context,
       builder: (_) => AlertDialog(
@@ -73,7 +74,7 @@ class InspeccionTipoTile extends StatelessWidget {
     );
   }
 
-  void _handleDeletePressed(BuildContext context, InspeccionTipoEntity? inspeccionTipo) {
+  void _handleDeletePressed(BuildContext context, CategoriaEntity? categoria) {
     // Cerramos el modal bottom sheet.
     Navigator.pop(context);
 
@@ -81,17 +82,17 @@ class InspeccionTipoTile extends StatelessWidget {
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return BlocConsumer<RemoteInspeccionTipoBloc, RemoteInspeccionTipoState>(
-          listener: (BuildContext context, RemoteInspeccionTipoState state) {
-            if (state is RemoteInspeccionTipoFailure) {
+        return BlocConsumer<RemoteCategoriaBloc, RemoteCategoriaState>(
+          listener: (BuildContext context, RemoteCategoriaState state) {
+            if (state is RemoteCategoriaFailure) {
                _showFailureDialog(context, state);
             }
 
-            if (state is RemoteInspeccionTipoFailedMessage) {
+            if (state is RemoteCategoriaFailedMessage) {
               _showFailedMessageDialog(context, state);
             }
 
-            if (state is RemoteInspeccionTipoResponseSuccess) {
+            if (state is RemoteCategoriaResponseSuccess) {
               // Cerramos el AlertDialog.
               Navigator.pop(context);
 
@@ -105,8 +106,8 @@ class InspeccionTipoTile extends StatelessWidget {
               );
             }
           },
-          builder: (BuildContext context, RemoteInspeccionTipoState state) {
-            if (state is RemoteInspeccionTipoLoading) {
+          builder: (BuildContext context, RemoteCategoriaState state) {
+            if (state is RemoteCategoriaLoading) {
               return AlertDialog(
                 content: Row(
                   children: <Widget>[
@@ -126,16 +127,16 @@ class InspeccionTipoTile extends StatelessWidget {
             }
 
             return AlertDialog(
-              title: Text('¿Eliminar tipo de inspección?', style: $styles.textStyles.h3.copyWith(fontSize: 18)),
+              title: Text('¿Eliminar categoría?', style: $styles.textStyles.h3.copyWith(fontSize: 18)),
               content: RichText(
                 text: TextSpan(style: $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
                   children: <InlineSpan>[
-                    const TextSpan(text: 'Se eliminará el tipo de inspección '),
+                    const TextSpan(text: 'Se eliminará la categoría '),
                     TextSpan(
-                      text: '"${inspeccionTipo!.name.toProperCase()}" ',
+                      text: '"${categoria!.name.toProperCase()}". ',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    TextSpan(text: 'con el folio ${inspeccionTipo.folio}. ¿Estás seguro de querer realizar esa acción?'),
+                    const TextSpan(text: '¿Estás seguro de querer realizar esa acción?'),
                   ],
                 ),
               ),
@@ -156,7 +157,7 @@ class InspeccionTipoTile extends StatelessWidget {
     );
   }
 
-  void _handleModalBottomSheet(BuildContext context, InspeccionTipoEntity? inspeccionTipo) {
+  void _handleModalBottomSheet(BuildContext context, CategoriaEntity? categoria, InspeccionTipoEntity? inspeccionTipo) {
     showModalBottomSheet<void>(
       context: context,
       builder: (BuildContext context) {
@@ -164,23 +165,27 @@ class InspeccionTipoTile extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.symmetric(vertical: $styles.insets.sm),
+              padding: EdgeInsets.all($styles.insets.sm),
               child: Center(
-                child: Text('Folio: ${inspeccionTipo!.folio}', style: $styles.textStyles.h3),
+                child: Text(
+                  categoria?.name.toProperCase() ?? '',
+                  style: $styles.textStyles.h3.copyWith(fontSize: 18),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
             ListTile(
               onTap: () {},
               leading: const Icon(Icons.add),
-              title: Text($strings.createCategoryButtonText),
+              title: Text($strings.createCategoryItemButtonText),
             ),
             ListTile(
-              onTap: () => _handleEditPressed(context, inspeccionTipo),
+              onTap: () => _handleEditPressed(context, categoria, inspeccionTipo),
               leading: const Icon(Icons.edit),
               title: Text($strings.editButtonText),
             ),
             ListTile(
-              onTap: () => _handleDeletePressed(context, inspeccionTipo),
+              onTap: () => _handleDeletePressed(context, categoria),
               leading: const Icon(Icons.delete),
               textColor: Theme.of(context).colorScheme.error,
               iconColor: Theme.of(context).colorScheme.error,
@@ -192,7 +197,7 @@ class InspeccionTipoTile extends StatelessWidget {
     );
   }
 
-  void _handleEditPressed(BuildContext context, InspeccionTipoEntity? inspeccionTipo) {
+  void _handleEditPressed(BuildContext context, CategoriaEntity? categoria, InspeccionTipoEntity? inspeccionTipo) {
     // Cerramos el modal bottom sheet.
     Navigator.pop(context);
 
@@ -211,8 +216,8 @@ class InspeccionTipoTile extends StatelessWidget {
           return SlideTransition(
             position: animation.drive<Offset>(tween),
             child: FormModal(
-              title: 'Editar: ${inspeccionTipo!.folio}',
-              child: UpdateInspeccionTipoForm(inspeccionTipo: inspeccionTipo),
+              title: 'Editar categoría',
+              child: UpdateCategoriaForm(categoria: categoria, inspeccionTipo: inspeccionTipo),
             ),
           );
         },
@@ -221,27 +226,21 @@ class InspeccionTipoTile extends StatelessWidget {
     );
   }
 
-  void _onTap() {
-    if (onInspeccionTipoPressed != null) return onInspeccionTipoPressed!(inspeccionTipo!);
-  }
-
   void _onRemove(BuildContext context) {
-    BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(DeleteInspeccionTipo(inspeccionTipo!));
+    BlocProvider.of<RemoteCategoriaBloc>(context).add(DeleteCategoria(categoria!));
   }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: _onTap,
+      onTap: (){},
       leading: CircleAvatar(
-        backgroundColor: Colors.transparent,
-        child: Image.asset(ImagePaths.circleVehicle),
+        child: Text(categoria?.orden.toString() ?? '0', style: $styles.textStyles.h4),
       ),
-      title: Text(inspeccionTipo!.name.toProperCase(), overflow: TextOverflow.ellipsis),
-      subtitle: Text('Folio: ${inspeccionTipo!.folio}'),
+      title: Text(categoria?.name.toProperCase() ?? '', softWrap: true),
       trailing: IconButton(
         icon: const Icon(Icons.more_vert),
-        onPressed: () => _handleModalBottomSheet(context, inspeccionTipo),
+        onPressed: () => _handleModalBottomSheet(context, categoria, inspeccionTipo),
       ),
     );
   }
