@@ -101,10 +101,14 @@ class CategoriaTile extends StatelessWidget {
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(
-                  content: Text(state.apiResponse.message, style: $styles.textStyles.bodySmall),
+                  content: Text(state.apiResponse.message, softWrap: true),
                   backgroundColor: Colors.green,
+                  behavior: SnackBarBehavior.floating,
+                  elevation: 0,
                 ),
               );
+
+              context.read<RemoteCategoriaBloc>().add(ListCategorias(inspeccionTipo!));
             }
           },
           builder: (BuildContext context, RemoteCategoriaState state) {
@@ -176,7 +180,7 @@ class CategoriaTile extends StatelessWidget {
               ),
             ),
             ListTile(
-              onTap: () {},
+              onTap: _onTap,
               leading: const Icon(Icons.add),
               title: Text($strings.createCategoryItemButtonText),
             ),

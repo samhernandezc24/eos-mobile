@@ -99,8 +99,10 @@ class InspeccionTipoTile extends StatelessWidget {
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(
-                  content: Text(state.apiResponse.message, style: $styles.textStyles.bodySmall),
+                  content: Text(state.apiResponse.message, softWrap: true),
                   backgroundColor: Colors.green,
+                  behavior: SnackBarBehavior.floating,
+                  elevation: 0,
                 ),
               );
             }
@@ -166,11 +168,15 @@ class InspeccionTipoTile extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(vertical: $styles.insets.sm),
               child: Center(
-                child: Text('Código: ${inspeccionTipo!.codigo}', style: $styles.textStyles.h3),
+                child: Text(
+                  inspeccionTipo!.name.toProperCase(),
+                  style: $styles.textStyles.h3.copyWith(fontSize: 18),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
             ListTile(
-              onTap: () {},
+              onTap: _onTap,
               leading: const Icon(Icons.add),
               title: Text($strings.createCategoryButtonText),
             ),

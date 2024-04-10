@@ -108,7 +108,7 @@ class _UpdateCategoriaFormState extends State<UpdateCategoriaForm> {
         idCategoria         : widget.categoria?.idCategoria ?? '',
         name                : _nameController.text,
         idInspeccionTipo    : widget.categoria?.idInspeccionTipo ?? '',
-        inspeccionTipoFolio : widget.categoria?.inspeccionTipoFolio ?? '',
+        inspeccionTipoCodigo : widget.categoria?.inspeccionTipoCodigo ?? '',
         inspeccionTipoName  : widget.categoria?.inspeccionTipoName ?? '',
       );
       BlocProvider.of<RemoteCategoriaBloc>(context).add(UpdateCategoria(objData));

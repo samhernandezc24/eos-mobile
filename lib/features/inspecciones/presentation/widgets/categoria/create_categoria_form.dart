@@ -94,21 +94,17 @@ class _CreateCategoriaFormState extends State<CreateCategoriaForm> {
   }
 
   void _handleStoreCategoria() {
-    if (!_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Formulario incompleto'),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
-    } else {
+    final CategoriaReqEntity objData = CategoriaReqEntity(
+      name                  : _nameController.text,
+      idInspeccionTipo      : widget.inspeccionTipo?.idInspeccionTipo ?? '',
+      inspeccionTipoCodigo  : widget.inspeccionTipo?.codigo ?? '',
+      inspeccionTipoName    : widget.inspeccionTipo?.name ?? '',
+    );
+
+    final bool isValidForm = _formKey.currentState!.validate();
+
+    if (isValidForm) {
       _formKey.currentState!.save();
-      final CategoriaReqEntity objData = CategoriaReqEntity(
-        name                  : _nameController.text,
-        idInspeccionTipo      : widget.inspeccionTipo?.idInspeccionTipo ?? '',
-        inspeccionTipoCodigo  : widget.inspeccionTipo?.codigo ?? '',
-        inspeccionTipoName    : widget.inspeccionTipo?.name ?? '',
-      );
       BlocProvider.of<RemoteCategoriaBloc>(context).add(StoreCategoria(objData));
     }
   }
@@ -148,11 +144,10 @@ class _CreateCategoriaFormState extends State<CreateCategoriaForm> {
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   SnackBar(
-                    content: Text(
-                      state.apiResponse.message,
-                      style: $styles.textStyles.bodySmall,
-                    ),
+                    content: Text(state.apiResponse.message, softWrap: true),
                     backgroundColor: Colors.green,
+                    behavior: SnackBarBehavior.floating,
+                    elevation: 0,
                   ),
                 );
 

@@ -105,11 +105,11 @@ class _UpdateCategoriaFormState extends State<UpdateCategoriaForm> {
     } else {
       _formKey.currentState!.save();
       final CategoriaEntity objData = CategoriaEntity(
-        idCategoria         : widget.categoria?.idCategoria ?? '',
-        name                : _nameController.text,
-        idInspeccionTipo    : widget.categoria?.idInspeccionTipo ?? '',
-        inspeccionTipoFolio : widget.categoria?.inspeccionTipoFolio ?? '',
-        inspeccionTipoName  : widget.categoria?.inspeccionTipoName ?? '',
+        idCategoria           : widget.categoria?.idCategoria ?? '',
+        name                  : _nameController.text,
+        idInspeccionTipo      : widget.categoria?.idInspeccionTipo ?? '',
+        inspeccionTipoCodigo  : widget.categoria?.inspeccionTipoCodigo ?? '',
+        inspeccionTipoName    : widget.categoria?.inspeccionTipoName ?? '',
       );
       BlocProvider.of<RemoteCategoriaBloc>(context).add(UpdateCategoria(objData));
     }
@@ -150,11 +150,10 @@ class _UpdateCategoriaFormState extends State<UpdateCategoriaForm> {
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   SnackBar(
-                    content: Text(
-                      state.apiResponse.message,
-                      style: $styles.textStyles.bodySmall,
-                    ),
+                    content: Text(state.apiResponse.message, softWrap: true),
                     backgroundColor: Colors.green,
+                    behavior: SnackBarBehavior.floating,
+                    elevation: 0,
                   ),
                 );
 

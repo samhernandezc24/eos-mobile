@@ -9,15 +9,15 @@ class CategoriaModel extends CategoriaEntity {
     required String idCategoria,
     required String name,
     required String idInspeccionTipo,
+    required String inspeccionTipoCodigo,
     required String inspeccionTipoName,
-    required String inspeccionTipoFolio,
     int? orden,
   }) : super(
         idCategoria           : idCategoria,
         name                  : name,
         idInspeccionTipo      : idInspeccionTipo,
+        inspeccionTipoCodigo  : inspeccionTipoCodigo,
         inspeccionTipoName    : inspeccionTipoName,
-        inspeccionTipoFolio   : inspeccionTipoFolio,
         orden                 : orden,
       );
 
@@ -28,8 +28,8 @@ class CategoriaModel extends CategoriaEntity {
       idCategoria           : jsonMap['idCategoria'] as String,
       name                  : jsonMap['name'] as String,
       idInspeccionTipo      : jsonMap['idInspeccionTipo'] as String,
+      inspeccionTipoCodigo  : jsonMap['inspeccionTipoCodigo'] as String,
       inspeccionTipoName    : jsonMap['inspeccionTipoName'] as String,
-      inspeccionTipoFolio   : jsonMap['inspeccionTipoFolio'] as String,
       orden                 : jsonMap['orden'] as int? ?? 0,
     );
   }
@@ -41,8 +41,8 @@ class CategoriaModel extends CategoriaEntity {
       idCategoria           : entity.idCategoria,
       name                  : entity.name,
       idInspeccionTipo      : entity.idInspeccionTipo,
+      inspeccionTipoCodigo  : entity.inspeccionTipoCodigo,
       inspeccionTipoName    : entity.inspeccionTipoName,
-      inspeccionTipoFolio   : entity.inspeccionTipoFolio,
       orden                 : entity.orden,
     );
   }
@@ -53,8 +53,8 @@ class CategoriaModel extends CategoriaEntity {
       'idCategoria'           : idCategoria,
       'name'                  : name,
       'idInspeccionTipo'      : idInspeccionTipo,
+      'inspeccionTipoCodigo'  : inspeccionTipoCodigo,
       'inspeccionTipoName'    : inspeccionTipoName,
-      'inspeccionTipoFolio'   : inspeccionTipoFolio,
       'orden'                 : orden,
     };
   }

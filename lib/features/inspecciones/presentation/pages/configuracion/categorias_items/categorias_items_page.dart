@@ -1,7 +1,6 @@
-import 'package:eos_mobile/core/common/widgets/modals/form_modal.dart';
+import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_field.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/widgets/categoria_item/create_categoria_item_form.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class InspeccionConfiguracionCategoriasItemsPage extends StatefulWidget {
@@ -15,31 +14,12 @@ class InspeccionConfiguracionCategoriasItemsPage extends StatefulWidget {
 }
 
 class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionConfiguracionCategoriasItemsPage> {
+  /// LIST
+  late final List<String> lstPreguntas                = <String>['A', 'B'];
+  late final List<dynamic> lstFormulariosTipos   = <dynamic>['Pregunta abierta', 'Opción múltiple', 'Lista desplegable', 'Fecha', 'Hora', 'Número Entero', 'Número decimal'];
+
   /// METHODS
-  void _handleCreatePressed(BuildContext context, InspeccionTipoEntity? inspeccionTipo, CategoriaEntity? categoria) {
-    Navigator.push<void>(
-      context,
-      PageRouteBuilder<void>(
-        transitionDuration: $styles.times.pageTransition,
-        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-          const Offset begin  = Offset(0, 1);
-          const Offset end    = Offset.zero;
-          const Cubic curve   = Curves.ease;
-
-          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position: animation.drive<Offset>(tween),
-            child: FormModal(
-              title: 'Nueva pregunta',
-              child: CreateCategoriaItemForm(inspeccionTipo: inspeccionTipo, categoria: categoria),
-            ),
-          );
-        },
-        fullscreenDialog: true,
-      ),
-    );
-  }
+  void _handleCreatePreguntaPressed() {}
 
   @override
   Widget build(BuildContext context) {
@@ -93,19 +73,67 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                   ),
                 ),
                 Gap($styles.insets.sm),
-                Container(
-                  alignment: Alignment.center,
-                  child: FilledButton.icon(
-                    onPressed: () => _handleCreatePressed(context, widget.inspeccionTipo, widget.categoria),
-                    icon: const Icon(Icons.add),
-                    label: Text('Crear pregunta', style: $styles.textStyles.button),
-                  ),
-                ),
               ],
+            ),
+          ),
+
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {},
+              child: ListView(
+                children: <Widget>[
+                  Card(
+                    child: Column(
+                      children: <Widget>[
+                        ListTile(
+                          title: LabeledTextField(
+                            controller: TextEditingController(),
+                            labelText: 'Pregunta:',
+                            textInputAction: TextInputAction.done,
+                          ),
+                          onTap: (){},
+                        ),
+                        ListTile(
+                          title: LabeledDropdownFormField(
+                            labelText: 'Tipo:',
+                            onChanged: (_){},
+                            items: lstFormulariosTipos,
+                          ),
+                          onTap: (){},
+                        ),
+                        const Divider(),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              IconButton(onPressed: (){}, icon: const Icon(Icons.content_copy), tooltip: 'Duplicar elemento'),
+                              IconButton(
+                                onPressed: (){},
+                                icon: const Icon(Icons.delete),
+                                tooltip: 'Eliminar',
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
       ),
+      floatingActionButton: _buildFloatingActionButton(),
+    );
+  }
+
+  Widget _buildFloatingActionButton() {
+    return FloatingActionButton(
+      onPressed: (){},
+      tooltip: 'Agregar pregunta',
+      child: const Icon(Icons.add),
     );
   }
 }
