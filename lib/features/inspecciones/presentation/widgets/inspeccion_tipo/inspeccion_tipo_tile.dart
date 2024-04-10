@@ -135,7 +135,7 @@ class InspeccionTipoTile extends StatelessWidget {
                       text: '"${inspeccionTipo!.name.toProperCase()}" ',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    TextSpan(text: 'con el folio ${inspeccionTipo.folio}. ¿Estás seguro de querer realizar esa acción?'),
+                    TextSpan(text: 'con el código ${inspeccionTipo.codigo}. ¿Estás seguro de querer realizar esa acción?'),
                   ],
                 ),
               ),
@@ -166,7 +166,7 @@ class InspeccionTipoTile extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(vertical: $styles.insets.sm),
               child: Center(
-                child: Text('Folio: ${inspeccionTipo!.folio}', style: $styles.textStyles.h3),
+                child: Text('Código: ${inspeccionTipo!.codigo}', style: $styles.textStyles.h3),
               ),
             ),
             ListTile(
@@ -211,7 +211,7 @@ class InspeccionTipoTile extends StatelessWidget {
           return SlideTransition(
             position: animation.drive<Offset>(tween),
             child: FormModal(
-              title: 'Editar: ${inspeccionTipo!.folio}',
+              title: 'Editar: ${inspeccionTipo!.codigo}',
               child: UpdateInspeccionTipoForm(inspeccionTipo: inspeccionTipo),
             ),
           );
@@ -238,7 +238,7 @@ class InspeccionTipoTile extends StatelessWidget {
         child: Image.asset(ImagePaths.circleVehicle),
       ),
       title: Text(inspeccionTipo!.name.toProperCase(), overflow: TextOverflow.ellipsis),
-      subtitle: Text('Folio: ${inspeccionTipo!.folio}'),
+      subtitle: Text('Código: ${inspeccionTipo!.codigo}'),
       trailing: IconButton(
         icon: const Icon(Icons.more_vert),
         onPressed: () => _handleModalBottomSheet(context, inspeccionTipo),

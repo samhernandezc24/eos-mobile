@@ -90,17 +90,12 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
   }
 
   void _handleSignIn() {
-    if (!_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Formulario incompleto'),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
-    } else {
+    final SignInEntity objData  = SignInEntity(email: _emailController.text, password: _passwordController.text);
+    final bool isValidForm      = _formKey.currentState!.validate();
+
+    if (isValidForm) {
       _formKey.currentState!.save();
-      final SignInEntity objSignIn = SignInEntity(email: _emailController.text, password: _passwordController.text);
-      context.read<RemoteAuthBloc>().add(SignInSubmitted(objSignIn));
+      BlocProvider.of<RemoteAuthBloc>(context).add(SignInSubmitted(objData));
     }
   }
 

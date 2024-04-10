@@ -1,4 +1,5 @@
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
+import 'package:eos_mobile/core/utils/string_utils.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/shared/shared.dart';
@@ -15,26 +16,23 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // CONTROLLERS
-  late final TextEditingController _folioController;
+  late final TextEditingController _codigoController;
   late final TextEditingController _nameController;
-  late final TextEditingController _correoController;
 
   // PROPERTIES
-  final int currentYear = DateTime.now().year;
+  final String codigo   = StringUtils.generateRandomNumericCode();
 
   @override
   void initState() {
-    _folioController    = TextEditingController();
+    _codigoController   = TextEditingController(text: codigo);
     _nameController     = TextEditingController();
-    _correoController   = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
-    _folioController.dispose();
+    _codigoController.dispose();
     _nameController.dispose();
-    _correoController.dispose();
     super.dispose();
   }
 
@@ -100,20 +98,11 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
   }
 
   void _handleStoreInspeccionTipo() {
-    if (!_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Formulario incompleto'),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
-    } else {
+    final InspeccionTipoReqEntity objData = InspeccionTipoReqEntity(codigo: _codigoController.text, name: _nameController.text);
+    final bool isValidForm = _formKey.currentState!.validate();
+
+    if (isValidForm) {
       _formKey.currentState!.save();
-      final InspeccionTipoReqEntity objData = InspeccionTipoReqEntity(
-        folio   : _folioController.text,
-        name    : _nameController.text,
-        correo  : _correoController.text,
-      );
       BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(StoreInspeccionTipo(objData));
     }
   }
@@ -124,32 +113,21 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
       key: _formKey,
       child: Column(
         children: <Widget>[
-          // FOLIO:
+          // CÓDIGO:
           LabeledTextField(
-            autoFocus: true,
-            controller: _folioController,
-            hintText: 'INST-$currentYear-xxxx',
-            labelText: 'Folio:',
-            validator: FormValidators.textValidator,
+            controller: _codigoController,
+            labelText: 'Código:',
+            isReadOnly: true,
           ),
 
-          Gap($styles.insets.md),
+          Gap($styles.insets.md) ,
 
           // NOMBRE:
           LabeledTextField(
+            autoFocus: true,
             controller: _nameController,
             labelText: 'Nombre:',
             validator: FormValidators.textValidator,
-          ),
-
-          Gap($styles.insets.md),
-
-          // CORREO (OPCIONAL):
-          LabeledTextField(
-            controller: _correoController,
-            hintText: 'ejem@plo.com',
-            labelText: 'Correo (opcional):',
-            keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.done,
           ),
 
@@ -172,11 +150,10 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   SnackBar(
-                    content: Text(
-                      state.apiResponse.message,
-                      style: $styles.textStyles.bodySmall,
-                    ),
+                    content: Text(state.apiResponse.message, softWrap: true),
                     backgroundColor: Colors.green,
+                    behavior: SnackBarBehavior.floating,
+                    elevation: 0,
                   ),
                 );
               }

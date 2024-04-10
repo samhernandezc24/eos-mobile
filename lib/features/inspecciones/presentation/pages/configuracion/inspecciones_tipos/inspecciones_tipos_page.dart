@@ -15,6 +15,11 @@ class InspeccionConfiguracionInspeccionesTiposPage extends StatefulWidget {
 }
 
 class _InspeccionConfiguracionInspeccionesTiposPageState extends State<InspeccionConfiguracionInspeccionesTiposPage> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
   /// METHODS
   void _handleCreatePressed(BuildContext context) {
     Navigator.push<void>(

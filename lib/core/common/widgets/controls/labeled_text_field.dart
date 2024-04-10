@@ -47,6 +47,7 @@ class _LabeledTextFieldState extends State<LabeledTextField> {
         Gap($styles.insets.xs),
 
         TextFormField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           controller: widget.controller,
           autofocus: widget.autoFocus,
           decoration: InputDecoration(

@@ -6,22 +6,19 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo
 /// en el body de la petición.
 class InspeccionTipoReqModel extends InspeccionTipoReqEntity {
   const InspeccionTipoReqModel({
-    required String folio,
+    required String codigo,
     required String name,
-    String? correo,
   }) : super(
-          folio   : folio,
+          codigo  : codigo,
           name    : name,
-          correo  : correo,
         );
 
   /// Constructor factory para crear la instancia de [InspeccionTipoReqModel]
   /// durante el mapeo del JSON.
   factory InspeccionTipoReqModel.fromJson(Map<String, dynamic> jsonMap) {
     return InspeccionTipoReqModel(
-      folio             : jsonMap['folio'] as String,
-      name              : jsonMap['name'] as String,
-      correo            : jsonMap['correo'] as String? ?? '',
+      codigo      : jsonMap['codigo'] as String,
+      name        : jsonMap['name'] as String,
     );
   }
 
@@ -29,18 +26,16 @@ class InspeccionTipoReqModel extends InspeccionTipoReqEntity {
   /// en una instancia de [InspeccionTipoReqModel].
   factory InspeccionTipoReqModel.fromEntity(InspeccionTipoReqEntity entity) {
     return InspeccionTipoReqModel(
-      folio             : entity.folio,
-      name              : entity.name,
-      correo            : entity.correo,
+      codigo      : entity.codigo,
+      name        : entity.name,
     );
   }
 
   /// Serialización de la estructura del modelo a formato JSON.
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
-      'folio'             : folio,
-      'name'              : name,
-      'correo'            : correo,
+      'codigo'    : codigo,
+      'name'      : name,
     };
   }
 }

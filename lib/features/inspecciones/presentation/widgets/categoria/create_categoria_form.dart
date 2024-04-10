@@ -104,10 +104,10 @@ class _CreateCategoriaFormState extends State<CreateCategoriaForm> {
     } else {
       _formKey.currentState!.save();
       final CategoriaReqEntity objData = CategoriaReqEntity(
-        name                : _nameController.text,
-        idInspeccionTipo    : widget.inspeccionTipo?.idInspeccionTipo ?? '',
-        inspeccionTipoFolio : widget.inspeccionTipo?.folio ?? '',
-        inspeccionTipoName  : widget.inspeccionTipo?.name ?? '',
+        name                  : _nameController.text,
+        idInspeccionTipo      : widget.inspeccionTipo?.idInspeccionTipo ?? '',
+        inspeccionTipoCodigo  : widget.inspeccionTipo?.codigo ?? '',
+        inspeccionTipoName    : widget.inspeccionTipo?.name ?? '',
       );
       BlocProvider.of<RemoteCategoriaBloc>(context).add(StoreCategoria(objData));
     }

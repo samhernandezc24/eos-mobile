@@ -91,10 +91,10 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
                     style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
                     children: [
                       const TextSpan(
-                        text: 'Folio',
+                        text: 'Código',
                         style: TextStyle(fontWeight: FontWeight.w600),
                       ),
-                      TextSpan(text: ': ${widget.inspeccionTipo?.folio ?? ''}'),
+                      TextSpan(text: ': ${widget.inspeccionTipo?.codigo ?? ''}'),
                     ],
                   ),
                 ),

@@ -1,4 +1,8 @@
+import 'dart:math';
+
 class StringUtils {
+  static const _digits = '0123456789';
+
   /// Verifica si una cadena es nula o está vacía.
   static bool isEmpty(String? s) {
     return s == null || s.trim().isEmpty;
@@ -80,5 +84,12 @@ class StringUtils {
       stringBuffer.write(part[0]);
     }
     return stringBuffer.toString().toUpperCase();
+  }
+
+  /// Genera un código númerico random para métodos de creación compartidos.
+  static String generateRandomNumericCode({int length = 5}) {
+    final Random random   = Random.secure();
+    final String code     = String.fromCharCodes(Iterable.generate(length, (_) => _digits.codeUnitAt(random.nextInt(_digits.length))));
+    return code;
   }
 }

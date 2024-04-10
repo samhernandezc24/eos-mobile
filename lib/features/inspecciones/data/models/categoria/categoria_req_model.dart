@@ -8,13 +8,13 @@ class CategoriaReqModel extends CategoriaReqEntity {
   const CategoriaReqModel({
     required String name,
     required String idInspeccionTipo,
+    required String inspeccionTipoCodigo,
     required String inspeccionTipoName,
-    required String inspeccionTipoFolio,
   }) : super(
         name                  : name,
         idInspeccionTipo      : idInspeccionTipo,
+        inspeccionTipoCodigo  : inspeccionTipoCodigo,
         inspeccionTipoName    : inspeccionTipoName,
-        inspeccionTipoFolio   : inspeccionTipoFolio,
       );
 
   /// Constructor factory para crear la instancia de [CategoriaReqModel]
@@ -23,8 +23,8 @@ class CategoriaReqModel extends CategoriaReqEntity {
     return CategoriaReqModel(
       name                  : jsonMap['name'] as String,
       idInspeccionTipo      : jsonMap['idInspeccionTipo'] as String,
+      inspeccionTipoCodigo  : jsonMap['inspeccionTipoCodigo'] as String,
       inspeccionTipoName    : jsonMap['inspeccionTipoName'] as String,
-      inspeccionTipoFolio   : jsonMap['inspeccionTipoFolio'] as String,
     );
   }
 
@@ -34,8 +34,8 @@ class CategoriaReqModel extends CategoriaReqEntity {
     return CategoriaReqModel(
       name                  : entity.name,
       idInspeccionTipo      : entity.idInspeccionTipo,
+      inspeccionTipoCodigo  : entity.inspeccionTipoCodigo,
       inspeccionTipoName    : entity.inspeccionTipoName,
-      inspeccionTipoFolio   : entity.inspeccionTipoFolio,
     );
   }
 
@@ -44,8 +44,8 @@ class CategoriaReqModel extends CategoriaReqEntity {
     return <String, dynamic>{
       'name'                  : name,
       'idInspeccionTipo'      : idInspeccionTipo,
+      'inspeccionTipoCodigo'  : inspeccionTipoCodigo,
       'inspeccionTipoName'    : inspeccionTipoName,
-      'inspeccionTipoFolio'   : inspeccionTipoFolio,
     };
   }
 }

@@ -7,15 +7,13 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo
 class InspeccionTipoModel extends InspeccionTipoEntity {
   const InspeccionTipoModel({
     required String idInspeccionTipo,
-    required String folio,
+    required String codigo,
     required String name,
-    String? correo,
     int? orden,
   }) : super(
           idInspeccionTipo  : idInspeccionTipo,
-          folio             : folio,
+          codigo            : codigo,
           name              : name,
-          correo            : correo,
           orden             : orden,
         );
 
@@ -24,9 +22,8 @@ class InspeccionTipoModel extends InspeccionTipoEntity {
   factory InspeccionTipoModel.fromJson(Map<String, dynamic> jsonMap) {
     return InspeccionTipoModel(
       idInspeccionTipo  : jsonMap['idInspeccionTipo'] as String,
-      folio             : jsonMap['folio'] as String,
+      codigo            : jsonMap['codigo'] as String,
       name              : jsonMap['name'] as String,
-      correo            : jsonMap['correo'] as String? ?? '',
       orden             : jsonMap['orden'] as int? ?? 0,
     );
   }
@@ -36,9 +33,8 @@ class InspeccionTipoModel extends InspeccionTipoEntity {
   factory InspeccionTipoModel.fromEntity(InspeccionTipoEntity entity) {
     return InspeccionTipoModel(
       idInspeccionTipo  : entity.idInspeccionTipo,
-      folio             : entity.folio,
+      codigo            : entity.codigo,
       name              : entity.name,
-      correo            : entity.correo,
       orden             : entity.orden,
     );
   }
@@ -47,9 +43,8 @@ class InspeccionTipoModel extends InspeccionTipoEntity {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'idInspeccionTipo'  : idInspeccionTipo,
-      'folio'             : folio,
+      'codigo'            : codigo,
       'name'              : name,
-      'correo'            : correo,
       'orden'             : orden,
     };
   }
