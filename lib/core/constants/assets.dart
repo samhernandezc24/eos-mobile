@@ -24,3 +24,9 @@ class SvgPaths {
   static const String error500        = '${ImagePaths.errors}/500.svg';
   static const String forgotPassword  = '${ImagePaths.pages}/forgot_password.svg';
 }
+
+/// Unifica las rutas de los lotties en su propia clase.
+class LottiePaths {
+  static const String root              = 'assets/lottie';
+  static const String underConstruction = '$root/page_under_construction.json';
+}

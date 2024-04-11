@@ -1,4 +1,5 @@
 import 'package:eos_mobile/shared/shared.dart';
+import 'package:lottie/lottie.dart';
 
 class EmptyPage extends StatelessWidget {
   const EmptyPage({super.key});
@@ -6,11 +7,14 @@ class EmptyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: Container(
-        padding: EdgeInsets.all($styles.insets.md),
-        child: const Center(
-          child: Text('Empty Page'),
+        padding: EdgeInsets.all($styles.insets.sm),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Lottie.asset(LottiePaths.underConstruction),
+          ],
         ),
       ),
     );

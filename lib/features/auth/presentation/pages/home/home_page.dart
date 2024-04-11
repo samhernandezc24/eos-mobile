@@ -36,9 +36,12 @@ class _HomePageState extends State<HomePage> {
                 switch (index) {
                   case 0:
                     GoRouter.of(context).go('/home/inspecciones');
-
-                  /// se agregaran las demás rutas para los módulos
-                  /// una vez se haya finalizado el módulo principal.
+                  case 1:
+                    GoRouter.of(context).go('/home/compras');
+                  case 2:
+                    GoRouter.of(context).go('/home/embarques');
+                  case 3:
+                    GoRouter.of(context).go('/home/unidades');
                 }
               },
               child: GridTile(

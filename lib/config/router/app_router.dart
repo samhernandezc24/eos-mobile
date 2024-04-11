@@ -1,3 +1,4 @@
+import 'package:eos_mobile/core/common/pages/empty/empty_page.dart';
 import 'package:eos_mobile/core/common/pages/errors/error_404_page.dart';
 import 'package:eos_mobile/core/common/pages/welcome/welcome_page.dart';
 import 'package:eos_mobile/features/actividades/presentation/pages/actividad_page.dart';
@@ -68,6 +69,10 @@ final GoRouter appRouter = GoRouter(
           'home.inspecciones.searchUnidad'              => 'Buscar unidad',
 
           'home.inspecciones.config.inspeccionesTipos'  => 'Configuración de inspecciones',
+
+          'home.compras'                                => 'Órdenes de compras',
+          'home.embarques'                              => 'Órdenes de embarques',
+          'home.unidades'                               => 'Unidades',
           _                                             => 'Empty Page',
         };
 
@@ -101,6 +106,10 @@ final GoRouter appRouter = GoRouter(
                   ],
                   useFade: true,
                 ),
+
+                AppRoute('compras', 'home.compras', (_) => const EmptyPage(), useFade: true),
+                AppRoute('embarques', 'home.embarques', (_) => const EmptyPage(), useFade: true),
+                AppRoute('unidades', 'home.unidades', (_) => const EmptyPage(), useFade: true),
               ],
             ),
           ],

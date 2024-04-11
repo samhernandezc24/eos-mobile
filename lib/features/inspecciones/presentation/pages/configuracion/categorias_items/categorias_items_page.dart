@@ -2,6 +2,7 @@ import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_field.d
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/shared/shared.dart';
+import 'package:flutter/rendering.dart';
 
 class InspeccionConfiguracionCategoriasItemsPage extends StatefulWidget {
   const InspeccionConfiguracionCategoriasItemsPage({Key? key, this.inspeccionTipo, this.categoria}) : super(key: key);
@@ -72,10 +73,11 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                     ],
                   ),
                 ),
-                Gap($styles.insets.sm),
               ],
             ),
           ),
+
+          Gap($styles.insets.sm),
 
           Expanded(
             child: RefreshIndicator(
@@ -83,42 +85,55 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
               child: ListView(
                 children: <Widget>[
                   Card(
-                    child: Column(
+                    child: Stack(
                       children: <Widget>[
-                        ListTile(
-                          title: LabeledTextField(
-                            controller: TextEditingController(),
-                            labelText: 'Pregunta:',
-                            textInputAction: TextInputAction.done,
-                          ),
-                          onTap: (){},
-                        ),
-                        ListTile(
-                          title: LabeledDropdownFormField(
-                            labelText: 'Tipo:',
-                            onChanged: (_){},
-                            items: lstFormulariosTipos,
-                          ),
-                          onTap: (){},
-                        ),
-                        const Divider(),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              IconButton(onPressed: (){}, icon: const Icon(Icons.content_copy), tooltip: 'Duplicar elemento'),
-                              IconButton(
-                                onPressed: (){},
-                                icon: const Icon(Icons.delete),
-                                tooltip: 'Eliminar',
+                        Column(
+                          children: <Widget>[
+                            ListTile(
+                              title: LabeledTextField(
+                                controller: TextEditingController(),
+                                labelText: 'Pregunta:',
+                                textInputAction: TextInputAction.done,
                               ),
-                            ],
+                              onTap: (){},
+                            ),
+                            ListTile(
+                              title: LabeledDropdownFormField(
+                                labelText: 'Tipo:',
+                                onChanged: (_){},
+                                items: lstFormulariosTipos,
+                              ),
+                              onTap: (){},
+                            ),
+                            const Divider(),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm),
+                              child: Row(
+                                children: <Widget>[
+                                  IconButton(onPressed: (){}, icon: const Icon(Icons.content_copy), tooltip: 'Duplicar elemento'),
+                                  IconButton(
+                                    onPressed: (){},
+                                    icon: Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
+                                    tooltip: 'Eliminar',
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: CircleAvatar(
+                            radius: 12,
+                            child: Text('1', style: $styles.textStyles.h4),
                           ),
                         ),
                       ],
                     ),
                   ),
+
+                  Gap($styles.insets.lg),
                 ],
               ),
             ),
