@@ -1,4 +1,4 @@
-import 'package:eos_mobile/core/common/data/module_data.dart';
+import 'package:eos_mobile/core/common/data/elementos/module_data.dart';
 import 'package:eos_mobile/core/common/widgets/scaling_grid_delegate.dart';
 import 'package:eos_mobile/shared/shared.dart';
 

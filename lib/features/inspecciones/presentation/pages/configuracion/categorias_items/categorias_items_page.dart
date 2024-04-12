@@ -12,8 +12,7 @@ class InspeccionConfiguracionCategoriasItemsPage extends StatefulWidget {
   final CategoriaEntity? categoria;
 
   @override
-  State<InspeccionConfiguracionCategoriasItemsPage> createState() =>
-      _InspeccionConfiguracionCategoriasItemsPageState();
+  State<InspeccionConfiguracionCategoriasItemsPage> createState() => _InspeccionConfiguracionCategoriasItemsPageState();
 }
 
 class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionConfiguracionCategoriasItemsPage> {

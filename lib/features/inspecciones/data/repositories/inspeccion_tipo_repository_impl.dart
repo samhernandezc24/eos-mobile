@@ -27,8 +27,8 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         final ApiResponse apiResponse = httpResponse.data;
-        if (httpResponse.data.session) {
-          if (httpResponse.data.action) {
+        if (apiResponse.session) {
+          if (apiResponse.action) {
             final dynamic result = apiResponse.result;
             // ignore: avoid_dynamic_calls
             final List<dynamic> lstResult = result['inspeccionesTipos'] as List<dynamic>;

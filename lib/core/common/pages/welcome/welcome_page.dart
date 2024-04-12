@@ -1,5 +1,5 @@
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
-import 'package:eos_mobile/core/common/data/page_data.dart';
+import 'package:eos_mobile/core/common/data/elementos/page_data.dart';
 import 'package:eos_mobile/core/common/widgets/controls/app_page_indicator.dart';
 import 'package:eos_mobile/core/common/widgets/controls/circle_buttons.dart';
 import 'package:eos_mobile/core/common/widgets/gradient_container.dart';
