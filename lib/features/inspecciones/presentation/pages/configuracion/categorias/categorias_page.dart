@@ -137,8 +137,7 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
                   }
 
                   if (state is RemoteCategoriaSuccess) {
-                    if (state.categorias != null &&
-                        state.categorias!.isNotEmpty) {
+                    if (state.categorias != null && state.categorias!.isNotEmpty) {
                       return ListView.builder(
                         itemCount: state.categorias!.length,
                         itemBuilder: (BuildContext context, int index) {

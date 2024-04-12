@@ -1,252 +1,134 @@
-import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
-import 'package:eos_mobile/core/common/widgets/modals/form_modal.dart';
-import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
-import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/widgets/categoria/update_categoria_form.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_entity.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
-class CategoriaTile extends StatelessWidget {
-  const CategoriaTile({Key? key, this.categoria, this.inspeccionTipo, this.onCategoriaPressed}) : super(key : key);
+class CategoriaItemTile extends StatelessWidget {
+  CategoriaItemTile({Key? key, this.categoriaItem}) : super(key: key);
 
-  final CategoriaEntity? categoria;
-  final InspeccionTipoEntity? inspeccionTipo;
-  final void Function(CategoriaEntity categoria)? onCategoriaPressed;
+  final CategoriaItemEntity? categoriaItem;
 
-  /// METHODS
-  Future<void> _showFailureDialog(BuildContext context, RemoteCategoriaFailure state) {
-    return showDialog<void>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const SizedBox.shrink(),
-        content: Row(
-          children: <Widget>[
-            Icon(Icons.error, color: Theme.of(context).colorScheme.error),
-            SizedBox(width: $styles.insets.xs + 2),
-            Flexible(
-              child: Text(
-                state.failure?.response?.data.toString() ??
-                    'Se produjo un error inesperado. Intenta eliminar la categoría de nuevo.',
-                style: $styles.textStyles.title2.copyWith(
-                  height: 1.5,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => context.pop(),
-            child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _showFailedMessageDialog(BuildContext context, RemoteCategoriaFailedMessage state) {
-    return showDialog<void>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const SizedBox.shrink(),
-        content: Row(
-          children: <Widget>[
-            Icon(Icons.error, color: Theme.of(context).colorScheme.error),
-            SizedBox(width: $styles.insets.xs + 2),
-            Flexible(
-              child: Text(
-                state.errorMessage.toString(),
-                style: $styles.textStyles.title2.copyWith(
-                  height: 1.5,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => context.pop(),
-            child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _handleDeletePressed(BuildContext context, CategoriaEntity? categoria) {
-    // Cerramos el modal bottom sheet.
-    Navigator.pop(context);
-
-    // Mostramos el AlertDialog.
-    showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return BlocConsumer<RemoteCategoriaBloc, RemoteCategoriaState>(
-          listener: (BuildContext context, RemoteCategoriaState state) {
-            if (state is RemoteCategoriaFailure) {
-               _showFailureDialog(context, state);
-            }
-
-            if (state is RemoteCategoriaFailedMessage) {
-              _showFailedMessageDialog(context, state);
-            }
-
-            if (state is RemoteCategoriaResponseSuccess) {
-              // Cerramos el AlertDialog.
-              Navigator.pop(context);
-
-              ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(
-                  content: Text(state.apiResponse.message, style: $styles.textStyles.bodySmall),
-                  backgroundColor: Colors.green,
-                ),
-              );
-            }
-          },
-          builder: (BuildContext context, RemoteCategoriaState state) {
-            if (state is RemoteCategoriaLoading) {
-              return AlertDialog(
-                content: Row(
-                  children: <Widget>[
-                    LoadingIndicator(
-                      color: Theme.of(context).primaryColor,
-                      width: 20,
-                      height: 20,
-                      strokeWidth: 2,
-                    ),
-                    SizedBox(width: $styles.insets.xs + 2),
-                    Flexible(
-                      child: Text('Espere por favor...', style: $styles.textStyles.title2.copyWith(height: 1.5)),
-                    ),
-                  ],
-                ),
-              );
-            }
-
-            return AlertDialog(
-              title: Text('¿Eliminar categoría?', style: $styles.textStyles.h3.copyWith(fontSize: 18)),
-              content: RichText(
-                text: TextSpan(style: $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
-                  children: <InlineSpan>[
-                    const TextSpan(text: 'Se eliminará la categoría '),
-                    TextSpan(
-                      text: '"${categoria!.name.toProperCase()}". ',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const TextSpan(text: '¿Estás seguro de querer realizar esa acción?'),
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => _onRemove(context),
-                  child: Text($strings.deleteButtonText, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text($strings.cancelButtonText, style: $styles.textStyles.button),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  void _handleModalBottomSheet(BuildContext context, CategoriaEntity? categoria, InspeccionTipoEntity? inspeccionTipo) {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all($styles.insets.sm),
-              child: Center(
-                child: Text(
-                  categoria?.name.toProperCase() ?? '',
-                  style: $styles.textStyles.h3.copyWith(fontSize: 18),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ),
-            ListTile(
-              onTap: () {},
-              leading: const Icon(Icons.add),
-              title: Text($strings.createCategoryItemButtonText),
-            ),
-            ListTile(
-              onTap: () => _handleEditPressed(context, categoria, inspeccionTipo),
-              leading: const Icon(Icons.edit),
-              title: Text($strings.editButtonText),
-            ),
-            ListTile(
-              onTap: () => _handleDeletePressed(context, categoria),
-              leading: const Icon(Icons.delete),
-              textColor: Theme.of(context).colorScheme.error,
-              iconColor: Theme.of(context).colorScheme.error,
-              title: Text($strings.deleteButtonText),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _handleEditPressed(BuildContext context, CategoriaEntity? categoria, InspeccionTipoEntity? inspeccionTipo) {
-    // Cerramos el modal bottom sheet.
-    Navigator.pop(context);
-
-    // Mostramos el FormModal para la edición.
-    Navigator.push<void>(
-      context,
-      PageRouteBuilder<void>(
-        transitionDuration: $styles.times.pageTransition,
-        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-          const Offset begin  = Offset(0, 1);
-          const Offset end    = Offset.zero;
-          const Cubic curve   = Curves.ease;
-
-          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position: animation.drive<Offset>(tween),
-            child: FormModal(
-              title: 'Editar categoría',
-              child: UpdateCategoriaForm(categoria: categoria, inspeccionTipo: inspeccionTipo),
-            ),
-          );
-        },
-        fullscreenDialog: true,
-      ),
-    );
-  }
-
-  void _onTap() {
-    if (onCategoriaPressed != null) return onCategoriaPressed!(categoria!);
-  }
-
-  void _onRemove(BuildContext context) {
-    BlocProvider.of<RemoteCategoriaBloc>(context).add(DeleteCategoria(categoria!));
-  }
+  /// LIST
+  late final List<dynamic> lstFormulariosTipos = <dynamic>[
+    'Pregunta abierta',
+    'Opción múltiple',
+    'Lista desplegable',
+    'Fecha',
+    'Hora',
+    'Número Entero',
+    'Número decimal',
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: _onTap,
-      leading: CircleAvatar(
-        child: Text(categoria?.orden.toString() ?? '0', style: $styles.textStyles.h4),
-      ),
-      title: Text(categoria?.name.toProperCase() ?? '', softWrap: true),
-      trailing: IconButton(
-        icon: const Icon(Icons.more_vert),
-        onPressed: () => _handleModalBottomSheet(context, categoria, inspeccionTipo),
+    return Card(
+      elevation: 2,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          ListTile(
+            leading: CircleAvatar(
+              radius: 12,
+              child: Text(categoriaItem?.orden.toString() ?? '0', style: $styles.textStyles.h4),
+            ),
+            title: Text(categoriaItem!.name, overflow: TextOverflow.ellipsis, maxLines: 2),
+            onTap: () {},
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm),
+            child: Column(
+              children: <Widget>[
+                _buildMultipleChoiceOptions(),
+              ],
+            ),
+          ),
+          // ListTile(
+          //   title: LabeledTextField(
+          //     controller: TextEditingController(),
+          //     labelText: 'Pregunta:',
+          //     textInputAction: TextInputAction.done,
+          //   ),
+          //   onTap: () {},
+          // ),
+          // ListTile(
+          //   title: LabeledDropdownFormField(
+          //     labelText: 'Tipo:',
+          //     onChanged: (_) {},
+          //     items: lstFormulariosTipos,
+          //   ),
+          //   onTap: () {},
+          // ),
+          const Divider(),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm),
+            child: Row(
+              children: <Widget>[
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.content_copy),
+                  tooltip: 'Duplicar elemento',
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
+                  tooltip: 'Eliminar',
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  Widget _buildMultipleChoiceOptions() {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  Radio(value: 1, groupValue: 'null', onChanged: (index) {}),
+                  const Expanded(
+                    child: Text('Sí'),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  Radio(
+                      value: 1, groupValue: 'null', onChanged: (index) {}),
+                  Expanded(child: Text('No'))
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+    // return SizedBox(
+    //   height: 100,
+    //   child: GridView.builder(
+    //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    //       crossAxisCount: 3,
+    //       crossAxisSpacing: 4,
+    //       mainAxisSpacing: 4,
+    //     ),
+    //     itemCount: 4,
+    //     itemBuilder: (BuildContext context, int index) {
+    //       return Container(
+    //         margin: const EdgeInsets.all(4),
+    //         child: Row(
+    //           children: <Widget>[
+    //             const Radio(value: null, groupValue: null, onChanged: null),
+    //             Text('Opción ${index + 1}'),
+    //           ],
+    //         ),
+    //       );
+    //     },
+    //   ),
+    // );
   }
 }

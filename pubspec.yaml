@@ -149,6 +149,7 @@ dependencies:
 
   # Widget WebView en Android e iOS
   webview_flutter: ^4.5.0
+  reorderables: ^0.6.0
 
 dev_dependencies:
   flutter_test:
