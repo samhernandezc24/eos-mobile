@@ -40,6 +40,7 @@ import 'package:eos_mobile/features/inspecciones/domain/usecases/inspecciones_ti
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspecciones_tipos/store_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspecciones_tipos/update_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/create_unidad_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/store_unidad_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria_item/remote/remote_categoria_item_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
@@ -112,6 +113,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<StoreCategoriaItemUseCase>(StoreCategoriaItemUseCase(sl()));
 
   sl.registerSingleton<CreateUnidadUseCase>(CreateUnidadUseCase(sl()));
+  sl.registerSingleton<StoreUnidadUseCase>(StoreUnidadUseCase(sl()));
 
   // BLoCs
   sl.registerFactory<RemoteAuthBloc>(() => RemoteAuthBloc(sl()));
@@ -120,5 +122,5 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<RemoteInspeccionTipoBloc>(() => RemoteInspeccionTipoBloc(sl(), sl(), sl(), sl()));
   sl.registerFactory<RemoteCategoriaBloc>(() => RemoteCategoriaBloc(sl(), sl(), sl(), sl()));
   sl.registerFactory<RemoteCategoriaItemBloc>(() => RemoteCategoriaItemBloc(sl(), sl()));
-  sl.registerFactory<RemoteUnidadBloc>(() => RemoteUnidadBloc(sl()));
+  sl.registerFactory<RemoteUnidadBloc>(() => RemoteUnidadBloc(sl(), sl()));
 }

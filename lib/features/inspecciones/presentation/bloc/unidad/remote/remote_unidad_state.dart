@@ -27,14 +27,14 @@ class RemoteUnidadCreateSuccess extends RemoteUnidadState {
   List<Object?> get props => [ unidadData ];
 }
 
-// class RemoteCategoriaResponseSuccess extends RemoteUnidadState {
-//   const RemoteCategoriaResponseSuccess(this.apiResponse);
+class RemoteUnidadResponseSuccess extends RemoteUnidadState {
+  const RemoteUnidadResponseSuccess(this.apiResponse);
 
-//   final ApiResponseEntity apiResponse;
+  final ApiResponseEntity apiResponse;
 
-//   @override
-//   List<Object?> get props => [ apiResponse ];
-// }
+  @override
+  List<Object?> get props => [ apiResponse ];
+}
 
 class RemoteUnidadFailure extends RemoteUnidadState {
   const RemoteUnidadFailure(this.failure);

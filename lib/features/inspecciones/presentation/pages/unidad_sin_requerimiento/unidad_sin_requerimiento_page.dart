@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/common/widgets/controls/basic_modal.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_field.dart';
+import 'package:eos_mobile/core/common/widgets/modals/form_modal.dart';
 import 'package:eos_mobile/core/enums/unidad_inspeccion_tipo.dart';
 import 'package:eos_mobile/core/enums/view_form_control.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/card_checklist.dart';
@@ -253,8 +254,8 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
 
                                                 return SlideTransition(
                                                   position: animation.drive<Offset>(tween),
-                                                  child: const BasicModal(
-                                                    title: 'Nueva Unidad',
+                                                  child: const FormModal(
+                                                    title: 'Nueva unidad',
                                                     child: CreateUnidadForm(),
                                                   ),
                                                 );

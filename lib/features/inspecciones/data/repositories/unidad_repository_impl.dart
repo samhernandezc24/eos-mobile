@@ -6,6 +6,7 @@ import 'package:eos_mobile/core/common/data/catalogos/unidad_data.dart';
 import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/unidad/unidad_remote_api_service.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/unidad_repository.dart';
 import 'package:eos_mobile/shared/shared.dart';
@@ -57,8 +58,40 @@ class UnidadRepositoryImpl implements UnidadRepository {
 
   /// GUARDADO DE UNIDAD
   @override
-  Future<DataState<ApiResponse>> storeUnidad(UnidadReqEntity unidad) {
-    // TODO: implement storeUnidad
-    throw UnimplementedError();
+  Future<DataState<ApiResponse>> storeUnidad(UnidadReqEntity unidad) async {
+    try {
+      // Obtener el token localmente.
+      final String? token = await authTokenHelper.retrieveRefreshToken();
+
+      // Realizar la solicitud usando el token actualizado o el actual.
+      final httpResponse = await _unidadRemoteApiService.storeUnidad(
+        'Bearer $token',
+        'application/json',
+        UnidadReqModel.fromEntity(unidad),
+      );
+
+      if (httpResponse.response.statusCode == HttpStatus.ok) {
+        if (httpResponse.data.session) {
+          if (httpResponse.data.action) {
+            return DataSuccess(httpResponse.data);
+          } else {
+            return DataFailedMessage(httpResponse.data.message);
+          }
+        } else {
+          return DataFailedMessage(httpResponse.data.message);
+        }
+      } else {
+        return DataFailed(
+          DioException(
+            error           : httpResponse.response.statusMessage,
+            response        : httpResponse.response,
+            type            : DioExceptionType.badResponse,
+            requestOptions  : httpResponse.response.requestOptions,
+          ),
+        );
+      }
+    } on DioException catch (ex) {
+      return DataFailed(ex);
+    }
   }
 }
