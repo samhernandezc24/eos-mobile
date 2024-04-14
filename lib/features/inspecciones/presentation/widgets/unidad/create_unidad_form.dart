@@ -6,7 +6,6 @@ import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
 import 'package:eos_mobile/shared/shared.dart';
-import 'package:flutter/material.dart';
 
 class CreateUnidadForm extends StatefulWidget {
   const CreateUnidadForm({Key? key}) : super(key: key);
@@ -30,25 +29,31 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
   late final TextEditingController _odometroController;
 
   // LIST
-  late final List<BaseDataEntity> lstBases = <BaseDataEntity>[];
-  late final List<UnidadMarcaDataEntity> lstUnidadesMarcas =
-      <UnidadMarcaDataEntity>[];
-  late final List<UnidadTipoDataEntity> lstUnidadesTipos =
-      <UnidadTipoDataEntity>[];
+  late final List<BaseDataEntity> lstBases                  = <BaseDataEntity>[];
+  late final List<UnidadMarcaDataEntity> lstUnidadesMarcas  = <UnidadMarcaDataEntity>[];
+  late final List<UnidadTipoDataEntity> lstUnidadesTipos    =  <UnidadTipoDataEntity>[];
+
+  // PROPERTIES
+  String? selectedTipoUnidadId;
+  String? selectedTipoUnidadName;
+  String? selectedBaseId;
+  String? selectedBaseName;
+  String? selectedUnidadMarcaId;
+  String? selectedUnidadMarcaName;
 
   @override
   void initState() {
     // Cargar el listado de los DropdownList.
     BlocProvider.of<RemoteUnidadBloc>(context).add(CreateUnidad());
 
-    _numeroEconomicoController = TextEditingController();
-    _numeroSerieController = TextEditingController();
-    _descripcionController = TextEditingController();
-    _modeloController = TextEditingController();
-    _anioEquipoController = TextEditingController();
-    _capacidadController = TextEditingController();
-    _horometroController = TextEditingController();
-    _odometroController = TextEditingController();
+    _numeroEconomicoController    = TextEditingController();
+    _numeroSerieController        = TextEditingController();
+    _descripcionController        = TextEditingController();
+    _modeloController             = TextEditingController();
+    _anioEquipoController         = TextEditingController();
+    _capacidadController          = TextEditingController();
+    _horometroController          = TextEditingController();
+    _odometroController           = TextEditingController();
     super.initState();
   }
 
@@ -66,8 +71,7 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
   }
 
   // METHODS
-  Future<void> _showFailureDialog(
-      BuildContext context, RemoteUnidadFailure state) {
+  Future<void> _showFailureDialog(BuildContext context, RemoteUnidadFailure state) {
     return showDialog<void>(
       context: context,
       builder: (_) => AlertDialog(
@@ -91,16 +95,14 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
         actions: <Widget>[
           TextButton(
             onPressed: () => context.pop(),
-            child: Text($strings.acceptButtonText,
-                style: $styles.textStyles.button),
+            child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
           ),
         ],
       ),
     );
   }
 
-  Future<void> _showFailedMessageDialog(
-      BuildContext context, RemoteUnidadFailedMessage state) {
+  Future<void> _showFailedMessageDialog(BuildContext context, RemoteUnidadFailedMessage state) {
     return showDialog<void>(
       context: context,
       builder: (_) => AlertDialog(
@@ -123,8 +125,7 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
         actions: <Widget>[
           TextButton(
             onPressed: () => context.pop(),
-            child: Text($strings.acceptButtonText,
-                style: $styles.textStyles.button),
+            child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
           ),
         ],
       ),
@@ -132,28 +133,32 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
   }
 
   void _handleStoreUnidad() {
-    // final UnidadReqEntity objData = UnidadReqEntity(
-    //   numeroEconomico   : _numeroEconomicoController.text,
-    //   numeroSerie       : _numeroSerieController.text,
-    //   descripcion       : _descripcionController.text,
-    //   modelo            : _modeloController.text,
-    //   anioEquipo        : _anioEquipoController.text,
-    //   idBase            : idBase,
-    //   baseName          : baseName,
-    //   idUnidadMarca     : idUnidadMarca,
-    //   unidadMarcaName   : unidadMarcaName,
-    //   idUnidadTipo      : idUnidadTipo,
-    //   unidadTipoName    : unidadTipoName,
-    //   capacidad         : _capacidadController.text as double,
-    //   horometro         : _horometroController.text as int,
-    //   odometro          : _odometroController.text as int,
-    // );
+    final double? capacidad = double.tryParse(_capacidadController.text);
+    final int? horometro    = int.tryParse(_horometroController.text);
+    final int? odometro     = int.tryParse(_odometroController.text);
+
+    final UnidadReqEntity objData = UnidadReqEntity(
+      numeroEconomico   : _numeroEconomicoController.text,
+      numeroSerie       : _numeroSerieController.text,
+      descripcion       : _descripcionController.text,
+      modelo            : _modeloController.text,
+      anioEquipo        : _anioEquipoController.text,
+      idBase            : selectedBaseId ?? '',
+      baseName          : selectedBaseName ?? '',
+      idUnidadMarca     : selectedUnidadMarcaId ?? '',
+      unidadMarcaName   : selectedUnidadMarcaName ?? '',
+      idUnidadTipo      : selectedTipoUnidadId ?? '',
+      unidadTipoName    : selectedTipoUnidadName ?? '',
+      capacidad         : capacidad ?? 0.0,
+      horometro         : horometro ?? 0,
+      odometro          : odometro ?? 0,
+    );
 
     final bool isValidForm = _formKey.currentState!.validate();
 
     if (isValidForm) {
       _formKey.currentState!.save();
-      // BlocProvider.of<RemoteUnidadBloc>(context).add(StoreUnidad(objData));
+      BlocProvider.of<RemoteUnidadBloc>(context).add(StoreUnidad(objData));
     }
   }
 
@@ -199,27 +204,25 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
                         hintText: 'Seleccione',
                       ),
                       items: state.unidadData?.unidadesTipos
-                              .map<DropdownMenuItem<dynamic>>((unidadTipo) {
-                            return DropdownMenuItem<dynamic>(
-                              value: unidadTipo.idUnidadTipo,
-                              child: Text(unidadTipo.name ?? ''),
-                            );
-                          }).toList() ??
-                          [],
+                        .map<DropdownMenuItem<dynamic>>((unidadTipo) {
+                          return DropdownMenuItem<dynamic>(
+                            value: unidadTipo.idUnidadTipo,
+                            child: Text(unidadTipo.name ?? ''),
+                          );
+                        }).toList() ?? [],
                       onChanged: (newValue) {
-                        setState(() {});
+                        final selectedTipoUnidad = state.unidadData?.unidadesTipos.firstWhere((unidadTipo) => unidadTipo.idUnidadTipo == newValue);
+                        if (selectedTipoUnidad != null) {
+                          setState(() {
+                            selectedTipoUnidadId    = selectedTipoUnidad.idUnidadTipo;
+                            selectedTipoUnidadName  = selectedTipoUnidad.name;
+                            // print('ID: ${selectedTipoUnidad.idUnidadTipo}, Nombre: ${selectedTipoUnidad.name}');
+                          });
+                        }
                       },
                     ),
                   ],
                 ),
-                // LabeledDropdownFormField(
-                //   labelText: '* Tipo de unidad:',
-                //   hintText: 'Seleccione',
-                //   items: lstUnidadesTipos,
-                //   onChanged: (newValue) {
-                //     setState(() {});
-                //   },
-                // ),
 
                 Gap($styles.insets.sm),
 
@@ -231,8 +234,7 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
-                          Text('* Selecciona la marca:',
-                              style: $styles.textStyles.label),
+                          Text('* Selecciona la marca:', style: $styles.textStyles.label),
                           Gap($styles.insets.xs),
                           DropdownButtonFormField<dynamic>(
                             menuMaxHeight: 280,
@@ -244,26 +246,25 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
                               hintText: 'Seleccione',
                             ),
                             items: state.unidadData?.unidadesMarcas
-                                    .map<DropdownMenuItem<dynamic>>(
-                                        (unidadMarca) {
-                                  return DropdownMenuItem<dynamic>(
-                                    value: unidadMarca.idUnidadMarca,
-                                    child: Text(unidadMarca.name ?? ''),
-                                  );
-                                }).toList() ??
-                                [],
+                              .map<DropdownMenuItem<dynamic>>((unidadMarca) {
+                                return DropdownMenuItem<dynamic>(
+                                  value: unidadMarca.idUnidadMarca,
+                                  child: Text(unidadMarca.name ?? ''),
+                                );
+                              }).toList() ?? [],
                             onChanged: (newValue) {
-                              setState(() {});
+                              final selectedUnidadMarca = state.unidadData?.unidadesMarcas.firstWhere((unidadMarca) => unidadMarca.idUnidadMarca == newValue);
+                              if (selectedUnidadMarca != null) {
+                                setState(() {
+                                  selectedUnidadMarcaId    = selectedUnidadMarca.idUnidadMarca;
+                                  selectedUnidadMarcaName  = selectedUnidadMarca.name;
+                                  // print('ID: ${selectedUnidadMarca.idUnidadMarca}, Nombre: ${selectedUnidadMarca.name}');
+                                });
+                              }
                             },
                           ),
                         ],
                       ),
-                      // child: LabeledDropdownFormField(
-                      //   labelText: '* Selecciona la marca:',
-                      //   hintText: 'Seleccione',
-                      //   onChanged: (_) {},
-                      //   items: lstUnidadesMarcas,
-                      // ),
                     ),
                     SizedBox(width: $styles.insets.sm),
                     Expanded(
@@ -282,9 +283,8 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
                 // NO. DE SERIE:
                 LabeledTextField(
                   controller: _numeroSerieController,
-                  labelText: '* Número de serie:',
+                  labelText: 'Número de serie:',
                   hintText: 'Ingrese número serie...',
-                  validator: FormValidators.textValidator,
                 ),
 
                 Gap($styles.insets.sm),
@@ -304,7 +304,7 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
                     SizedBox(width: $styles.insets.sm),
                     Expanded(
                       child: LabeledTextField(
-                        controller: _numeroSerieController,
+                        controller: _anioEquipoController,
                         labelText: 'Año del equipo:',
                         hintText: 'Ingrese año de equipo...',
                       ),
@@ -318,8 +318,7 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    Text('* Selecciona la base:',
-                        style: $styles.textStyles.label),
+                    Text('* Selecciona la base:', style: $styles.textStyles.label),
                     Gap($styles.insets.xs),
                     DropdownButtonFormField<dynamic>(
                       menuMaxHeight: 280,
@@ -331,15 +330,21 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
                         hintText: 'Seleccione',
                       ),
                       items: state.unidadData?.bases
-                              .map<DropdownMenuItem<dynamic>>((base) {
-                            return DropdownMenuItem<dynamic>(
-                              value: base.idBase,
-                              child: Text(base.name ?? ''),
-                            );
-                          }).toList() ??
-                          [],
+                        .map<DropdownMenuItem<dynamic>>((base) {
+                          return DropdownMenuItem<dynamic>(
+                            value: base.idBase,
+                            child: Text(base.name ?? ''),
+                          );
+                        }).toList() ?? [],
                       onChanged: (newValue) {
-                        setState(() {});
+                        final selectedBase = state.unidadData?.bases.firstWhere((base) => base.idBase == newValue);
+                        if (selectedBase != null) {
+                          setState(() {
+                            selectedBaseId    = selectedBase.idBase;
+                            selectedBaseName  = selectedBase.name;
+                            // print('ID: ${selectedBase.idBase}, Nombre: ${selectedBase.name}');
+                          });
+                        }
                       },
                     ),
                   ],
@@ -357,7 +362,6 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
                         labelText: 'Horómetro:',
                         hintText: 'Ingrese cantidad',
                         keyboardType: TextInputType.number,
-                        validator: FormValidators.integerValidator,
                       ),
                     ),
                     SizedBox(width: $styles.insets.sm),
@@ -367,7 +371,6 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
                         labelText: 'Odómetro:',
                         hintText: 'Ingrese cantidad',
                         keyboardType: TextInputType.number,
-                        validator: FormValidators.integerValidator,
                       ),
                     ),
                   ],
