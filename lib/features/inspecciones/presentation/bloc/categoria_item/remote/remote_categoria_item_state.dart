@@ -10,12 +10,12 @@ class RemoteCategoriaItemState extends Equatable {
 class RemoteCategoriaItemLoading extends RemoteCategoriaItemState {}
 
 class RemoteCategoriaItemSuccess extends RemoteCategoriaItemState {
-  const RemoteCategoriaItemSuccess(this.categoriasItems);
+  const RemoteCategoriaItemSuccess(this.objCategoriaItem);
 
-  final List<CategoriaItemEntity>? categoriasItems;
+  final CategoriaItemDataEntity? objCategoriaItem;
 
   @override
-  List<Object?> get props => [ categoriasItems ];
+  List<Object?> get props => [ objCategoriaItem ];
 }
 
 class RemoteCategoriaItemResponseSuccess extends RemoteCategoriaItemState {

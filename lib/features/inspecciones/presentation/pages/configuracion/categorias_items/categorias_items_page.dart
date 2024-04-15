@@ -85,7 +85,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
               ],
             ),
           ),
-          Gap($styles.insets.sm),
+
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
@@ -102,12 +102,13 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                   }
 
                   if (state is RemoteCategoriaItemSuccess) {
-                    if (state.categoriasItems != null && state.categoriasItems!.isNotEmpty) {
+                    if (state.objCategoriaItem!.categoriasItems != null && state.objCategoriaItem!.categoriasItems!.isNotEmpty) {
                       return ListView.separated(
-                        itemCount: state.categoriasItems!.length,
+                        itemCount: state.objCategoriaItem!.categoriasItems!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return CategoriaItemTile(
-                            categoriaItem: state.categoriasItems![index],
+                            categoriaItem: state.objCategoriaItem!.categoriasItems![index],
+                            lstFormulariosTipos: state.objCategoriaItem!.formulariosTipos,
                           );
                         },
                         separatorBuilder: (BuildContext context, int index) {

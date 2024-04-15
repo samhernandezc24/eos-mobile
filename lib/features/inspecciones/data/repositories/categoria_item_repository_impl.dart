@@ -4,7 +4,7 @@ import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/categoria_item/categoria_item_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria_model.dart';
-import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_model.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_data_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_entity.dart';
@@ -19,7 +19,7 @@ class CategoriaItemRepositoryImpl implements CategoriaItemRepository {
 
   /// LISTADO DE CATEGORÍAS ITEMS
   @override
-  Future<DataState<List<CategoriaItemModel>>> listCategoriasItems(CategoriaEntity categoria) async {
+  Future<DataState<CategoriaItemDataModel>> listCategoriasItems(CategoriaEntity categoria) async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
@@ -29,16 +29,13 @@ class CategoriaItemRepositoryImpl implements CategoriaItemRepository {
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         final ApiResponse apiResponse = httpResponse.data;
-        if (httpResponse.data.session) {
-          if (httpResponse.data.action) {
-            final dynamic result = apiResponse.result;
-            // ignore: avoid_dynamic_calls
-            final List<dynamic> lstResult = result['categoriasItems'] as List<dynamic>;
-            final List<CategoriaItemModel> lstCategoriasItems = lstResult
-                .map<CategoriaItemModel>((dynamic i) => CategoriaItemModel.fromJson(i as Map<String, dynamic>))
-                .toList();
 
-            return DataSuccess(lstCategoriasItems);
+        if (apiResponse.session) {
+          if (apiResponse.action) {
+            final result = apiResponse.result as Map<String, dynamic>;
+            final CategoriaItemDataModel objCategoriaItem = CategoriaItemDataModel.fromJson(result);
+
+            return DataSuccess(objCategoriaItem);
           } else {
             return DataFailedMessage(apiResponse.message);
           }

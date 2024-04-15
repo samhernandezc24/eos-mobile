@@ -6,7 +6,6 @@ class SessionManager {
 
   Future<void> checkTokenExpiration() async {
     final String? token = await storage.read(key: 'token');
-    print(token);
 
     if (token != null) {
       final int? minutesRemaining = AuthUtils.minutesUntilTokenExpiration(token);
