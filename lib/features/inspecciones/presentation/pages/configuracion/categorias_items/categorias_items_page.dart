@@ -21,6 +21,9 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
   // CONTROLLERS
   final ScrollController _scrollController = ScrollController();
 
+  // PROPERTIES
+  bool _isNewCategoriaItemBeingAdded = false;
+
   @override
   void initState() {
     BlocProvider.of<RemoteCategoriaItemBloc>(context).add(ListCategoriasItems(widget.categoria!));
@@ -188,7 +191,13 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
       },
       builder: (BuildContext context, RemoteCategoriaItemState state) {
         return FloatingActionButton(
-          onPressed: state is RemoteCategoriaItemLoading ? null : () => _handleAddCategoriaItemPressed(context),
+          onPressed: state is RemoteCategoriaItemLoading ? null : () {
+             _handleAddCategoriaItemPressed(context);
+
+            setState(() {
+              _isNewCategoriaItemBeingAdded = true;
+            });
+          },
           tooltip: 'Agregar pregunta',
           child: const Icon(Icons.add),
         );

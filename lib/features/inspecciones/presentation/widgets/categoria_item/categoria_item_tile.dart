@@ -17,19 +17,32 @@ class CategoriaItemTile extends StatefulWidget {
 }
 
 class _CategoriaItemTileState extends State<CategoriaItemTile> {
+  /// CONTROLLERS
+  late final TextEditingController _nameController;
+
   /// LIST
   late final List<String> _options;
 
   /// PROPERTIES
+  late String? _selectedValue;
+
   bool _isEditModeQuestion  = false;
   bool _isEditModeList      = false;
-  String? _selectedValue;
 
   @override
   void initState() {
     _options        = widget.categoriaItem!.formularioValor!.split(',');
     _selectedValue  = widget.categoriaItem!.idFormularioTipo;
+
+    _nameController = TextEditingController(text: widget.categoriaItem?.name ?? '');
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
   }
 
   /// METHODS
@@ -92,6 +105,21 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
         ],
       ),
     );
+  }
+
+  void _handleUpdatePressed(BuildContext context) {
+    final CategoriaItemEntity objCategoriaItem = CategoriaItemEntity(
+      idCategoriaItem       : widget.categoriaItem?.idCategoriaItem ?? '',
+      name                  : widget.categoriaItem?.name ?? '',
+      idCategoria           : widget.categoria?.idCategoria ?? '',
+      categoriaName         : widget.categoria?.name ?? '',
+      idFormularioTipo      : widget.categoriaItem?.idFormularioTipo ?? '',
+      formularioTipoName    : widget.categoriaItem?.formularioTipoName ?? '',
+      formularioValor       : widget.categoriaItem?.formularioValor ?? '',
+    );
+
+    // Dispara el evento UpdateCategoriaItem al BLoC.
+    BlocProvider.of<RemoteCategoriaItemBloc>(context).add(UpdateCategoriaItem(objCategoriaItem));
   }
 
   void _handleDeletePressed(BuildContext context, CategoriaItemEntity? categoriaItem) {
@@ -194,36 +222,36 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           ListTile(
-            leading: CircleAvatar(
-              radius: 12,
-              child: Text(widget.categoriaItem?.orden.toString() ?? '0', style: $styles.textStyles.h4),
-            ),
+            leading: _isEditModeQuestion
+                ? null
+                : CircleAvatar(
+                    radius: 12,
+                    child: Text(widget.categoriaItem?.orden.toString() ?? '0', style: $styles.textStyles.h4),
+                  ),
             title: _isEditModeQuestion
-                ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text('Pregunta:', style: $styles.textStyles.label),
-
-                    Gap($styles.insets.xs),
-
-                    TextFormField(
-                      autofocus: true,
-                      initialValue: widget.categoriaItem?.name ?? '',
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: $styles.insets.sm - 3,
-                          horizontal: $styles.insets.xs + 2,
-                        ),
+                ? TextFormField(
+                    autofocus: true,
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: $styles.insets.sm - 3,
+                        horizontal: $styles.insets.xs + 2,
                       ),
                     ),
-                  ],
-                )
+                  )
                 : Text(
                     widget.categoriaItem?.name ?? '',
                     style: $styles.textStyles.body.copyWith(height: 1.5),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                   ),
+            trailing: _isEditModeQuestion
+                ? IconButton.filled(
+                    onPressed: () => _handleUpdatePressed(context),
+                    icon: Icon(Icons.check, color: Theme.of(context).canvasColor),
+                    tooltip: 'Guardar',
+                  )
+                : null,
             onTap: () {
               setState(() {
                 _isEditModeQuestion = !_isEditModeQuestion;
@@ -257,6 +285,39 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
                         );
                       }).toList(),
                     onChanged: (newValue) => setState(() => _selectedValue = newValue),
+                  ),
+
+                  Gap($styles.insets.xs),
+
+                  ListTile(
+                    leading: Icon(Icons.circle_outlined),
+                    title: TextFormField(
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: $styles.insets.sm - 3,
+                          horizontal: $styles.insets.xs + 2,
+                        ),
+                      ),
+                    ),
+                    trailing: IconButton(onPressed: (){}, icon: Icon(Icons.close)),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.circle_outlined),
+                    title: TextFormField(
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: $styles.insets.sm - 3,
+                          horizontal: $styles.insets.xs + 2,
+                        ),
+                      ),
+                    ),
+                    trailing: IconButton(onPressed: (){}, icon: Icon(Icons.close)),
+                  ),
+
+                  TextButton.icon(
+                    onPressed: (){},
+                    icon: const Icon(Icons.add),
+                    label: Text('Agregar una opción', style: $styles.textStyles.button),
                   ),
                 ],
               )
