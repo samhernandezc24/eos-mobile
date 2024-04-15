@@ -170,7 +170,9 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
           return Center(child: LoadingIndicator(color: Theme.of(context).primaryColor, strokeWidth: 2));
         }
 
-        if (state is RemoteUnidadFailure) {}
+        if (state is RemoteUnidadFailure) {
+          _showFailureDialog(context, state);
+        }
 
         if (state is RemoteUnidadCreateSuccess) {
           return Form(
