@@ -13,10 +13,21 @@ class CategoriaItemTile extends StatefulWidget {
 }
 
 class _CategoriaItemTileState extends State<CategoriaItemTile> {
-  /// LIST
-  // late final List<FormularioTipoEntity> lstFormulariosTipos = <FormularioTipoEntity>[];
+  // LIST
+  late final List<String> _options;
 
-  // late final List<dynamic> lstFormulariosTipos = <dynamic>[
+  // PROPERTIES
+  bool _isEditModeQuestion  = false;
+  bool _isEditModeList      = false;
+  String? _selectedValue;
+
+  @override
+  void initState() {
+    _options        = widget.categoriaItem!.formularioValor!.split(',');
+    _selectedValue  = widget.categoriaItem!.idFormularioTipo;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -24,74 +35,96 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          // ListTile(
-          //   leading: CircleAvatar(
-          //     radius: 12,
-          //     child: Text(categoriaItem?.orden.toString() ?? '0', style: $styles.textStyles.h4),
-          //   ),
-          //   title: Text(categoriaItem!.name, overflow: TextOverflow.ellipsis, maxLines: 2),
-          //   onTap: () {},
-          // ),
-          // Padding(
-          //   padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm),
-          //   child: Column(
-          //     children: <Widget>[
-          //       _buildMultipleChoiceOptions(),
-          //     ],
-          //   ),
-          // ),
           ListTile(
-            title: LabeledTextField(
-              controller: TextEditingController(),
-              labelText: 'Pregunta:',
-              textInputAction: TextInputAction.done,
+            leading: CircleAvatar(
+              radius: 12,
+              child: Text(widget.categoriaItem?.orden.toString() ?? '0', style: $styles.textStyles.h4),
             ),
-            onTap: () {},
+            title: _isEditModeQuestion
+                ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Pregunta:',
+                      style: $styles.textStyles.label,
+                    ),
+
+                    Gap($styles.insets.xs),
+
+                    TextFormField(
+                      autofocus: true,
+                      initialValue: widget.categoriaItem?.name ?? '',
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: $styles.insets.sm - 3,
+                          horizontal: $styles.insets.xs + 2,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+                : Text(
+                    widget.categoriaItem?.name ?? '',
+                    style: $styles.textStyles.body.copyWith(height: 1.5),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+            onTap: () {
+              setState(() {
+                _isEditModeQuestion = !_isEditModeQuestion;
+              });
+            },
           ),
           ListTile(
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Text('Tipo:', style: $styles.textStyles.label),
-                Gap($styles.insets.xs),
-                DropdownButtonFormField<dynamic>(
-                  menuMaxHeight: 280,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: $styles.insets.sm - 3,
-                      horizontal: $styles.insets.xs + 2,
+            title: _isEditModeList
+              ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text('Tipo:', style: $styles.textStyles.label),
+
+                  Gap($styles.insets.xs),
+
+                  DropdownButtonFormField<String?>(
+                    menuMaxHeight: 280,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: $styles.insets.sm - 3,
+                        horizontal: $styles.insets.xs + 2,
+                      ),
+                      hintText: 'Seleccione',
                     ),
-                    hintText: 'Seleccione',
+                    value: _selectedValue,
+                    items: widget.lstFormulariosTipos!
+                      .map((formularioTipo) {
+                        return DropdownMenuItem(
+                          value: formularioTipo.idFormularioTipo,
+                          child: Text(formularioTipo.name),
+                        );
+                      }).toList(),
+                    onChanged: (newValue) => setState(() => _selectedValue = newValue),
                   ),
-                  items: widget.lstFormulariosTipos!
-                    .map<DropdownMenuItem<dynamic>>((formularioTipo) {
-                      return DropdownMenuItem<dynamic>(
-                        value: formularioTipo.idFormularioTipo,
-                        child: Text(formularioTipo.name),
-                      );
-                    }).toList(),
-                  onChanged: (newValue) {
-                    setState(() {});
-                  },
-                  // onChanged: (newValue) {
-                  //   final selectedTipoUnidad = state.unidadData?.unidadesTipos.firstWhere((unidadTipo) => unidadTipo.idUnidadTipo == newValue);
-                  //   if (selectedTipoUnidad != null) {
-                  //     setState(() {
-                  //       selectedTipoUnidadId    = selectedTipoUnidad.idUnidadTipo;
-                  //       selectedTipoUnidadName  = selectedTipoUnidad.name;
-                  //       // print('ID: ${selectedTipoUnidad.idUnidadTipo}, Nombre: ${selectedTipoUnidad.name}');
-                  //     });
-                  //   }
-                  // },
-                ),
-              ],
-            ),
-            // title: LabeledDropdownFormField(
-            //   labelText: 'Tipo:',
-            //   onChanged: (_) {},
-            //   items: lstFormulariosTipos,
-            // ),
-            onTap: () {},
+                ],
+              )
+              : Row(
+                children: _options.map((opt) {
+                  return Row(
+                    children: [
+                      Radio(
+                        value: opt,
+                        groupValue: widget.categoriaItem?.formularioValor,
+                        onChanged: null,
+                      ),
+                      Text(opt),
+                      SizedBox(width: $styles.insets.xs),
+                    ],
+                  );
+                }).toList(),
+              ),
+            onTap: () {
+              setState(() {
+                _isEditModeList = !_isEditModeList;
+              });
+            },
           ),
           const Divider(),
           Padding(
@@ -114,58 +147,5 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
         ],
       ),
     );
-  }
-
-  Widget _buildMultipleChoiceOptions() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Expanded(
-              child: Row(
-                children: [
-                  Radio(value: 1, groupValue: 'null', onChanged: (index) {}),
-                  const Expanded(
-                    child: Text('Sí'),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Row(
-                children: [
-                  Radio(
-                      value: 1, groupValue: 'null', onChanged: (index) {}),
-                  Expanded(child: Text('No'))
-                ],
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-    // return SizedBox(
-    //   height: 100,
-    //   child: GridView.builder(
-    //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-    //       crossAxisCount: 3,
-    //       crossAxisSpacing: 4,
-    //       mainAxisSpacing: 4,
-    //     ),
-    //     itemCount: 4,
-    //     itemBuilder: (BuildContext context, int index) {
-    //       return Container(
-    //         margin: const EdgeInsets.all(4),
-    //         child: Row(
-    //           children: <Widget>[
-    //             const Radio(value: null, groupValue: null, onChanged: null),
-    //             Text('Opción ${index + 1}'),
-    //           ],
-    //         ),
-    //       );
-    //     },
-    //   ),
-    // );
   }
 }

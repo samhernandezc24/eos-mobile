@@ -65,7 +65,11 @@ class CategoriaItemRepositoryImpl implements CategoriaItemRepository {
       final String? token = await authTokenHelper.retrieveRefreshToken();
 
       // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _categoriaItemRemoteApiService.storeCategoriaItem('Bearer $token', 'application/json', CategoriaItemReqModel.fromEntity(categoriaItem));
+      final httpResponse = await _categoriaItemRemoteApiService.storeCategoriaItem(
+        'Bearer $token',
+        'application/json',
+        CategoriaItemReqModel.fromEntity(categoriaItem),
+      );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         if (httpResponse.data.session) {
