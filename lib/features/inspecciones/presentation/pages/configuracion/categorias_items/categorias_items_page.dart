@@ -136,6 +136,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                         itemBuilder: (BuildContext context, int index) {
                           return CategoriaItemTile(
                             categoriaItem: state.objCategoriaItem!.categoriasItems![index],
+                            categoria: widget.categoria,
                             lstFormulariosTipos: state.objCategoriaItem!.formulariosTipos,
                           );
                         },

@@ -33,8 +33,10 @@ import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/delet
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/list_categorias_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/store_categoria_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/update_categoria_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/delete_categoria_item_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/list_categorias_items_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/store_categoria_item_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/update_categoria_item_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspecciones_tipos/delete_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspecciones_tipos/list_inspecciones_tipos_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspecciones_tipos/store_inspeccion_tipo_usecase.dart';
@@ -111,6 +113,8 @@ Future<void> initializeDependencies() async {
 
   sl.registerSingleton<ListCategoriasItemsUseCase>(ListCategoriasItemsUseCase(sl()));
   sl.registerSingleton<StoreCategoriaItemUseCase>(StoreCategoriaItemUseCase(sl()));
+  sl.registerSingleton<UpdateCategoriaItemUseCase>(UpdateCategoriaItemUseCase(sl()));
+  sl.registerSingleton<DeleteCategoriaItemUseCase>(DeleteCategoriaItemUseCase(sl()));
 
   sl.registerSingleton<CreateUnidadUseCase>(CreateUnidadUseCase(sl()));
   sl.registerSingleton<StoreUnidadUseCase>(StoreUnidadUseCase(sl()));
@@ -121,6 +125,6 @@ Future<void> initializeDependencies() async {
 
   sl.registerFactory<RemoteInspeccionTipoBloc>(() => RemoteInspeccionTipoBloc(sl(), sl(), sl(), sl()));
   sl.registerFactory<RemoteCategoriaBloc>(() => RemoteCategoriaBloc(sl(), sl(), sl(), sl()));
-  sl.registerFactory<RemoteCategoriaItemBloc>(() => RemoteCategoriaItemBloc(sl(), sl()));
+  sl.registerFactory<RemoteCategoriaItemBloc>(() => RemoteCategoriaItemBloc(sl(), sl(), sl(), sl()));
   sl.registerFactory<RemoteUnidadBloc>(() => RemoteUnidadBloc(sl(), sl()));
 }

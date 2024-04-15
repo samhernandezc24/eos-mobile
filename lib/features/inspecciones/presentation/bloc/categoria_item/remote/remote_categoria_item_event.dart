@@ -24,3 +24,21 @@ class StoreCategoriaItem extends RemoteCategoriaItemEvent {
   @override
   List<Object?> get props => [ categoriaItem ];
 }
+
+class UpdateCategoriaItem extends RemoteCategoriaItemEvent {
+  const UpdateCategoriaItem(this.categoriaItem);
+
+  final CategoriaItemEntity categoriaItem;
+
+  @override
+  List<Object?> get props => [ categoriaItem ];
+}
+
+class DeleteCategoriaItem extends RemoteCategoriaItemEvent {
+  const DeleteCategoriaItem(this.categoriaItem);
+
+  final CategoriaItemEntity categoriaItem;
+
+  @override
+  List<Object?> get props => [ categoriaItem ];
+}

@@ -8,6 +8,8 @@ class CategoriaItemModel extends CategoriaItemEntity {
   const CategoriaItemModel({
     required String idCategoriaItem,
     required String name,
+    required String idCategoria,
+    required String categoriaName,
     required String idFormularioTipo,
     required String formularioTipoName,
     String? formularioValor,
@@ -15,6 +17,8 @@ class CategoriaItemModel extends CategoriaItemEntity {
   }) : super(
         idCategoriaItem     : idCategoriaItem,
         name                : name,
+        idCategoria         : idCategoria,
+        categoriaName       : categoriaName,
         idFormularioTipo    : idFormularioTipo,
         formularioTipoName  : formularioTipoName,
         formularioValor     : formularioValor,
@@ -27,6 +31,8 @@ class CategoriaItemModel extends CategoriaItemEntity {
     return CategoriaItemModel(
       idCategoriaItem     : jsonMap['idCategoriaItem'] as String,
       name                : jsonMap['name'] as String,
+      idCategoria         : jsonMap['idCategoria'] as String,
+      categoriaName       : jsonMap['categoriaName'] as String,
       idFormularioTipo    : jsonMap['idFormularioTipo'] as String,
       formularioTipoName  : jsonMap['formularioTipoName'] as String,
       formularioValor     : jsonMap['formularioValor'] as String,
@@ -40,6 +46,8 @@ class CategoriaItemModel extends CategoriaItemEntity {
     return CategoriaItemModel(
       idCategoriaItem     : entity.idCategoriaItem,
       name                : entity.name,
+      idCategoria         : entity.idCategoria,
+      categoriaName       : entity.categoriaName,
       idFormularioTipo    : entity.idFormularioTipo,
       formularioTipoName  : entity.formularioTipoName,
       formularioValor     : entity.formularioValor,
@@ -52,6 +60,8 @@ class CategoriaItemModel extends CategoriaItemEntity {
     return <String, dynamic>{
       'idCategoriaItem'     : idCategoriaItem,
       'name'                : name,
+      'idCategoria'         : idCategoria,
+      'categoriaName'       : categoriaName,
       'idFormularioTipo'    : idFormularioTipo,
       'formularioTipoName'  : formularioTipoName,
       'formularioValor'     : formularioValor,

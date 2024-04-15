@@ -8,6 +8,8 @@ class CategoriaItemEntity extends Equatable {
   const CategoriaItemEntity({
     required this.idCategoriaItem,
     required this.name,
+    required this.idCategoria,
+    required this.categoriaName,
     required this.idFormularioTipo,
     required this.formularioTipoName,
     this.formularioValor,
@@ -16,11 +18,13 @@ class CategoriaItemEntity extends Equatable {
 
   final String idCategoriaItem;
   final String name;
+  final String idCategoria;
+  final String categoriaName;
   final String idFormularioTipo;
   final String formularioTipoName;
   final String? formularioValor;
   final int? orden;
 
   @override
-  List<Object?> get props => [ idCategoriaItem, name, idFormularioTipo, formularioTipoName, formularioValor, orden ];
+  List<Object?> get props => [ idCategoriaItem, name, idCategoria, categoriaName, idFormularioTipo, formularioTipoName, formularioValor, orden ];
 }
