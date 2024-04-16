@@ -94,6 +94,20 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
     });
   }
 
+  void _handleUpdatePressed(BuildContext context, CategoriaItemEntity? categoriaItem) {
+    final CategoriaItemEntity objCategoriaItemData = CategoriaItemEntity(
+      idCategoriaItem     : categoriaItem?.idCategoriaItem ?? '',
+      name                : categoriaItem?.name ?? '',
+      idCategoria         : categoriaItem?.idCategoria ?? '',
+      categoriaName       : categoriaItem?.categoriaName ?? '',
+      idFormularioTipo    : categoriaItem?.idFormularioTipo ?? '',
+      formularioTipoName  : categoriaItem?.formularioTipoName ?? '',
+      isEdit              : false,
+    );
+
+    context.read<RemoteCategoriaItemBloc>().add(UpdateCategoriaItem(objCategoriaItemData));
+  }
+
   void _handleDeletePressed(BuildContext context, CategoriaItemEntity? categoriaItem) {
     showDialog<void>(
       context: context,
@@ -226,7 +240,11 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
               children: <Widget>[
                 if (_isEditMode)
                     TextButton.icon(
-                      onPressed: (){},
+                      onPressed: () {
+                        _handleUpdatePressed(context, widget.categoriaItem);
+                        _editCategoriaItem(widget.categoriaItem!);
+                        context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
+                      },
                       icon: const Icon(Icons.check_circle),
                       label: Text($strings.saveButtonText, style: $styles.textStyles.button),
                     ),
