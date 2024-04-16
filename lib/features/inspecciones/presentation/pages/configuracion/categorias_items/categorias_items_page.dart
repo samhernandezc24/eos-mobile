@@ -41,6 +41,12 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
     context.read<RemoteCategoriaItemBloc>().add(StoreCategoriaItem(objCategoriaItemData));
   }
 
+  // void _scrollToNewCategoriaItem(int index) {
+  //   if (_scrollController.hasClients) {
+  //     _scrollController.animateTo(_scrollController.position.maxScrollExtent, duration: $styles.times.fast, curve: Curves.easeInOut);
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,6 +96,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
 
                           return CategoriaItemTile(
                             categoriaItem: categoriaItem,
+                            categoria: widget.categoria,
                             formulariosTipos: lstFormulariosTipos,
                           );
                         },
