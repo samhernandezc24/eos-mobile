@@ -18,12 +18,6 @@ class InspeccionConfiguracionCategoriasItemsPage extends StatefulWidget {
 }
 
 class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionConfiguracionCategoriasItemsPage> {
-  // CONTROLLERS
-  final ScrollController _scrollController = ScrollController();
-
-  // PROPERTIES
-  bool _isNewCategoriaItemBeingAdded = false;
-
   @override
   void initState() {
     BlocProvider.of<RemoteCategoriaItemBloc>(context).add(ListCategoriasItems(widget.categoria!));
@@ -125,16 +119,8 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
 
                   if (state is RemoteCategoriaItemSuccess) {
                     if (state.objCategoriaItem!.categoriasItems != null && state.objCategoriaItem!.categoriasItems!.isNotEmpty) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        _scrollController.animateTo(
-                          _scrollController.position.maxScrollExtent,
-                          duration: $styles.times.fast,
-                          curve: Curves.easeOut,
-                        );
-                      });
 
                       return ListView.separated(
-                        controller: _scrollController,
                         itemCount: state.objCategoriaItem!.categoriasItems!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return CategoriaItemTile(
@@ -191,13 +177,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
       },
       builder: (BuildContext context, RemoteCategoriaItemState state) {
         return FloatingActionButton(
-          onPressed: state is RemoteCategoriaItemLoading ? null : () {
-             _handleAddCategoriaItemPressed(context);
-
-            setState(() {
-              _isNewCategoriaItemBeingAdded = true;
-            });
-          },
+          onPressed: state is RemoteCategoriaItemLoading ? null : () => _handleAddCategoriaItemPressed(context),
           tooltip: 'Agregar pregunta',
           child: const Icon(Icons.add),
         );

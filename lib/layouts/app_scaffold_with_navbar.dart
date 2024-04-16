@@ -222,10 +222,6 @@ class AppScaffoldWithNavBar extends StatelessWidget {
 
   List<Widget>? _buildActions(BuildContext context, String currentRoute) {
     switch (currentRoute) {
-      case '/home':
-        return [
-          IconButton(onPressed: () => authTokenHelper.testExpirationToken(), icon: const Icon(Icons.bug_report)),
-        ];
       case '/home/inspecciones':
         return [
           PopupMenuButton<String>(
