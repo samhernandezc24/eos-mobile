@@ -73,10 +73,34 @@ class RemoteCategoriaItemBloc extends Bloc<RemoteCategoriaItemEvent, RemoteCateg
 
     if (objDataState is DataFailedMessage) {
       emit(RemoteCategoriaItemFailedMessage(objDataState.errorMessage));
+
+      emit(RemoteCategoriaItemLoading());
+
+      final categoria = CategoriaEntity(
+        idCategoria           : event.categoriaItem.idCategoria,
+        name                  : event.categoriaItem.categoriaName,
+        idInspeccionTipo      : event.categoriaItem.idCategoria,
+        inspeccionTipoCodigo  : '',
+        inspeccionTipoName    : event.categoriaItem.inspeccionTipoName,
+      );
+
+      await onListCategoriasItems(ListCategoriasItems(categoria), emit);
     }
 
     if (objDataState is DataFailed) {
       emit(RemoteCategoriaItemFailure(objDataState.exception));
+
+      emit(RemoteCategoriaItemLoading());
+
+      final categoria = CategoriaEntity(
+        idCategoria           : event.categoriaItem.idCategoria,
+        name                  : event.categoriaItem.categoriaName,
+        idInspeccionTipo      : event.categoriaItem.idCategoria,
+        inspeccionTipoCodigo  : '',
+        inspeccionTipoName    : event.categoriaItem.inspeccionTipoName,
+      );
+
+      await onListCategoriasItems(ListCategoriasItems(categoria), emit);
     }
   }
 
