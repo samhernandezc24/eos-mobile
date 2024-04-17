@@ -1,4 +1,3 @@
-import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/formulario_tipo/formulario_tipo_entity.dart';
@@ -17,6 +16,10 @@ class CategoriaItemTile extends StatefulWidget {
 }
 
 class _CategoriaItemTileState extends State<CategoriaItemTile> {
+  /// CONTROLLERS
+  late TextEditingController _nameController;
+  late TextEditingController _formularioValorController;
+
   /// PROPERTIES
   late bool _isEditMode;
 
@@ -24,6 +27,16 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
   void initState() {
     super.initState();
     _isEditMode = widget.categoriaItem?.isEdit ?? false;
+
+    _nameController             = TextEditingController(text: widget.categoriaItem?.name ?? '');
+    _formularioValorController  = TextEditingController(text: widget.categoriaItem?.formularioValor ?? '');
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _formularioValorController.dispose();
+    super.dispose();
   }
 
   /// METHODS
@@ -97,11 +110,12 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
   void _handleUpdatePressed(BuildContext context, CategoriaItemEntity? categoriaItem) {
     final CategoriaItemEntity objCategoriaItemData = CategoriaItemEntity(
       idCategoriaItem     : categoriaItem?.idCategoriaItem ?? '',
-      name                : categoriaItem?.name ?? '',
+      name                : _nameController.text,
       idCategoria         : categoriaItem?.idCategoria ?? '',
       categoriaName       : categoriaItem?.categoriaName ?? '',
       idFormularioTipo    : categoriaItem?.idFormularioTipo ?? '',
       formularioTipoName  : categoriaItem?.formularioTipoName ?? '',
+      formularioValor     : _formularioValorController.text,
       isEdit              : false,
     );
 
@@ -142,24 +156,7 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
             }
           },
           builder: (BuildContext context, RemoteCategoriaItemState state) {
-            if (state is RemoteCategoriaItemLoading) {
-              return AlertDialog(
-                content: Row(
-                  children: <Widget>[
-                    LoadingIndicator(
-                      color: Theme.of(context).primaryColor,
-                      width: 20,
-                      height: 20,
-                      strokeWidth: 2,
-                    ),
-                    SizedBox(width: $styles.insets.xs + 2),
-                    Flexible(
-                      child: Text('Espere por favor...', style: $styles.textStyles.title2.copyWith(height: 1.5)),
-                    ),
-                  ],
-                ),
-              );
-            }
+            if (state is RemoteCategoriaItemLoading) {}
 
             return AlertDialog(
               title: Text('¿Eliminar pregunta?', style: $styles.textStyles.h3.copyWith(fontSize: 18)),
@@ -168,7 +165,7 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
                   children: <InlineSpan>[
                     const TextSpan(text: 'Se eliminará la pregunta '),
                     TextSpan(
-                      text: '"${categoriaItem!.name.toProperCase()}". ',
+                      text: '"${categoriaItem!.name}". ',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const TextSpan(text: '¿Estás seguro de querer realizar esa acción?'),
@@ -210,6 +207,7 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
                   ),
             title: _isEditMode
                 ? TextFormField(
+                  controller: _nameController,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(
                         vertical: $styles.insets.sm - 3,
@@ -217,7 +215,6 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
                       ),
                       hintText: 'Pregunta',
                     ),
-                    initialValue: widget.categoriaItem?.name ?? '',
                   )
                 : Text(widget.categoriaItem?.name ?? ''),
           ),
@@ -243,7 +240,6 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
                       onPressed: () {
                         _handleUpdatePressed(context, widget.categoriaItem);
                         _editCategoriaItem(widget.categoriaItem!);
-                        context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
                       },
                       icon: const Icon(Icons.check_circle),
                       label: Text($strings.saveButtonText, style: $styles.textStyles.button),
@@ -297,6 +293,7 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
             Text('Sugerencia: Para agregar opciones intenta seguir el formato separando las opciones por comas.', style: $styles.textStyles.label),
             Gap($styles.insets.xs),
             TextFormField(
+              controller: _formularioValorController,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.symmetric(
                   vertical: $styles.insets.sm - 3,
@@ -304,7 +301,6 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
                 ),
                 hintText: 'Pregunta',
               ),
-              initialValue: widget.categoriaItem?.formularioValor ?? '',
             ),
           ],
         ),
@@ -319,19 +315,20 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
         return Text('Texto de respuesta', style: $styles.textStyles.title2);
       // OPCIÓN MÚLTIPLE:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb32':
+        final List<String> options = categoriaItem.formularioValor!.split(',');
         return Row(
-          children: <Widget>[
-            Row(
+          children: options.map((opt) {
+            return Row(
               children: <Widget>[
                 Radio<String>(
-                  value: 'Valor 1',
+                  value: opt,
                   groupValue: null,
                   onChanged: null,
                 ),
-                Text('Valor'),
+                Text(opt),
               ],
-            ),
-          ],
+            );
+          }).toList(),
         );
       // LISTA DESPLEGABLE:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33':

@@ -92,7 +92,7 @@ class _InspeccionConfiguracionInspeccionesTiposPageState extends State<Inspeccio
               child: BlocBuilder<RemoteInspeccionTipoBloc, RemoteInspeccionTipoState>(
                 builder: (_, RemoteInspeccionTipoState state) {
                   if (state is RemoteInspeccionTipoLoading) {
-                    return Center(child: LoadingIndicator(color: Theme.of(context).primaryColor, strokeWidth: 2));
+                    return Center(child: LoadingIndicator(color: Theme.of(context).primaryColor, strokeWidth: 3));
                   }
 
                   if (state is RemoteInspeccionTipoFailure) {
