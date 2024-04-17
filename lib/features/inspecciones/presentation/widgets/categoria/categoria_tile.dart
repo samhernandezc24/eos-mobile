@@ -103,7 +103,7 @@ class CategoriaTile extends StatelessWidget {
                 SnackBar(
                   content: Text(state.apiResponse.message, softWrap: true),
                   backgroundColor: Colors.green,
-                  behavior: SnackBarBehavior.floating,
+                  behavior: SnackBarBehavior.fixed,
                   elevation: 0,
                 ),
               );

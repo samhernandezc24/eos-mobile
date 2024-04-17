@@ -107,10 +107,6 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
     );
   }
 
-  FormularioTipoEntity _findFormularioTipoById(String idFormularioTipo) {
-    return widget.formulariosTipos!.firstWhere((element) => element.idFormularioTipo == idFormularioTipo);
-  }
-
   void _editCategoriaItem(CategoriaItemEntity categoriaItem) {
     setState(() {
       _isEditMode = !_isEditMode;
@@ -254,15 +250,20 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                if (_isEditMode)
-                    TextButton.icon(
-                      onPressed: () {
-                        _handleUpdatePressed(context, widget.categoriaItem);
-                        _editCategoriaItem(widget.categoriaItem!);
-                      },
-                      icon: const Icon(Icons.check_circle),
-                      label: Text($strings.saveButtonText, style: $styles.textStyles.button),
-                    ),
+                if (_isEditMode) ...{
+                  TextButton.icon(
+                    onPressed: () {
+                      _handleUpdatePressed(context, widget.categoriaItem);
+                      _editCategoriaItem(widget.categoriaItem!);
+                    },
+                    icon: const Icon(Icons.check_circle),
+                    label: Text($strings.saveButtonText, style: $styles.textStyles.button),
+                  ),
+                  TextButton(
+                    onPressed: () => _editCategoriaItem(widget.categoriaItem!),
+                    child: Text($strings.cancelButtonText, style: $styles.textStyles.button),
+                  ),
+                },
                 IconButton(
                   onPressed: () => _handleDuplicateCategoriaItem(context),
                   icon: const Icon(Icons.content_copy),

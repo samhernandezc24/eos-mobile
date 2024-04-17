@@ -92,7 +92,6 @@ class InspeccionTipoTile extends StatelessWidget {
             }
 
             if (state is RemoteInspeccionTipoResponseSuccess) {
-              // Cerramos el AlertDialog.
               Navigator.pop(context);
 
               ScaffoldMessenger.of(context)
@@ -101,7 +100,7 @@ class InspeccionTipoTile extends StatelessWidget {
                 SnackBar(
                   content: Text(state.apiResponse.message, softWrap: true),
                   backgroundColor: Colors.green,
-                  behavior: SnackBarBehavior.floating,
+                  behavior: SnackBarBehavior.fixed,
                   elevation: 0,
                 ),
               );
