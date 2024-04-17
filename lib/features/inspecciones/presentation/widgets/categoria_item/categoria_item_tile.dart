@@ -401,41 +401,71 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
       // LISTA DESPLEGABLE:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33':
         final List<String> options = categoriaItem.formularioValor!.split(',');
-        return Wrap(
-          spacing: $styles.insets.sm,
-          children: options.asMap().entries.map((entry) {
-            final int index = entry.key;
-            final String value = entry.value;
-            return Padding(
-              padding: EdgeInsets.only(right: $styles.insets.sm),
-              child: Text('${index + 1}. $value'),
-            );
+        return DropdownButtonFormField<String>(
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(
+              vertical: $styles.insets.sm - 3,
+              horizontal: $styles.insets.xs + 2,
+            ),
+          ),
+          value: options.isNotEmpty ? options.first : null,
+          items: options.map((option) {
+            return DropdownMenuItem<String>(value: option, child: Text(option));
           }).toList(),
+          onChanged: null,
         );
       // FECHA:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb34':
-        return Row(
-          children: <Widget>[
-            const Icon(Icons.calendar_month),
-            SizedBox(width: $styles.insets.sm),
-            Text('Día, mes, año', style: $styles.textStyles.title2),
-          ],
+        return TextField(
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(
+              vertical: $styles.insets.sm - 3,
+              horizontal: $styles.insets.xs + 2,
+            ),
+            hintText: 'dd/mm/aaaa',
+            suffixIcon: const Icon(Icons.calendar_month),
+          ),
+          readOnly: true,
         );
       // HORA:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb35':
-        return  Row(
-          children: <Widget>[
-            const Icon(Icons.schedule),
-            SizedBox(width: $styles.insets.sm),
-            Text('Hora', style: $styles.textStyles.title2),
-          ],
+        return TextField(
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(
+              vertical: $styles.insets.sm - 3,
+              horizontal: $styles.insets.xs + 2,
+            ),
+            hintText: 'hh:mm:ss',
+            suffixIcon: const Icon(Icons.schedule),
+          ),
+          readOnly: true,
         );
       // NÚMERO ENTERO:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb36':
-        return Text('Campo de respuesta con número entero', style: $styles.textStyles.title2);
+        return TextField(
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(
+              vertical: $styles.insets.sm - 3,
+              horizontal: $styles.insets.xs + 2,
+            ),
+            hintText: '1, 2, 3, 4, 5, 6,...',
+            suffixIcon: const Icon(Icons.numbers),
+          ),
+          readOnly: true,
+        );
       // NÚMERO DECIMAL:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb37':
-        return Text('Campo de respuesta con número décimal', style: $styles.textStyles.title2);
+        return TextField(
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(
+              vertical: $styles.insets.sm - 3,
+              horizontal: $styles.insets.xs + 2,
+            ),
+            hintText: '1.2, 1.4, 2.6, 3.6,...',
+            suffixIcon: const Icon(Icons.numbers),
+          ),
+          readOnly: true,
+        );
       // DESCONOCIDO:
       default:
         return Text('Tipo de formulario desconocido', style: $styles.textStyles.title2);
