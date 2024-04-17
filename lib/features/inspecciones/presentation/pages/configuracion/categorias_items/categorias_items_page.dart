@@ -96,6 +96,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
 
                           return CategoriaItemTile(
                             categoriaItem: categoriaItem,
+                            inspeccionTipo: widget.inspeccionTipo,
                             categoria: widget.categoria,
                             formulariosTipos: lstFormulariosTipos,
                           );

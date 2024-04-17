@@ -36,6 +36,7 @@ import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/updat
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/delete_categoria_item_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/list_categorias_items_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/store_categoria_item_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/store_duplicate_categoria_item_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/update_categoria_item_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspecciones_tipos/delete_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspecciones_tipos/list_inspecciones_tipos_usecase.dart';
@@ -113,6 +114,7 @@ Future<void> initializeDependencies() async {
 
   sl.registerSingleton<ListCategoriasItemsUseCase>(ListCategoriasItemsUseCase(sl()));
   sl.registerSingleton<StoreCategoriaItemUseCase>(StoreCategoriaItemUseCase(sl()));
+  sl.registerSingleton<StoreDuplicateCategoriaItemUseCase>(StoreDuplicateCategoriaItemUseCase(sl()));
   sl.registerSingleton<UpdateCategoriaItemUseCase>(UpdateCategoriaItemUseCase(sl()));
   sl.registerSingleton<DeleteCategoriaItemUseCase>(DeleteCategoriaItemUseCase(sl()));
 

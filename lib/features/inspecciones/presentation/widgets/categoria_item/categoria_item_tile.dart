@@ -1,14 +1,16 @@
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_duplicate_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_entity.dart';
-import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/formulario_tipo/formulario_tipo_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria_item/remote/remote_categoria_item_bloc.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class CategoriaItemTile extends StatefulWidget {
-  const CategoriaItemTile({Key? key, this.categoriaItem, this.categoria, this.formulariosTipos}) : super(key : key);
+  const CategoriaItemTile({Key? key, this.categoriaItem, this.inspeccionTipo, this.categoria, this.formulariosTipos}) : super(key : key);
 
   final CategoriaItemEntity? categoriaItem;
+  final InspeccionTipoEntity? inspeccionTipo;
   final CategoriaEntity? categoria;
   final List<FormularioTipoEntity>? formulariosTipos;
 
@@ -18,10 +20,11 @@ class CategoriaItemTile extends StatefulWidget {
 
 class _CategoriaItemTileState extends State<CategoriaItemTile> {
   /// CONTROLLERS
-  late TextEditingController _nameController;
-  late TextEditingController _formularioValorController;
+  late final TextEditingController _nameController;
+  late final TextEditingController _formularioValorController;
 
   /// PROPERTIES
+  late FormularioTipoEntity _selectedFormularioTipo;
   late bool _isEditMode;
 
   @override
@@ -31,6 +34,8 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
 
     _nameController             = TextEditingController(text: widget.categoriaItem?.name ?? '');
     _formularioValorController  = TextEditingController(text: widget.categoriaItem?.formularioValor ?? '');
+
+    _selectedFormularioTipo = widget.formulariosTipos!.firstWhere((element) => element.name == widget.categoriaItem!.formularioTipoName);
   }
 
   @override
@@ -114,25 +119,27 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
       name                : _nameController.text,
       idCategoria         : categoriaItem?.idCategoria ?? '',
       categoriaName       : categoriaItem?.categoriaName ?? '',
-      idFormularioTipo    : categoriaItem?.idFormularioTipo ?? '',
-      formularioTipoName  : categoriaItem?.formularioTipoName ?? '',
+      idFormularioTipo    : _selectedFormularioTipo.idFormularioTipo,
+      formularioTipoName  : _selectedFormularioTipo.name,
       formularioValor     : _formularioValorController.text,
     );
 
     context.read<RemoteCategoriaItemBloc>().add(UpdateCategoriaItem(objCategoriaItemData));
   }
 
-  void _handleDuplicateCategoriaItem(CategoriaItemReqEntity categoriaItem) {
-    // final CategoriaItemReqEntity duplicatedCategoriaItem = CategoriaItemReqEntity(
-    //   name                : _nameController.text,
-    //   idCategoria         : categoriaItem.idCategoria,
-    //   categoriaName       : categoriaItem.categoriaName,
-    //   idFormularioTipo    : categoriaItem.idFormularioTipo,
-    //   formularioTipoName  : categoriaItem.formularioTipoName,
-    //   formularioValor     : _formularioValorController.text,
-    // );
+  void _handleDuplicateCategoriaItem(BuildContext context) {
+    final CategoriaItemDuplicateReqEntity duplicatedCategoriaItem = CategoriaItemDuplicateReqEntity(
+      name                  : widget.categoriaItem?.name ?? '',
+      idInspeccionTipo      : widget.inspeccionTipo?.idInspeccionTipo ?? '',
+      inspeccionTipoName    : widget.inspeccionTipo?.name ?? '',
+      idCategoria           : widget.categoria?.idCategoria ?? '',
+      categoriaName         : widget.categoria?.name ?? '',
+      idFormularioTipo      : widget.categoriaItem?.idFormularioTipo ?? '',
+      formularioTipoName    : widget.categoriaItem?.formularioTipoName ?? '',
+      formularioValor       : widget.categoriaItem?.formularioValor ?? '',
+    );
 
-    // print(duplicatedCategoriaItem);
+    context.read<RemoteCategoriaItemBloc>().add(StoreDuplicateCategoriaItem(duplicatedCategoriaItem));
   }
 
   void _handleDeletePressed(BuildContext context, CategoriaItemEntity? categoriaItem) {
@@ -258,7 +265,7 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
                       label: Text($strings.saveButtonText, style: $styles.textStyles.button),
                     ),
                 IconButton(
-                  onPressed: (){},
+                  onPressed: () => _handleDuplicateCategoriaItem(context),
                   icon: const Icon(Icons.content_copy),
                   tooltip: 'Duplicar elemento',
                 ),
@@ -289,12 +296,14 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
             hintText: 'Seleccione',
           ),
           menuMaxHeight: 280,
-          value: widget.formulariosTipos!.firstWhere((element) => element.name == widget.categoriaItem!.formularioTipoName),
+          value: _selectedFormularioTipo,
           items: widget.formulariosTipos!.map((formularioTipo) {
             return DropdownMenuItem<FormularioTipoEntity>(value: formularioTipo, child: Text(formularioTipo.name));
           }).toList(),
           onChanged: (newValue) {
-            setState(() {});
+            setState(() {
+              _selectedFormularioTipo = newValue!;
+            });
           },
         ),
 
@@ -303,7 +312,18 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('Sugerencia: Para agregar opciones intenta seguir el formato separando las opciones por comas.', style: $styles.textStyles.label),
+            RichText(
+              text: TextSpan(
+                style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                children: <InlineSpan>[
+                  TextSpan(
+                    text: 'Sugerencia',
+                    style: $styles.textStyles.bodySmall.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  const TextSpan(text: ': Para agregar opciones intenta seguir el formato separando las opciones por comas y sin espacios.'),
+                ],
+              ),
+            ),
             Gap($styles.insets.xs),
             TextFormField(
               controller: _formularioValorController,
@@ -325,39 +345,72 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
     switch (categoriaItem.idFormularioTipo) {
       // PREGUNTA ABIERTA:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb31':
-        return Text('Texto de respuesta', style: $styles.textStyles.title2);
+        return Text('Texto de respuesta abierta', style: $styles.textStyles.title2);
       // OPCIÓN MÚLTIPLE:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb32':
         final List<String> options = categoriaItem.formularioValor!.split(',');
         return Row(
-          children: options.map((opt) {
-            return Row(
-              children: <Widget>[
-                Radio<String>(
-                  value: opt,
-                  groupValue: null,
-                  onChanged: null,
-                ),
-                Text(opt),
-              ],
-            );
-          }).toList(),
+          children: <Widget>[
+            Container(
+              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                children: options.map((opt) {
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Radio<String>(
+                        value: opt,
+                        groupValue: null,
+                        onChanged: null,
+                      ),
+                      Text(opt),
+                    ],
+                  );
+                }).toList(),
+              ),
+            ),
+          ],
         );
       // LISTA DESPLEGABLE:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33':
-        return Text('Texto de respuesta', style: $styles.textStyles.title2);
+        final List<String> options = categoriaItem.formularioValor!.split(',');
+        return Wrap(
+          spacing: $styles.insets.sm,
+          children: options.asMap().entries.map((entry) {
+            final int index = entry.key;
+            final String value = entry.value;
+            return Padding(
+              padding: EdgeInsets.only(right: $styles.insets.sm),
+              child: Text('${index + 1}. $value'),
+            );
+          }).toList(),
+        );
       // FECHA:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb34':
-        return Text('Texto de respuesta', style: $styles.textStyles.title2);
+        return Row(
+          children: <Widget>[
+            const Icon(Icons.calendar_month),
+            SizedBox(width: $styles.insets.sm),
+            Text('Día, mes, año', style: $styles.textStyles.title2),
+          ],
+        );
       // HORA:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb35':
-        return Text('Texto de respuesta', style: $styles.textStyles.title2);
+        return  Row(
+          children: <Widget>[
+            const Icon(Icons.schedule),
+            SizedBox(width: $styles.insets.sm),
+            Text('Hora', style: $styles.textStyles.title2),
+          ],
+        );
       // NÚMERO ENTERO:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb36':
-        return Text('Texto de respuesta', style: $styles.textStyles.title2);
+        return Text('Campo de respuesta con número entero', style: $styles.textStyles.title2);
       // NÚMERO DECIMAL:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb37':
-        return Text('Texto de respuesta', style: $styles.textStyles.title2);
+        return Text('Campo de respuesta con número décimal', style: $styles.textStyles.title2);
       // DESCONOCIDO:
       default:
         return Text('Tipo de formulario desconocido', style: $styles.textStyles.title2);
