@@ -25,6 +25,15 @@ class StoreCategoriaItem extends RemoteCategoriaItemEvent {
   List<Object?> get props => [ categoriaItem ];
 }
 
+class StoreDuplicateCategoriaItem extends RemoteCategoriaItemEvent {
+  const StoreDuplicateCategoriaItem(this.categoriaItem);
+
+  final CategoriaItemDuplicateReqEntity categoriaItem;
+
+  @override
+  List<Object?> get props => [ categoriaItem ];
+}
+
 class UpdateCategoriaItem extends RemoteCategoriaItemEvent {
   const UpdateCategoriaItem(this.categoriaItem);
 

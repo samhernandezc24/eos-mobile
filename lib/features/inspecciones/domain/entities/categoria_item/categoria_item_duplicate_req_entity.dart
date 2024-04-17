@@ -1,42 +1,39 @@
 import 'package:eos_mobile/shared/shared.dart';
 
-/// [CategoriaItemEntity]
+/// [CategoriaItemDuplicateReqEntity]
 ///
-/// Representa la pregunta del formulario de las inspecciones
-/// que se realizará a una unidad de inventario o a una unidad temporal.
-class CategoriaItemEntity extends Equatable {
-  const CategoriaItemEntity({
-    required this.idCategoriaItem,
+/// Representa los datos de la request para la pregunta, se mandara esta informacion
+/// en el body de la petición.
+class CategoriaItemDuplicateReqEntity extends Equatable {
+  const CategoriaItemDuplicateReqEntity({
     required this.name,
+    required this.idInspeccionTipo,
+    required this.inspeccionTipoName,
     required this.idCategoria,
     required this.categoriaName,
     required this.idFormularioTipo,
     required this.formularioTipoName,
     this.formularioValor,
-    this.orden,
-    this.isEdit,
   });
 
-  final String idCategoriaItem;
   final String name;
+  final String idInspeccionTipo;
+  final String inspeccionTipoName;
   final String idCategoria;
   final String categoriaName;
   final String idFormularioTipo;
   final String formularioTipoName;
   final String? formularioValor;
-  final int? orden;
-  final bool? isEdit;
 
   @override
   List<Object?> get props => [
-    idCategoriaItem,
     name,
+    idInspeccionTipo,
+    inspeccionTipoName,
     idCategoria,
     categoriaName,
     idFormularioTipo,
     formularioTipoName,
-    formularioValor,
-    orden,
-    isEdit,
+    formularioValor ,
   ];
 }

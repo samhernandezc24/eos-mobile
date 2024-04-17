@@ -1,5 +1,6 @@
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/formulario_tipo/formulario_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria_item/remote/remote_categoria_item_bloc.dart';
 import 'package:eos_mobile/shared/shared.dart';
@@ -116,10 +117,22 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
       idFormularioTipo    : categoriaItem?.idFormularioTipo ?? '',
       formularioTipoName  : categoriaItem?.formularioTipoName ?? '',
       formularioValor     : _formularioValorController.text,
-      isEdit              : false,
     );
 
     context.read<RemoteCategoriaItemBloc>().add(UpdateCategoriaItem(objCategoriaItemData));
+  }
+
+  void _handleDuplicateCategoriaItem(CategoriaItemReqEntity categoriaItem) {
+    // final CategoriaItemReqEntity duplicatedCategoriaItem = CategoriaItemReqEntity(
+    //   name                : _nameController.text,
+    //   idCategoria         : categoriaItem.idCategoria,
+    //   categoriaName       : categoriaItem.categoriaName,
+    //   idFormularioTipo    : categoriaItem.idFormularioTipo,
+    //   formularioTipoName  : categoriaItem.formularioTipoName,
+    //   formularioValor     : _formularioValorController.text,
+    // );
+
+    // print(duplicatedCategoriaItem);
   }
 
   void _handleDeletePressed(BuildContext context, CategoriaItemEntity? categoriaItem) {

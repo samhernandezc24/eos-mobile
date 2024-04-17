@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria_model.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_duplicate_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_req_model.dart';
 import 'package:eos_mobile/shared/shared.dart';
@@ -28,6 +29,14 @@ abstract class CategoriaItemRemoteApiService {
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
     @Body() CategoriaItemReqModel categoriaItem,
+  );
+
+  /// GUARDAR CATEGORÍA ITEM DUPLICADO
+  @POST('/StoreDuplicate')
+  Future<HttpResponse<ApiResponse>> storeDuplicateCategoriaItem(
+    @Header(HttpHeaders.authorizationHeader) String token,
+    @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Body() CategoriaItemDuplicateReqModel categoriaItem,
   );
 
   /// ACTUALIZAR CATEGORÍA ITEM

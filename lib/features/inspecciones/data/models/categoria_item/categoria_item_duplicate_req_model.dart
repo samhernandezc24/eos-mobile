@@ -1,76 +1,71 @@
-import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_duplicate_req_entity.dart';
 
-/// [CategoriaItemModel]
+/// [CategoriaItemDuplicateReqModel]
 ///
-/// Representa la pregunta del formulario de las inspecciones
-/// que se realizará a una unidad de inventario o a una unidad temporal.
-class CategoriaItemModel extends CategoriaItemEntity {
-  const CategoriaItemModel({
-    required String idCategoriaItem,
+/// Representa los datos de la request para la pregunta, se mandara esta informacion
+/// en el body de la petición.
+class CategoriaItemDuplicateReqModel extends CategoriaItemDuplicateReqEntity {
+  const CategoriaItemDuplicateReqModel({
     required String name,
+    required String idInspeccionTipo,
+    required String inspeccionTipoName,
     required String idCategoria,
     required String categoriaName,
     required String idFormularioTipo,
     required String formularioTipoName,
     String? formularioValor,
-    int? orden,
-    bool? isEdit,
   }) : super(
-        idCategoriaItem     : idCategoriaItem,
         name                : name,
+        idInspeccionTipo    : idInspeccionTipo,
+        inspeccionTipoName  : inspeccionTipoName,
         idCategoria         : idCategoria,
         categoriaName       : categoriaName,
         idFormularioTipo    : idFormularioTipo,
         formularioTipoName  : formularioTipoName,
         formularioValor     : formularioValor,
-        orden               : orden,
-        isEdit              : isEdit,
       );
 
-  /// Constructor factory para crear la instancia de [CategoriaItemModel]
+  /// Constructor factory para crear la instancia de [CategoriaItemDuplicateReqModel]
   /// durante el mapeo del JSON.
-  factory CategoriaItemModel.fromJson(Map<String, dynamic> jsonMap) {
-    return CategoriaItemModel(
-      idCategoriaItem     : jsonMap['idCategoriaItem'] as String,
+  factory CategoriaItemDuplicateReqModel.fromJson(Map<String, dynamic> jsonMap) {
+    return CategoriaItemDuplicateReqModel(
       name                : jsonMap['name'] as String,
+      idInspeccionTipo    : jsonMap['idInspeccionTipo'] as String,
+      inspeccionTipoName  : jsonMap['inspeccionTipoName'] as String,
       idCategoria         : jsonMap['idCategoria'] as String,
       categoriaName       : jsonMap['categoriaName'] as String,
       idFormularioTipo    : jsonMap['idFormularioTipo'] as String,
       formularioTipoName  : jsonMap['formularioTipoName'] as String,
       formularioValor     : jsonMap['formularioValor'] as String? ?? '',
-      orden               : jsonMap['orden'] as int? ?? 0,
-      isEdit              : jsonMap['isEdit'] as bool? ?? false,
     );
   }
 
-  /// Constructor factory para convertir la instancia de [CategoriaItemEntity]
-  /// en una instancia de [CategoriaItemModel].
-  factory CategoriaItemModel.fromEntity(CategoriaItemEntity entity) {
-    return CategoriaItemModel(
-      idCategoriaItem     : entity.idCategoriaItem,
+  /// Constructor factory para convertir la instancia de [CategoriaItemDuplicateReqEntity]
+  /// en una instancia de [CategoriaItemDuplicateReqModel].
+  factory CategoriaItemDuplicateReqModel.fromEntity(CategoriaItemDuplicateReqEntity entity) {
+    return CategoriaItemDuplicateReqModel(
       name                : entity.name,
+      idInspeccionTipo    : entity.idInspeccionTipo,
+      inspeccionTipoName  : entity.inspeccionTipoName,
       idCategoria         : entity.idCategoria,
       categoriaName       : entity.categoriaName,
       idFormularioTipo    : entity.idFormularioTipo,
       formularioTipoName  : entity.formularioTipoName,
       formularioValor     : entity.formularioValor,
-      orden               : entity.orden,
-      isEdit              : entity.isEdit,
     );
   }
 
   /// Serialización de la estructura del modelo a formato JSON.
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
-      'idCategoriaItem'     : idCategoriaItem,
       'name'                : name,
+      'idInspeccionTipo'    : idInspeccionTipo,
+      'inspeccionTipoName'  : inspeccionTipoName,
       'idCategoria'         : idCategoria,
       'categoriaName'       : categoriaName,
       'idFormularioTipo'    : idFormularioTipo,
       'formularioTipoName'  : formularioTipoName,
       'formularioValor'     : formularioValor,
-      'orden'               : orden,
-      'isEdit'              : isEdit,
     };
   }
 }

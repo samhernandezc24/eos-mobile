@@ -81,7 +81,7 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
                         text: 'Tipo de Inspección',
                         style: TextStyle(fontWeight: FontWeight.w600),
                       ),
-                      TextSpan(text: ': ${widget.inspeccionTipo?.name.toProperCase() ?? ''}'),
+                      TextSpan(text: ': ${widget.inspeccionTipo?.name ?? ''}'),
                     ],
                   ),
                 ),
