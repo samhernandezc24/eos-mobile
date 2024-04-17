@@ -107,6 +107,10 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
     );
   }
 
+  FormularioTipoEntity _findFormularioTipoById(String idFormularioTipo) {
+    return widget.formulariosTipos!.firstWhere((element) => element.idFormularioTipo == idFormularioTipo);
+  }
+
   void _editCategoriaItem(CategoriaItemEntity categoriaItem) {
     setState(() {
       _isEditMode = !_isEditMode;
@@ -240,12 +244,7 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
           ),
 
           // VALORES DEL FORMULARIO (EDITABLE):
-          ListTile(
-            onTap: () =>  _editCategoriaItem(widget.categoriaItem!),
-            title: _isEditMode
-                ? _buildFormularioTipos()
-                : _buildFormularioValuesContent(widget.categoriaItem!),
-          ),
+          _buildFormularioValues(widget.categoriaItem!),
 
           const Divider(),
 
@@ -283,7 +282,19 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
     );
   }
 
-  Widget _buildFormularioTipos() {
+  Widget _buildFormularioValues(CategoriaItemEntity categoriaItem) {
+    return ListTile(
+      onTap: () => _editCategoriaItem(categoriaItem),
+      title: _isEditMode
+          ? _buildFormularioTiposSelect()
+          : _buildFormularioValuesContent(categoriaItem),
+    );
+  }
+
+  Widget _buildFormularioTiposSelect() {
+    final bool isMultipleOption = _selectedFormularioTipo.idFormularioTipo == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb32';
+    final bool isDropdownList   = _selectedFormularioTipo.idFormularioTipo == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -304,39 +315,52 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
             setState(() {
               _selectedFormularioTipo = newValue!;
             });
+
+            if (newValue!.idFormularioTipo == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb31' ||
+                newValue.idFormularioTipo == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb34' ||
+                newValue.idFormularioTipo == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb35' ||
+                newValue.idFormularioTipo == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb36' ||
+                newValue.idFormularioTipo == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb37') {
+              _formularioValorController.clear();
+            } else {
+              _formularioValorController.text = 'Sí,No';
+            }
           },
         ),
 
         Gap($styles.insets.sm),
 
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            RichText(
-              text: TextSpan(
-                style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
-                children: <InlineSpan>[
-                  TextSpan(
-                    text: 'Sugerencia',
-                    style: $styles.textStyles.bodySmall.copyWith(fontWeight: FontWeight.w600),
-                  ),
-                  const TextSpan(text: ': Para agregar opciones intenta seguir el formato separando las opciones por comas y sin espacios.'),
-                ],
-              ),
-            ),
-            Gap($styles.insets.xs),
-            TextFormField(
-              controller: _formularioValorController,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: $styles.insets.sm - 3,
-                  horizontal: $styles.insets.xs + 2,
+        if (isMultipleOption || isDropdownList)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              RichText(
+                text: TextSpan(
+                  style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                  children: <InlineSpan>[
+                    TextSpan(
+                      text: 'Sugerencia',
+                      style: $styles.textStyles.bodySmall.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                    const TextSpan(text: ': Para agregar opciones intenta seguir el formato separando las opciones por comas y sin espacios.'),
+                  ],
                 ),
-                hintText: 'Pregunta',
               ),
-            ),
-          ],
-        ),
+              Gap($styles.insets.xs),
+              TextFormField(
+                controller: _formularioValorController,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: $styles.insets.sm - 3,
+                    horizontal: $styles.insets.xs + 2,
+                  ),
+                  hintText: 'Opción 1,Opción 2,...',
+                ),
+              ),
+            ],
+          )
+        else
+          Text('Tipo de pregunta: ${_selectedFormularioTipo.name}'),
       ],
     );
   }

@@ -129,7 +129,7 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
               child: BlocBuilder<RemoteCategoriaBloc, RemoteCategoriaState>(
                 builder: (BuildContext context, RemoteCategoriaState state) {
                   if (state is RemoteCategoriaLoading) {
-                    return Center(child: LoadingIndicator(color: Theme.of(context).primaryColor, strokeWidth: 2));
+                    return Center(child: LoadingIndicator(color: Theme.of(context).primaryColor, strokeWidth: 3));
                   }
 
                   if (state is RemoteCategoriaFailure) {
