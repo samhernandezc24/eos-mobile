@@ -18,4 +18,6 @@ class ListAPI {
   static const String categoriasItems     = '$apiBaseUrl/api/Inspecciones/Tipos/Categorias/Items';
   /// UNIDADES (TEMPORALES)
   static const String unidades            = '$apiBaseUrl/api/Inspecciones/Unidades';
+  /// INSPECCIONES
+  static const String inspecciones        = '$apiBaseUrl/api/Inspecciones';
 }
