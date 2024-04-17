@@ -12,6 +12,7 @@ class CategoriaItemModel extends CategoriaItemEntity {
     required String categoriaName,
     required String idFormularioTipo,
     required String formularioTipoName,
+    required bool isEdit,
     String? formularioValor,
     int? orden,
   }) : super(
@@ -23,6 +24,7 @@ class CategoriaItemModel extends CategoriaItemEntity {
         formularioTipoName  : formularioTipoName,
         formularioValor     : formularioValor,
         orden               : orden,
+        isEdit              : isEdit,
       );
 
   /// Constructor factory para crear la instancia de [CategoriaItemModel]
@@ -37,6 +39,7 @@ class CategoriaItemModel extends CategoriaItemEntity {
       formularioTipoName  : jsonMap['formularioTipoName'] as String,
       formularioValor     : jsonMap['formularioValor'] as String,
       orden               : jsonMap['orden'] as int? ?? 0,
+      isEdit              : jsonMap['isEdit'] as bool,
     );
   }
 
@@ -52,6 +55,7 @@ class CategoriaItemModel extends CategoriaItemEntity {
       formularioTipoName  : entity.formularioTipoName,
       formularioValor     : entity.formularioValor,
       orden               : entity.orden,
+      isEdit              : entity.isEdit,
     );
   }
 
@@ -66,6 +70,7 @@ class CategoriaItemModel extends CategoriaItemEntity {
       'formularioTipoName'  : formularioTipoName,
       'formularioValor'     : formularioValor,
       'orden'               : orden,
+      'isEdit'              : isEdit,
     };
   }
 }

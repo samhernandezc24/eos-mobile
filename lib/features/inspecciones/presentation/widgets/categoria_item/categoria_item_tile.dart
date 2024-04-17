@@ -6,43 +6,24 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria_ite
 import 'package:eos_mobile/shared/shared.dart';
 
 class CategoriaItemTile extends StatefulWidget {
-  const CategoriaItemTile({Key? key, this.categoriaItem, this.categoria, this.lstFormulariosTipos}) : super(key: key);
+  const CategoriaItemTile({Key? key, this.categoriaItem, this.categoria, this.formulariosTipos}) : super(key : key);
 
   final CategoriaItemEntity? categoriaItem;
   final CategoriaEntity? categoria;
-  final List<FormularioTipoEntity>? lstFormulariosTipos;
+  final List<FormularioTipoEntity>? formulariosTipos;
 
   @override
   State<CategoriaItemTile> createState() => _CategoriaItemTileState();
 }
 
 class _CategoriaItemTileState extends State<CategoriaItemTile> {
-  /// CONTROLLERS
-  late final TextEditingController _nameController;
-
-  /// LIST
-  late final List<String> _options;
-
   /// PROPERTIES
-  late String? _selectedValue;
-
-  bool _isEditModeQuestion  = false;
-  bool _isEditModeList      = false;
+  late bool _isEditMode;
 
   @override
   void initState() {
-    _options        = widget.categoriaItem!.formularioValor!.split(',');
-    _selectedValue  = widget.categoriaItem!.idFormularioTipo;
-
-    _nameController = TextEditingController(text: widget.categoriaItem?.name ?? '');
-
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
+    _isEditMode = widget.categoriaItem?.isEdit ?? false;
   }
 
   /// METHODS
@@ -107,23 +88,27 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
     );
   }
 
-  void _handleUpdatePressed(BuildContext context) {
-    final CategoriaItemEntity objCategoriaItem = CategoriaItemEntity(
-      idCategoriaItem       : widget.categoriaItem?.idCategoriaItem ?? '',
-      name                  : widget.categoriaItem?.name ?? '',
-      idCategoria           : widget.categoria?.idCategoria ?? '',
-      categoriaName         : widget.categoria?.name ?? '',
-      idFormularioTipo      : widget.categoriaItem?.idFormularioTipo ?? '',
-      formularioTipoName    : widget.categoriaItem?.formularioTipoName ?? '',
-      formularioValor       : widget.categoriaItem?.formularioValor ?? '',
+  void _editCategoriaItem(CategoriaItemEntity categoriaItem) {
+    setState(() {
+      _isEditMode = !_isEditMode;
+    });
+  }
+
+  void _handleUpdatePressed(BuildContext context, CategoriaItemEntity? categoriaItem) {
+    final CategoriaItemEntity objCategoriaItemData = CategoriaItemEntity(
+      idCategoriaItem     : categoriaItem?.idCategoriaItem ?? '',
+      name                : categoriaItem?.name ?? '',
+      idCategoria         : categoriaItem?.idCategoria ?? '',
+      categoriaName       : categoriaItem?.categoriaName ?? '',
+      idFormularioTipo    : categoriaItem?.idFormularioTipo ?? '',
+      formularioTipoName  : categoriaItem?.formularioTipoName ?? '',
+      isEdit              : false,
     );
 
-    // Dispara el evento UpdateCategoriaItem al BLoC.
-    BlocProvider.of<RemoteCategoriaItemBloc>(context).add(UpdateCategoriaItem(objCategoriaItem));
+    context.read<RemoteCategoriaItemBloc>().add(UpdateCategoriaItem(objCategoriaItemData));
   }
 
   void _handleDeletePressed(BuildContext context, CategoriaItemEntity? categoriaItem) {
-    // Mostramos el AlertDialog.
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -131,18 +116,15 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
           listener: (BuildContext context, RemoteCategoriaItemState state) {
             if (state is RemoteCategoriaItemFailure) {
                _showFailureDialog(context, state);
-
               context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
             }
 
             if (state is RemoteCategoriaItemFailedMessage) {
               _showFailedMessageDialog(context, state);
-
               context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
             }
 
             if (state is RemoteCategoriaItemResponseSuccess) {
-              // Cerramos el AlertDialog.
               Navigator.pop(context);
 
               ScaffoldMessenger.of(context)
@@ -195,7 +177,7 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
               ),
               actions: <Widget>[
                 TextButton(
-                  onPressed: () => _onRemove(context),
+                  onPressed: () => context.read<RemoteCategoriaItemBloc>().add(DeleteCategoriaItem(categoriaItem)),
                   child: Text($strings.deleteButtonText, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
                 ),
                 TextButton(
@@ -210,150 +192,70 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
     );
   }
 
-  void _onRemove(BuildContext context) {
-    BlocProvider.of<RemoteCategoriaItemBloc>(context).add(DeleteCategoriaItem(widget.categoriaItem!));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
+      margin: EdgeInsets.only(bottom: $styles.insets.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          // PREGUNTA (EDITABLE):
           ListTile(
-            leading: _isEditModeQuestion
+            onTap: () =>  _editCategoriaItem(widget.categoriaItem!),
+            leading: _isEditMode
                 ? null
                 : CircleAvatar(
-                    radius: 12,
-                    child: Text(widget.categoriaItem?.orden.toString() ?? '0', style: $styles.textStyles.h4),
+                    radius: 14,
+                    child: Text(widget.categoriaItem!.orden.toString(), style: $styles.textStyles.h4),
                   ),
-            title: _isEditModeQuestion
+            title: _isEditMode
                 ? TextFormField(
-                    autofocus: true,
-                    controller: _nameController,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(
                         vertical: $styles.insets.sm - 3,
                         horizontal: $styles.insets.xs + 2,
                       ),
+                      hintText: 'Pregunta',
                     ),
+                    initialValue: widget.categoriaItem?.name ?? '',
                   )
-                : Text(
-                    widget.categoriaItem?.name ?? '',
-                    style: $styles.textStyles.body.copyWith(height: 1.5),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                  ),
-            trailing: _isEditModeQuestion
-                ? IconButton.filled(
-                    onPressed: () => _handleUpdatePressed(context),
-                    icon: Icon(Icons.check, color: Theme.of(context).canvasColor),
-                    tooltip: 'Guardar',
-                  )
-                : null,
-            onTap: () {
-              setState(() {
-                _isEditModeQuestion = !_isEditModeQuestion;
-              });
-            },
+                : Text(widget.categoriaItem?.name ?? ''),
           ),
+
+          // VALORES DEL FORMULARIO (EDITABLE):
           ListTile(
-            title: _isEditModeList
-              ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text('Tipo:', style: $styles.textStyles.label),
-
-                  Gap($styles.insets.xs),
-
-                  DropdownButtonFormField<String?>(
-                    menuMaxHeight: 280,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: $styles.insets.sm - 3,
-                        horizontal: $styles.insets.xs + 2,
-                      ),
-                      hintText: 'Seleccione',
-                    ),
-                    value: _selectedValue,
-                    items: widget.lstFormulariosTipos!
-                      .map((formularioTipo) {
-                        return DropdownMenuItem(
-                          value: formularioTipo.idFormularioTipo,
-                          child: Text(formularioTipo.name),
-                        );
-                      }).toList(),
-                    onChanged: (newValue) => setState(() => _selectedValue = newValue),
-                  ),
-
-                  Gap($styles.insets.xs),
-
-                  ListTile(
-                    leading: Icon(Icons.circle_outlined),
-                    title: TextFormField(
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: $styles.insets.sm - 3,
-                          horizontal: $styles.insets.xs + 2,
-                        ),
-                      ),
-                    ),
-                    trailing: IconButton(onPressed: (){}, icon: Icon(Icons.close)),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.circle_outlined),
-                    title: TextFormField(
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: $styles.insets.sm - 3,
-                          horizontal: $styles.insets.xs + 2,
-                        ),
-                      ),
-                    ),
-                    trailing: IconButton(onPressed: (){}, icon: Icon(Icons.close)),
-                  ),
-
-                  TextButton.icon(
-                    onPressed: (){},
-                    icon: const Icon(Icons.add),
-                    label: Text('Agregar una opción', style: $styles.textStyles.button),
-                  ),
-                ],
-              )
-              : Row(
-                children: _options.map((opt) {
-                  return Row(
-                    children: [
-                      Radio(
-                        value: opt,
-                        groupValue: widget.categoriaItem?.formularioValor,
-                        onChanged: null,
-                      ),
-                      Text(opt),
-                      SizedBox(width: $styles.insets.xs),
-                    ],
-                  );
-                }).toList(),
-              ),
-            onTap: () {
-              setState(() {
-                _isEditModeList = !_isEditModeList;
-              });
-            },
+            onTap: () =>  _editCategoriaItem(widget.categoriaItem!),
+            title: _isEditMode
+                ? _buildFormularioTipos()
+                : _buildFormularioValuesContent(widget.categoriaItem!),
           ),
+
           const Divider(),
+
+          // ACCIONES (BOTONES):
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm),
+            padding: EdgeInsets.symmetric(horizontal: $styles.insets.xs),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
+                if (_isEditMode)
+                    TextButton.icon(
+                      onPressed: () {
+                        _handleUpdatePressed(context, widget.categoriaItem);
+                        _editCategoriaItem(widget.categoriaItem!);
+                        context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
+                      },
+                      icon: const Icon(Icons.check_circle),
+                      label: Text($strings.saveButtonText, style: $styles.textStyles.button),
+                    ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: (){},
                   icon: const Icon(Icons.content_copy),
                   tooltip: 'Duplicar elemento',
                 ),
                 IconButton(
                   onPressed: () => _handleDeletePressed(context, widget.categoriaItem),
+                  color: Theme.of(context).colorScheme.error,
                   icon: Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
                   tooltip: 'Eliminar',
                 ),
@@ -363,5 +265,92 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
         ],
       ),
     );
+  }
+
+  Widget _buildFormularioTipos() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        DropdownButtonFormField<FormularioTipoEntity>(
+          decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(
+              vertical: $styles.insets.sm - 3,
+              horizontal: $styles.insets.xs + 2,
+            ),
+            hintText: 'Seleccione',
+          ),
+          menuMaxHeight: 280,
+          value: widget.formulariosTipos!.firstWhere((element) => element.name == widget.categoriaItem!.formularioTipoName),
+          items: widget.formulariosTipos!.map((formularioTipo) {
+            return DropdownMenuItem<FormularioTipoEntity>(value: formularioTipo, child: Text(formularioTipo.name));
+          }).toList(),
+          onChanged: (newValue) {
+            setState(() {});
+          },
+        ),
+
+        Gap($styles.insets.sm),
+
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text('Sugerencia: Para agregar opciones intenta seguir el formato separando las opciones por comas.', style: $styles.textStyles.label),
+            Gap($styles.insets.xs),
+            TextFormField(
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: $styles.insets.sm - 3,
+                  horizontal: $styles.insets.xs + 2,
+                ),
+                hintText: 'Pregunta',
+              ),
+              initialValue: widget.categoriaItem?.formularioValor ?? '',
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFormularioValuesContent(CategoriaItemEntity categoriaItem) {
+    switch (categoriaItem.idFormularioTipo) {
+      // PREGUNTA ABIERTA:
+      case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb31':
+        return Text('Texto de respuesta', style: $styles.textStyles.title2);
+      // OPCIÓN MÚLTIPLE:
+      case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb32':
+        return Row(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Radio<String>(
+                  value: 'Valor 1',
+                  groupValue: null,
+                  onChanged: null,
+                ),
+                Text('Valor'),
+              ],
+            ),
+          ],
+        );
+      // LISTA DESPLEGABLE:
+      case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33':
+        return Text('Texto de respuesta', style: $styles.textStyles.title2);
+      // FECHA:
+      case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb34':
+        return Text('Texto de respuesta', style: $styles.textStyles.title2);
+      // HORA:
+      case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb35':
+        return Text('Texto de respuesta', style: $styles.textStyles.title2);
+      // NÚMERO ENTERO:
+      case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb36':
+        return Text('Texto de respuesta', style: $styles.textStyles.title2);
+      // NÚMERO DECIMAL:
+      case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb37':
+        return Text('Texto de respuesta', style: $styles.textStyles.title2);
+      // DESCONOCIDO:
+      default:
+        return Text('Tipo de formulario desconocido', style: $styles.textStyles.title2);
+    }
   }
 }

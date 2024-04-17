@@ -3,7 +3,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/formulario_tipo
 import 'package:eos_mobile/shared/shared.dart';
 
 class CategoriaItemDataEntity extends Equatable {
-  const CategoriaItemDataEntity({required this.categoriasItems, required this.formulariosTipos});
+  const CategoriaItemDataEntity({this.categoriasItems, this.formulariosTipos});
 
   final List<CategoriaItemEntity>? categoriasItems;
   final List<FormularioTipoEntity>? formulariosTipos;
