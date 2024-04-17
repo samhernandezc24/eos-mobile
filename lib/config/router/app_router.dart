@@ -58,22 +58,19 @@ final GoRouter appRouter = GoRouter(
       builder: (BuildContext context, GoRouterState state, StatefulNavigationShell navigationShell) {
         final String? routeName = GoRouterState.of(context).topRoute?.name;
         final String title = switch (routeName) {
-          'home'                                        => 'EOS Mobile',
-          'dashboard'                                   => 'Dashboard',
-          'actividades'                                 => 'Registro de actividades',
-          'notificaciones'                              => 'Notificaciones',
-          'home.inspecciones'                           => 'Índice de inspecciones',
-          'home.inspecciones.list'                      => 'Lista de inspecciones',
-          'home.inspecciones.conRequerimiento'          => 'Unidades con requerimientos',
-          'home.inspecciones.sinRequerimiento'          => 'Inspección de unidad sin req.',
-          'home.inspecciones.searchUnidad'              => 'Buscar unidad',
-
-          'home.inspecciones.config.inspeccionesTipos'  => 'Configuración de inspecciones',
-
-          'home.compras'                                => 'Órdenes de compras',
-          'home.embarques'                              => 'Órdenes de embarques',
-          'home.unidades'                               => 'Unidades',
-          _                                             => 'Empty Page',
+          'home'                                  => 'EOS Mobile',
+          'dashboard'                             => 'Dashboard',
+          'actividades'                           => 'Registro de actividades',
+          'notificaciones'                        => 'Notificaciones',
+          'home.inspecciones'                     => 'Índice de inspecciones',
+          'home.inspecciones.list'                => 'Lista de inspecciones',
+          'home.inspecciones.conRequerimiento'    => 'Unidades con requerimientos',
+          'home.inspecciones.sinRequerimiento'    => 'Inspección de unidad sin req.',
+          'home.inspecciones.searchUnidad'        => 'Buscar unidad',
+          'home.compras'                          => 'Órdenes de compras',
+          'home.embarques'                        => 'Órdenes de embarques',
+          'home.unidades'                         => 'Unidades',
+          _                                       => 'Empty Page',
         };
 
         return AppScaffoldWithNavBar(title: title, navigationShell: navigationShell);

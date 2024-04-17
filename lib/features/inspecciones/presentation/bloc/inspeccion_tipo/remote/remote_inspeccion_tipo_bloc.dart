@@ -3,10 +3,10 @@ import 'package:eos_mobile/core/network/data_state.dart';
 import 'package:eos_mobile/core/usecases/usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_req_entity.dart';
-import 'package:eos_mobile/features/inspecciones/domain/usecases/inspecciones_tipos/delete_inspeccion_tipo_usecase.dart';
-import 'package:eos_mobile/features/inspecciones/domain/usecases/inspecciones_tipos/list_inspecciones_tipos_usecase.dart';
-import 'package:eos_mobile/features/inspecciones/domain/usecases/inspecciones_tipos/store_inspeccion_tipo_usecase.dart';
-import 'package:eos_mobile/features/inspecciones/domain/usecases/inspecciones_tipos/update_inspeccion_tipo_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_tipo/delete_inspeccion_tipo_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_tipo/list_inspecciones_tipos_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_tipo/store_inspeccion_tipo_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_tipo/update_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 part 'remote_inspeccion_tipo_event.dart';
