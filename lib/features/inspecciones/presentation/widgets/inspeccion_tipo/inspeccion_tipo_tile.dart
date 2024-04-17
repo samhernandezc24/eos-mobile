@@ -238,9 +238,8 @@ class InspeccionTipoTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: _onTap,
-      leading: CircleAvatar(
-        backgroundColor: Colors.transparent,
-        child: Image.asset(ImagePaths.circleVehicle),
+      leading: const CircleAvatar(
+        child: Icon(Icons.local_shipping),
       ),
       title: Text(inspeccionTipo!.name.toProperCase(), overflow: TextOverflow.ellipsis),
       subtitle: Text('Código: ${inspeccionTipo!.codigo}'),
