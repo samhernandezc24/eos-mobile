@@ -23,7 +23,6 @@ class RemoteInspeccionBloc extends Bloc<RemoteInspeccionEvent, RemoteInspeccionS
     final objDataState = await _createInspeccionUseCase(params: NoParams());
 
     if (objDataState is DataSuccess) {
-      print(objDataState.data);
       emit(RemoteInspeccionCreateSuccess(objDataState.data));
     }
 
