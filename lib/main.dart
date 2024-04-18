@@ -23,7 +23,7 @@ Future<void> main() async {
   await initializeDependencies();
 
   // Ejecutar la aplicación.
-  runApp(const MainApp());
+  runApp(MainApp());
   await appLogic.bootstrap();
 
   // Remover el splash nativo cuando la construcción de la app haya terminado.
@@ -32,8 +32,8 @@ Future<void> main() async {
 
 /// Construcción de la aplicación usando el constructor [MaterialApp.router] y el constructor
 /// global `appRouter`, una instancia de [GoRouter].
-class MainApp extends StatelessWidget {
-  const MainApp({Key? key}) : super(key: key);
+class MainApp extends StatelessWidget with GetItMixin {
+  MainApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -51,7 +51,7 @@ class MainApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme($styles),
         darkTheme: AppTheme.darkTheme($styles),
-        themeMode: ThemeMode.light,
+        themeMode: ThemeMode.dark,
         routeInformationProvider: appRouter.routeInformationProvider,
         routeInformationParser: appRouter.routeInformationParser,
         routerDelegate: appRouter.routerDelegate,

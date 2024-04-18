@@ -78,7 +78,7 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
                     style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
                     children: [
                       const TextSpan(
-                        text: 'Tipo de Inspección',
+                        text: 'Tipo de inspección',
                         style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                       TextSpan(text: ': ${widget.inspeccionTipo?.name ?? ''}'),
@@ -91,7 +91,7 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
                     style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
                     children: [
                       const TextSpan(
-                        text: 'Código',
+                        text: 'Código tipo de inspección',
                         style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                       TextSpan(text: ': ${widget.inspeccionTipo?.codigo ?? ''}'),

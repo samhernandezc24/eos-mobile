@@ -54,7 +54,7 @@ class AppStrings {
   String inspectionTypeTitle          = 'Listado de tipos de inspecciones';
 
   String inspectionIndexListTitle     = 'Lista de inspecciones';
-  String inspectionIndexListSubtitle  = 'Muestra inspecciones finalizadas de unidades.';
+  String inspectionIndexListSubtitle  = 'Muestra inspecciones de unidades finalizadas, en evaluación, borradores.';
   String inspectionIndexWithReqTitle  = 'Nueva inspección de unidad con requerimiento';
   String inspectionIndexNoReqTitle    = 'Nueva inspección de unidad sin requerimiento';
   String inspectionIndexSearchTitle   = 'Buscar unidad';
@@ -96,7 +96,7 @@ class AppStrings {
 
   String saveButtonText               = 'Guardar';
 
-  String searchInputHint              = 'Buscar por No. Económico o Folio';
+  String searchInputHintText          = 'Buscar por no. económico o folio';
   String searchInputSemanticClear     = 'Limpiar Búsqueda';
   String searchInputSuggestionsTitle  = 'Sugerencias';
 

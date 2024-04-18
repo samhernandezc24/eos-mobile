@@ -9,6 +9,7 @@ class SettingsLogic with ThrottledSaveLoadMixin {
   late final ValueNotifier<bool> hasCompletedOnboarding     = ValueNotifier<bool>(false)..addListener(scheduleSave);
   late final ValueNotifier<bool> hasAuthenticated           = ValueNotifier<bool>(false)..addListener(scheduleSave);
   late final ValueNotifier<bool> isDarkModeEnabled          = ValueNotifier<bool>(false)..addListener(scheduleSave);
+  late final ValueNotifier<bool> isSearchPanelOpen          = ValueNotifier<bool>(false)..addListener(scheduleSave);
 
   final bool useBlurs = !PlatformInfo.isAndroid;
 
@@ -17,6 +18,7 @@ class SettingsLogic with ThrottledSaveLoadMixin {
     hasCompletedOnboarding.value      = value['hasCompletedOnboarding'] as bool? ?? false;
     hasAuthenticated.value            = value['hasAuthenticated']       as bool? ?? false;
     isDarkModeEnabled.value           = value['isDarkModeEnabled']      as bool? ?? false;
+    isSearchPanelOpen.value           = value['isSearchPanelOpen']      as bool? ?? false;
   }
 
   @override
@@ -25,6 +27,7 @@ class SettingsLogic with ThrottledSaveLoadMixin {
       'hasCompletedOnboarding'    : hasCompletedOnboarding.value,
       'hasAuthenticated'          : hasAuthenticated.value,
       'isDarkModeEnabled'         : isDarkModeEnabled.value,
+      'isSearchPanelOpen'         : isSearchPanelOpen.value,
     };
   }
 }
