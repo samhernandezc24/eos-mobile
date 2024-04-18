@@ -74,7 +74,7 @@ class ListInspeccionSearchInput extends StatelessWidget {
               padding: EdgeInsets.all($styles.insets.xs),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.92),
-                borderRadius: BorderRadius.circular($styles.insets.xxs * 1.5),
+                borderRadius: BorderRadius.circular($styles.insets.xxs),
                 border: Border.all(color: Theme.of(context).colorScheme.secondary.withOpacity(0.3)),
               ),
               child: ConstrainedBox(
@@ -131,7 +131,7 @@ class ListInspeccionSearchInput extends StatelessWidget {
       height: $styles.insets.xl,
       decoration: BoxDecoration(
         color: Theme.of(context).inputDecorationTheme.fillColor,
-        borderRadius: BorderRadius.circular($styles.insets.xxs * 1.5),
+        borderRadius: BorderRadius.circular($styles.insets.xxs),
         border: Border.all(color: Theme.of(context).colorScheme.secondary.withOpacity(0.3), width: 1.6),
       ),
       child: Row(

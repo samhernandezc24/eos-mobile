@@ -61,9 +61,10 @@ class _InspeccionListPageState extends State<InspeccionListPage>  {
             child: ListInspeccionSearchInput(onSubmit: _handleSearchSubmitted),
           ),
           Container(
-            padding: EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, 0),
-            child: const Text('Elementos para filtrar el <InputSearch>'),
+            padding: EdgeInsets.symmetric(horizontal: $styles.insets.xs * 1.5),
+            child: _buildStatusBar(context),
           ),
+          const Divider(),
         ],
       ),
     );
@@ -72,6 +73,29 @@ class _InspeccionListPageState extends State<InspeccionListPage>  {
       body: Stack(
         children: <Widget>[
           Positioned.fill(child: ColoredBox(color: Theme.of(context).colorScheme.background, child: content)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusBar(BuildContext context) {
+    return MergeSemantics(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Gap($styles.insets.xs),
+              Text('498 coincidencias', style: $styles.textStyles.body),
+            ],
+          ),
+          Row(
+            children: [
+              IconButton(onPressed: (){}, icon: const Icon(Icons.format_line_spacing), tooltip: 'Ordenar por'),
+              IconButton(onPressed: (){}, icon: const Icon(Icons.filter_list), tooltip: 'Filtrar por'),
+              Gap($styles.insets.xs),
+            ],
+          ),
         ],
       ),
     );
