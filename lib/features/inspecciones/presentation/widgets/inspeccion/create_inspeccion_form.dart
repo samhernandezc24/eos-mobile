@@ -1,26 +1,26 @@
 import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_field.dart';
 import 'package:eos_mobile/core/enums/unidad_inspeccion_tipo.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/widgets/unidad/create_unidad_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:intl/intl.dart';
 
-class InspeccionFormContent extends StatefulWidget {
-  const InspeccionFormContent({Key? key, this.inspeccionesTipos}) : super(key: key);
+class CreateInspeccionForm extends StatefulWidget {
+  const CreateInspeccionForm({Key? key, this.inspeccionesTipos}) : super(key: key);
 
   final List<InspeccionTipoEntity>? inspeccionesTipos;
 
   @override
-  State<InspeccionFormContent> createState() => _InspeccionFormContentState();
+  State<CreateInspeccionForm> createState() => _CreateInspeccionFormState();
 }
 
-class _InspeccionFormContentState extends State<InspeccionFormContent> {
+class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
   /// INSTANCES
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   /// CONTROLLERS
   late final TextEditingController _fechaInspeccionController;
   late final TextEditingController _locacionController;
-  late final TextEditingController _tipoPlataformaController;
 
   /// PROPERTIES
   UnidadInspeccionTipo? _selectedUnidad;
@@ -28,22 +28,42 @@ class _InspeccionFormContentState extends State<InspeccionFormContent> {
   @override
   void initState() {
     super.initState();
+
     _selectedUnidad = UnidadInspeccionTipo.inventario;
 
     _fechaInspeccionController  = TextEditingController(text: DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now()));
     _locacionController         = TextEditingController();
-    _tipoPlataformaController   = TextEditingController();
   }
 
   @override
   void dispose() {
     _fechaInspeccionController.dispose();
     _locacionController.dispose();
-    _tipoPlataformaController.dispose();
     super.dispose();
   }
 
   /// METHODS
+  void _handleCreateUnidadPressed(BuildContext context) {
+    Navigator.push<void>(
+      context,
+      PageRouteBuilder<void>(
+        transitionDuration: $styles.times.pageTransition,
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+          const Offset begin  = Offset(0, 1);
+          const Offset end    = Offset.zero;
+          const Cubic curve   = Curves.ease;
+
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive<Offset>(tween),
+            child: const CreateUnidadPage(),
+          );
+        },
+        fullscreenDialog: true,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +74,8 @@ class _InspeccionFormContentState extends State<InspeccionFormContent> {
         children: <Widget>[
           // CHECKBOX PARA CAMBIAR ENTRE UNIDAD INVENTARIO / UNIDAD TEMPORAL:
           _buildUnidadCheckbox(UnidadInspeccionTipo.temporal, 'Unidad temporal'),
+
+          Gap($styles.insets.xs),
 
           // SELECCIONAR Y BUSCAR UNIDAD A INSPECCIONAR:
           LabeledDropdownFormField<InspeccionTipoEntity>(
@@ -76,12 +98,12 @@ class _InspeccionFormContentState extends State<InspeccionFormContent> {
             },
             child: _selectedUnidad == UnidadInspeccionTipo.temporal
                 ? Padding(
-                    padding: EdgeInsets.only(top: $styles.insets.xs),
+                    padding: EdgeInsets.only(top: $styles.insets.sm),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         FilledButton.icon(
-                          onPressed: (){},
+                          onPressed: () => _handleCreateUnidadPressed(context),
                           icon: const Icon(Icons.add),
                           label: Text('Nueva unidad', style: $styles.textStyles.button),
                         ),
@@ -111,24 +133,6 @@ class _InspeccionFormContentState extends State<InspeccionFormContent> {
             isReadOnly: true,
             labelText: '* Fecha de la inspección:',
             textAlign: TextAlign.end,
-          ),
-
-          Gap($styles.insets.sm),
-
-          // LOCACIÓN:
-          LabeledTextField(
-            controller: _locacionController,
-            labelText: '* Locación:',
-            hintText: 'Ingresa locación...',
-          ),
-
-          Gap($styles.insets.sm),
-
-          // TIPO DE PLATAFORMA:
-          LabeledTextField(
-            controller: _tipoPlataformaController,
-            labelText: 'Tipo de plataforma:',
-            hintText: 'Ingresa tipo plataforma...',
           ),
         ],
       ),

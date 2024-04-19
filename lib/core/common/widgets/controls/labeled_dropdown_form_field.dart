@@ -9,6 +9,7 @@ class LabeledDropdownFormField<T> extends StatelessWidget {
     this.value,
     this.onChanged,
     this.itemBuilder,
+    this.validator,
   }) : super(key: key);
 
   final String label;
@@ -17,6 +18,7 @@ class LabeledDropdownFormField<T> extends StatelessWidget {
   final T? value;
   final ValueChanged<T?>? onChanged;
   final Widget Function(T)? itemBuilder;
+  final String? Function(T?)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class LabeledDropdownFormField<T> extends StatelessWidget {
         Text(label, style: $styles.textStyles.label),
         Gap($styles.insets.xs),
         DropdownButtonFormField<T>(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(
               vertical: $styles.insets.sm - 3,
@@ -42,7 +45,7 @@ class LabeledDropdownFormField<T> extends StatelessWidget {
           }).toList(),
           onChanged: onChanged,
           menuMaxHeight: 280,
-          value: value,
+          validator: validator,
         ),
       ],
     );

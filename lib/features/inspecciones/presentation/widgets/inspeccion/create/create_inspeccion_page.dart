@@ -1,78 +1,55 @@
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/inspeccion_form_content.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/create_inspeccion_form.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
-class InspeccionUnidadSinRequerimientoPage extends StatefulWidget {
-  const InspeccionUnidadSinRequerimientoPage({Key? key}) : super(key: key);
+class CreateInspeccionPage extends StatefulWidget {
+  const CreateInspeccionPage({super.key});
 
   @override
-  State<InspeccionUnidadSinRequerimientoPage> createState() => _InspeccionUnidadSinRequerimientoPageState();
+  State<CreateInspeccionPage> createState() => _CreateInspeccionPageState();
 }
 
-class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadSinRequerimientoPage> {
+class _CreateInspeccionPageState extends State<CreateInspeccionPage> {
   /// CONTROLLERS
   late final ScrollController _scrollController  = ScrollController();
 
   /// LIST
   late List<InspeccionTipoEntity> lstInspeccionesTipos  = <InspeccionTipoEntity>[];
-  late List<dynamic> lstUnidades                        = <dynamic>[];
 
   /// PROPERTIES
   bool _showScrollToTopButton = false;
 
   @override
   void initState() {
-    context.read<RemoteInspeccionBloc>().add(CreateInspeccionData());
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    context.read<RemoteInspeccionBloc>().add(CreateInspeccionData());
   }
 
   /// METHODS
-  void _handleModalBottomSheet(BuildContext context) {
-    showModalBottomSheet<void>(
+  void _handleDidPopPressed(BuildContext context) {
+    showDialog<void>(
       context: context,
-      builder: (BuildContext context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: $styles.insets.sm),
-              child: Center(
-                child: Text(
-                  '¿Quieres terminar la inspección más tarde?',
-                  style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600),
-                ),
-              ),
-            ),
-            ListTile(
-              onTap: (){},
-              leading: const Icon(Icons.bookmark),
-              title: const Text('Guardar como borrador'),
-              subtitle: const Text('Puedes retomar y responder esta inspección en otro momento.'),
-            ),
-            ListTile(
-              onTap: () => context.go('/home/inspecciones'),
-              leading: const Icon(Icons.delete_forever),
-              textColor: Theme.of(context).colorScheme.error,
-              iconColor: Theme.of(context).colorScheme.error,
-              title: const Text('Descartar inspección'),
-            ),
-            ListTile(
-              onTap: () => context.pop(),
-              leading: const Icon(Icons.check),
-              textColor: Theme.of(context).colorScheme.primary,
-              iconColor: Theme.of(context).colorScheme.primary,
-              title: const Text('Continuar respondiendo'),
-            ),
-          ],
-        );
-      },
+      builder: (BuildContext context) => AlertDialog(
+        title: const SizedBox.shrink(),
+        content: Text('¿Está seguro que desea salir?', style: $styles.textStyles.bodySmall.copyWith(fontSize: 16)),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Cerrar dialog
+              Navigator.of(context).pop(); // Cerrar pagina
+            },
+            child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text($strings.cancelButtonText, style: $styles.textStyles.button),
+          ),
+        ],
+      ),
     );
   }
 
@@ -82,7 +59,7 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
 
   @override
   Widget build(BuildContext context) {
-    // Mostrar el boton para scrollear al top, cuando se encuentre navegando a un nivel
+    // Mostrar el boton para scrollear al top de la página, cuando se encuentre navegando a un nivel
     // de bottom bajo.
     final Widget scrollToTopButton = AnimatedOpacity(
       opacity: _showScrollToTopButton ? 1.0 : 0.0,
@@ -93,32 +70,11 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
       ),
     );
 
-    // Mostrar las acciones para realizar durante la inspección (guardado parcial).
-    final Widget bottomActionsBar = BottomAppBar(
-      child: Row(
-        children: <Widget>[
-          IconButton(
-            onPressed: (){},
-            icon: const Icon(Icons.camera_alt),
-            tooltip: 'Tomar fotografías',
-          ),
-          IconButton(
-            onPressed: (){},
-            icon: const Icon(Icons.sync),
-            tooltip: 'Sincronizar información',
-          ),
-          const Spacer(),
-          FilledButton(onPressed: (){}, child: Text($strings.saveButtonText, style: $styles.textStyles.button)),
-        ],
-      ),
-    );
-
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
         if (didPop) return;
-
-        _handleModalBottomSheet(context);
+        _handleDidPopPressed(context);
       },
       child: Scaffold(
         appBar: AppBar(title: Text('Nueva inspección', style: $styles.textStyles.h3)),
@@ -150,10 +106,10 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
 
                 return ListView(
                   controller: _scrollController,
-                  padding: EdgeInsets.all($styles.insets.sm),
+                  padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm, vertical: $styles.insets.xs),
                   children: <Widget>[
-                    // CAMPOS PARA REALIZAR LA INSPECCIÓN DE UNIDAD SIN REQUERIMIENTO
-                    InspeccionFormContent(inspeccionesTipos: lstInspeccionesTipos),
+                    // CAMPOS PARA CREAR LA INSPECCIÓN DE UNIDAD SIN REQUERIMIENTO
+                    CreateInspeccionForm(inspeccionesTipos: lstInspeccionesTipos),
                   ],
                 );
               }
@@ -161,13 +117,12 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
             },
           ),
         ),
-        bottomNavigationBar: bottomActionsBar,
         floatingActionButton: scrollToTopButton,
       ),
     );
   }
 
-   Widget _buildFailureInspeccion(BuildContext context, RemoteInspeccionFailure state) {
+  Widget _buildFailureInspeccion(BuildContext context, RemoteInspeccionFailure state) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

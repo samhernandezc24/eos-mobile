@@ -1,6 +1,7 @@
 import 'package:eos_mobile/core/common/data/catalogos/base_data.dart';
 import 'package:eos_mobile/core/common/data/catalogos/unidad_marca_data.dart';
 import 'package:eos_mobile/core/common/data/catalogos/unidad_tipo_data.dart';
+import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_field.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_textarea_field.dart';
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_req_entity.dart';
@@ -8,7 +9,11 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote
 import 'package:eos_mobile/shared/shared.dart';
 
 class CreateUnidadForm extends StatefulWidget {
-  const CreateUnidadForm({Key? key}) : super(key: key);
+  const CreateUnidadForm({Key? key, this.bases, this.unidadesMarcas, this.unidadesTipos}) : super(key: key);
+
+  final List<BaseDataEntity>? bases;
+  final List<UnidadMarcaDataEntity>? unidadesMarcas;
+  final List<UnidadTipoDataEntity>? unidadesTipos;
 
   @override
   State<CreateUnidadForm> createState() => _CreateUnidadFormState();
@@ -28,11 +33,6 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
   late final TextEditingController _horometroController;
   late final TextEditingController _odometroController;
 
-  // LIST
-  late final List<BaseDataEntity> lstBases                  = <BaseDataEntity>[];
-  late final List<UnidadMarcaDataEntity> lstUnidadesMarcas  = <UnidadMarcaDataEntity>[];
-  late final List<UnidadTipoDataEntity> lstUnidadesTipos    =  <UnidadTipoDataEntity>[];
-
   // PROPERTIES
   String? selectedTipoUnidadId;
   String? selectedTipoUnidadName;
@@ -43,9 +43,6 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
 
   @override
   void initState() {
-    // Cargar el listado de los DropdownList.
-    BlocProvider.of<RemoteUnidadBloc>(context).add(CreateUnidad());
-
     _numeroEconomicoController    = TextEditingController();
     _numeroSerieController        = TextEditingController();
     _descripcionController        = TextEditingController();
@@ -163,295 +160,281 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
-      builder: (BuildContext context, RemoteUnidadState state) {
-        if (state is RemoteUnidadLoading) {
-          return Center(child: LoadingIndicator(color: Theme.of(context).primaryColor, strokeWidth: 2));
-        }
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          // NÚMERO ECONÓMICO:
+          LabeledTextField(
+            autoFocus: true,
+            controller: _numeroEconomicoController,
+            labelText: '* Número económico:',
+            hintText: 'Ingrese número económico...',
+            validator: FormValidators.textValidator,
+          ),
 
-        if (state is RemoteUnidadFailure) {
-          _showFailureDialog(context, state);
-        }
+          Gap($styles.insets.sm),
 
-        if (state is RemoteUnidadCreateSuccess) {
-          return Form(
-            key: _formKey,
-            child: Column(
-              children: <Widget>[
-                // NÚMERO ECONÓMICO:
-                LabeledTextField(
-                  autoFocus: true,
-                  controller: _numeroEconomicoController,
-                  labelText: '* Número económico:',
-                  hintText: 'Ingrese número económico...',
+          // SELECCIONAR EL TIPO DE UNIDAD:
+          LabeledDropdownFormField(
+            label: '* Tipo de unidad:',
+            hintText: 'Seleccione',
+            items: widget.unidadesTipos,
+            itemBuilder: (unidadTipo) => Text(unidadTipo.name ?? ''),
+            onChanged: (_){},
+            validator: FormValidators.dropdownValidator,
+            // onChanged: (newValue) {
+            //   final selectedTipoUnidad = widget.unidadesTipos?.firstWhere((element) => element.idUnidadTipo == newValue);
+
+            //   if (selectedTipoUnidad != null) {
+            //     setState(() {
+            //       selectedTipoUnidadId    = selectedTipoUnidad.idUnidadTipo;
+            //       selectedTipoUnidadName  = selectedTipoUnidad.name;
+            //     });
+            //   }
+            // },
+          ),
+
+          Gap($styles.insets.sm),
+
+          // MARCA / MODELO DE LA UNIDAD:
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: LabeledDropdownFormField(
+                  label: '* Marca',
+                  hintText: 'Seleccionar',
+                  items: widget.unidadesMarcas,
+                  itemBuilder: (unidadMarca) => Text(unidadMarca.name ?? ''),
+                  onChanged: (_){},
+                  validator: FormValidators.dropdownValidator,
+                ),
+              ),
+              // Expanded(
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.stretch,
+              //     children: <Widget>[
+              //       Text('* Selecciona la marca:', style: $styles.textStyles.label),
+              //       Gap($styles.insets.xs),
+              //       DropdownButtonFormField<dynamic>(
+              //         menuMaxHeight: 280,
+              //         decoration: InputDecoration(
+              //           contentPadding: EdgeInsets.symmetric(
+              //             vertical: $styles.insets.sm - 3,
+              //             horizontal: $styles.insets.xs + 2,
+              //           ),
+              //           hintText: 'Seleccione',
+              //         ),
+              //         items: state.unidadData?.unidadesMarcas
+              //           .map<DropdownMenuItem<dynamic>>((unidadMarca) {
+              //             return DropdownMenuItem<dynamic>(
+              //               value: unidadMarca.idUnidadMarca,
+              //               child: Text(unidadMarca.name ?? ''),
+              //             );
+              //           }).toList() ?? [],
+              //         onChanged: (newValue) {
+              //           final selectedUnidadMarca = state.unidadData?.unidadesMarcas.firstWhere((unidadMarca) => unidadMarca.idUnidadMarca == newValue);
+              //           if (selectedUnidadMarca != null) {
+              //             setState(() {
+              //               selectedUnidadMarcaId    = selectedUnidadMarca.idUnidadMarca;
+              //               selectedUnidadMarcaName  = selectedUnidadMarca.name;
+              //               // print('ID: ${selectedUnidadMarca.idUnidadMarca}, Nombre: ${selectedUnidadMarca.name}');
+              //             });
+              //           }
+              //         },
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              SizedBox(width: $styles.insets.sm),
+              Expanded(
+                child: LabeledTextField(
+                  controller: _modeloController,
+                  labelText: '* Modelo:',
+                  hintText: 'Ingrese el modelo...',
                   validator: FormValidators.textValidator,
                 ),
+              ),
+            ],
+          ),
 
-                Gap($styles.insets.sm),
+          Gap($styles.insets.sm),
 
-                // TIPO DE UNIDAD:
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Text('* Tipo de unidad:', style: $styles.textStyles.label),
-                    Gap($styles.insets.xs),
-                    DropdownButtonFormField<dynamic>(
-                      menuMaxHeight: 280,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: $styles.insets.sm - 3,
-                          horizontal: $styles.insets.xs + 2,
-                        ),
-                        hintText: 'Seleccione',
-                      ),
-                      items: state.unidadData?.unidadesTipos
-                        .map<DropdownMenuItem<dynamic>>((unidadTipo) {
-                          return DropdownMenuItem<dynamic>(
-                            value: unidadTipo.idUnidadTipo,
-                            child: Text(unidadTipo.name ?? ''),
-                          );
-                        }).toList() ?? [],
-                      onChanged: (newValue) {
-                        final selectedTipoUnidad = state.unidadData?.unidadesTipos.firstWhere((unidadTipo) => unidadTipo.idUnidadTipo == newValue);
-                        if (selectedTipoUnidad != null) {
-                          setState(() {
-                            selectedTipoUnidadId    = selectedTipoUnidad.idUnidadTipo;
-                            selectedTipoUnidadName  = selectedTipoUnidad.name;
-                            // print('ID: ${selectedTipoUnidad.idUnidadTipo}, Nombre: ${selectedTipoUnidad.name}');
-                          });
-                        }
-                      },
-                    ),
-                  ],
+          // NO. DE SERIE:
+          LabeledTextField(
+            controller: _numeroSerieController,
+            labelText: 'Número de serie:',
+            hintText: 'Ingrese número serie...',
+          ),
+
+          Gap($styles.insets.sm),
+
+          // CAPACIDAD / AÑO DEL EQUIPO
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: LabeledTextField(
+                  controller: _capacidadController,
+                  labelText: 'Capacidad:',
+                  hintText: 'Ingrese cantidad',
+                  keyboardType: TextInputType.number,
                 ),
-
-                Gap($styles.insets.sm),
-
-                // MARCA / MODELO DE LA UNIDAD:
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          Text('* Selecciona la marca:', style: $styles.textStyles.label),
-                          Gap($styles.insets.xs),
-                          DropdownButtonFormField<dynamic>(
-                            menuMaxHeight: 280,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(
-                                vertical: $styles.insets.sm - 3,
-                                horizontal: $styles.insets.xs + 2,
-                              ),
-                              hintText: 'Seleccione',
-                            ),
-                            items: state.unidadData?.unidadesMarcas
-                              .map<DropdownMenuItem<dynamic>>((unidadMarca) {
-                                return DropdownMenuItem<dynamic>(
-                                  value: unidadMarca.idUnidadMarca,
-                                  child: Text(unidadMarca.name ?? ''),
-                                );
-                              }).toList() ?? [],
-                            onChanged: (newValue) {
-                              final selectedUnidadMarca = state.unidadData?.unidadesMarcas.firstWhere((unidadMarca) => unidadMarca.idUnidadMarca == newValue);
-                              if (selectedUnidadMarca != null) {
-                                setState(() {
-                                  selectedUnidadMarcaId    = selectedUnidadMarca.idUnidadMarca;
-                                  selectedUnidadMarcaName  = selectedUnidadMarca.name;
-                                  // print('ID: ${selectedUnidadMarca.idUnidadMarca}, Nombre: ${selectedUnidadMarca.name}');
-                                });
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: $styles.insets.sm),
-                    Expanded(
-                      child: LabeledTextField(
-                        controller: _modeloController,
-                        labelText: '* Modelo:',
-                        hintText: 'Ingrese el modelo...',
-                        validator: FormValidators.textValidator,
-                      ),
-                    ),
-                  ],
+              ),
+              SizedBox(width: $styles.insets.sm),
+              Expanded(
+                child: LabeledTextField(
+                  controller: _anioEquipoController,
+                  labelText: 'Año del equipo:',
+                  hintText: 'Ingrese año de equipo...',
                 ),
+              ),
+            ],
+          ),
 
-                Gap($styles.insets.sm),
+          Gap($styles.insets.sm),
 
-                // NO. DE SERIE:
-                LabeledTextField(
-                  controller: _numeroSerieController,
-                  labelText: 'Número de serie:',
-                  hintText: 'Ingrese número serie...',
+          // SELECCIONAR BASE DE UNIDAD:
+          LabeledDropdownFormField(
+            label: '* Base',
+            hintText: 'Seleccionar',
+            items: widget.bases,
+            itemBuilder: (base) => Text(base.name ?? ''),
+            onChanged: (_) {},
+            validator: FormValidators.dropdownValidator,
+          ),
+          // Column(
+          //   crossAxisAlignment: CrossAxisAlignment.stretch,
+          //   children: <Widget>[
+          //     Text('* Selecciona la base:', style: $styles.textStyles.label),
+          //     Gap($styles.insets.xs),
+          //     DropdownButtonFormField<dynamic>(
+          //       menuMaxHeight: 280,
+          //       decoration: InputDecoration(
+          //         contentPadding: EdgeInsets.symmetric(
+          //           vertical: $styles.insets.sm - 3,
+          //           horizontal: $styles.insets.xs + 2,
+          //         ),
+          //         hintText: 'Seleccione',
+          //       ),
+          //       items: state.unidadData?.bases
+          //         .map<DropdownMenuItem<dynamic>>((base) {
+          //           return DropdownMenuItem<dynamic>(
+          //             value: base.idBase,
+          //             child: Text(base.name ?? ''),
+          //           );
+          //         }).toList() ?? [],
+          //       onChanged: (newValue) {
+          //         final selectedBase = state.unidadData?.bases.firstWhere((base) => base.idBase == newValue);
+          //         if (selectedBase != null) {
+          //           setState(() {
+          //             selectedBaseId    = selectedBase.idBase;
+          //             selectedBaseName  = selectedBase.name;
+          //             // print('ID: ${selectedBase.idBase}, Nombre: ${selectedBase.name}');
+          //           });
+          //         }
+          //       },
+          //     ),
+          //   ],
+          // ),
+
+          Gap($styles.insets.sm),
+
+          // HOROMETRO / ODOMETRO:
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: LabeledTextField(
+                  controller: _horometroController,
+                  labelText: 'Horómetro:',
+                  hintText: 'Ingrese cantidad',
+                  keyboardType: TextInputType.number,
                 ),
+              ),
+              SizedBox(width: $styles.insets.sm),
+              Expanded(
+                child: LabeledTextField(
+                  controller: _odometroController,
+                  labelText: 'Odómetro:',
+                  hintText: 'Ingrese cantidad',
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+            ],
+          ),
 
-                Gap($styles.insets.sm),
+          Gap($styles.insets.sm),
 
-                // CAPACIDAD / AÑO DEL EQUIPO
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                      child: LabeledTextField(
-                        controller: _capacidadController,
-                        labelText: 'Capacidad:',
-                        hintText: 'Ingrese cantidad',
-                        keyboardType: TextInputType.number,
-                      ),
+          // DESCRIPCIÓN
+          LabeledTextAreaField(
+            controller: _descripcionController,
+            labelText: 'Descripción de la unidad (opcional):',
+            hintText: 'Ingrese descripción...',
+            textInputAction: TextInputAction.done,
+            maxLines: 2,
+            maxCharacters: 300,
+          ),
+
+          Gap($styles.insets.md),
+
+          BlocConsumer<RemoteUnidadBloc, RemoteUnidadState>(
+            listener: (BuildContext context, RemoteUnidadState state) {
+              if (state is RemoteUnidadFailure) {
+                _showFailureDialog(context, state);
+              }
+
+              if (state is RemoteUnidadFailedMessage) {
+                _showFailedMessageDialog(context, state);
+              }
+
+              if (state is RemoteUnidadResponseSuccess) {
+                Navigator.pop(context);
+
+                ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(state.apiResponse.message, softWrap: true),
+                    backgroundColor: Colors.green,
+                    behavior: SnackBarBehavior.floating,
+                    elevation: 0,
+                  ),
+                );
+              }
+            },
+            builder: (BuildContext context, RemoteUnidadState state) {
+              if (state is RemoteUnidadLoading) {
+                return FilledButton(
+                  onPressed: null,
+                  style: ButtonStyle(
+                    minimumSize: MaterialStateProperty.all<Size?>(
+                      const Size(double.infinity, 48),
                     ),
-                    SizedBox(width: $styles.insets.sm),
-                    Expanded(
-                      child: LabeledTextField(
-                        controller: _anioEquipoController,
-                        labelText: 'Año del equipo:',
-                        hintText: 'Ingrese año de equipo...',
-                      ),
-                    ),
-                  ],
+                  ),
+                  child: LoadingIndicator(
+                    color: Theme.of(context).primaryColor,
+                    width: 20,
+                    height: 20,
+                    strokeWidth: 2,
+                  ),
+                );
+              }
+
+              return FilledButton(
+                onPressed: _handleStoreUnidad,
+                style: ButtonStyle(
+                minimumSize: MaterialStateProperty.all<Size?>(
+                    const Size(double.infinity, 48),
+                  ),
                 ),
-
-                Gap($styles.insets.sm),
-
-                // BASES
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Text('* Selecciona la base:', style: $styles.textStyles.label),
-                    Gap($styles.insets.xs),
-                    DropdownButtonFormField<dynamic>(
-                      menuMaxHeight: 280,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: $styles.insets.sm - 3,
-                          horizontal: $styles.insets.xs + 2,
-                        ),
-                        hintText: 'Seleccione',
-                      ),
-                      items: state.unidadData?.bases
-                        .map<DropdownMenuItem<dynamic>>((base) {
-                          return DropdownMenuItem<dynamic>(
-                            value: base.idBase,
-                            child: Text(base.name ?? ''),
-                          );
-                        }).toList() ?? [],
-                      onChanged: (newValue) {
-                        final selectedBase = state.unidadData?.bases.firstWhere((base) => base.idBase == newValue);
-                        if (selectedBase != null) {
-                          setState(() {
-                            selectedBaseId    = selectedBase.idBase;
-                            selectedBaseName  = selectedBase.name;
-                            // print('ID: ${selectedBase.idBase}, Nombre: ${selectedBase.name}');
-                          });
-                        }
-                      },
-                    ),
-                  ],
-                ),
-
-                Gap($styles.insets.sm),
-
-                // HOROMETRO / ODOMETRO:
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                      child: LabeledTextField(
-                        controller: _horometroController,
-                        labelText: 'Horómetro:',
-                        hintText: 'Ingrese cantidad',
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    SizedBox(width: $styles.insets.sm),
-                    Expanded(
-                      child: LabeledTextField(
-                        controller: _odometroController,
-                        labelText: 'Odómetro:',
-                        hintText: 'Ingrese cantidad',
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                  ],
-                ),
-
-                Gap($styles.insets.sm),
-
-                // DESCRIPCIÓN
-                LabeledTextAreaField(
-                  controller: _descripcionController,
-                  labelText: 'Descripción de la unidad (opcional):',
-                  hintText: 'Ingrese descripción...',
-                  textInputAction: TextInputAction.done,
-                  maxLines: 2,
-                  maxCharacters: 300,
-                ),
-
-                Gap($styles.insets.md),
-
-                BlocConsumer<RemoteUnidadBloc, RemoteUnidadState>(
-                  listener: (BuildContext context, RemoteUnidadState state) {
-                    if (state is RemoteUnidadFailure) {
-                      _showFailureDialog(context, state);
-                    }
-
-                    if (state is RemoteUnidadFailedMessage) {
-                      _showFailedMessageDialog(context, state);
-                    }
-
-                    if (state is RemoteUnidadResponseSuccess) {
-                      Navigator.pop(context);
-
-                      ScaffoldMessenger.of(context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(
-                        SnackBar(
-                          content: Text(state.apiResponse.message, softWrap: true),
-                          backgroundColor: Colors.green,
-                          behavior: SnackBarBehavior.floating,
-                          elevation: 0,
-                        ),
-                      );
-                    }
-                  },
-                  builder: (BuildContext context, RemoteUnidadState state) {
-                    if (state is RemoteUnidadLoading) {
-                      return FilledButton(
-                        onPressed: null,
-                        style: ButtonStyle(
-                          minimumSize: MaterialStateProperty.all<Size?>(
-                            const Size(double.infinity, 48),
-                          ),
-                        ),
-                        child: LoadingIndicator(
-                          color: Theme.of(context).primaryColor,
-                          width: 20,
-                          height: 20,
-                          strokeWidth: 2,
-                        ),
-                      );
-                    }
-
-                    return FilledButton(
-                      onPressed: _handleStoreUnidad,
-                      style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all<Size?>(
-                          const Size(double.infinity, 48),
-                        ),
-                      ),
-                      child: Text($strings.saveButtonText, style: $styles.textStyles.button),
-                    );
-                  },
-                ),
-              ],
-            ),
-          );
-        }
-
-        return const SizedBox.shrink();
-      },
+                child: Text($strings.saveButtonText, style: $styles.textStyles.button),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

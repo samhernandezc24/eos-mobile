@@ -1,5 +1,6 @@
 import 'package:eos_mobile/core/extensions/panel_extension.dart';
 import 'package:eos_mobile/core/utils/haptics_utils.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/create/create_inspeccion_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/list_inspeccion_search_input.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
@@ -44,9 +45,29 @@ class _InspeccionListPageState extends State<InspeccionListPage>  {
   }
 
   void _updateResults() {
-    if (_query.isEmpty) {
+    if (_query.isEmpty) {}
+  }
 
-    }
+  void _handleCreateInspeccionPressed(BuildContext context) {
+    Navigator.push<void>(
+      context,
+      PageRouteBuilder<void>(
+        transitionDuration: $styles.times.pageTransition,
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+          const Offset begin  = Offset(0, 1);
+          const Offset end    = Offset.zero;
+          const Cubic curve   = Curves.ease;
+
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive<Offset>(tween),
+            child: const CreateInspeccionPage(),
+          );
+        },
+        fullscreenDialog: true,
+      ),
+    );
   }
 
   @override
@@ -70,11 +91,14 @@ class _InspeccionListPageState extends State<InspeccionListPage>  {
     );
 
     return Scaffold(
+      appBar: AppBar(title: Text('Lista de inspecciones', style: $styles.textStyles.h3)),
       body: Stack(
         children: <Widget>[
           Positioned.fill(child: ColoredBox(color: Theme.of(context).colorScheme.background, child: content)),
         ],
       ),
+      // NUEVA INSPECCIÓN DE UNIDAD SIN REQUERIMIENTO:
+      floatingActionButton: _buildFloatingActionButton(context),
     );
   }
 
@@ -98,6 +122,14 @@ class _InspeccionListPageState extends State<InspeccionListPage>  {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildFloatingActionButton(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () => _handleCreateInspeccionPressed(context),
+      tooltip: 'Nueva inspección',
+      child: const Icon(Icons.add),
     );
   }
 }

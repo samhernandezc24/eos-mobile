@@ -45,7 +45,7 @@ class AppStrings {
   String error500Title                = '¡Oops, algo ha salido mal!';
 
   String forgotPasswordAppBarText     = '¿Has olvidado tu contraseña?';
-  String forgotPasswordButtonText     = 'Enviar Enlace';
+  String forgotPasswordButtonText     = 'Enviar enlace';
   String forgotPasswordMessage        = 'Completa el formulario para restablecer su contraseña';
   String forgotPasswordSemanticImage  = 'Se te ha olvidado la contraseña';
 
@@ -54,7 +54,7 @@ class AppStrings {
   String inspectionTypeTitle          = 'Listado de tipos de inspecciones';
 
   String inspectionIndexListTitle     = 'Lista de inspecciones';
-  String inspectionIndexListSubtitle  = 'Muestra inspecciones de unidades finalizadas, en evaluación, borradores.';
+  String inspectionIndexListSubtitle  = 'Muestra inspecciones en general.';
   String inspectionIndexWithReqTitle  = 'Nueva inspección de unidad con requerimiento';
   String inspectionIndexNoReqTitle    = 'Nueva inspección de unidad sin requerimiento';
   String inspectionIndexSearchTitle   = 'Buscar unidad';
@@ -69,7 +69,7 @@ class AppStrings {
   String homePageModule5              = 'Proyectos';
   String homePageModule6              = 'Unidades';
 
-  String homeGoBackButtonText         = 'Volver a Inicio';
+  String homeGoBackButtonText         = 'Volver a inicio';
   String homeMenuAboutApp             = 'EOS Mobile agiliza los procesos internos de la empresa {heavyLiftUrl}. ';
   String homeMenuAboutBuilt           = 'Construido con {flutterUrl} para ofrecer una experiencia nativa.';
   String homeMenuAboutProcess         = 'Facilita la centralización de tareas y operaciones en un único lugar, mejorando la productividad.';
@@ -77,12 +77,6 @@ class AppStrings {
   String homeMenuButtonSettings       = 'Configuración';
   String homeMenuButtonHelp           = 'Ayuda y comentarios';
   String homeMenuButtonLogout         = 'Cerrar sesión';
-  String homeMenuButtonModule1        = 'Inspecciones de Unidades';
-  String homeMenuButtonModule2        = 'Órdenes de Compras';
-  String homeMenuButtonModule3        = 'Órdenes de Embarques';
-  String homeMenuButtonModule4        = 'Requerimientos';
-  String homeMenuButtonModule5        = 'Proyectos';
-  String homeMenuButtonModule6        = 'Unidades';
   String homeMenuButtonNotification   = 'Notificaciones';
   String homeMenuButtonHome           = 'Inicio';
   String homeMenuButtonDashboard      = 'Dashboard';
@@ -92,7 +86,7 @@ class AppStrings {
   String bottomNavigationHome         = 'Inicio';
 
   String refreshButtonText            = 'Actualizar';
-  String retryButtonText              = 'Volver a Intentar';
+  String retryButtonText              = 'Volver a intentar';
 
   String saveButtonText               = 'Guardar';
 

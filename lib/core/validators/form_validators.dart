@@ -2,7 +2,7 @@ class FormValidators {
   /// Validación de correo electrónico.
   static String? emailValidator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Por favor ingresa tu correo electrónico';
+      return 'Por favor ingresa tu correo electrónico.';
     }
 
     final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
@@ -32,7 +32,14 @@ class FormValidators {
   static String? integerValidator(String? value) {
     final RegExp numericRegex = RegExp(r'^-?[0-9]+$');
     if (!numericRegex.hasMatch(value ?? '')) {
-      return 'Por favor, ingresa un número entero válido';
+      return 'Por favor, ingresa un número entero válido.';
+    }
+    return null;
+  }
+
+  static String? dropdownValidator(dynamic value) {
+    if (value == null) {
+      return 'Por favor, selecciona una opción.';
     }
     return null;
   }
