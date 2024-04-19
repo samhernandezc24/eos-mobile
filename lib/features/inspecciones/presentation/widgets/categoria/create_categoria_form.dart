@@ -44,7 +44,7 @@ class _CreateCategoriaFormState extends State<CreateCategoriaForm> {
             SizedBox(width: $styles.insets.xs + 2),
             Flexible(
               child: Text(
-                state.failure?.response?.data.toString() ?? 'Se produjo un error inesperado. Intenta crear la categoría de nuevo.',
+                state.failure?.errorMessage ?? 'Se produjo un error inesperado. Intenta crear la categoría de nuevo.',
                 style: $styles.textStyles.title2.copyWith(
                   height: 1.5,
                   color: Theme.of(context).colorScheme.error,
@@ -146,7 +146,7 @@ class _CreateCategoriaFormState extends State<CreateCategoriaForm> {
                   SnackBar(
                     content: Text(state.apiResponse.message, softWrap: true),
                     backgroundColor: Colors.green,
-                    behavior: SnackBarBehavior.floating,
+                    behavior: SnackBarBehavior.fixed,
                     elevation: 0,
                   ),
                 );

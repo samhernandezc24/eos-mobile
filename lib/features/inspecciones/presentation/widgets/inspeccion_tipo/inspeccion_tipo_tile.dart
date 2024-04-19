@@ -23,8 +23,7 @@ class InspeccionTipoTile extends StatelessWidget {
             SizedBox(width: $styles.insets.xs + 2),
             Flexible(
               child: Text(
-                state.failure?.response?.data.toString() ??
-                    'Se produjo un error inesperado. Intenta eliminar el tipo de inspección de nuevo.',
+               state.failure?.errorMessage ?? 'Se produjo un error inesperado. Intenta eliminar de nuevo el tipo de inspección.',
                 style: $styles.textStyles.title2.copyWith(
                   height: 1.5,
                   color: Theme.of(context).colorScheme.error,

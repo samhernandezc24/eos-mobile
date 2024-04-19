@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
+import 'package:eos_mobile/core/network/errors/dio_exception.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion_tipo/inspeccion_tipo_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion_tipo/inspeccion_tipo_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion_tipo/inspeccion_tipo_req_model.dart';
@@ -46,22 +47,24 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
         }
       } else {
         return DataFailed(
-          DioException(
-            error           : httpResponse.response.statusMessage,
-            response        : httpResponse.response,
-            type            : DioExceptionType.badResponse,
-            requestOptions  : httpResponse.response.requestOptions,
+          ServerException.fromDioException(
+            DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
           ),
         );
       }
     } on DioException catch (ex) {
-      return DataFailed(ex);
+      return DataFailed(ServerException.fromDioException(ex));
     }
   }
 
   /// GUARDADO DE INSPECCIÓN TIPO
   @override
-  Future<DataState<ApiResponse>> storeInspeccionTipo(InspeccionTipoReqEntity data) async {
+  Future<DataState<ApiResponse>> storeInspeccionTipo(InspeccionTipoReqEntity inspeccionTipo) async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
@@ -70,7 +73,7 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
       final httpResponse = await _inspeccionTipoRemoteApiService.storeInspeccionTipo(
         'Bearer $token',
         'application/json',
-        InspeccionTipoReqModel.fromEntity(data),
+        InspeccionTipoReqModel.fromEntity(inspeccionTipo),
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
@@ -85,16 +88,18 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
         }
       } else {
         return DataFailed(
-          DioException(
-            error           : httpResponse.response.statusMessage,
-            response        : httpResponse.response,
-            type            : DioExceptionType.badResponse,
-            requestOptions  : httpResponse.response.requestOptions,
+          ServerException.fromDioException(
+            DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
           ),
         );
       }
     } on DioException catch (ex) {
-      return DataFailed(ex);
+      return DataFailed(ServerException.fromDioException(ex));
     }
   }
 
@@ -124,16 +129,18 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
         }
       } else {
         return DataFailed(
-          DioException(
-            error           : httpResponse.response.statusMessage,
-            response        : httpResponse.response,
-            type            : DioExceptionType.badResponse,
-            requestOptions  : httpResponse.response.requestOptions,
+          ServerException.fromDioException(
+            DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
           ),
         );
       }
     } on DioException catch (ex) {
-      return DataFailed(ex);
+      return DataFailed(ServerException.fromDioException(ex));
     }
   }
 
@@ -163,16 +170,18 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
         }
       } else {
         return DataFailed(
-          DioException(
-            error           : httpResponse.response.statusMessage,
-            response        : httpResponse.response,
-            type            : DioExceptionType.badResponse,
-            requestOptions  : httpResponse.response.requestOptions,
+          ServerException.fromDioException(
+            DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
           ),
         );
       }
     } on DioException catch (ex) {
-      return DataFailed(ex);
+      return DataFailed(ServerException.fromDioException(ex));
     }
   }
 }

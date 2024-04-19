@@ -57,8 +57,7 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
             SizedBox(width: $styles.insets.xs + 2),
             Flexible(
               child: Text(
-                state.failure?.response?.data.toString() ??
-                    'Se produjo un error inesperado. Intenta eliminar la pregunta de nuevo.',
+                state.failure?.errorMessage ?? 'Se produjo un error inesperado. Intenta eliminar la pregunta de nuevo.',
                 style: $styles.textStyles.title2.copyWith(
                   height: 1.5,
                   color: Theme.of(context).colorScheme.error,

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:eos_mobile/core/network/data_state.dart';
+import 'package:eos_mobile/core/network/errors/dio_exception.dart';
 import 'package:eos_mobile/features/auth/data/datasources/local/auth_local_source.dart';
 import 'package:eos_mobile/features/auth/data/datasources/remote/auth_remote_api_service.dart';
 import 'package:eos_mobile/features/auth/data/models/account_model.dart';
@@ -27,16 +28,18 @@ class AuthRepositoryImpl implements AuthRepository {
         return DataSuccess(httpResponse.data);
       } else {
         return DataFailed(
-          DioException(
-            error: httpResponse.response.statusMessage,
-            response: httpResponse.response,
-            type: DioExceptionType.badResponse,
-            requestOptions: httpResponse.response.requestOptions,
+          ServerException.fromDioException(
+            DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
           ),
         );
       }
     } on DioException catch (ex) {
-      return DataFailed(ex);
+      return DataFailed(ServerException.fromDioException(ex));
     }
   }
 

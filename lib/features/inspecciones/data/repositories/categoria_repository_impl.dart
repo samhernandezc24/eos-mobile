@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
+import 'package:eos_mobile/core/network/errors/dio_exception.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/categoria/categoria_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria_req_model.dart';
@@ -47,16 +48,18 @@ class CategoriaRepositoryImpl implements CategoriaRepository {
         }
       } else {
         return DataFailed(
-          DioException(
-            error           : httpResponse.response.statusMessage,
-            response        : httpResponse.response,
-            type            : DioExceptionType.badResponse,
-            requestOptions  : httpResponse.response.requestOptions,
+          ServerException.fromDioException(
+              DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
           ),
         );
       }
     } on DioException catch (ex) {
-      return DataFailed(ex);
+      return DataFailed(ServerException.fromDioException(ex));
     }
   }
 
@@ -68,7 +71,11 @@ class CategoriaRepositoryImpl implements CategoriaRepository {
       final String? token = await authTokenHelper.retrieveRefreshToken();
 
       // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _categoriaRemoteApiService.storeCategoria('Bearer $token', 'application/json', CategoriaReqModel.fromEntity(categoria));
+      final httpResponse = await _categoriaRemoteApiService.storeCategoria(
+        'Bearer $token',
+        'application/json',
+        CategoriaReqModel.fromEntity(categoria),
+      );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         if (httpResponse.data.session) {
@@ -82,16 +89,18 @@ class CategoriaRepositoryImpl implements CategoriaRepository {
         }
       } else {
         return DataFailed(
-          DioException(
-            error           : httpResponse.response.statusMessage,
-            response        : httpResponse.response,
-            type            : DioExceptionType.badResponse,
-            requestOptions  : httpResponse.response.requestOptions,
+          ServerException.fromDioException(
+              DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
           ),
         );
       }
     } on DioException catch (ex) {
-      return DataFailed(ex);
+      return DataFailed(ServerException.fromDioException(ex));
     }
   }
 
@@ -117,16 +126,18 @@ class CategoriaRepositoryImpl implements CategoriaRepository {
         }
       } else {
         return DataFailed(
-          DioException(
-            error           : httpResponse.response.statusMessage,
-            response        : httpResponse.response,
-            type            : DioExceptionType.badResponse,
-            requestOptions  : httpResponse.response.requestOptions,
+          ServerException.fromDioException(
+              DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
           ),
         );
       }
     } on DioException catch (ex) {
-      return DataFailed(ex);
+      return DataFailed(ServerException.fromDioException(ex));
     }
   }
 
@@ -152,16 +163,18 @@ class CategoriaRepositoryImpl implements CategoriaRepository {
         }
       } else {
         return DataFailed(
-          DioException(
-            error           : httpResponse.response.statusMessage,
-            response        : httpResponse.response,
-            type            : DioExceptionType.badResponse,
-            requestOptions  : httpResponse.response.requestOptions,
+          ServerException.fromDioException(
+              DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
           ),
         );
       }
     } on DioException catch (ex) {
-      return DataFailed(ex);
+      return DataFailed(ServerException.fromDioException(ex));
     }
   }
 }

@@ -19,7 +19,7 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
   late List<InspeccionTipoEntity> lstInspeccionesTipos = <InspeccionTipoEntity>[];
 
   /// PROPERTIES
-  bool _showScrollTopButton = false;
+  bool _showScrollToTopButton = false;
 
   @override
   void initState() {
@@ -48,7 +48,7 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
               onTap: (){},
               leading: const Icon(Icons.bookmark),
               title: const Text('Guardar como borrador'),
-              subtitle: const Text('Puedes editarlo cuando regreses nuevamente a este apartado donde lo dejaste.'),
+              subtitle: const Text('Puedes retomar y responder esta inspección en otro momento.'),
             ),
             ListTile(
               onTap: () => context.go('/home/inspecciones'),
@@ -62,7 +62,7 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
               leading: const Icon(Icons.check),
               textColor: Theme.of(context).colorScheme.primary,
               iconColor: Theme.of(context).colorScheme.primary,
-              title: const Text('Seguir editando'),
+              title: const Text('Continuar respondiendo'),
             ),
           ],
         );
@@ -70,15 +70,19 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
     );
   }
 
+  void _scrollToTop() {
+    _scrollController.animateTo(0, duration: $styles.times.fast, curve: Curves.easeInOut);
+  }
+
   @override
   Widget build(BuildContext context) {
     // Mostrar el boton para scrollear al top, cuando se encuentre navegando a un nivel
     // de bottom bajo.
     final Widget scrollToTopButton = AnimatedOpacity(
-      opacity: _showScrollTopButton ? 1.0 : 0.0,
+      opacity: _showScrollToTopButton ? 1.0 : 0.0,
       duration: $styles.times.fast,
       child: FloatingActionButton(
-        onPressed: (){},
+        onPressed: _scrollToTop,
         child: const Icon(Icons.arrow_upward),
       ),
     );
@@ -116,7 +120,7 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
           onNotification: (notification) {
             if (notification is ScrollUpdateNotification) {
               setState(() {
-                _showScrollTopButton = _scrollController.offset > 100;
+                _showScrollToTopButton = _scrollController.offset > 100;
               });
             }
             return true;
@@ -125,6 +129,10 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
             builder: (BuildContext context, RemoteInspeccionState state) {
               if (state is RemoteInspeccionLoading) {
                 return Center(child: LoadingIndicator(color: Theme.of(context).primaryColor, strokeWidth: 3));
+              }
+
+              if (state is RemoteInspeccionFailure) {
+                return _buildFailureInspeccion(context, state);
               }
 
               if (state is RemoteInspeccionCreateSuccess) {
@@ -145,6 +153,33 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
         ),
         bottomNavigationBar: bottomActionsBar,
         floatingActionButton: scrollToTopButton,
+      ),
+    );
+  }
+
+   Widget _buildFailureInspeccion(BuildContext context, RemoteInspeccionFailure state) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 64),
+          Gap($styles.insets.sm),
+          Text($strings.error500Title, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600)),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
+            child: Text(
+              state.failure?.errorMessage ?? 'Se produjo un error inesperado. Inténtalo de nuevo.',
+              overflow: TextOverflow.ellipsis,
+              maxLines: 10,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          FilledButton.icon(
+            onPressed: () => BlocProvider.of<RemoteInspeccionBloc>(context).add(CreateInspeccionData()),
+            icon: const Icon(Icons.refresh),
+            label: Text($strings.retryButtonText, style: $styles.textStyles.button),
+          ),
+        ],
       ),
     );
   }

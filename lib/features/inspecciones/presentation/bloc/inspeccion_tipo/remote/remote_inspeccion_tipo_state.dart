@@ -30,7 +30,7 @@ class RemoteInspeccionTipoResponseSuccess extends RemoteInspeccionTipoState {
 class RemoteInspeccionTipoFailure extends RemoteInspeccionTipoState {
   const RemoteInspeccionTipoFailure(this.failure);
 
-  final DioException? failure;
+  final ServerException? failure;
 
   @override
   List<Object?> get props => [ failure ];

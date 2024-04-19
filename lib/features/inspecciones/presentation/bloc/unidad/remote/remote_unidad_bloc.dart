@@ -1,6 +1,7 @@
 import 'package:eos_mobile/core/common/data/catalogos/unidad_data.dart';
 import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
+import 'package:eos_mobile/core/network/errors/dio_exception.dart';
 import 'package:eos_mobile/core/usecases/usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_req_entity.dart';
@@ -38,7 +39,7 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteUnidadFailure(objDataState.exception));
+      emit(RemoteUnidadFailure(objDataState.serverException));
     }
   }
 
@@ -56,7 +57,7 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteUnidadFailure(objDataState.exception));
+      emit(RemoteUnidadFailure(objDataState.serverException));
     }
   }
 }

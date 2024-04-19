@@ -30,7 +30,7 @@ class RemoteCategoriaResponseSuccess extends RemoteCategoriaState {
 class RemoteCategoriaFailure extends RemoteCategoriaState {
   const RemoteCategoriaFailure(this.failure);
 
-  final DioException? failure;
+  final ServerException? failure;
 
   @override
   List<Object?> get props => [ failure ];

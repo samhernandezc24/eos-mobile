@@ -39,7 +39,7 @@ class RemoteUnidadResponseSuccess extends RemoteUnidadState {
 class RemoteUnidadFailure extends RemoteUnidadState {
   const RemoteUnidadFailure(this.failure);
 
-  final DioException? failure;
+  final ServerException? failure;
 
   @override
   List<Object?> get props => [ failure ];

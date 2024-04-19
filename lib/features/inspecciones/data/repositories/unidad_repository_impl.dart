@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:eos_mobile/core/common/data/catalogos/unidad_data.dart';
 import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
+import 'package:eos_mobile/core/network/errors/dio_exception.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/unidad/unidad_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_req_entity.dart';
@@ -43,16 +44,18 @@ class UnidadRepositoryImpl implements UnidadRepository {
         }
       } else {
         return DataFailed(
-          DioException(
-            error           : httpResponse.response.statusMessage,
-            response        : httpResponse.response,
-            type            : DioExceptionType.badResponse,
-            requestOptions  : httpResponse.response.requestOptions,
+          ServerException.fromDioException(
+              DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
           ),
         );
       }
     } on DioException catch (ex) {
-      return DataFailed(ex);
+      return DataFailed(ServerException.fromDioException(ex));
     }
   }
 
@@ -82,16 +85,18 @@ class UnidadRepositoryImpl implements UnidadRepository {
         }
       } else {
         return DataFailed(
-          DioException(
-            error           : httpResponse.response.statusMessage,
-            response        : httpResponse.response,
-            type            : DioExceptionType.badResponse,
-            requestOptions  : httpResponse.response.requestOptions,
+          ServerException.fromDioException(
+              DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
           ),
         );
       }
     } on DioException catch (ex) {
-      return DataFailed(ex);
+      return DataFailed(ServerException.fromDioException(ex));
     }
   }
 }

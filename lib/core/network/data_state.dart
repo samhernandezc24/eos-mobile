@@ -1,10 +1,10 @@
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/core/network/errors/dio_exception.dart';
 
 abstract class DataState<T> {
-  const DataState({this.data, this.exception, this.errorMessage});
+  const DataState({this.data, this.serverException, this.errorMessage});
 
   final T? data;
-  final DioException? exception;
+  final ServerException? serverException;
   final String? errorMessage;
 }
 
@@ -17,5 +17,5 @@ class DataFailedMessage<T> extends DataState<T> {
 }
 
 class DataFailed<T> extends DataState<T> {
-  const DataFailed(DioException exception) : super(exception: exception);
+  const DataFailed(ServerException serverException) : super(serverException: serverException);
 }

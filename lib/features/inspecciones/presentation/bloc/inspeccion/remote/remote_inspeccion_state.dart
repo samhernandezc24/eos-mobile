@@ -21,7 +21,7 @@ class RemoteInspeccionCreateSuccess extends RemoteInspeccionState {
 class RemoteInspeccionFailure extends RemoteInspeccionState {
   const RemoteInspeccionFailure(this.failure);
 
-  final DioException? failure;
+  final ServerException? failure;
 
   @override
   List<Object?> get props => [ failure ];

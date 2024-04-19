@@ -1,5 +1,6 @@
 import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
+import 'package:eos_mobile/core/network/errors/dio_exception.dart';
 import 'package:eos_mobile/core/usecases/usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_req_entity.dart';
@@ -45,7 +46,7 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionTipoFailure(objDataState.exception));
+      emit(RemoteInspeccionTipoFailure(objDataState.serverException));
     }
   }
 
@@ -65,7 +66,7 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionTipoFailure(objDataState.exception));
+      emit(RemoteInspeccionTipoFailure(objDataState.serverException));
       await _reloadInspeccionesTipos(emit);
     }
   }
@@ -86,7 +87,7 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionTipoFailure(objDataState.exception));
+      emit(RemoteInspeccionTipoFailure(objDataState.serverException));
       await _reloadInspeccionesTipos(emit);
     }
   }
@@ -107,7 +108,7 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionTipoFailure(objDataState.exception));
+      emit(RemoteInspeccionTipoFailure(objDataState.serverException));
       await _reloadInspeccionesTipos(emit);
     }
   }

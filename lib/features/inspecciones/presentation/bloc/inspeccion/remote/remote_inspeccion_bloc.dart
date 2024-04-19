@@ -1,4 +1,5 @@
 import 'package:eos_mobile/core/network/data_state.dart';
+import 'package:eos_mobile/core/network/errors/dio_exception.dart';
 import 'package:eos_mobile/core/usecases/usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/create_inspeccion_usecase.dart';
@@ -31,7 +32,7 @@ class RemoteInspeccionBloc extends Bloc<RemoteInspeccionEvent, RemoteInspeccionS
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionFailure(objDataState.exception));
+      emit(RemoteInspeccionFailure(objDataState.serverException));
     }
   }
 }

@@ -211,7 +211,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
           Container(
             padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
             child: Text(
-              state.failure?.message ?? 'Error al obtener el listado de preguntas.',
+              state.failure?.errorMessage ?? 'Se produjo un error inesperado. Intenta actualizar de nuevo la lista.',
               overflow: TextOverflow.ellipsis,
               maxLines: 10,
               textAlign: TextAlign.center,
@@ -238,7 +238,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
           Container(
             padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
             child: Text(
-              state.errorMessage.toString(),
+              state.errorMessage ?? 'Se produjo un error inesperado. Intenta actualizar de nuevo la lista.',
               overflow: TextOverflow.ellipsis,
               maxLines: 10,
               textAlign: TextAlign.center,
@@ -258,11 +258,11 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
     return BlocConsumer<RemoteCategoriaItemBloc, RemoteCategoriaItemState>(
       listener: (BuildContext context, RemoteCategoriaItemState state) {
         if (state is RemoteCategoriaItemFailure) {
-
+          _buildFailureCategoriaItem(context, state);
         }
 
         if (state is RemoteCategoriaItemFailedMessage) {
-
+          _buildFailedMessageCategoriaItem(context, state);
         }
 
         if (state is RemoteCategoriaItemResponseSuccess) {

@@ -1,5 +1,6 @@
 import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
+import 'package:eos_mobile/core/network/errors/dio_exception.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_data_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_duplicate_req_entity.dart';
@@ -51,7 +52,7 @@ class RemoteCategoriaItemBloc extends Bloc<RemoteCategoriaItemEvent, RemoteCateg
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteCategoriaItemFailure(objDataState.exception));
+      emit(RemoteCategoriaItemFailure(objDataState.serverException));
     }
   }
 
@@ -81,7 +82,7 @@ class RemoteCategoriaItemBloc extends Bloc<RemoteCategoriaItemEvent, RemoteCateg
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteCategoriaItemFailure(objDataState.exception));
+      emit(RemoteCategoriaItemFailure(objDataState.serverException));
     }
   }
 
@@ -111,7 +112,7 @@ class RemoteCategoriaItemBloc extends Bloc<RemoteCategoriaItemEvent, RemoteCateg
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteCategoriaItemFailure(objDataState.exception));
+      emit(RemoteCategoriaItemFailure(objDataState.serverException));
     }
   }
 
@@ -139,7 +140,7 @@ class RemoteCategoriaItemBloc extends Bloc<RemoteCategoriaItemEvent, RemoteCateg
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteCategoriaItemFailure(objDataState.exception));
+      emit(RemoteCategoriaItemFailure(objDataState.serverException));
     }
   }
 
@@ -157,7 +158,7 @@ class RemoteCategoriaItemBloc extends Bloc<RemoteCategoriaItemEvent, RemoteCateg
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteCategoriaItemFailure(objDataState.exception));
+      emit(RemoteCategoriaItemFailure(objDataState.serverException));
     }
   }
 }

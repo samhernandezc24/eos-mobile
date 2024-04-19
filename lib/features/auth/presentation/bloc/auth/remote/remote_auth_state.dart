@@ -23,7 +23,7 @@ class RemoteSignInSuccess extends RemoteAuthState {
 class RemoteSignInFailure extends RemoteAuthState {
   const RemoteSignInFailure(this.failure);
 
-  final DioException? failure;
+  final ServerException? failure;
 
   @override
   List<Object?> get props => [ failure ];

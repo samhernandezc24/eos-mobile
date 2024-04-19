@@ -1,5 +1,6 @@
 import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
+import 'package:eos_mobile/core/network/errors/dio_exception.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
@@ -45,7 +46,7 @@ class RemoteCategoriaBloc extends Bloc<RemoteCategoriaEvent, RemoteCategoriaStat
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteCategoriaFailure(objDataState.exception));
+      emit(RemoteCategoriaFailure(objDataState.serverException));
     }
   }
 
@@ -63,7 +64,7 @@ class RemoteCategoriaBloc extends Bloc<RemoteCategoriaEvent, RemoteCategoriaStat
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteCategoriaFailure(objDataState.exception));
+      // emit(RemoteCategoriaFailure(objDataState.exception));
     }
   }
 
@@ -81,7 +82,7 @@ class RemoteCategoriaBloc extends Bloc<RemoteCategoriaEvent, RemoteCategoriaStat
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteCategoriaFailure(objDataState.exception));
+      // emit(RemoteCategoriaFailure(objDataState.exception));
     }
   }
 
@@ -99,7 +100,7 @@ class RemoteCategoriaBloc extends Bloc<RemoteCategoriaEvent, RemoteCategoriaStat
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteCategoriaFailure(objDataState.exception));
+      // emit(RemoteCategoriaFailure(objDataState.exception));
     }
   }
 }

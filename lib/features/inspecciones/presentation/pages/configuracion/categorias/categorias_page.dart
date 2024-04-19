@@ -132,6 +132,10 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
                     return Center(child: LoadingIndicator(color: Theme.of(context).primaryColor, strokeWidth: 3));
                   }
 
+                  if (state is RemoteCategoriaFailedMessage) {
+                    _buildFailedMessageCategoria(context, state);
+                  }
+
                   if (state is RemoteCategoriaFailure) {
                     _buildFailureCategoria(context, state);
                   }
@@ -163,6 +167,33 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
     );
   }
 
+  Widget _buildFailedMessageCategoria(BuildContext context, RemoteCategoriaFailedMessage state) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 64),
+          Gap($styles.insets.sm),
+          Text($strings.error500Title, style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600)),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
+            child: Text(
+              state.errorMessage ?? 'Se produjo un error inesperado. Intenta actualizar de nuevo la lista.',
+              overflow: TextOverflow.ellipsis,
+              maxLines: 10,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          FilledButton.icon(
+            onPressed: () => BlocProvider.of<RemoteCategoriaBloc>(context).add(ListCategorias(widget.inspeccionTipo!)),
+            icon: const Icon(Icons.refresh),
+            label: Text($strings.retryButtonText, style: $styles.textStyles.button),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildFailureCategoria(BuildContext context, RemoteCategoriaFailure state) {
     return Center(
       child: Column(
@@ -174,7 +205,7 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
           Container(
             padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
             child: Text(
-              '${state.failure!.message}',
+              state.failure?.errorMessage ?? 'Se produjo un error inesperado. Intenta actualizar de nuevo la lista.',
               overflow: TextOverflow.ellipsis,
               maxLines: 10,
               textAlign: TextAlign.center,

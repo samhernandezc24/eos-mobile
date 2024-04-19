@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
+import 'package:eos_mobile/core/network/errors/dio_exception.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/categoria_item/categoria_item_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_data_model.dart';
@@ -28,7 +29,11 @@ class CategoriaItemRepositoryImpl implements CategoriaItemRepository {
       final String? token = await authTokenHelper.retrieveRefreshToken();
 
       // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _categoriaItemRemoteApiService.listCategoriasItems('Bearer $token', 'application/json', CategoriaModel.fromEntity(categoria));
+      final httpResponse = await _categoriaItemRemoteApiService.listCategoriasItems(
+        'Bearer $token',
+        'application/json',
+        CategoriaModel.fromEntity(categoria),
+      );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         final ApiResponse apiResponse = httpResponse.data;
@@ -47,16 +52,18 @@ class CategoriaItemRepositoryImpl implements CategoriaItemRepository {
         }
       } else {
         return DataFailed(
-          DioException(
-            error           : httpResponse.response.statusMessage,
-            response        : httpResponse.response,
-            type            : DioExceptionType.badResponse,
-            requestOptions  : httpResponse.response.requestOptions,
+          ServerException.fromDioException(
+              DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
           ),
         );
       }
     } on DioException catch (ex) {
-      return DataFailed(ex);
+      return DataFailed(ServerException.fromDioException(ex));
     }
   }
 
@@ -86,16 +93,18 @@ class CategoriaItemRepositoryImpl implements CategoriaItemRepository {
         }
       } else {
         return DataFailed(
-          DioException(
-            error           : httpResponse.response.statusMessage,
-            response        : httpResponse.response,
-            type            : DioExceptionType.badResponse,
-            requestOptions  : httpResponse.response.requestOptions,
+          ServerException.fromDioException(
+              DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
           ),
         );
       }
     } on DioException catch (ex) {
-      return DataFailed(ex);
+      return DataFailed(ServerException.fromDioException(ex));
     }
   }
 
@@ -125,16 +134,18 @@ class CategoriaItemRepositoryImpl implements CategoriaItemRepository {
         }
       } else {
         return DataFailed(
-          DioException(
-            error           : httpResponse.response.statusMessage,
-            response        : httpResponse.response,
-            type            : DioExceptionType.badResponse,
-            requestOptions  : httpResponse.response.requestOptions,
+          ServerException.fromDioException(
+              DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
           ),
         );
       }
     } on DioException catch (ex) {
-      return DataFailed(ex);
+      return DataFailed(ServerException.fromDioException(ex));
     }
   }
 
@@ -164,16 +175,18 @@ class CategoriaItemRepositoryImpl implements CategoriaItemRepository {
         }
       } else {
         return DataFailed(
-          DioException(
-            error           : httpResponse.response.statusMessage,
-            response        : httpResponse.response,
-            type            : DioExceptionType.badResponse,
-            requestOptions  : httpResponse.response.requestOptions,
+          ServerException.fromDioException(
+              DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
           ),
         );
       }
     } on DioException catch (ex) {
-      return DataFailed(ex);
+      return DataFailed(ServerException.fromDioException(ex));
     }
   }
 
@@ -203,16 +216,18 @@ class CategoriaItemRepositoryImpl implements CategoriaItemRepository {
         }
       } else {
         return DataFailed(
-          DioException(
-            error           : httpResponse.response.statusMessage,
-            response        : httpResponse.response,
-            type            : DioExceptionType.badResponse,
-            requestOptions  : httpResponse.response.requestOptions,
+          ServerException.fromDioException(
+              DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
           ),
         );
       }
     } on DioException catch (ex) {
-      return DataFailed(ex);
+      return DataFailed(ServerException.fromDioException(ex));
     }
   }
 }
