@@ -23,6 +23,7 @@ class ServerException implements Exception {
         errorMessage = 'Se produjo un error inesperado. Inténtalo de nuevo.';
     }
   }
+
   late String errorMessage;
 
   String _handleStatusCode(int? statusCode, String? serverMessage) {

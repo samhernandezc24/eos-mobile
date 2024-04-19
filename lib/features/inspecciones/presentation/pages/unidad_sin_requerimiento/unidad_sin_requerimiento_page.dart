@@ -13,7 +13,7 @@ class InspeccionUnidadSinRequerimientoPage extends StatefulWidget {
 
 class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadSinRequerimientoPage> {
   /// CONTROLLERS
-  final ScrollController _scrollController  = ScrollController();
+  late final ScrollController _scrollController  = ScrollController();
 
   /// LIST
   late List<InspeccionTipoEntity> lstInspeccionesTipos = <InspeccionTipoEntity>[];
@@ -23,8 +23,13 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
 
   @override
   void initState() {
-    super.initState();
     context.read<RemoteInspeccionBloc>().add(CreateInspeccionData());
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   /// METHODS
@@ -131,6 +136,10 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
                 return Center(child: LoadingIndicator(color: Theme.of(context).primaryColor, strokeWidth: 3));
               }
 
+              if (state is RemoteInspeccionFailedMessage) {
+                return _buildFailedMessageInspeccion(context, state);
+              }
+
               if (state is RemoteInspeccionFailure) {
                 return _buildFailureInspeccion(context, state);
               }
@@ -169,6 +178,33 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
             padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
             child: Text(
               state.failure?.errorMessage ?? 'Se produjo un error inesperado. Inténtalo de nuevo.',
+              overflow: TextOverflow.ellipsis,
+              maxLines: 10,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          FilledButton.icon(
+            onPressed: () => BlocProvider.of<RemoteInspeccionBloc>(context).add(CreateInspeccionData()),
+            icon: const Icon(Icons.refresh),
+            label: Text($strings.retryButtonText, style: $styles.textStyles.button),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFailedMessageInspeccion(BuildContext context, RemoteInspeccionFailedMessage state) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 64),
+          Gap($styles.insets.sm),
+          Text($strings.error500Title, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600)),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
+            child: Text(
+              state.errorMessage ?? 'Se produjo un error inesperado. Inténtalo de nuevo.',
               overflow: TextOverflow.ellipsis,
               maxLines: 10,
               textAlign: TextAlign.center,
