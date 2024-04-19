@@ -1,4 +1,5 @@
-import 'package:eos_mobile/core/network/errors/dio_exception.dart';
+
+import 'package:eos_mobile/core/network/errors/exceptions.dart';
 
 abstract class DataState<T> {
   const DataState({this.data, this.serverException, this.errorMessage});

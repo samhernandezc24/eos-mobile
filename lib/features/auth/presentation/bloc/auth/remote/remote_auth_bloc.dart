@@ -1,5 +1,5 @@
 import 'package:eos_mobile/core/network/data_state.dart';
-import 'package:eos_mobile/core/network/errors/dio_exception.dart';
+import 'package:eos_mobile/core/network/errors/exceptions.dart';
 import 'package:eos_mobile/features/auth/domain/entities/account_entity.dart';
 import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
 import 'package:eos_mobile/features/auth/domain/usecases/sign_in_usecase.dart';

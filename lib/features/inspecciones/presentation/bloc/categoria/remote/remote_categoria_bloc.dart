@@ -1,6 +1,6 @@
 import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
-import 'package:eos_mobile/core/network/errors/dio_exception.dart';
+import 'package:eos_mobile/core/network/errors/exceptions.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';

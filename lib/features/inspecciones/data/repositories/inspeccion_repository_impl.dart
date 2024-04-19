@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
-import 'package:eos_mobile/core/network/errors/dio_exception.dart';
+import 'package:eos_mobile/core/network/errors/exceptions.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion/inspeccion_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_data_model.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_repository.dart';
@@ -13,7 +13,7 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
 
   final InspeccionRemoteApiService _inspeccionRemoteApiService;
 
-  // @override
+  @override
   Future<DataState<InspeccionDataModel>> createInspeccion() async {
     try {
       // Obtener el token localmente.
