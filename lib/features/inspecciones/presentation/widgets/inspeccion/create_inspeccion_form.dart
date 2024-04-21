@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_field.dart';
 import 'package:eos_mobile/core/enums/unidad_inspeccion_tipo.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
@@ -78,6 +79,22 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
           Gap($styles.insets.xs),
 
           // SELECCIONAR Y BUSCAR UNIDAD A INSPECCIONAR:
+          DropdownSearch<String>(
+            popupProps: PopupProps.menu(
+              showSelectedItems: true,
+              disabledItemFn: (String s) => s.startsWith('I'),
+            ),
+            items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
+            dropdownDecoratorProps: DropDownDecoratorProps(
+                dropdownSearchDecoration: InputDecoration(
+                    labelText: "Menu mode",
+                    hintText: "country in menu mode",
+                ),
+            ),
+            onChanged: print,
+            selectedItem: "Brazil",
+          ),
+
           LabeledDropdownFormField<InspeccionTipoEntity>(
             label: '* Unidad:',
             hintText: 'Seleccionar',

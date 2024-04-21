@@ -19,6 +19,7 @@ class _InspeccionListPageState extends State<InspeccionListPage>  {
 
   /// PROPERTIES
   String _query = '';
+  List<String> options = ['Opcion 1', 'Opcion 2', 'Opcion 3'];
 
   @override
   void initState() {
@@ -70,6 +71,126 @@ class _InspeccionListPageState extends State<InspeccionListPage>  {
     );
   }
 
+  void _handleFilterModal(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: $styles.insets.sm),
+              child: Center(
+                child: Text(
+                  'Filtros de inspecciones',
+                  style: $styles.textStyles.h3.copyWith(fontSize: 18),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+            ListTile(
+              onTap: (){},
+              leading: const Icon(Icons.checklist_outlined),
+              title: const Text('Estatus:'),
+              trailing: PopupMenuButton<String>(
+                icon: const Icon(Icons.arrow_drop_down),
+                itemBuilder: (BuildContext context) {
+                  return options.map((String option) {
+                    return PopupMenuItem<String>(
+                      value: option,
+                      child: Text(option),
+                    );
+                  }).toList();
+                },
+                onSelected: (String value) {
+                  setState(() {
+
+                  });
+                },
+              ),
+            ),
+            ListTile(
+              onTap: (){},
+              leading: const Icon(Icons.checklist),
+              title: const Text('Tipo de inspección:'),
+            ),
+            ListTile(
+              onTap: (){},
+              leading: const Icon(Icons.forklift),
+              title: const Text('Tipo de unidad:'),
+            ),
+            ListTile(
+              onTap: (){},
+              leading: const Icon(Icons.person),
+              title: const Text('Creado por:'),
+            ),
+            ListTile(
+              onTap: (){},
+              leading: const Icon(Icons.person),
+              title: const Text('Actualizado por:'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _handleSortModal(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: $styles.insets.sm),
+              child: Center(
+                child: Text(
+                  'Ordenar por',
+                  style: $styles.textStyles.h3.copyWith(fontSize: 18),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+            ListTile(
+              onTap: (){},
+              title: const Text('Predeterminado'),
+              trailing: Radio<bool>(
+                value: true, // Aquí debes establecer el valor correspondiente al radio button
+                groupValue: null, // Aquí debes establecer el valor seleccionado del grupo de radio buttons
+                onChanged: (bool? value) {
+                  // Aquí puedes manejar la lógica cuando se selecciona este radio button
+                },
+              ),
+            ),
+            ListTile(
+              onTap: (){},
+              title: const Text('Fecha: más recientes'),
+              trailing: Radio<bool>(
+                value: true, // Aquí debes establecer el valor correspondiente al radio button
+                groupValue: null, // Aquí debes establecer el valor seleccionado del grupo de radio buttons
+                onChanged: (bool? value) {
+                  // Aquí puedes manejar la lógica cuando se selecciona este radio button
+                },
+              ),
+            ),
+            ListTile(
+              onTap: (){},
+              title: const Text('Fecha: más antiguos'),
+              trailing: Radio<bool>(
+                value: true, // Aquí debes establecer el valor correspondiente al radio button
+                groupValue: null, // Aquí debes establecer el valor seleccionado del grupo de radio buttons
+                onChanged: (bool? value) {
+                  // Aquí puedes manejar la lógica cuando se selecciona este radio button
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final Widget content = GestureDetector(
@@ -110,13 +231,21 @@ class _InspeccionListPageState extends State<InspeccionListPage>  {
           Row(
             children: [
               Gap($styles.insets.xs),
-              Text('498 coincidencias', style: $styles.textStyles.body),
+              Text('498 resultados', style: $styles.textStyles.body),
             ],
           ),
           Row(
             children: [
-              IconButton(onPressed: (){}, icon: const Icon(Icons.format_line_spacing), tooltip: 'Ordenar por'),
-              IconButton(onPressed: (){}, icon: const Icon(Icons.filter_list), tooltip: 'Filtrar por'),
+              IconButton(
+                onPressed: () => _handleFilterModal(context),
+                icon: const Icon(Icons.filter_list),
+                tooltip: 'Filtrar por',
+              ),
+              IconButton(
+                onPressed: () => _handleSortModal(context),
+                icon: const Icon(Icons.format_line_spacing),
+                tooltip: 'Ordenar por',
+              ),
               Gap($styles.insets.xs),
             ],
           ),
