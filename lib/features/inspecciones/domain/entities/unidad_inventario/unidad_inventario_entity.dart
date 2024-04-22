@@ -6,16 +6,16 @@ import 'package:eos_mobile/shared/shared.dart';
 /// realizar diferentes operaciones con la información de la unidad en inventario.
 class UnidadInventarioEntity extends Equatable {
   const UnidadInventarioEntity({
-    required this.idUnidad,
-    required this.numeroEconomico,
-    required this.idBase,
-    required this.baseName,
-    required this.idBaseDestino,
-    required this.idUnidadEstatus,
-    required this.unidadEstatusName,
-    required this.idUnidadTipo,
-    required this.unidadTipoName,
-    required this.unidadTipoSeccion,
+    this.idUnidad,
+    this.numeroEconomico,
+    this.idBase,
+    this.baseName,
+    this.idBaseDestino,
+    this.idUnidadEstatus,
+    this.unidadEstatusName,
+    this.idUnidadTipo,
+    this.unidadTipoName,
+    this.unidadTipoSeccion,
     this.motivoBaja,
     this.placaEstatal,
     this.placaFederal,
@@ -23,17 +23,17 @@ class UnidadInventarioEntity extends Equatable {
     this.transferencia,
   });
 
-  final String idUnidad;
-  final String numeroEconomico;
-  final String idBase;
-  final String baseName;
-  final String idBaseDestino;
-  final String idUnidadEstatus;
-  final String unidadEstatusName;
+  final String? idUnidad;
+  final String? numeroEconomico;
+  final String? idBase;
+  final String? baseName;
+  final String? idBaseDestino;
+  final String? idUnidadEstatus;
+  final String? unidadEstatusName;
   final String? motivoBaja;
-  final String idUnidadTipo;
-  final String unidadTipoName;
-  final String unidadTipoSeccion;
+  final String? idUnidadTipo;
+  final String? unidadTipoName;
+  final String? unidadTipoSeccion;
   final String? placaEstatal;
   final String? placaFederal;
   final String? idCombustibleTipo;

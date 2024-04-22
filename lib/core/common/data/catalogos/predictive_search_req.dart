@@ -27,6 +27,18 @@ class PredictiveSearchReqModel extends PredictiveSearchReqEntity {
     );
   }
 
+  /// Constructor factory para convertir la instancia de [PredictiveSearchReqEntity]
+  /// en una instancia de [PredictiveSearchReqModel].
+  factory PredictiveSearchReqModel.fromEntity(PredictiveSearchReqEntity entity) {
+    return PredictiveSearchReqModel(
+      search        : entity.search,
+      searchFilters : entity.searchFilters?.map((item) => SearchFilterModel.fromEntity(item)).toList(),
+      filters       : entity.filters,
+      columns       : entity.columns,
+      dateFilters   : entity.dateFilters,
+    );
+  }
+
   /// Serialización de la estructura del modelo a formato JSON.
   Map<String, dynamic> toJson() {
     return {
@@ -36,23 +48,6 @@ class PredictiveSearchReqModel extends PredictiveSearchReqEntity {
       'columns'       : columns,
       'dateFilters'   : dateFilters,
     };
-  }
-}
-
-class SearchFilterModel extends SearchFilterEntity {
-  const SearchFilterModel({String? field}) : super(field: field);
-
-  /// Constructor factory para crear la instancia de [SearchFilterModel]
-  /// durante el mapeo del JSON.
-  factory SearchFilterModel.fromJson(Map<String, dynamic> jsonMap) {
-    return SearchFilterModel(
-      field : jsonMap['field'] as String? ?? '',
-    );
-  }
-
-  /// Serialización de la estructura del modelo a formato JSON.
-  Map<String, dynamic> toJson() {
-    return { 'field' : field };
   }
 }
 
@@ -82,4 +77,27 @@ class SearchFilterEntity extends Equatable {
 
   @override
   List<Object?> get props => [ field ];
+}
+
+class SearchFilterModel extends SearchFilterEntity {
+  const SearchFilterModel({String? field}) : super(field: field);
+
+  /// Constructor factory para crear la instancia de [SearchFilterModel]
+  /// durante el mapeo del JSON.
+  factory SearchFilterModel.fromJson(Map<String, dynamic> jsonMap) {
+    return SearchFilterModel(
+      field : jsonMap['field'] as String? ?? '',
+    );
+  }
+
+  /// Constructor factory para convertir la instancia de [SearchFilterEntity]
+  /// en una instancia de [SearchFilterModel].
+  factory SearchFilterModel.fromEntity(SearchFilterEntity entity) {
+    return SearchFilterModel(field : entity.field);
+  }
+
+  /// Serialización de la estructura del modelo a formato JSON.
+  Map<String, dynamic> toJson() {
+    return { 'field' : field };
+  }
 }

@@ -1,7 +1,10 @@
+import 'package:eos_mobile/core/common/data/catalogos/predictive_search_req.dart';
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/unidad_inventario/unidad_inventario_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/create_inspeccion_form.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad_inventario/remote/remote_unidad_inventario_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/create/create_inspeccion_form.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
 class CreateInspeccionPage extends StatefulWidget {
@@ -13,9 +16,10 @@ class CreateInspeccionPage extends StatefulWidget {
 
 class _CreateInspeccionPageState extends State<CreateInspeccionPage> {
   /// CONTROLLERS
-  late final ScrollController _scrollController  = ScrollController();
+  late final ScrollController _scrollController = ScrollController();
 
   /// LIST
+  late List<UnidadInventarioEntity> lstRows             = <UnidadInventarioEntity>[];
   late List<InspeccionTipoEntity> lstInspeccionesTipos  = <InspeccionTipoEntity>[];
 
   /// PROPERTIES
@@ -25,9 +29,15 @@ class _CreateInspeccionPageState extends State<CreateInspeccionPage> {
   void initState() {
     super.initState();
     context.read<RemoteInspeccionBloc>().add(CreateInspeccionData());
+    _loadPredictiveSearch('');
   }
 
   /// METHODS
+  void _loadPredictiveSearch(String search) {
+    final predictiveSearch = PredictiveSearchReqEntity(search: search);
+    context.read<RemoteUnidadInventarioBloc>().add(PredictiveUnidadInventario(predictiveSearch));
+  }
+
   void _handleDidPopPressed(BuildContext context) {
     showDialog<void>(
       context: context,
@@ -87,34 +97,55 @@ class _CreateInspeccionPageState extends State<CreateInspeccionPage> {
             }
             return true;
           },
-          child: BlocBuilder<RemoteInspeccionBloc, RemoteInspeccionState>(
-            builder: (BuildContext context, RemoteInspeccionState state) {
-              if (state is RemoteInspeccionLoading) {
-                return Center(child: LoadingIndicator(color: Theme.of(context).primaryColor, strokeWidth: 3));
-              }
+          child: MultiBlocListener(
+            listeners: [
+              BlocListener<RemoteUnidadInventarioBloc, RemoteUnidadInventarioState>(
+                listener: (BuildContext context, RemoteUnidadInventarioState state) {
+                  if (state is RemoteUnidadInventarioSuccess) {
+                    lstRows = state.unidades?.rows ?? [];
+                  }
+                },
+              ),
+              BlocListener<RemoteInspeccionBloc, RemoteInspeccionState>(
+                listener: (BuildContext context, RemoteInspeccionState state) {
+                  if (state is RemoteInspeccionCreateSuccess) {
+                    lstInspeccionesTipos = state.objInspeccion?.inspeccionesTipos ?? [];
+                  }
+                },
+              ),
+            ],
+            child: BlocBuilder<RemoteInspeccionBloc, RemoteInspeccionState>(
+              builder: (BuildContext context, RemoteInspeccionState state) {
+                if (state is RemoteInspeccionLoading) {
+                  return Center(child: LoadingIndicator(color: Theme.of(context).primaryColor, strokeWidth: 3));
+                }
 
-              if (state is RemoteInspeccionFailedMessage) {
-                return _buildFailedMessageInspeccion(context, state);
-              }
+                if (state is RemoteInspeccionFailedMessage) {
+                  return _buildFailedMessageInspeccion(context, state);
+                }
 
-              if (state is RemoteInspeccionFailure) {
-                return _buildFailureInspeccion(context, state);
-              }
+                if (state is RemoteInspeccionFailure) {
+                  return _buildFailureInspeccion(context, state);
+                }
 
-              if (state is RemoteInspeccionCreateSuccess) {
-                lstInspeccionesTipos = state.objInspeccion?.inspeccionesTipos ?? [];
+                if (state is RemoteInspeccionCreateSuccess) {
+                  // lstInspeccionesTipos = state.objInspeccion?.inspeccionesTipos ?? [];
 
-                return ListView(
-                  controller: _scrollController,
-                  padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm, vertical: $styles.insets.xs),
-                  children: <Widget>[
-                    // CAMPOS PARA CREAR LA INSPECCIÓN DE UNIDAD SIN REQUERIMIENTO
-                    CreateInspeccionForm(inspeccionesTipos: lstInspeccionesTipos),
-                  ],
-                );
-              }
-              return const SizedBox.shrink();
-            },
+                  return ListView(
+                    controller: _scrollController,
+                    padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm, vertical: $styles.insets.xs),
+                    children: <Widget>[
+                      // CAMPOS PARA CREAR LA INSPECCIÓN DE UNIDAD SIN REQUERIMIENTO
+                      CreateInspeccionForm(
+                        unidadesInventarios: lstRows,
+                        inspeccionesTipos: lstInspeccionesTipos,
+                      ),
+                    ],
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
           ),
         ),
         floatingActionButton: scrollToTopButton,

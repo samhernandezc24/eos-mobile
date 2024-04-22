@@ -9,6 +9,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria_ite
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad_inventario/remote/remote_unidad_inventario_bloc.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -45,6 +46,7 @@ class MainApp extends StatelessWidget with GetItMixin {
         BlocProvider<RemoteInspeccionBloc>(create: (BuildContext context) => sl<RemoteInspeccionBloc>()),
         BlocProvider<RemoteInspeccionTipoBloc>(create: (BuildContext context) => sl<RemoteInspeccionTipoBloc>()..add(ListInspeccionesTipos())),
         BlocProvider<RemoteUnidadBloc>(create: (BuildContext context) => sl<RemoteUnidadBloc>()),
+        BlocProvider<RemoteUnidadInventarioBloc>(create: (BuildContext context) => sl<RemoteUnidadInventarioBloc>()),
       ],
       child: MaterialApp.router(
         title: $strings.defaultAppName,

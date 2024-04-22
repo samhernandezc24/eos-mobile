@@ -2,14 +2,12 @@
 
 import 'dart:io';
 
-import 'package:eos_mobile/core/common/data/catalogos/predictive_search_req.dart';
 import 'package:eos_mobile/core/common/data/catalogos/unidad_data.dart';
 import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
 import 'package:eos_mobile/core/network/errors/exceptions.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/unidad/unidad_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_req_model.dart';
-import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_inventario_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/unidad_repository.dart';
 import 'package:eos_mobile/shared/shared.dart';
@@ -100,11 +98,5 @@ class UnidadRepositoryImpl implements UnidadRepository {
     } on DioException catch (ex) {
       return DataFailed(ServerException.fromDioException(ex));
     }
-  }
-
-  @override
-  Future<DataState<UnidadInventarioEntity>> predictiveUnidadInventario(PredictiveSearchReqEntity predictiveSearch) {
-    // TODO: implement predictiveUnidadInventario
-    throw UnimplementedError();
   }
 }

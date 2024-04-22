@@ -1,4 +1,4 @@
-import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_inventario_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/unidad_inventario/unidad_inventario_entity.dart';
 
 /// [UnidadInventarioModel]
 ///
@@ -6,16 +6,16 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_i
 /// realizar diferentes operaciones con la información de la unidad en inventario.
 class UnidadInventarioModel extends UnidadInventarioEntity {
   const UnidadInventarioModel({
-    required String idUnidad,
-    required String numeroEconomico,
-    required String idBase,
-    required String baseName,
-    required String idBaseDestino,
-    required String idUnidadEstatus,
-    required String unidadEstatusName,
-    required String idUnidadTipo,
-    required String unidadTipoName,
-    required String unidadTipoSeccion,
+    String? idUnidad,
+    String? numeroEconomico,
+    String? idBase,
+    String? baseName,
+    String? idBaseDestino,
+    String? idUnidadEstatus,
+    String? unidadEstatusName,
+    String? idUnidadTipo,
+    String? unidadTipoName,
+    String? unidadTipoSeccion,
     String? motivoBaja,
     String? placaEstatal,
     String? placaFederal,
@@ -41,17 +41,17 @@ class UnidadInventarioModel extends UnidadInventarioEntity {
   /// durante el mapeo del JSON.
   factory UnidadInventarioModel.fromJson(Map<String, dynamic> jsonMap) {
     return UnidadInventarioModel(
-      idUnidad            : jsonMap['idUnidad'] as String,
-      numeroEconomico     : jsonMap['numeroEconomico'] as String,
-      idBase              : jsonMap['idBase'] as String,
-      baseName            : jsonMap['baseName'] as String,
-      idBaseDestino       : jsonMap['idBaseDestino'] as String,
-      idUnidadEstatus     : jsonMap['idUnidadEstatus'] as String,
-      unidadEstatusName   : jsonMap['unidadEstatusName'] as String,
+      idUnidad            : jsonMap['idUnidad'] as String? ?? '',
+      numeroEconomico     : jsonMap['numeroEconomico'] as String? ?? '',
+      idBase              : jsonMap['idBase'] as String? ?? '',
+      baseName            : jsonMap['baseName'] as String? ?? '',
+      idBaseDestino       : jsonMap['idBaseDestino'] as String? ?? '',
+      idUnidadEstatus     : jsonMap['idUnidadEstatus'] as String? ?? '',
+      unidadEstatusName   : jsonMap['unidadEstatusName'] as String? ?? '',
       motivoBaja          : jsonMap['motivoBaja'] as String? ?? '',
-      idUnidadTipo        : jsonMap['idUnidadTipo'] as String,
-      unidadTipoName      : jsonMap['unidadTipoName'] as String,
-      unidadTipoSeccion   : jsonMap['unidadTipoSeccion'] as String,
+      idUnidadTipo        : jsonMap['idUnidadTipo'] as String? ?? '',
+      unidadTipoName      : jsonMap['unidadTipoName'] as String? ?? '',
+      unidadTipoSeccion   : jsonMap['unidadTipoSeccion'] as String? ?? '',
       placaEstatal        : jsonMap['placaEstatal'] as String? ?? '',
       placaFederal        : jsonMap['placaFederal'] as String? ?? '',
       transferencia       : jsonMap['transferencia'] as bool? ?? false,

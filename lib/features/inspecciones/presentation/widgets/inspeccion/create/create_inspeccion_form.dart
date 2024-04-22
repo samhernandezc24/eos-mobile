@@ -1,15 +1,16 @@
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_field.dart';
 import 'package:eos_mobile/core/enums/unidad_inspeccion_tipo.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/unidad_inventario/unidad_inventario_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/unidad/create_unidad_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:intl/intl.dart';
 
 class CreateInspeccionForm extends StatefulWidget {
-  const CreateInspeccionForm({Key? key, this.inspeccionesTipos}) : super(key: key);
+  const CreateInspeccionForm({Key? key, this.inspeccionesTipos, this.unidadesInventarios}) : super(key: key);
 
   final List<InspeccionTipoEntity>? inspeccionesTipos;
+  final List<UnidadInventarioEntity>? unidadesInventarios;
 
   @override
   State<CreateInspeccionForm> createState() => _CreateInspeccionFormState();
@@ -20,6 +21,7 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   /// CONTROLLERS
+  late final TextEditingController _searchUnidadInventarioController;
   late final TextEditingController _fechaInspeccionController;
   late final TextEditingController _locacionController;
 
@@ -29,15 +31,16 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
   @override
   void initState() {
     super.initState();
-
     _selectedUnidad = UnidadInspeccionTipo.inventario;
 
-    _fechaInspeccionController  = TextEditingController(text: DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now()));
-    _locacionController         = TextEditingController();
+    _searchUnidadInventarioController   = TextEditingController();
+    _fechaInspeccionController          = TextEditingController(text: DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now()));
+    _locacionController                 = TextEditingController();
   }
 
   @override
   void dispose() {
+    _searchUnidadInventarioController.dispose();
     _fechaInspeccionController.dispose();
     _locacionController.dispose();
     super.dispose();
@@ -79,27 +82,11 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
           Gap($styles.insets.xs),
 
           // SELECCIONAR Y BUSCAR UNIDAD A INSPECCIONAR:
-          DropdownSearch<String>(
-            popupProps: PopupProps.menu(
-              showSelectedItems: true,
-              disabledItemFn: (String s) => s.startsWith('I'),
-            ),
-            items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
-            dropdownDecoratorProps: DropDownDecoratorProps(
-                dropdownSearchDecoration: InputDecoration(
-                    labelText: "Menu mode",
-                    hintText: "country in menu mode",
-                ),
-            ),
-            onChanged: print,
-            selectedItem: "Brazil",
-          ),
-
-          LabeledDropdownFormField<InspeccionTipoEntity>(
+          LabeledDropdownFormField<UnidadInventarioEntity>(
             label: '* Unidad:',
             hintText: 'Seleccionar',
-            items: widget.inspeccionesTipos,
-            itemBuilder: (inspeccionTipo) => Text(inspeccionTipo.name),
+            items: widget.unidadesInventarios,
+            itemBuilder: (unidad) => Text(unidad.numeroEconomico ?? ''),
             onChanged: (_) {},
             validator: FormValidators.dropdownValidator,
           ),

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_remote_api_service.dart';
+part of 'unidad_inventario_remote_api_service.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,12 +8,13 @@ part of 'auth_remote_api_service.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
-class _AuthRemoteApiService implements AuthRemoteApiService {
-  _AuthRemoteApiService(
+class _UnidadInventarioRemoteApiService
+    implements UnidadInventarioRemoteApiService {
+  _UnidadInventarioRemoteApiService(
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://10.0.2.2:7000/api/AspNetUser';
+    baseUrl ??= ListAPI.unidadesEOS;
   }
 
   final Dio _dio;
@@ -21,18 +22,22 @@ class _AuthRemoteApiService implements AuthRemoteApiService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<AccountModel>> signIn(
+  Future<HttpResponse<ApiResponse>> predictiveUnidadInventario(
+    String token,
     String contentType,
-    SignInModel signIn,
+    PredictiveSearchReqModel predictiveSearch,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'content-type': contentType};
+    final _headers = <String, dynamic>{
+      r'authorization': token,
+      r'content-type': contentType,
+    };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(signIn.toJson());
+    _data.addAll(predictiveSearch.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<AccountModel>>(Options(
+        _setStreamType<HttpResponse<ApiResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -40,7 +45,7 @@ class _AuthRemoteApiService implements AuthRemoteApiService {
     )
             .compose(
               _dio.options,
-              '/LoginTreo',
+              '/PredictiveEOS',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -49,7 +54,7 @@ class _AuthRemoteApiService implements AuthRemoteApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = AccountModel.fromJson(_result.data!);
+    final value = ApiResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
