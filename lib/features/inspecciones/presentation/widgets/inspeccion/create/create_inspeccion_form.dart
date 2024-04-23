@@ -1,16 +1,19 @@
+import 'package:eos_mobile/core/common/data/catalogos/predictive_search_req.dart';
+import 'package:eos_mobile/core/common/widgets/controls/error_box_container.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_field.dart';
+import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_search_field.dart';
+import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/core/enums/unidad_inspeccion_tipo.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad_inventario/unidad_inventario_entity.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad_inventario/remote/remote_unidad_inventario_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/unidad/create_unidad_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:intl/intl.dart';
 
 class CreateInspeccionForm extends StatefulWidget {
-  const CreateInspeccionForm({Key? key, this.inspeccionesTipos, this.unidadesInventarios}) : super(key: key);
-
-  final List<InspeccionTipoEntity>? inspeccionesTipos;
-  final List<UnidadInventarioEntity>? unidadesInventarios;
+  const CreateInspeccionForm({Key? key}) : super(key: key);
 
   @override
   State<CreateInspeccionForm> createState() => _CreateInspeccionFormState();
@@ -25,12 +28,21 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
   late final TextEditingController _fechaInspeccionController;
   late final TextEditingController _locacionController;
 
+  /// LIST
+  late List<InspeccionTipoEntity> lstInspeccionesTipos  = <InspeccionTipoEntity>[];
+  late List<UnidadInventarioEntity> lstRows             = <UnidadInventarioEntity>[];
+
   /// PROPERTIES
   UnidadInspeccionTipo? _selectedUnidad;
+  UnidadInventarioEntity? _selectedValue;
 
   @override
   void initState() {
     super.initState();
+    context.read<RemoteInspeccionBloc>().add(CreateInspeccionData());
+
+    _loadPredictiveSearch('');
+
     _selectedUnidad = UnidadInspeccionTipo.inventario;
 
     _searchUnidadInventarioController   = TextEditingController();
@@ -47,6 +59,11 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
   }
 
   /// METHODS
+  void _loadPredictiveSearch(String search) {
+    final predictiveSearch = PredictiveSearchReqEntity(search: search);
+    context.read<RemoteUnidadInventarioBloc>().add(PredictiveUnidadInventario(predictiveSearch));
+  }
+
   void _handleCreateUnidadPressed(BuildContext context) {
     Navigator.push<void>(
       context,
@@ -82,13 +99,65 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
           Gap($styles.insets.xs),
 
           // SELECCIONAR Y BUSCAR UNIDAD A INSPECCIONAR:
-          LabeledDropdownFormField<UnidadInventarioEntity>(
-            label: '* Unidad:',
-            hintText: 'Seleccionar',
-            items: widget.unidadesInventarios,
-            itemBuilder: (unidad) => Text(unidad.numeroEconomico ?? ''),
-            onChanged: (_) {},
-            validator: FormValidators.dropdownValidator,
+          BlocBuilder<RemoteUnidadInventarioBloc, RemoteUnidadInventarioState>(
+            builder: (BuildContext context, RemoteUnidadInventarioState state) {
+              if (state is RemoteUnidadInventarioLoading) {
+                return Center(
+                  child: LoadingIndicator(
+                    color: Theme.of(context).primaryColor,
+                    width: 20,
+                    height: 20,
+                    strokeWidth: 3,
+                  ),
+                );
+              }
+
+              if (state is RemoteUnidadInventarioFailedMessage) {
+                return ErrorBoxContainer(
+                  errorMessage: state.errorMessage ??
+                      'Se produjo un error al cargar el listado de unidades. Inténtalo de nuevo.',
+                  onPressed: () => _loadPredictiveSearch(''),
+                );
+              }
+
+              if (state is RemoteUnidadInventarioFailure) {
+                return ErrorBoxContainer(
+                  errorMessage: state.failure?.errorMessage ??
+                      'Se produjo un error al cargar el listado de tipos de inspecciones. Inténtalo de nuevo.',
+                  onPressed: () => _loadPredictiveSearch(''),
+                );
+              }
+
+              if (state is RemoteUnidadInventarioSuccess) {
+                lstRows = state.unidades?.rows ?? [];
+
+                return LabeledDropdownFormSearchField<UnidadInventarioEntity>(
+                  label: '* Unidad:',
+                  hintSearchText: 'Buscar unidad',
+                  searchController: _searchUnidadInventarioController,
+                  items: lstRows,
+                  itemBuilder: (unidad) => Text(unidad.numeroEconomico ?? ''),
+                  value: _selectedValue,
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() {
+                        _selectedValue = value;
+                      });
+                    }
+                  },
+                  searchMatchFn: (DropdownMenuItem<UnidadInventarioEntity> item, String searchValue) {
+                    return item.value!.numeroEconomico!.toLowerCase().contains(searchValue.toLowerCase());
+                  },
+                  onMenuStateChange: (isOpen) {
+                    if (!isOpen) {
+                      _searchUnidadInventarioController.clear();
+                    }
+                  },
+                  validator: FormValidators.dropdownValidator,
+                );
+              }
+              return const SizedBox.shrink();
+            },
           ),
 
           // MOSTRAR BOTON PARA NUEVA UNIDAD CON ANIMACION:
@@ -120,13 +189,49 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
           Gap($styles.insets.sm),
 
           // SELECCIONAR EL TIPO DE INSPECCIÓN:
-          LabeledDropdownFormField<InspeccionTipoEntity>(
-            label: '* Tipo de inspección:',
-            hintText: 'Seleccionar',
-            items: widget.inspeccionesTipos,
-            itemBuilder: (inspeccionTipo) => Text(inspeccionTipo.name),
-            onChanged: (_) {},
-            validator: FormValidators.dropdownValidator,
+          BlocBuilder<RemoteInspeccionBloc, RemoteInspeccionState>(
+            builder: (BuildContext context, RemoteInspeccionState state) {
+              if (state is RemoteInspeccionLoading) {
+                return Center(
+                  child: LoadingIndicator(
+                    color: Theme.of(context).primaryColor,
+                    width: 20,
+                    height: 20,
+                    strokeWidth: 3,
+                  ),
+                );
+              }
+
+              if (state is RemoteInspeccionFailedMessage) {
+                return ErrorBoxContainer(
+                  errorMessage: state.errorMessage ??
+                      'Se produjo un error al cargar el listado de tipos de inspecciones. Inténtalo de nuevo.',
+                  onPressed: () => BlocProvider.of<RemoteInspeccionBloc>(context).add(CreateInspeccionData()),
+                );
+              }
+
+              if (state is RemoteInspeccionFailure) {
+                return ErrorBoxContainer(
+                  errorMessage: state.failure?.errorMessage ??
+                      'Se produjo un error al cargar el listado de tipos de inspecciones. Inténtalo de nuevo.',
+                  onPressed: () => BlocProvider.of<RemoteInspeccionBloc>(context).add(CreateInspeccionData()),
+                );
+              }
+
+              if (state is RemoteInspeccionCreateSuccess) {
+                lstInspeccionesTipos = state.objInspeccion?.inspeccionesTipos ?? [];
+
+                return LabeledDropdownFormField<InspeccionTipoEntity>(
+                  label: '* Tipo de inspección:',
+                  hintText: 'Seleccionar',
+                  items: lstInspeccionesTipos,
+                  itemBuilder: (inspeccionTipo) => Text(inspeccionTipo.name),
+                  onChanged: (_) {},
+                  validator: FormValidators.dropdownValidator,
+                );
+              }
+              return const SizedBox.shrink();
+            },
           ),
 
           Gap($styles.insets.sm),

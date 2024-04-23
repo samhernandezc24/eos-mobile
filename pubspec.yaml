@@ -40,7 +40,7 @@ dependencies:
   dotted_border: ^2.1.0
 
   # Widget de búsqueda de Flutter con dropdown
-  dropdown_search: ^5.0.6
+  dropdown_button2: ^2.3.9
 
   # Encriptacion
   encrypt: ^5.0.3
@@ -149,7 +149,6 @@ dependencies:
 
   # Widget WebView en Android e iOS
   webview_flutter: ^4.5.0
-  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:

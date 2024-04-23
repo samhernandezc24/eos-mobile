@@ -212,7 +212,6 @@ class _InspeccionListPageState extends State<InspeccionListPage>  {
             padding: EdgeInsets.symmetric(horizontal: $styles.insets.xs * 1.5),
             child: _buildStatusBar(context),
           ),
-          const Divider(),
           Expanded(
             child: RepaintBoundary(
               child: _ListInspeccionesResults(

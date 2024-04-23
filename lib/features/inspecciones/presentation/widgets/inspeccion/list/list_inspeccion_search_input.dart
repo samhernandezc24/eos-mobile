@@ -43,10 +43,6 @@ class ListInspeccionSearchInput extends StatelessWidget {
     }
 
     return fakeData.where((element) => element.toLowerCase().contains(textEditingValue.text.toLowerCase()));
-    // return fakeData.where((str) {
-    //   return str.startsWith(textEditingValue.text.toLowerCase());
-    // }).toList()
-    //   ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
   }
 
   Widget _buildSuggestionsView(BuildContext context, void Function(String) onSelected, Iterable<String> results, BoxConstraints constraints) {

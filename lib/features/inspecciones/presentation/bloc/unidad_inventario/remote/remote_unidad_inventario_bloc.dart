@@ -27,11 +27,11 @@ class RemoteUnidadInventarioBloc extends Bloc<RemoteUnidadInventarioEvent, Remot
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteUnidadFailedMessage(objDataState.errorMessage));
+      emit(RemoteUnidadInventarioFailedMessage(objDataState.errorMessage));
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteUnidadFailure(objDataState.serverException));
+      emit(RemoteUnidadInventarioFailure(objDataState.serverException));
     }
   }
 }

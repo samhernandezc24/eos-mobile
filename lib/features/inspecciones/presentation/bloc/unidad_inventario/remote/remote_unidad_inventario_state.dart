@@ -27,8 +27,8 @@ class RemoteUnidadInventarioResponseSuccess extends RemoteUnidadInventarioState 
   List<Object?> get props => [ apiResponse ];
 }
 
-class RemoteUnidadFailure extends RemoteUnidadInventarioState {
-  const RemoteUnidadFailure(this.failure);
+class RemoteUnidadInventarioFailure extends RemoteUnidadInventarioState {
+  const RemoteUnidadInventarioFailure(this.failure);
 
   final ServerException? failure;
 
@@ -36,8 +36,8 @@ class RemoteUnidadFailure extends RemoteUnidadInventarioState {
   List<Object?> get props => [ failure ];
 }
 
-class RemoteUnidadFailedMessage extends RemoteUnidadInventarioState {
-  const RemoteUnidadFailedMessage(this.errorMessage);
+class RemoteUnidadInventarioFailedMessage extends RemoteUnidadInventarioState {
+  const RemoteUnidadInventarioFailedMessage(this.errorMessage);
 
   final String? errorMessage;
 
