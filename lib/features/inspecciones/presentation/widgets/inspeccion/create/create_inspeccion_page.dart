@@ -9,12 +9,6 @@ class CreateInspeccionPage extends StatefulWidget {
 }
 
 class _CreateInspeccionPageState extends State<CreateInspeccionPage> {
-  /// CONTROLLERS
-  late final ScrollController _scrollController = ScrollController();
-
-  /// PROPERTIES
-  bool _showScrollToTopButton = false;
-
   /// METHODS
   void _handleDidPopPressed(BuildContext context) {
     showDialog<void>(
@@ -41,23 +35,8 @@ class _CreateInspeccionPageState extends State<CreateInspeccionPage> {
     );
   }
 
-  void _scrollToTop() {
-    _scrollController.animateTo(0, duration: $styles.times.fast, curve: Curves.easeInOut);
-  }
-
   @override
   Widget build(BuildContext context) {
-    // Mostrar el boton para scrollear al top de la página, cuando se encuentre navegando a un nivel
-    // de bottom bajo.
-    final Widget scrollToTopButton = AnimatedOpacity(
-      opacity: _showScrollToTopButton ? 1.0 : 0.0,
-      duration: $styles.times.fast,
-      child: FloatingActionButton(
-        onPressed: _scrollToTop,
-        child: const Icon(Icons.arrow_upward),
-      ),
-    );
-
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
@@ -66,25 +45,13 @@ class _CreateInspeccionPageState extends State<CreateInspeccionPage> {
       },
       child: Scaffold(
         appBar: AppBar(title: Text('Nueva inspección', style: $styles.textStyles.h3)),
-        body: NotificationListener<ScrollNotification>(
-          onNotification: (notification) {
-            if (notification is ScrollUpdateNotification) {
-              setState(() {
-                _showScrollToTopButton = _scrollController.offset > 100;
-              });
-            }
-            return true;
-          },
-          child: ListView(
-            controller: _scrollController,
-            padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm, vertical: $styles.insets.xs),
-            children: const <Widget>[
-              // CAMPOS PARA CREAR LA INSPECCIÓN DE UNIDAD SIN REQUERIMIENTO
-              CreateInspeccionForm(),
-            ],
-          ),
+        body: ListView(
+          padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm, vertical: $styles.insets.xs),
+          children: const <Widget>[
+            // CAMPOS PARA CREAR LA INSPECCIÓN DE UNIDAD SIN REQUERIMIENTO
+            CreateInspeccionForm(),
+          ],
         ),
-        floatingActionButton: scrollToTopButton,
       ),
     );
   }

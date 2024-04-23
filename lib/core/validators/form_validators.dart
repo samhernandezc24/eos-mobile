@@ -30,9 +30,22 @@ class FormValidators {
 
   /// Validación de campos de números enteros.
   static String? integerValidator(String? value) {
+    if (value == null || value.isEmpty) return null;
+
     final RegExp numericRegex = RegExp(r'^-?[0-9]+$');
-    if (!numericRegex.hasMatch(value ?? '')) {
+    if (!numericRegex.hasMatch(value)) {
       return 'Por favor, ingresa un número entero válido.';
+    }
+    return null;
+  }
+
+  /// Validación de campos de números decimales.
+  static String? decimalValidator(String? value) {
+    if (value == null || value.isEmpty) return null;
+
+    final RegExp numericRegex = RegExp(r'^-?[0-9]+(?:\.[0-9]+)?$');
+    if (!numericRegex.hasMatch(value)) {
+      return 'Por favor, ingresa un número decimal válido.';
     }
     return null;
   }

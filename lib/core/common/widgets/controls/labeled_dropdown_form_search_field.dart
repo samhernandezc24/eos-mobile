@@ -37,6 +37,7 @@ class LabeledDropdownFormSearchField<T> extends StatelessWidget {
         Text(label, style: $styles.textStyles.label),
         Gap($styles.insets.xs),
         DropdownButtonFormField2<T>(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           isExpanded: true,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(
