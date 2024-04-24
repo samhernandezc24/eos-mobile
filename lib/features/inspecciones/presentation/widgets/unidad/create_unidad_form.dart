@@ -9,11 +9,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote
 import 'package:eos_mobile/shared/shared.dart';
 
 class CreateUnidadForm extends StatefulWidget {
-  const CreateUnidadForm({Key? key, this.bases, this.unidadesMarcas, this.unidadesTipos}) : super(key: key);
-
-  final List<BaseDataEntity>? bases;
-  final List<UnidadMarcaDataEntity>? unidadesMarcas;
-  final List<UnidadTipoDataEntity>? unidadesTipos;
+  const CreateUnidadForm({Key? key}) : super(key: key);
 
   @override
   State<CreateUnidadForm> createState() => _CreateUnidadFormState();
@@ -24,14 +20,28 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // CONTROLLERS
+  late final TextEditingController _searchUnidadTipoController;
+
   late final TextEditingController _numeroEconomicoController;
+  late final TextEditingController _placaController;
   late final TextEditingController _numeroSerieController;
-  late final TextEditingController _descripcionController;
   late final TextEditingController _modeloController;
   late final TextEditingController _anioEquipoController;
+  late final TextEditingController _descripcionController;
   late final TextEditingController _capacidadController;
-  late final TextEditingController _horometroController;
   late final TextEditingController _odometroController;
+  late final TextEditingController _horometroController;
+
+  /// LIST
+  late List<BaseDataEntity> lstBases                  = <BaseDataEntity>[];
+  late List<UnidadMarcaDataEntity> lstUnidadesMarcas  = <UnidadMarcaDataEntity>[];
+  late List<UnidadTipoDataEntity> lstUnidadesTipos    = <UnidadTipoDataEntity>[];
+
+  final List<dynamic> lstUnidadesPlacasTipos  = <dynamic>[
+    {'ea52bdfd-8af6-4f5a-b182-2b99e554eb31': 'Estatal'},
+    {'ea52bdfd-8af6-4f5a-b182-2b99e554eb32': 'Federal'},
+    {'ea52bdfd-8af6-4f5a-b182-2b99e554eb33': 'No aplica'},
+  ];
 
   // PROPERTIES
   String? selectedTipoUnidadId;
@@ -43,27 +53,33 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
 
   @override
   void initState() {
+    super.initState();
+    context.read<RemoteUnidadBloc>().add(CreateUnidad());
+
+    _searchUnidadTipoController   = TextEditingController();
     _numeroEconomicoController    = TextEditingController();
+    _placaController              = TextEditingController();
     _numeroSerieController        = TextEditingController();
-    _descripcionController        = TextEditingController();
     _modeloController             = TextEditingController();
     _anioEquipoController         = TextEditingController();
+    _descripcionController        = TextEditingController();
     _capacidadController          = TextEditingController();
-    _horometroController          = TextEditingController();
     _odometroController           = TextEditingController();
-    super.initState();
+    _horometroController          = TextEditingController();
   }
 
   @override
   void dispose() {
+    _searchUnidadTipoController.dispose();
     _numeroEconomicoController.dispose();
+    _placaController.dispose();
     _numeroSerieController.dispose();
-    _descripcionController.dispose();
     _modeloController.dispose();
     _anioEquipoController.dispose();
+    _descripcionController.dispose();
     _capacidadController.dispose();
-    _horometroController.dispose();
     _odometroController.dispose();
+    _horometroController.dispose();
     super.dispose();
   }
 
@@ -130,24 +146,41 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
 
   void _handleStoreUnidad() {
     final double? capacidad = double.tryParse(_capacidadController.text);
-    final int? horometro    = int.tryParse(_horometroController.text);
     final int? odometro     = int.tryParse(_odometroController.text);
+    final int? horometro    = int.tryParse(_horometroController.text);
 
     final UnidadReqEntity objData = UnidadReqEntity(
-      numeroEconomico   : _numeroEconomicoController.text,
-      numeroSerie       : _numeroSerieController.text,
-      descripcion       : _descripcionController.text,
-      modelo            : _modeloController.text,
-      anioEquipo        : _anioEquipoController.text,
-      idBase            : selectedBaseId ?? '',
-      baseName          : selectedBaseName ?? '',
-      idUnidadMarca     : selectedUnidadMarcaId ?? '',
-      unidadMarcaName   : selectedUnidadMarcaName ?? '',
-      idUnidadTipo      : selectedTipoUnidadId ?? '',
-      unidadTipoName    : selectedTipoUnidadName ?? '',
-      capacidad         : capacidad ?? 0.0,
-      horometro         : horometro ?? 0,
-      odometro          : odometro ?? 0,
+      // numeroEconomico     : _numeroEconomicoController.text,
+      // idBase              : selectedIdBase ?? '',
+      // baseName            : selectedBaseName ?? '',
+      // idUnidadTipo        : selectedIdUnidadTipo ?? '',
+      // unidadTipoName      : unidadTipoName,
+      // idUnidadMarca       : idUnidadMarca,
+      // unidadMarcaName     : unidadMarcaName,
+      // idUnidadPlacaTipo   : idUnidadPlacaTipo,
+      // unidadPlacaTipoName : unidadPlacaTipoName,
+      // placa               : placa,
+      // numeroSerie         : numeroSerie,
+      // modelo              : modelo,
+      // anioEquipo          : anioEquipo,
+      // descripcion         : descripcion,
+      // capacidad           : capacidad,
+      // odometro            : odometro,
+      // horometro           : horometro,
+      // numeroEconomico   : _numeroEconomicoController.text,
+      // numeroSerie       : _numeroSerieController.text,
+      // descripcion       : _descripcionController.text,
+      // modelo            : _modeloController.text,
+      // anioEquipo        : _anioEquipoController.text,
+      // idBase            : selectedBaseId ?? '',
+      // baseName          : selectedBaseName ?? '',
+      // idUnidadMarca     : selectedUnidadMarcaId ?? '',
+      // unidadMarcaName   : selectedUnidadMarcaName ?? '',
+      // idUnidadTipo      : selectedTipoUnidadId ?? '',
+      // unidadTipoName    : selectedTipoUnidadName ?? '',
+      // capacidad         : capacidad ?? 0.0,
+      // horometro         : horometro ?? 0,
+      // odometro          : odometro ?? 0,
     );
 
     final bool isValidForm = _formKey.currentState!.validate();

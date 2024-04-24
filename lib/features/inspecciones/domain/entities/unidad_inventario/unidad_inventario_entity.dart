@@ -3,7 +3,7 @@ import 'package:eos_mobile/shared/shared.dart';
 /// [UnidadInventarioEntity]
 ///
 /// Representa los datos de la unidad en inventario que se obtendrá del servidor para
-/// realizar diferentes operaciones con la información de la unidad en inventario.
+/// realizar diferentes operaciones con su información.
 class UnidadInventarioEntity extends Equatable {
   const UnidadInventarioEntity({
     this.idUnidad,

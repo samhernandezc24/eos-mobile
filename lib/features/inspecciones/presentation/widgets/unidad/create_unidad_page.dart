@@ -20,12 +20,6 @@ class _CreateUnidadPageState extends State<CreateUnidadPage> {
   late List<UnidadTipoDataEntity> lstUnidadesTipos    =  <UnidadTipoDataEntity>[];
 
   @override
-  void initState() {
-    super.initState();
-    context.read<RemoteUnidadBloc>().add(CreateUnidad());
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Nueva unidad', style: $styles.textStyles.h3)),
