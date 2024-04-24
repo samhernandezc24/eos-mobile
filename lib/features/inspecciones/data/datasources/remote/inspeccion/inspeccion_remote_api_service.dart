@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/core/network/api_response.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_req_model.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -16,5 +17,13 @@ abstract class InspeccionRemoteApiService {
   Future<HttpResponse<ApiResponse>> createInspeccion(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
+  );
+
+  /// CARGAR INFORMACIÓN PARA CREAR UNA INSPECCIÓN
+  @POST('/Store')
+  Future<HttpResponse<ApiResponse>> storeInspeccion(
+    @Header(HttpHeaders.authorizationHeader) String token,
+    @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Body() InspeccionReqModel inspeccion,
   );
 }

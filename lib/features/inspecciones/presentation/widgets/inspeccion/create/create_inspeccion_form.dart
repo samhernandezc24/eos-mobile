@@ -30,6 +30,7 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
   late final TextEditingController _fechaInspeccionController;
   late final TextEditingController _baseNameController;
   late final TextEditingController _numeroEconomicoController;
+  late final TextEditingController _unidadTipoController;
   late final TextEditingController _marcaController;
   late final TextEditingController _placaTipoController;
   late final TextEditingController _placaController;
@@ -58,6 +59,8 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
   String? selectedUnidadIdBase;
   String? selectedUnidadBaseName;
   String? selectedUnidadNumeroEconomico;
+  String? selectedUnidadIdTipo;
+  String? selectedUnidadTipoName;
   String? selectedUnidadIdMarca;
   String? selectedUnidadMarcaName;
   String? selectedUnidadIdPlacaTipo;
@@ -79,6 +82,7 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
     _fechaInspeccionController          = TextEditingController(text: DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now()));
     _baseNameController                 = TextEditingController();
     _numeroEconomicoController          = TextEditingController();
+    _unidadTipoController               = TextEditingController();
     _marcaController                    = TextEditingController();
     _placaTipoController                = TextEditingController();
     _placaController                    = TextEditingController();
@@ -98,6 +102,7 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
     _fechaInspeccionController.dispose();
     _baseNameController.dispose();
     _numeroEconomicoController.dispose();
+    _unidadTipoController.dispose();
     _marcaController.dispose();
     _placaTipoController.dispose();
     _placaController.dispose();
@@ -186,34 +191,42 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
     final int? horometro    = int.tryParse(_horometroController.text);
 
     final InspeccionReqEntity objData = InspeccionReqEntity(
-      fecha                 : fecha,
-      idBase                : selectedUnidadIdBase ?? '',
-      baseName              : selectedUnidadBaseName ?? '',
-      idInspeccionTipo      : selectedInspeccionTipoId ?? '',
-      inspeccionTipoCodigo  : selectedInspeccionTipoCodigo ?? '',
-      inspeccionTipoName    : selectedInspeccionTipoName ?? '',
-      idUnidad              : selectedUnidadId ?? '',
-      unidadNumeroEconomico : _numeroEconomicoController.text,
-      isUnidadTemporal      : _selectedUnidad == UnidadInspeccionTipo.temporal,
-      idUnidadMarca         : selectedUnidadIdMarca ?? '',
-      unidadMarcaName       : _marcaController.text,
-      idUnidadPlacaTipo     : selectedUnidadIdPlacaTipo ?? '',
-      unidadPlacaTipoName   : _placaTipoController.text,
-      placa                 : _placaController.text,
-      numeroSerie           : _numeroSerieController.text,
-      modelo                : _modeloController.text,
-      anioEquipo            : _anioEquipoController.text,
-      locacion              : _locacionController.text,
-      tipoPlataforma        : _tipoPlataformaController.text,
-      capacidad             : capacidad,
-      odometro              : odometro,
-      horometro             : horometro,
+      fecha                       : fecha,
+      idBase                      : selectedUnidadIdBase ?? '',
+      baseName                    : selectedUnidadBaseName ?? '',
+      idInspeccionTipo            : selectedInspeccionTipoId ?? '',
+      inspeccionTipoCodigo        : selectedInspeccionTipoCodigo ?? '',
+      inspeccionTipoName          : selectedInspeccionTipoName ?? '',
+      idRequerimiento             : '',
+      requerimientoFolio          : '',
+      idUnidad                    : selectedUnidadId ?? '',
+      unidadNumeroEconomico       : _numeroEconomicoController.text,
+      isUnidadTemporal            : _selectedUnidad == UnidadInspeccionTipo.temporal,
+      idUnidadTipo                : selectedUnidadIdTipo ?? '',
+      unidadTipoName              : selectedUnidadTipoName ?? '',
+      idUnidadMarca               : selectedUnidadIdMarca ?? '',
+      unidadMarcaName             : _marcaController.text,
+      idUnidadPlacaTipo           : selectedUnidadIdPlacaTipo ?? '',
+      unidadPlacaTipoName         : _placaTipoController.text,
+      placa                       : _placaController.text,
+      numeroSerie                 : _numeroSerieController.text,
+      modelo                      : _modeloController.text,
+      locacion                    : _locacionController.text,
+      anioEquipo                  : _anioEquipoController.text,
+      tipoPlataforma              : _tipoPlataformaController.text,
+      capacidad                   : capacidad,
+      odometro                    : odometro,
+      horometro                   : horometro,
+      observaciones               : '',
+      firmaOperador               : '',
+      firmaVerificador            : '',
     );
 
     final bool isValidForm = _formKey.currentState!.validate();
 
     if (isValidForm) {
-      print(objData);
+      _formKey.currentState!.save();
+      BlocProvider.of<RemoteInspeccionBloc>(context).add(StoreInspeccion(objData));
     }
   }
 
@@ -298,6 +311,8 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
                         selectedUnidadIdBase          = newValue?.idBase;
                         selectedUnidadBaseName        = newValue?.baseName;
                         selectedUnidadNumeroEconomico = newValue?.numeroEconomico;
+                        selectedUnidadIdTipo          = newValue?.idUnidadTipo;
+                        selectedUnidadTipoName        = newValue?.unidadTipoName;
                         selectedUnidadIdMarca         = '';
                         selectedUnidadMarcaName       = '';
                         selectedUnidadIdPlacaTipo     = '';
@@ -309,6 +324,7 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
                         // Actualización de valores.
                         _baseNameController.text          = selectedUnidadBaseName ?? '';
                         _numeroEconomicoController.text   = selectedUnidadNumeroEconomico ?? '';
+                        _unidadTipoController.text        = selectedUnidadTipoName ?? '';
                         _marcaController.text             = selectedUnidadMarcaName ?? '';
                         _placaTipoController.text         = selectedUnidadPlacaTipoName ?? '';
                         _placaController.text             = selectedUnidadPlaca ?? '';
@@ -426,7 +442,17 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
           // NO. ECONÓMICO
           LabeledTextField(
             controller: _numeroEconomicoController,
-            labelText: '* No. Económico:',
+            labelText: '* No. económico:',
+            isReadOnly: true,
+            validator: FormValidators.textValidator,
+          ),
+
+          Gap($styles.insets.sm),
+
+          // NO. ECONÓMICO
+          LabeledTextField(
+            controller: _unidadTipoController,
+            labelText: '* Tipo de unidad:',
             isReadOnly: true,
             validator: FormValidators.textValidator,
           ),
@@ -462,6 +488,15 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
             controller: _numeroSerieController,
             isReadOnly: true,
             labelText: 'Número de serie:',
+          ),
+
+          Gap($styles.insets.sm),
+
+           // NO. DE SERIE
+          LabeledTextField(
+            controller: _anioEquipoController,
+            isReadOnly: true,
+            labelText: 'Año del equipo:',
           ),
 
           Gap($styles.insets.sm),
@@ -517,22 +552,6 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
             validator: FormValidators.decimalValidator,
           ),
 
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: <Widget>[
-          //     Expanded(
-          //       child:
-          //     ),
-          //     SizedBox(width: $styles.insets.sm),
-          //     Expanded(
-          //       child: LabeledTextField(
-          //         controller: _anioEquipoController,
-          //         labelText: 'Año del equipo:',
-          //       ),
-          //     ),
-          //   ],
-          // ),
-
           Gap($styles.insets.sm),
 
           // HOROMETRO / ODOMETRO (SI APLICA)
@@ -561,14 +580,59 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
 
           Gap($styles.insets.lg),
 
-          FilledButton(
-            onPressed: _handleStoreInspeccion,
-            style: ButtonStyle(
-              minimumSize: MaterialStateProperty.all<Size?>(
-                const Size(double.infinity, 48),
-              ),
-            ),
-            child: Text($strings.saveButtonText, style: $styles.textStyles.button),
+          BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
+            listener: (BuildContext context, RemoteInspeccionState state) {
+              if (state is RemoteInspeccionFailure) {
+                _showFailureDialog(context, state);
+              }
+
+              if (state is RemoteInspeccionFailedMessage) {
+                _showFailedMessageDialog(context, state);
+              }
+
+              if (state is RemoteInspeccionResponseSuccess) {
+                Navigator.pop(context);
+
+                ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(state.apiResponse.message, softWrap: true),
+                    backgroundColor: Colors.green,
+                    behavior: SnackBarBehavior.fixed,
+                    elevation: 0,
+                  ),
+                );
+              }
+            },
+            builder: (BuildContext context, RemoteInspeccionState state) {
+              if (state is RemoteInspeccionLoading) {
+                return FilledButton(
+                  onPressed: null,
+                  style: ButtonStyle(
+                    minimumSize: MaterialStateProperty.all<Size?>(
+                      const Size(double.infinity, 48),
+                    ),
+                  ),
+                  child: LoadingIndicator(
+                    color: Theme.of(context).primaryColor,
+                    width: 20,
+                    height: 20,
+                    strokeWidth: 2,
+                  ),
+                );
+              }
+
+              return FilledButton(
+                onPressed: _handleStoreInspeccion,
+                style: ButtonStyle(
+                  minimumSize: MaterialStateProperty.all<Size?>(
+                    const Size(double.infinity, 48),
+                  ),
+                ),
+                child: Text($strings.saveButtonText, style: $styles.textStyles.button),
+              );
+            },
           ),
         ],
       ),

@@ -1,5 +1,9 @@
 import 'package:eos_mobile/shared/shared.dart';
 
+/// [InspeccionReqEntity]
+///
+/// Representa los datos de la request para la inspección, se mandara esta informacion
+/// en el body de la petición.
 class InspeccionReqEntity extends Equatable {
   const InspeccionReqEntity({
     required this.idInspeccionTipo,
@@ -8,6 +12,8 @@ class InspeccionReqEntity extends Equatable {
     required this.idUnidad,
     required this.unidadNumeroEconomico,
     required this.isUnidadTemporal,
+    required this.idUnidadTipo,
+    required this.unidadTipoName,
     required this.locacion,
     this.fecha,
     this.idBase,
@@ -46,6 +52,8 @@ class InspeccionReqEntity extends Equatable {
   final String idUnidad;
   final String unidadNumeroEconomico;
   final bool isUnidadTemporal;
+  final String idUnidadTipo;
+  final String unidadTipoName;
   final String? idUnidadMarca;
   final String? unidadMarcaName;
   final String? idUnidadPlacaTipo;
@@ -78,6 +86,8 @@ class InspeccionReqEntity extends Equatable {
         idUnidad,
         unidadNumeroEconomico,
         isUnidadTemporal,
+        idUnidadTipo,
+        unidadTipoName,
         idUnidadMarca,
         unidadMarcaName,
         idUnidadPlacaTipo,

@@ -45,6 +45,7 @@ import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/store_duplicate_categoria_item_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/update_categoria_item_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/create_inspeccion_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/store_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_tipo/delete_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_tipo/list_inspecciones_tipos_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_tipo/store_inspeccion_tipo_usecase.dart';
@@ -82,14 +83,17 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<SettingsLogic>(() => SettingsLogic());
 
   // Servicios / Datasources
-  sl.registerSingleton<AuthRemoteApiService>(AuthRemoteApiService(sl()));
   sl.registerSingleton<AuthLocalSource>(AuthLocalSource());
+  sl.registerSingleton<AuthRemoteApiService>(AuthRemoteApiService(sl()));
+
   sl.registerSingleton<CategoriaRemoteApiService>(CategoriaRemoteApiService(sl()));
   sl.registerSingleton<CategoriaItemRemoteApiService>(CategoriaItemRemoteApiService(sl()));
+
   sl.registerSingleton<InspeccionRemoteApiService>(InspeccionRemoteApiService(sl()));
   sl.registerSingleton<InspeccionTipoRemoteApiService>(InspeccionTipoRemoteApiService(sl()));
-  sl.registerSingleton<UnidadRemoteApiService>(UnidadRemoteApiService(sl()));
+
   sl.registerSingleton<UnidadInventarioRemoteApiService>(UnidadInventarioRemoteApiService(sl()));
+  sl.registerSingleton<UnidadRemoteApiService>(UnidadRemoteApiService(sl()));
 
   // Repositorios
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
@@ -101,41 +105,55 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<UnidadInventarioRepository>(UnidadInventarioRepositoryImpl(sl()));
 
   // Casos de uso
-  sl.registerSingleton<SignInUseCase>(SignInUseCase(sl()));
-  sl.registerSingleton<RemoveCredentialsUseCase>(RemoveCredentialsUseCase(sl()));
-  sl.registerSingleton<RemoveUserInfoUseCase>(RemoveUserInfoUseCase(sl()));
-  sl.registerSingleton<RemoveUserSessionUseCase>(RemoveUserSessionUseCase(sl()));
+  sl.registerSingleton<CreateInspeccionUseCase>(CreateInspeccionUseCase(sl()));
+  sl.registerSingleton<CreateUnidadUseCase>(CreateUnidadUseCase(sl()));
+
+  sl.registerSingleton<DeleteCategoriaItemUseCase>(DeleteCategoriaItemUseCase(sl()));
+  sl.registerSingleton<DeleteCategoriaUseCase>(DeleteCategoriaUseCase(sl()));
+  sl.registerSingleton<DeleteInspeccionTipoUseCase>(DeleteInspeccionTipoUseCase(sl()));
+
   sl.registerSingleton<GetCredentialsUseCase>(GetCredentialsUseCase(sl()));
   sl.registerSingleton<GetUserInfoUseCase>(GetUserInfoUseCase(sl()));
   sl.registerSingleton<GetUserSessionUseCase>(GetUserSessionUseCase(sl()));
+
+  sl.registerSingleton<ListCategoriasItemsUseCase>(ListCategoriasItemsUseCase(sl()));
+  sl.registerSingleton<ListCategoriasUseCase>(ListCategoriasUseCase(sl()));
+  sl.registerSingleton<ListInspeccionesTiposUseCase>(ListInspeccionesTiposUseCase(sl()));
+
+  sl.registerSingleton<PredictiveUnidadInventarioUseCase>(PredictiveUnidadInventarioUseCase(sl()));
+
+  sl.registerSingleton<RemoveCredentialsUseCase>(RemoveCredentialsUseCase(sl()));
+  sl.registerSingleton<RemoveUserInfoUseCase>(RemoveUserInfoUseCase(sl()));
+  sl.registerSingleton<RemoveUserSessionUseCase>(RemoveUserSessionUseCase(sl()));
+
   sl.registerSingleton<SaveCredentialsUseCase>(SaveCredentialsUseCase(sl()));
   sl.registerSingleton<SaveUserInfoUseCase>(SaveUserInfoUseCase(sl()));
   sl.registerSingleton<SaveUserSessionUseCase>(SaveUserSessionUseCase(sl()));
-  sl.registerSingleton<ListInspeccionesTiposUseCase>(ListInspeccionesTiposUseCase(sl()));
-  sl.registerSingleton<StoreInspeccionTipoUseCase>(StoreInspeccionTipoUseCase(sl()));
-  sl.registerSingleton<UpdateInspeccionTipoUseCase>(UpdateInspeccionTipoUseCase(sl()));
-  sl.registerSingleton<DeleteInspeccionTipoUseCase>(DeleteInspeccionTipoUseCase(sl()));
-  sl.registerSingleton<ListCategoriasUseCase>(ListCategoriasUseCase(sl()));
-  sl.registerSingleton<StoreCategoriaUseCase>(StoreCategoriaUseCase(sl()));
-  sl.registerSingleton<UpdateCategoriaUseCase>(UpdateCategoriaUseCase(sl()));
-  sl.registerSingleton<DeleteCategoriaUseCase>(DeleteCategoriaUseCase(sl()));
-  sl.registerSingleton<ListCategoriasItemsUseCase>(ListCategoriasItemsUseCase(sl()));
+
+  sl.registerSingleton<SignInUseCase>(SignInUseCase(sl()));
+
   sl.registerSingleton<StoreCategoriaItemUseCase>(StoreCategoriaItemUseCase(sl()));
+  sl.registerSingleton<StoreCategoriaUseCase>(StoreCategoriaUseCase(sl()));
   sl.registerSingleton<StoreDuplicateCategoriaItemUseCase>(StoreDuplicateCategoriaItemUseCase(sl()));
-  sl.registerSingleton<UpdateCategoriaItemUseCase>(UpdateCategoriaItemUseCase(sl()));
-  sl.registerSingleton<DeleteCategoriaItemUseCase>(DeleteCategoriaItemUseCase(sl()));
-  sl.registerSingleton<CreateUnidadUseCase>(CreateUnidadUseCase(sl()));
+  sl.registerSingleton<StoreInspeccionUseCase>(StoreInspeccionUseCase(sl()));
+  sl.registerSingleton<StoreInspeccionTipoUseCase>(StoreInspeccionTipoUseCase(sl()));
   sl.registerSingleton<StoreUnidadUseCase>(StoreUnidadUseCase(sl()));
-  sl.registerSingleton<CreateInspeccionUseCase>(CreateInspeccionUseCase(sl()));
-  sl.registerSingleton<PredictiveUnidadInventarioUseCase>(PredictiveUnidadInventarioUseCase(sl()));
+
+  sl.registerSingleton<UpdateCategoriaItemUseCase>(UpdateCategoriaItemUseCase(sl()));
+  sl.registerSingleton<UpdateCategoriaUseCase>(UpdateCategoriaUseCase(sl()));
+  sl.registerSingleton<UpdateInspeccionTipoUseCase>(UpdateInspeccionTipoUseCase(sl()));
 
   // BLoCs
   sl.registerFactory<LocalAuthBloc>(() => LocalAuthBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
+
   sl.registerFactory<RemoteAuthBloc>(() => RemoteAuthBloc(sl()));
+
   sl.registerFactory<RemoteCategoriaBloc>(() => RemoteCategoriaBloc(sl(), sl(), sl(), sl()));
   sl.registerFactory<RemoteCategoriaItemBloc>(() => RemoteCategoriaItemBloc(sl(), sl(), sl(), sl(), sl()));
-  sl.registerFactory<RemoteInspeccionBloc>(() => RemoteInspeccionBloc(sl()));
+
+  sl.registerFactory<RemoteInspeccionBloc>(() => RemoteInspeccionBloc(sl(), sl()));
   sl.registerFactory<RemoteInspeccionTipoBloc>(() => RemoteInspeccionTipoBloc(sl(), sl(), sl(), sl()));
+
   sl.registerFactory<RemoteUnidadBloc>(() => RemoteUnidadBloc(sl(), sl()));
   sl.registerFactory<RemoteUnidadInventarioBloc>(() => RemoteUnidadInventarioBloc(sl()));
 }

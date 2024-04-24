@@ -18,6 +18,15 @@ class RemoteInspeccionCreateSuccess extends RemoteInspeccionState {
   List<Object?> get props => [ objInspeccion ];
 }
 
+class RemoteInspeccionResponseSuccess extends RemoteInspeccionState {
+  const RemoteInspeccionResponseSuccess(this.apiResponse);
+
+  final ApiResponseEntity apiResponse;
+
+  @override
+  List<Object?> get props => [ apiResponse ];
+}
+
 class RemoteInspeccionFailure extends RemoteInspeccionState {
   const RemoteInspeccionFailure(this.failure);
 
