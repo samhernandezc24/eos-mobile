@@ -73,34 +73,113 @@ class _ListInspeccionesResultsState extends State<_ListInspeccionesResults> {
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
-      margin: EdgeInsets.only(bottom: $styles.insets.sm),
-      child: Container(
-        padding: EdgeInsets.all($styles.insets.sm),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(inspeccion.folio),
-                  Gap($styles.insets.xs),
-                  Text('15 BlueHDI 100 - Active Business'),
-                ],
-              ),
+      margin: EdgeInsets.only(bottom: $styles.insets.sm * 1.5),
+      child: Stack(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all($styles.insets.xs),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _buildInspeccionFechaSection(DateTime.now()),
+
+                Gap($styles.insets.sm),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _buildInspeccionInfoText('Folio inspección: ', 'INS-24-VH-000001'),
+                      _buildInspeccionInfoText('Requerimiento: ', 'REQ-EPB-24-000001'),
+                      _buildInspeccionInfoText('No. económico: ', 'HL-010'),
+                      _buildInspeccionInfoText('Tipo de unidad: ', 'MINICARGADOR'),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(inspeccion.folio),
-                  Gap($styles.insets.xs),
-                  Text('15 BlueHDI 100 - Active Business'),
-                ],
-              ),
+          ),
+
+          Positioned(
+            top: 0,
+            right: $styles.insets.xxs,
+            child: IconButton(
+              onPressed: (){},
+              icon: Icon(Icons.info, color: Theme.of(context).primaryColor),
+              tooltip: 'Ver detalles',
             ),
-          ],
-        ),
+          ),
+
+          Positioned(
+            bottom: 0,
+            right: $styles.insets.xxs,
+            child: TextButton.icon(
+              onPressed: (){},
+              icon: const Icon(Icons.assignment_turned_in_outlined),
+              label: const Text('Evaluar'),
+            ),
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget _buildInspeccionFechaSection(DateTime fechaInspeccion) {
+    final double borderRadius = $styles.corners.md;
+
+    return DefaultTextColor(
+      color: Theme.of(context).colorScheme.onPrimary,
+      child: Column(
+        children: <Widget>[
+          Container(
+            width: 100,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(borderRadius), topRight: Radius.circular(borderRadius)),
+            ),
+            padding: EdgeInsets.all($styles.insets.sm),
+            child: Column(
+              children: <Widget>[
+                Text(
+                  DateFormat('MMM').format(fechaInspeccion).toUpperCase(),
+                  style: $styles.textStyles.bodySmallBold,
+                ),
+                Text(DateFormat('dd').format(fechaInspeccion), style: $styles.textStyles.h3),
+                Divider(color: Theme.of(context).colorScheme.onPrimary, thickness: 1.5),
+                Gap($styles.insets.xs),
+                Icon(Icons.pending_actions, color: Theme.of(context).colorScheme.onPrimary),
+                Gap($styles.insets.xs),
+                Text('Por Evaluar', style: $styles.textStyles.label.copyWith(fontSize: 13, height: 1.3), softWrap: true, textAlign: TextAlign.center),
+              ],
+            ),
+          ),
+
+          Container(
+            width: 100,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.6),
+              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(borderRadius), bottomRight: Radius.circular(borderRadius)),
+            ),
+            padding: EdgeInsets.all($styles.insets.sm),
+            child: Column(
+              children: <Widget>[
+                Text(DateFormat('hh:mm a').format(fechaInspeccion), style: $styles.textStyles.bodySmallBold),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInspeccionInfoText(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(label, style: $styles.textStyles.label),
+        Text(value, style: $styles.textStyles.label.copyWith(fontSize: 16, fontWeight: FontWeight.w600, height: 1.3), overflow: TextOverflow.ellipsis),
+        Gap($styles.insets.xxs),
+      ],
     );
   }
 }

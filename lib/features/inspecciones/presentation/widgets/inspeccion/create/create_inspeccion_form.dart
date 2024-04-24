@@ -184,8 +184,7 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
   }
 
   void _handleStoreInspeccion() {
-    final DateTime fecha = DateFormat('dd/MM/yyyy HH:mm').parse(_fechaInspeccionController.text);
-
+    final DateTime fecha    = DateFormat('dd/MM/yyyy HH:mm').parse(_fechaInspeccionController.text);
     final double? capacidad = double.tryParse(_capacidadController.text);
     final int? odometro     = int.tryParse(_odometroController.text);
     final int? horometro    = int.tryParse(_horometroController.text);
@@ -197,8 +196,6 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
       idInspeccionTipo            : selectedInspeccionTipoId ?? '',
       inspeccionTipoCodigo        : selectedInspeccionTipoCodigo ?? '',
       inspeccionTipoName          : selectedInspeccionTipoName ?? '',
-      idRequerimiento             : '',
-      requerimientoFolio          : '',
       idUnidad                    : selectedUnidadId ?? '',
       unidadNumeroEconomico       : _numeroEconomicoController.text,
       isUnidadTemporal            : _selectedUnidad == UnidadInspeccionTipo.temporal,
@@ -217,9 +214,6 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
       capacidad                   : capacidad,
       odometro                    : odometro,
       horometro                   : horometro,
-      observaciones               : '',
-      firmaOperador               : '',
-      firmaVerificador            : '',
     );
 
     final bool isValidForm = _formKey.currentState!.validate();
