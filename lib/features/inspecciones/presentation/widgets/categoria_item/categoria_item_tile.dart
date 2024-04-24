@@ -211,6 +211,8 @@ class _CategoriaItemTileState extends State<CategoriaItemTile> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
       margin: EdgeInsets.only(bottom: $styles.insets.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

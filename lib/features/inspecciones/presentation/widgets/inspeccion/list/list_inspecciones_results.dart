@@ -34,7 +34,7 @@ class _ListInspeccionesResultsState extends State<_ListInspeccionesResults> {
           scrollBehavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
           slivers: <Widget>[
             SliverPadding(
-              padding: EdgeInsets.all($styles.insets.sm).copyWith(bottom: $styles.insets.offset * 1.2),
+              padding: EdgeInsets.all($styles.insets.sm).copyWith(bottom: $styles.insets.offset),
               sliver: _buildInspeccionesList(),
             ),
           ],
@@ -73,7 +73,7 @@ class _ListInspeccionesResultsState extends State<_ListInspeccionesResults> {
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
-      margin: EdgeInsets.only(bottom: $styles.insets.sm * 1.5),
+      margin: EdgeInsets.only(bottom: $styles.insets.lg),
       child: Stack(
         children: <Widget>[
           Container(

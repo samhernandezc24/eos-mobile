@@ -1,4 +1,3 @@
-import 'package:eos_mobile/core/common/widgets/controls/circle_buttons.dart';
 import 'package:eos_mobile/core/common/widgets/controls/scroll_decorator.dart';
 import 'package:eos_mobile/core/common/widgets/themed_text.dart';
 import 'package:eos_mobile/core/extensions/panel_extension.dart';
