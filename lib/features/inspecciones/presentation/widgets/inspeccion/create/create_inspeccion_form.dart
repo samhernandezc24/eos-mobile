@@ -6,8 +6,10 @@ import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/core/enums/unidad_inspeccion_tipo.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad_inventario/unidad_inventario_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad_inventario/remote/remote_unidad_inventario_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/unidad/create_unidad_page.dart';
 import 'package:eos_mobile/shared/shared.dart';
@@ -25,7 +27,7 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   /// CONTROLLERS
-  late final TextEditingController _searchUnidadInventarioController;
+  late final TextEditingController _searchUnidadController;
 
   late final TextEditingController _fechaInspeccionController;
   late final TextEditingController _baseNameController;
@@ -44,12 +46,14 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
   late final TextEditingController _odometroController;
 
   /// LIST
-  late List<InspeccionTipoEntity> lstInspeccionesTipos  = <InspeccionTipoEntity>[];
-  late List<UnidadInventarioEntity> lstRows             = <UnidadInventarioEntity>[];
+  late List<InspeccionTipoEntity> lstInspeccionesTipos      = <InspeccionTipoEntity>[];
+  late List<UnidadInventarioEntity> lstUnidadesInventarios  = <UnidadInventarioEntity>[];
+  late List<UnidadEntity> lstUnidades                       = <UnidadEntity>[];
 
   /// PROPERTIES
   UnidadInspeccionTipo? _selectedUnidad;
-  UnidadInventarioEntity? _selectedValue;
+  UnidadInventarioEntity? _selectedUnidadInventario;
+  UnidadEntity? _selectedUnidadTemporal;
 
   String? selectedInspeccionTipoId;
   String? selectedInspeccionTipoCodigo;
@@ -75,10 +79,11 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
     context.read<RemoteInspeccionBloc>().add(CreateInspeccionData());
 
     _loadPredictiveSearch('');
+    _loadPredictiveUnidades('');
 
     _selectedUnidad = UnidadInspeccionTipo.inventario;
 
-    _searchUnidadInventarioController   = TextEditingController();
+    _searchUnidadController             = TextEditingController();
     _fechaInspeccionController          = TextEditingController(text: DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now()));
     _baseNameController                 = TextEditingController();
     _numeroEconomicoController          = TextEditingController();
@@ -98,8 +103,7 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
 
   @override
   void dispose() {
-    _searchUnidadInventarioController.dispose();
-    _fechaInspeccionController.dispose();
+    _searchUnidadController.dispose();
     _baseNameController.dispose();
     _numeroEconomicoController.dispose();
     _unidadTipoController.dispose();
@@ -183,6 +187,11 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
     context.read<RemoteUnidadInventarioBloc>().add(PredictiveUnidadInventario(predictiveSearch));
   }
 
+  void _loadPredictiveUnidades(String search) {
+    final predictiveSearch = PredictiveSearchReqEntity(search: search);
+    context.read<RemoteUnidadBloc>().add(PredictiveUnidad(predictiveSearch));
+  }
+
   void _handleStoreInspeccion() {
     final DateTime fecha    = DateFormat('dd/MM/yyyy HH:mm').parse(_fechaInspeccionController.text);
     final double? capacidad = double.tryParse(_capacidadController.text);
@@ -246,6 +255,24 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
     );
   }
 
+  void _resetFields() {
+    _searchUnidadController.clear();
+    _baseNameController.clear();
+    _numeroEconomicoController.clear();
+    _unidadTipoController.clear();
+    _marcaController.clear();
+    _placaTipoController.clear();
+    _placaController.clear();
+    _numeroSerieController.clear();
+    _modeloController.clear();
+    _anioEquipoController.clear();
+    _locacionController.clear();
+    _tipoPlataformaController.clear();
+    _capacidadController.clear();
+    _horometroController.clear();
+    _odometroController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -259,87 +286,170 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
           Gap($styles.insets.xs),
 
           // SELECCIONAR Y BUSCAR UNIDAD A INSPECCIONAR:
-          BlocBuilder<RemoteUnidadInventarioBloc, RemoteUnidadInventarioState>(
-            builder: (BuildContext context, RemoteUnidadInventarioState state) {
-              if (state is RemoteUnidadInventarioLoading) {
-                return Center(
-                  child: LoadingIndicator(
-                    color: Theme.of(context).primaryColor,
-                    width: 20,
-                    height: 20,
-                    strokeWidth: 3,
-                  ),
-                );
-              }
+          if (_selectedUnidad == UnidadInspeccionTipo.temporal)
+            BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
+              builder: (BuildContext context, RemoteUnidadState state) {
+                if (state is RemoteUnidadLoading) {
+                  return Center(
+                    child: LoadingIndicator(
+                      color: Theme.of(context).primaryColor,
+                      width: 20,
+                      height: 20,
+                      strokeWidth: 3,
+                    ),
+                  );
+                }
 
-              if (state is RemoteUnidadInventarioFailedMessage) {
-                return ErrorBoxContainer(
-                  errorMessage: state.errorMessage ??
-                      'Se produjo un error al cargar el listado de unidades. Inténtalo de nuevo.',
-                  onPressed: () => _loadPredictiveSearch(''),
-                );
-              }
+                if (state is RemoteUnidadFailedMessage) {
+                  return ErrorBoxContainer(
+                    errorMessage: state.errorMessage ??
+                        'Se produjo un error al cargar el listado de unidades. Inténtalo de nuevo.',
+                    onPressed: () => _loadPredictiveUnidades(''),
+                  );
+                }
 
-              if (state is RemoteUnidadInventarioFailure) {
-                return ErrorBoxContainer(
-                  errorMessage: state.failure?.errorMessage ??
-                      'Se produjo un error al cargar el listado de unidades. Inténtalo de nuevo.',
-                  onPressed: () => _loadPredictiveSearch(''),
-                );
-              }
+                if (state is RemoteUnidadFailure) {
+                  return ErrorBoxContainer(
+                    errorMessage: state.failure?.errorMessage ??
+                        'Se produjo un error al cargar el listado de unidades. Inténtalo de nuevo.',
+                    onPressed: () => _loadPredictiveUnidades(''),
+                  );
+                }
 
-              if (state is RemoteUnidadInventarioSuccess) {
-                lstRows = state.unidades?.rows ?? [];
+                if (state is RemoteUnidadSuccess) {
+                  lstUnidades = state.unidades?.rows ?? [];
 
-                return LabeledDropdownFormSearchField<UnidadInventarioEntity>(
-                  label: '* Unidad:',
-                  hintSearchText: 'Buscar unidad',
-                  searchController: _searchUnidadInventarioController,
-                  items: lstRows,
-                  itemBuilder: (unidad) => Text(unidad.numeroEconomico ?? ''),
-                  value: _selectedValue,
-                  onChanged: (newValue) {
-                    setState(() {
-                        _selectedValue                = newValue;
-                        selectedUnidadId              = newValue?.idUnidad;
-                        selectedUnidadIdBase          = newValue?.idBase;
-                        selectedUnidadBaseName        = newValue?.baseName;
-                        selectedUnidadNumeroEconomico = newValue?.numeroEconomico;
-                        selectedUnidadIdTipo          = newValue?.idUnidadTipo;
-                        selectedUnidadTipoName        = newValue?.unidadTipoName;
-                        selectedUnidadIdMarca         = '';
-                        selectedUnidadMarcaName       = '';
-                        selectedUnidadIdPlacaTipo     = '';
-                        selectedUnidadPlacaTipoName   = '';
-                        selectedUnidadPlaca           = '';
-                        selectedUnidadNumeroSerie     = '';
-                        selectedUnidadAnioEquipo      = '';
+                  return LabeledDropdownFormSearchField<UnidadEntity>(
+                    label: '* Unidad:',
+                    hintSearchText: 'Buscar unidad',
+                    searchController: _searchUnidadController,
+                    items: lstUnidades,
+                    itemBuilder: (unidad) => Text(unidad.numeroEconomico ?? ''),
+                    value: _selectedUnidadTemporal,
+                    onChanged: (newValue) {
+                      setState(() {
+                          _selectedUnidadTemporal       = newValue;
+                          selectedUnidadId              = newValue?.idUnidad;
+                          selectedUnidadIdBase          = newValue?.idBase;
+                          selectedUnidadBaseName        = newValue?.baseName;
+                          selectedUnidadNumeroEconomico = newValue?.numeroEconomico;
+                          selectedUnidadIdTipo          = newValue?.idUnidadTipo;
+                          selectedUnidadTipoName        = newValue?.unidadTipoName;
+                          selectedUnidadIdMarca         = newValue?.idUnidadMarca;
+                          selectedUnidadMarcaName       = newValue?.unidadMarcaName;
+                          selectedUnidadIdPlacaTipo     = newValue?.idUnidadPlacaTipo;
+                          selectedUnidadPlacaTipoName   = newValue?.unidadPlacaTipoName;
+                          selectedUnidadPlaca           = newValue?.placa;
+                          selectedUnidadNumeroSerie     = newValue?.numeroSerie;
+                          selectedUnidadAnioEquipo      = newValue?.anioEquipo;
 
-                        // Actualización de valores.
-                        _baseNameController.text          = selectedUnidadBaseName ?? '';
-                        _numeroEconomicoController.text   = selectedUnidadNumeroEconomico ?? '';
-                        _unidadTipoController.text        = selectedUnidadTipoName ?? '';
-                        _marcaController.text             = selectedUnidadMarcaName ?? '';
-                        _placaTipoController.text         = selectedUnidadPlacaTipoName ?? '';
-                        _placaController.text             = selectedUnidadPlaca ?? '';
-                        _numeroSerieController.text       = selectedUnidadNumeroSerie ?? '';
-                        _anioEquipoController.text        = selectedUnidadAnioEquipo ?? '';
-                    });
-                  },
-                  searchMatchFn: (DropdownMenuItem<UnidadInventarioEntity> item, String searchValue) {
-                    return item.value!.numeroEconomico!.toLowerCase().contains(searchValue.toLowerCase());
-                  },
-                  onMenuStateChange: (isOpen) {
-                    if (!isOpen) {
-                      _searchUnidadInventarioController.clear();
-                    }
-                  },
-                  validator: FormValidators.dropdownValidator,
-                );
-              }
-              return const SizedBox.shrink();
-            },
-          ),
+                          // Actualización de valores.
+                          _baseNameController.text          = selectedUnidadBaseName ?? '';
+                          _numeroEconomicoController.text   = selectedUnidadNumeroEconomico ?? '';
+                          _unidadTipoController.text        = selectedUnidadTipoName ?? '';
+                          _marcaController.text             = selectedUnidadMarcaName ?? '';
+                          _placaTipoController.text         = selectedUnidadPlacaTipoName ?? '';
+                          _placaController.text             = selectedUnidadPlaca ?? '';
+                          _numeroSerieController.text       = selectedUnidadNumeroSerie ?? '';
+                          _anioEquipoController.text        = selectedUnidadAnioEquipo ?? '';
+                      });
+                    },
+                    searchMatchFn: (DropdownMenuItem<UnidadEntity> item, String searchValue) {
+                      return item.value!.numeroEconomico!.toLowerCase().contains(searchValue.toLowerCase());
+                    },
+                    onMenuStateChange: (isOpen) {
+                      if (!isOpen) {
+                        _searchUnidadController.clear();
+                      }
+                    },
+                    validator: FormValidators.dropdownValidator,
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            )
+          else
+            BlocBuilder<RemoteUnidadInventarioBloc, RemoteUnidadInventarioState>(
+              builder: (BuildContext context, RemoteUnidadInventarioState state) {
+                if (state is RemoteUnidadInventarioLoading) {
+                  return Center(
+                    child: LoadingIndicator(
+                      color: Theme.of(context).primaryColor,
+                      width: 20,
+                      height: 20,
+                      strokeWidth: 3,
+                    ),
+                  );
+                }
+
+                if (state is RemoteUnidadInventarioFailedMessage) {
+                  return ErrorBoxContainer(
+                    errorMessage: state.errorMessage ??
+                        'Se produjo un error al cargar el listado de unidades. Inténtalo de nuevo.',
+                    onPressed: () => _loadPredictiveSearch(''),
+                  );
+                }
+
+                if (state is RemoteUnidadInventarioFailure) {
+                  return ErrorBoxContainer(
+                    errorMessage: state.failure?.errorMessage ??
+                        'Se produjo un error al cargar el listado de unidades. Inténtalo de nuevo.',
+                    onPressed: () => _loadPredictiveSearch(''),
+                  );
+                }
+
+                if (state is RemoteUnidadInventarioSuccess) {
+                  lstUnidadesInventarios = state.unidades?.rows ?? [];
+
+                  return LabeledDropdownFormSearchField<UnidadInventarioEntity>(
+                    label: '* Unidad:',
+                    hintSearchText: 'Buscar unidad',
+                    searchController: _searchUnidadController,
+                    items: lstUnidadesInventarios,
+                    itemBuilder: (unidad) => Text(unidad.numeroEconomico ?? ''),
+                    value: _selectedUnidadInventario,
+                    onChanged: (newValue) {
+                      setState(() {
+                          _selectedUnidadInventario     = newValue;
+                          selectedUnidadId              = newValue?.idUnidad;
+                          selectedUnidadIdBase          = newValue?.idBase;
+                          selectedUnidadBaseName        = newValue?.baseName;
+                          selectedUnidadNumeroEconomico = newValue?.numeroEconomico;
+                          selectedUnidadIdTipo          = newValue?.idUnidadTipo;
+                          selectedUnidadTipoName        = newValue?.unidadTipoName;
+                          selectedUnidadIdMarca         = '';
+                          selectedUnidadMarcaName       = '';
+                          selectedUnidadIdPlacaTipo     = '';
+                          selectedUnidadPlacaTipoName   = '';
+                          selectedUnidadPlaca           = '';
+                          selectedUnidadNumeroSerie     = '';
+                          selectedUnidadAnioEquipo      = '';
+
+                          // Actualización de valores.
+                          _baseNameController.text          = selectedUnidadBaseName ?? '';
+                          _numeroEconomicoController.text   = selectedUnidadNumeroEconomico ?? '';
+                          _unidadTipoController.text        = selectedUnidadTipoName ?? '';
+                          _marcaController.text             = selectedUnidadMarcaName ?? '';
+                          _placaTipoController.text         = selectedUnidadPlacaTipoName ?? '';
+                          _placaController.text             = selectedUnidadPlaca ?? '';
+                          _numeroSerieController.text       = selectedUnidadNumeroSerie ?? '';
+                          _anioEquipoController.text        = selectedUnidadAnioEquipo ?? '';
+                      });
+                    },
+                    searchMatchFn: (DropdownMenuItem<UnidadInventarioEntity> item, String searchValue) {
+                      return item.value!.numeroEconomico!.toLowerCase().contains(searchValue.toLowerCase());
+                    },
+                    onMenuStateChange: (isOpen) {
+                      if (!isOpen) {
+                        _searchUnidadController.clear();
+                      }
+                    },
+                    validator: FormValidators.dropdownValidator,
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
 
           // MOSTRAR BOTON PARA NUEVA UNIDAD CON ANIMACION:
           AnimatedSwitcher(
@@ -638,7 +748,13 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
       return GestureDetector(
         onTap: () {
           setState(() {
-            _selectedUnidad = _selectedUnidad == unidad ? null : unidad;
+            if (_selectedUnidad == unidad) {
+              _selectedUnidad = null;
+              _resetFields();
+            } else {
+              _selectedUnidad = unidad;
+              _resetFields();
+            }
           });
         },
         child: Row(
@@ -647,7 +763,13 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
               value: _selectedUnidad == unidad,
               onChanged: (value) {
                 setState(() {
-                  _selectedUnidad = value! ? unidad : null;
+                  if (value!) {
+                    _selectedUnidad = unidad;
+                    _resetFields();
+                  } else {
+                    _selectedUnidad = null;
+                    _resetFields();
+                  }
                 });
               },
             ),

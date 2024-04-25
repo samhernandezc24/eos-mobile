@@ -13,6 +13,15 @@ class LoadBases extends RemoteUnidadEvent {}
 class LoadUnidadesMarcas extends RemoteUnidadEvent {}
 class LoadUnidadesTipos extends RemoteUnidadEvent {}
 
+class PredictiveUnidad extends RemoteUnidadEvent {
+  const PredictiveUnidad(this.predictiveSearch);
+
+  final PredictiveSearchReqEntity predictiveSearch;
+
+  @override
+  List<Object?> get props => [ predictiveSearch ];
+}
+
 class StoreUnidad extends RemoteUnidadEvent {
   const StoreUnidad(this.unidad);
 

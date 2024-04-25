@@ -10,12 +10,12 @@ class RemoteUnidadState extends Equatable {
 class RemoteUnidadLoading extends RemoteUnidadState {}
 
 class RemoteUnidadSuccess extends RemoteUnidadState {
-  const RemoteUnidadSuccess(this.categorias);
+  const RemoteUnidadSuccess(this.unidades);
 
-  final List<CategoriaEntity>? categorias;
+  final UnidadPredictiveDataEntity? unidades;
 
   @override
-  List<Object?> get props => [ categorias ];
+  List<Object?> get props => [ unidades ];
 }
 
 class RemoteUnidadCreateSuccess extends RemoteUnidadState {

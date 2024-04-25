@@ -4,7 +4,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/unidad_inventar
 /// [UnidadInventarioDataModel]
 ///
 /// Representa los datos de la unidad en inventario que se obtendrá del servidor para
-/// realizar diferentes operaciones con la información de la unidad en inventario.
+/// realizar diferentes operaciones con su información.
 class UnidadInventarioDataModel extends UnidadInventarioDataEntity {
   const UnidadInventarioDataModel({List<UnidadInventarioModel>? rows}) : super(rows: rows);
 
