@@ -9,8 +9,6 @@ import 'package:eos_mobile/features/inspecciones/presentation/pages/configuracio
 import 'package:eos_mobile/features/inspecciones/presentation/pages/index/index_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/pages/list/list_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/pages/search_unidad/search_unidad_page.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/pages/unidad_con_requerimiento/unidad_con_requerimiento_page.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/pages/unidad_sin_requerimiento/unidad_sin_requerimiento_page.dart';
 import 'package:eos_mobile/features/notificaciones/presentation/pages/notificacion_page.dart';
 import 'package:eos_mobile/layouts/app_scaffold_with_navbar.dart';
 import 'package:eos_mobile/shared/shared.dart';
@@ -58,17 +56,16 @@ final GoRouter appRouter = GoRouter(
       builder: (BuildContext context, GoRouterState state, StatefulNavigationShell navigationShell) {
         final String? routeName = GoRouterState.of(context).topRoute?.name;
         final String title = switch (routeName) {
-          'home'                                  => 'EOS Mobile',
-          'dashboard'                             => 'Dashboard',
-          'actividades'                           => 'Registro de actividades',
-          'notificaciones'                        => 'Notificaciones',
-          'home.inspecciones'                     => 'Índice de inspecciones',
-          'home.inspecciones.conRequerimiento'    => 'Unidades con requerimientos',
-          'home.inspecciones.searchUnidad'        => 'Buscar unidad',
-          'home.compras'                          => 'Órdenes de compras',
-          'home.embarques'                        => 'Órdenes de embarques',
-          'home.unidades'                         => 'Unidades',
-          _                                       => 'Empty Page',
+          'home'                            => 'EOS Mobile',
+          'dashboard'                       => 'Dashboard',
+          'actividades'                     => 'Registro de actividades',
+          'notificaciones'                  => 'Notificaciones',
+          'home.inspecciones'               => 'Índice de inspecciones',
+          'home.inspecciones.searchUnidad'  => 'Buscar unidad',
+          'home.compras'                    => 'Órdenes de compras',
+          'home.embarques'                  => 'Órdenes de embarques',
+          'home.unidades'                   => 'Unidades',
+          _                                 => 'Empty Page',
         };
 
         return AppScaffoldWithNavBar(title: title, navigationShell: navigationShell);
@@ -96,13 +93,13 @@ final GoRouter appRouter = GoRouter(
                       useFade: true,
                       parentKey: _rootNavigatorKey,
                     ),
-                    AppRoute('conrequerimiento', 'home.inspecciones.conRequerimiento', (_) => const InspeccionUnidadConRequerimientoPage(), useFade: true),
-                    AppRoute(
-                      'sinrequerimiento',
-                      'home.inspecciones.sinRequerimiento', (_) => const InspeccionUnidadSinRequerimientoPage(),
-                      useFade: true,
-                      parentKey: _rootNavigatorKey,
-                    ),
+                    // AppRoute('conrequerimiento', 'home.inspecciones.conRequerimiento', (_) => const InspeccionUnidadConRequerimientoPage(), useFade: true),
+                    // AppRoute(
+                    //   'sinrequerimiento',
+                    //   'home.inspecciones.sinRequerimiento', (_) => const InspeccionUnidadSinRequerimientoPage(),
+                    //   useFade: true,
+                    //   parentKey: _rootNavigatorKey,
+                    // ),
                     AppRoute('searchunidad', 'home.inspecciones.searchUnidad', (_) => const InspeccionSearchUnidadPage(), useFade: true),
                   ],
                   useFade: true,

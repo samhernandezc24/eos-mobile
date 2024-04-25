@@ -1,6 +1,7 @@
 import 'package:eos_mobile/core/common/data/catalogos/base_data.dart';
 import 'package:eos_mobile/core/common/data/catalogos/predictive_search_req.dart';
 import 'package:eos_mobile/core/common/data/catalogos/unidad_marca_data.dart';
+import 'package:eos_mobile/core/common/data/catalogos/unidad_placa_tipo_data.dart';
 import 'package:eos_mobile/core/common/data/catalogos/unidad_tipo_data.dart';
 import 'package:eos_mobile/core/common/widgets/controls/error_box_container.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_field.dart';
@@ -40,10 +41,10 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
   late List<UnidadMarcaDataEntity> lstUnidadesMarcas  = <UnidadMarcaDataEntity>[];
   late List<UnidadTipoDataEntity> lstUnidadesTipos    = <UnidadTipoDataEntity>[];
 
-  final List<Map<String, String>> lstUnidadesPlacasTipos  = <Map<String, String>>[
-    {'ea52bdfd-8af6-4f5a-b182-2b99e554eb31': 'Estatal'},
-    {'ea52bdfd-8af6-4f5a-b182-2b99e554eb32': 'Federal'},
-    {'ea52bdfd-8af6-4f5a-b182-2b99e554eb33': 'No aplica'},
+  final List<UnidadPlacaTipoData> lstUnidadesPlacasTipos = [
+    UnidadPlacaTipoData(idUnidadPlacaTipo: 'ea52bdfd-8af6-4f5a-b182-2b99e554eb31', name: 'Estatal'),
+    UnidadPlacaTipoData(idUnidadPlacaTipo: 'ea52bdfd-8af6-4f5a-b182-2b99e554eb32', name: 'Federal'),
+    UnidadPlacaTipoData(idUnidadPlacaTipo: 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33', name: 'No aplica'),
   ];
 
   // PROPERTIES
@@ -388,15 +389,15 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
           Gap($styles.insets.sm),
 
           // TIPO DE PLACA:
-          LabeledDropdownFormField<Map<String, String>>(
+          LabeledDropdownFormField<UnidadPlacaTipoData>(
             label: 'Tipo de placa:',
             hintText: 'Seleccionar',
             items: lstUnidadesPlacasTipos,
-            itemBuilder: (placaTipo) => Text(placaTipo.values.first),
+            itemBuilder: (unidadPlacaTipo) => Text(unidadPlacaTipo.name ?? ''),
             onChanged: (newValue) {
               setState(() {
-                _selectedIdUnidadPlacaTipo    = newValue?.keys.first;
-                _selectedUnidadPlacaTipoName  = newValue?.values.first;
+                _selectedIdUnidadPlacaTipo    = newValue?.idUnidadPlacaTipo ?? '';
+                _selectedUnidadPlacaTipoName  = newValue?.name ?? '';
               });
             },
           ),

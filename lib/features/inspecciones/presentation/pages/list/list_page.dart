@@ -7,8 +7,10 @@ import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/list/list_inspeccion_search_input.dart';
 import 'package:eos_mobile/shared/shared.dart';
 import 'package:intl/intl.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 part '../../widgets/inspeccion/list/list_inspecciones_results.dart';
+part '../../widgets/inspeccion/filter/filter_inspeccion.dart';
 
 class InspeccionListPage extends StatefulWidget {
   const InspeccionListPage({Key? key}) : super(key: key);
@@ -78,67 +80,76 @@ class _InspeccionListPageState extends State<InspeccionListPage>  {
   }
 
   void _handleFilterModal(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: $styles.insets.sm),
-              child: Center(
-                child: Text(
-                  'Filtros de inspecciones',
-                  style: $styles.textStyles.h3.copyWith(fontSize: 18),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ),
-            ListTile(
-              onTap: (){},
-              leading: const Icon(Icons.checklist_outlined),
-              title: const Text('Estatus:'),
-              trailing: PopupMenuButton<String>(
-                icon: const Icon(Icons.arrow_drop_down),
-                itemBuilder: (BuildContext context) {
-                  return options.map((String option) {
-                    return PopupMenuItem<String>(
-                      value: option,
-                      child: Text(option),
-                    );
-                  }).toList();
-                },
-                onSelected: (String value) {
-                  setState(() {
+    Navigator.push<void>(
+      context,
+      PageRouteBuilder<void>(
+        transitionDuration: $styles.times.pageTransition,
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+          const Offset begin  = Offset(1, 0);
+          const Offset end    = Offset.zero;
+          const Cubic curve   = Curves.ease;
 
-                  });
-                },
-              ),
-            ),
-            ListTile(
-              onTap: (){},
-              leading: const Icon(Icons.checklist),
-              title: const Text('Tipo de inspección:'),
-            ),
-            ListTile(
-              onTap: (){},
-              leading: const Icon(Icons.forklift),
-              title: const Text('Tipo de unidad:'),
-            ),
-            ListTile(
-              onTap: (){},
-              leading: const Icon(Icons.person),
-              title: const Text('Creado por:'),
-            ),
-            ListTile(
-              onTap: (){},
-              leading: const Icon(Icons.person),
-              title: const Text('Actualizado por:'),
-            ),
-          ],
-        );
-      },
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive<Offset>(tween),
+            child: const FilterInspeccion(),
+          );
+        },
+        fullscreenDialog: true,
+      ),
     );
+    // showModalBottomSheet<void>(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return Column(
+    //       mainAxisSize: MainAxisSize.min,
+    //       children: <Widget>[
+    //         Padding(
+    //           padding: EdgeInsets.symmetric(vertical: $styles.insets.sm),
+    //           child: Center(
+    //             child: Text(
+    //               'Filtros de inspecciones',
+    //               style: $styles.textStyles.h3.copyWith(fontSize: 18),
+    //               overflow: TextOverflow.ellipsis,
+    //             ),
+    //           ),
+    //         ),
+    //         ListTile(
+    //           onTap: (){},
+    //           title: const Text('Estatus:'),
+    //           trailing: DropdownMenu(
+    //             initialSelection: options.first,
+    //             onSelected: (String? value) {
+    //               setState(() {
+    //                 options.first = value!;
+    //               });
+    //             },
+    //             dropdownMenuEntries: options.map((String value) {
+    //               return DropdownMenuEntry(value: value, label: value);
+    //             }).toList(),
+    //           )
+    //         ),
+    //         ListTile(
+    //           onTap: (){},
+    //           title: const Text('Tipo de inspección:'),
+    //         ),
+    //         ListTile(
+    //           onTap: (){},
+    //           title: const Text('Tipo de unidad:'),
+    //         ),
+    //         ListTile(
+    //           onTap: (){},
+    //           title: const Text('Creado por:'),
+    //         ),
+    //         ListTile(
+    //           onTap: (){},
+    //           title: const Text('Actualizado por:'),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
   }
 
   void _handleSortModal(BuildContext context) {
@@ -253,12 +264,12 @@ class _InspeccionListPageState extends State<InspeccionListPage>  {
               IconButton(
                 onPressed: () => _handleFilterModal(context),
                 icon: const Icon(Icons.filter_list),
-                tooltip: 'Filtrar por',
+                tooltip: 'Filtros',
               ),
               IconButton(
                 onPressed: () => _handleSortModal(context),
                 icon: const Icon(Icons.format_line_spacing),
-                tooltip: 'Ordenar por',
+                tooltip: 'Ordenar',
               ),
               Gap($styles.insets.xs),
             ],
