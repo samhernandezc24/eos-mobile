@@ -1,7 +1,9 @@
 import 'package:eos_mobile/core/common/data/catalogos/base_data.dart';
 import 'package:eos_mobile/core/common/data/catalogos/unidad_marca_data.dart';
 import 'package:eos_mobile/core/common/data/catalogos/unidad_tipo_data.dart';
+import 'package:eos_mobile/core/common/widgets/controls/error_box_container.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_field.dart';
+import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_search_field.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_textarea_field.dart';
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_req_entity.dart';
@@ -37,19 +39,24 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
   late List<UnidadMarcaDataEntity> lstUnidadesMarcas  = <UnidadMarcaDataEntity>[];
   late List<UnidadTipoDataEntity> lstUnidadesTipos    = <UnidadTipoDataEntity>[];
 
-  final List<dynamic> lstUnidadesPlacasTipos  = <dynamic>[
+  final List<Map<String, String>> lstUnidadesPlacasTipos  = <Map<String, String>>[
     {'ea52bdfd-8af6-4f5a-b182-2b99e554eb31': 'Estatal'},
     {'ea52bdfd-8af6-4f5a-b182-2b99e554eb32': 'Federal'},
     {'ea52bdfd-8af6-4f5a-b182-2b99e554eb33': 'No aplica'},
   ];
 
   // PROPERTIES
-  String? selectedTipoUnidadId;
-  String? selectedTipoUnidadName;
-  String? selectedBaseId;
-  String? selectedBaseName;
-  String? selectedUnidadMarcaId;
-  String? selectedUnidadMarcaName;
+  UnidadTipoDataEntity? _selectedValue;
+
+  String? _selectedIdBase;
+  String? _selectedBaseName;
+  String? _selectedIdUnidadTipo;
+  String? _selectedUnidadTipoName;
+  String? _selectedIdUnidadMarca;
+  String? _selectedUnidadMarcaName;
+  String? _selectedIdUnidadPlacaTipo;
+  String? _selectedUnidadPlacaTipoName;
+
 
   @override
   void initState() {
@@ -150,37 +157,23 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
     final int? horometro    = int.tryParse(_horometroController.text);
 
     final UnidadReqEntity objData = UnidadReqEntity(
-      // numeroEconomico     : _numeroEconomicoController.text,
-      // idBase              : selectedIdBase ?? '',
-      // baseName            : selectedBaseName ?? '',
-      // idUnidadTipo        : selectedIdUnidadTipo ?? '',
-      // unidadTipoName      : unidadTipoName,
-      // idUnidadMarca       : idUnidadMarca,
-      // unidadMarcaName     : unidadMarcaName,
-      // idUnidadPlacaTipo   : idUnidadPlacaTipo,
-      // unidadPlacaTipoName : unidadPlacaTipoName,
-      // placa               : placa,
-      // numeroSerie         : numeroSerie,
-      // modelo              : modelo,
-      // anioEquipo          : anioEquipo,
-      // descripcion         : descripcion,
-      // capacidad           : capacidad,
-      // odometro            : odometro,
-      // horometro           : horometro,
-      // numeroEconomico   : _numeroEconomicoController.text,
-      // numeroSerie       : _numeroSerieController.text,
-      // descripcion       : _descripcionController.text,
-      // modelo            : _modeloController.text,
-      // anioEquipo        : _anioEquipoController.text,
-      // idBase            : selectedBaseId ?? '',
-      // baseName          : selectedBaseName ?? '',
-      // idUnidadMarca     : selectedUnidadMarcaId ?? '',
-      // unidadMarcaName   : selectedUnidadMarcaName ?? '',
-      // idUnidadTipo      : selectedTipoUnidadId ?? '',
-      // unidadTipoName    : selectedTipoUnidadName ?? '',
-      // capacidad         : capacidad ?? 0.0,
-      // horometro         : horometro ?? 0,
-      // odometro          : odometro ?? 0,
+      numeroEconomico     : _numeroEconomicoController.text,
+      idBase              : _selectedIdBase ?? '',
+      baseName            : _selectedBaseName ?? '',
+      idUnidadTipo        : _selectedIdUnidadTipo ?? '',
+      unidadTipoName      : _selectedUnidadTipoName ?? '',
+      idUnidadMarca       : _selectedIdUnidadMarca ?? '',
+      unidadMarcaName     : _selectedUnidadMarcaName ?? '',
+      idUnidadPlacaTipo   : _selectedIdUnidadPlacaTipo ?? '',
+      unidadPlacaTipoName : _selectedUnidadPlacaTipoName ?? '',
+      placa               : _placaController.text,
+      numeroSerie         : _numeroSerieController.text,
+      modelo              : _modeloController.text,
+      anioEquipo          : _anioEquipoController.text,
+      descripcion         : _descripcionController.text,
+      capacidad           : capacidad,
+      odometro            : odometro,
+      horometro           : horometro,
     );
 
     final bool isValidForm = _formKey.currentState!.validate();
@@ -208,24 +201,119 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
 
           Gap($styles.insets.sm),
 
-          // SELECCIONAR EL TIPO DE UNIDAD:
-          LabeledDropdownFormField(
-            label: '* Tipo de unidad:',
-            hintText: 'Seleccione',
-            items: widget.unidadesTipos,
-            itemBuilder: (unidadTipo) => Text(unidadTipo.name ?? ''),
-            onChanged: (_){},
-            validator: FormValidators.dropdownValidator,
-            // onChanged: (newValue) {
-            //   final selectedTipoUnidad = widget.unidadesTipos?.firstWhere((element) => element.idUnidadTipo == newValue);
+          // SELECCIONAR BASE DE UNIDAD:
+          BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
+            builder: (BuildContext context, RemoteUnidadState state) {
+              if (state is RemoteUnidadLoading) {
+                return Center(
+                  child: LoadingIndicator(
+                    color: Theme.of(context).primaryColor,
+                    width: 20,
+                    height: 20,
+                    strokeWidth: 3,
+                  ),
+                );
+              }
 
-            //   if (selectedTipoUnidad != null) {
-            //     setState(() {
-            //       selectedTipoUnidadId    = selectedTipoUnidad.idUnidadTipo;
-            //       selectedTipoUnidadName  = selectedTipoUnidad.name;
-            //     });
-            //   }
-            // },
+              if (state is RemoteUnidadFailedMessage) {
+                return ErrorBoxContainer(
+                  errorMessage: state.errorMessage ??
+                      'Se produjo un error al cargar el listado de bases. Inténtalo de nuevo.',
+                  onPressed: () => BlocProvider.of<RemoteUnidadBloc>(context).add(CreateUnidad()),
+                );
+              }
+
+              if (state is RemoteUnidadFailure) {
+                return ErrorBoxContainer(
+                  errorMessage: state.failure?.errorMessage ??
+                      'Se produjo un error al cargar el listado de bases. Inténtalo de nuevo.',
+                  onPressed: () => BlocProvider.of<RemoteUnidadBloc>(context).add(CreateUnidad()),
+                );
+              }
+
+              if (state is RemoteUnidadCreateSuccess) {
+                lstBases = state.unidadData?.bases ?? [];
+
+                return LabeledDropdownFormField(
+                  label: '* Base:',
+                  hintText: 'Seleccionar',
+                  items: lstBases,
+                  itemBuilder: (base) => Text(base.name ?? ''),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedIdBase    = newValue?.idBase;
+                      _selectedBaseName  = newValue?.name;
+                    });
+                  },
+                  validator: FormValidators.dropdownValidator,
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+
+          Gap($styles.insets.sm),
+
+          // SELECCIONAR EL TIPO DE UNIDAD:
+          BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
+            builder: (BuildContext context, RemoteUnidadState state) {
+              if (state is RemoteUnidadLoading) {
+                return Center(
+                  child: LoadingIndicator(
+                    color: Theme.of(context).primaryColor,
+                    width: 20,
+                    height: 20,
+                    strokeWidth: 3,
+                  ),
+                );
+              }
+
+              if (state is RemoteUnidadFailedMessage) {
+                return ErrorBoxContainer(
+                  errorMessage: state.errorMessage ??
+                      'Se produjo un error al cargar el listado de tipos de unidades. Inténtalo de nuevo.',
+                  onPressed: () => BlocProvider.of<RemoteUnidadBloc>(context).add(CreateUnidad()),
+                );
+              }
+
+              if (state is RemoteUnidadFailure) {
+                return ErrorBoxContainer(
+                  errorMessage: state.failure?.errorMessage ??
+                      'Se produjo un error al cargar el listado de tipos de unidades. Inténtalo de nuevo.',
+                  onPressed: () => BlocProvider.of<RemoteUnidadBloc>(context).add(CreateUnidad()),
+                );
+              }
+
+              if (state is RemoteUnidadCreateSuccess) {
+                lstUnidadesTipos = state.unidadData?.unidadesTipos ?? [];
+
+                return LabeledDropdownFormSearchField<UnidadTipoDataEntity>(
+                  label: '* Tipo de unidad:',
+                  hintSearchText: 'Buscar tipo de unidad',
+                  searchController: _searchUnidadTipoController,
+                  items: lstUnidadesTipos,
+                  itemBuilder: (unidadTipo) => Text(unidadTipo.name ?? ''),
+                  value: _selectedValue,
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedValue          = newValue;
+                      _selectedIdUnidadTipo   = newValue?.idUnidadTipo;
+                      _selectedUnidadTipoName = newValue?.name;
+                    });
+                  },
+                  searchMatchFn: (DropdownMenuItem<UnidadTipoDataEntity> item, String searchValue) {
+                    return item.value!.name!.toLowerCase().contains(searchValue.toLowerCase());
+                  },
+                  onMenuStateChange: (isOpen) {
+                    if (!isOpen) {
+                      _searchUnidadTipoController.clear();
+                    }
+                  },
+                  validator: FormValidators.dropdownValidator,
+                );
+              }
+              return const SizedBox.shrink();
+            },
           ),
 
           Gap($styles.insets.sm),
@@ -235,58 +323,62 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
-                child: LabeledDropdownFormField(
-                  label: '* Marca',
-                  hintText: 'Seleccionar',
-                  items: widget.unidadesMarcas,
-                  itemBuilder: (unidadMarca) => Text(unidadMarca.name ?? ''),
-                  onChanged: (_){},
-                  validator: FormValidators.dropdownValidator,
+                child: BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
+                  builder: (BuildContext context, RemoteUnidadState state) {
+                    if (state is RemoteUnidadLoading) {
+                      return Center(
+                        child: LoadingIndicator(
+                          color: Theme.of(context).primaryColor,
+                          width: 20,
+                          height: 20,
+                          strokeWidth: 3,
+                        ),
+                      );
+                    }
+
+                    if (state is RemoteUnidadFailedMessage) {
+                      return ErrorBoxContainer(
+                        errorMessage: state.errorMessage ??
+                            'Se produjo un error al cargar el listado de unidades marcas. Inténtalo de nuevo.',
+                        onPressed: () => BlocProvider.of<RemoteUnidadBloc>(context).add(CreateUnidad()),
+                      );
+                    }
+
+                    if (state is RemoteUnidadFailure) {
+                      return ErrorBoxContainer(
+                        errorMessage: state.failure?.errorMessage ??
+                            'Se produjo un error al cargar el listado de unidades marcas. Inténtalo de nuevo.',
+                        onPressed: () => BlocProvider.of<RemoteUnidadBloc>(context).add(CreateUnidad()),
+                      );
+                    }
+
+                    if (state is RemoteUnidadCreateSuccess) {
+                      lstUnidadesMarcas = state.unidadData?.unidadesMarcas ?? [];
+
+                      return LabeledDropdownFormField(
+                        label: 'Marca:',
+                        hintText: 'Seleccionar',
+                        items: lstUnidadesMarcas,
+                        itemBuilder: (unidadMarca) => Text(unidadMarca.name ?? ''),
+                        onChanged: (newValue) {
+                          setState(() {
+                            _selectedIdUnidadMarca    = newValue?.idUnidadMarca;
+                            _selectedUnidadMarcaName  = newValue?.name;
+                          });
+                        },
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
                 ),
               ),
-              // Expanded(
-              //   child: Column(
-              //     crossAxisAlignment: CrossAxisAlignment.stretch,
-              //     children: <Widget>[
-              //       Text('* Selecciona la marca:', style: $styles.textStyles.label),
-              //       Gap($styles.insets.xs),
-              //       DropdownButtonFormField<dynamic>(
-              //         menuMaxHeight: 280,
-              //         decoration: InputDecoration(
-              //           contentPadding: EdgeInsets.symmetric(
-              //             vertical: $styles.insets.sm - 3,
-              //             horizontal: $styles.insets.xs + 2,
-              //           ),
-              //           hintText: 'Seleccione',
-              //         ),
-              //         items: state.unidadData?.unidadesMarcas
-              //           .map<DropdownMenuItem<dynamic>>((unidadMarca) {
-              //             return DropdownMenuItem<dynamic>(
-              //               value: unidadMarca.idUnidadMarca,
-              //               child: Text(unidadMarca.name ?? ''),
-              //             );
-              //           }).toList() ?? [],
-              //         onChanged: (newValue) {
-              //           final selectedUnidadMarca = state.unidadData?.unidadesMarcas.firstWhere((unidadMarca) => unidadMarca.idUnidadMarca == newValue);
-              //           if (selectedUnidadMarca != null) {
-              //             setState(() {
-              //               selectedUnidadMarcaId    = selectedUnidadMarca.idUnidadMarca;
-              //               selectedUnidadMarcaName  = selectedUnidadMarca.name;
-              //               // print('ID: ${selectedUnidadMarca.idUnidadMarca}, Nombre: ${selectedUnidadMarca.name}');
-              //             });
-              //           }
-              //         },
-              //       ),
-              //     ],
-              //   ),
-              // ),
+
               SizedBox(width: $styles.insets.sm),
               Expanded(
                 child: LabeledTextField(
                   controller: _modeloController,
-                  labelText: '* Modelo:',
+                  labelText: 'Modelo:',
                   hintText: 'Ingrese el modelo...',
-                  validator: FormValidators.textValidator,
                 ),
               ),
             ],
@@ -294,11 +386,42 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
 
           Gap($styles.insets.sm),
 
-          // NO. DE SERIE:
-          LabeledTextField(
-            controller: _numeroSerieController,
-            labelText: 'Número de serie:',
-            hintText: 'Ingrese número serie...',
+          // TIPO DE PLACA:
+          LabeledDropdownFormField<Map<String, String>>(
+            label: 'Tipo de placa:',
+            hintText: 'Seleccionar',
+            items: lstUnidadesPlacasTipos,
+            itemBuilder: (placaTipo) => Text(placaTipo.values.first),
+            onChanged: (newValue) {
+              setState(() {
+                _selectedIdUnidadPlacaTipo    = newValue?.keys.first;
+                _selectedUnidadPlacaTipoName  = newValue?.values.first;
+              });
+            },
+          ),
+
+          Gap($styles.insets.sm),
+
+          // PLACA / NO. DE SERIE:
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: LabeledTextField(
+                  controller: _placaController,
+                  labelText: 'Placa:',
+                  hintText: 'Ingrese placa...',
+                ),
+              ),
+              SizedBox(width: $styles.insets.sm),
+              Expanded(
+                child: LabeledTextField(
+                  controller: _numeroSerieController,
+                  labelText: 'Número de serie:',
+                  hintText: 'Ingrese número serie...',
+                ),
+              ),
+            ],
           ),
 
           Gap($styles.insets.sm),
@@ -313,6 +436,7 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
                   labelText: 'Capacidad:',
                   hintText: 'Ingrese cantidad',
                   keyboardType: TextInputType.number,
+                  validator: FormValidators.decimalValidator,
                 ),
               ),
               SizedBox(width: $styles.insets.sm),
@@ -328,71 +452,27 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
 
           Gap($styles.insets.sm),
 
-          // SELECCIONAR BASE DE UNIDAD:
-          LabeledDropdownFormField(
-            label: '* Base',
-            hintText: 'Seleccionar',
-            items: widget.bases,
-            itemBuilder: (base) => Text(base.name ?? ''),
-            onChanged: (_) {},
-            validator: FormValidators.dropdownValidator,
-          ),
-          // Column(
-          //   crossAxisAlignment: CrossAxisAlignment.stretch,
-          //   children: <Widget>[
-          //     Text('* Selecciona la base:', style: $styles.textStyles.label),
-          //     Gap($styles.insets.xs),
-          //     DropdownButtonFormField<dynamic>(
-          //       menuMaxHeight: 280,
-          //       decoration: InputDecoration(
-          //         contentPadding: EdgeInsets.symmetric(
-          //           vertical: $styles.insets.sm - 3,
-          //           horizontal: $styles.insets.xs + 2,
-          //         ),
-          //         hintText: 'Seleccione',
-          //       ),
-          //       items: state.unidadData?.bases
-          //         .map<DropdownMenuItem<dynamic>>((base) {
-          //           return DropdownMenuItem<dynamic>(
-          //             value: base.idBase,
-          //             child: Text(base.name ?? ''),
-          //           );
-          //         }).toList() ?? [],
-          //       onChanged: (newValue) {
-          //         final selectedBase = state.unidadData?.bases.firstWhere((base) => base.idBase == newValue);
-          //         if (selectedBase != null) {
-          //           setState(() {
-          //             selectedBaseId    = selectedBase.idBase;
-          //             selectedBaseName  = selectedBase.name;
-          //             // print('ID: ${selectedBase.idBase}, Nombre: ${selectedBase.name}');
-          //           });
-          //         }
-          //       },
-          //     ),
-          //   ],
-          // ),
-
-          Gap($styles.insets.sm),
-
-          // HOROMETRO / ODOMETRO:
+          // ODOMETRO / HOROMETRO:
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Expanded(
-                child: LabeledTextField(
-                  controller: _horometroController,
-                  labelText: 'Horómetro:',
-                  hintText: 'Ingrese cantidad',
-                  keyboardType: TextInputType.number,
-                ),
-              ),
-              SizedBox(width: $styles.insets.sm),
               Expanded(
                 child: LabeledTextField(
                   controller: _odometroController,
                   labelText: 'Odómetro:',
                   hintText: 'Ingrese cantidad',
                   keyboardType: TextInputType.number,
+                  validator: FormValidators.integerValidator,
+                ),
+              ),
+              SizedBox(width: $styles.insets.sm),
+              Expanded(
+                child: LabeledTextField(
+                  controller: _horometroController,
+                  labelText: 'Horómetro:',
+                  hintText: 'Ingrese cantidad',
+                  keyboardType: TextInputType.number,
+                  validator: FormValidators.integerValidator,
                 ),
               ),
             ],
@@ -400,7 +480,7 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
 
           Gap($styles.insets.sm),
 
-          // DESCRIPCIÓN
+          // DESCRIPCIÓN:
           LabeledTextAreaField(
             controller: _descripcionController,
             labelText: 'Descripción de la unidad (opcional):',
@@ -431,7 +511,7 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
                   SnackBar(
                     content: Text(state.apiResponse.message, softWrap: true),
                     backgroundColor: Colors.green,
-                    behavior: SnackBarBehavior.floating,
+                    behavior: SnackBarBehavior.fixed,
                     elevation: 0,
                   ),
                 );

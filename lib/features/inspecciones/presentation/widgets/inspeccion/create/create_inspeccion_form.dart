@@ -283,7 +283,7 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
               if (state is RemoteUnidadInventarioFailure) {
                 return ErrorBoxContainer(
                   errorMessage: state.failure?.errorMessage ??
-                      'Se produjo un error al cargar el listado de tipos de inspecciones. Inténtalo de nuevo.',
+                      'Se produjo un error al cargar el listado de unidades. Inténtalo de nuevo.',
                   onPressed: () => _loadPredictiveSearch(''),
                 );
               }

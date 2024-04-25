@@ -9,6 +9,10 @@ sealed class RemoteUnidadEvent extends Equatable {
 
 class CreateUnidad extends RemoteUnidadEvent {}
 
+class LoadBases extends RemoteUnidadEvent {}
+class LoadUnidadesMarcas extends RemoteUnidadEvent {}
+class LoadUnidadesTipos extends RemoteUnidadEvent {}
+
 class StoreUnidad extends RemoteUnidadEvent {
   const StoreUnidad(this.unidad);
 
