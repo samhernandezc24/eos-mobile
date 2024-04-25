@@ -1,4 +1,5 @@
 import 'package:eos_mobile/core/common/data/catalogos/base_data.dart';
+import 'package:eos_mobile/core/common/data/catalogos/predictive_search_req.dart';
 import 'package:eos_mobile/core/common/data/catalogos/unidad_marca_data.dart';
 import 'package:eos_mobile/core/common/data/catalogos/unidad_tipo_data.dart';
 import 'package:eos_mobile/core/common/widgets/controls/error_box_container.dart';
@@ -515,6 +516,9 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
                     elevation: 0,
                   ),
                 );
+
+                const predictiveSearch = PredictiveSearchReqEntity(search: '');
+                context.read<RemoteUnidadBloc>().add(const PredictiveUnidad(predictiveSearch));
               }
             },
             builder: (BuildContext context, RemoteUnidadState state) {

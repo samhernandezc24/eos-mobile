@@ -1,3 +1,5 @@
+import 'package:eos_mobile/core/common/data/catalogos/predictive_search_req.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/unidad/create_unidad_form.dart';
 import 'package:eos_mobile/shared/shared.dart';
 
@@ -12,7 +14,17 @@ class _CreateUnidadPageState extends State<CreateUnidadPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Nueva unidad', style: $styles.textStyles.h3)),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () {
+            Navigator.of(context).pop();
+            const predictiveSearch = PredictiveSearchReqEntity(search: '');
+            context.read<RemoteUnidadBloc>().add(const PredictiveUnidad(predictiveSearch));
+          },
+        ),
+        title: Text('Nueva unidad', style: $styles.textStyles.h3),
+      ),
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm, vertical: $styles.insets.xs),
         children: const <Widget>[

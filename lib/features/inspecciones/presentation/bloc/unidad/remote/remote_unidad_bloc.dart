@@ -55,6 +55,8 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
 
     if (objDataState is DataSuccess) {
       emit(RemoteUnidadResponseSuccess(objDataState.data!));
+
+      emit(RemoteUnidadLoading());
     }
 
     if (objDataState is DataFailedMessage) {
