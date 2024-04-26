@@ -1,7 +1,6 @@
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
-import 'package:eos_mobile/ui/common/controls/app_loading_indicator.dart';
 
 class UpdateInspeccionTipoForm extends StatefulWidget {
   const UpdateInspeccionTipoForm({Key? key, this.inspeccionTipo}) : super(key: key);
@@ -116,19 +115,19 @@ class _UpdateInspeccionTipoFormState extends State<UpdateInspeccionTipoForm> {
       child: Column(
         children: <Widget>[
           // CÓDIGO:
-          LabeledTextField(
+          LabeledTextFormField(
             controller: _codigoController,
-            labelText: 'Código:',
+            label: 'Código:',
             isReadOnly: true,
           ),
 
           Gap($styles.insets.md),
 
           // NOMBRE:
-          LabeledTextField(
+          LabeledTextFormField(
             autoFocus: true,
             controller: _nameController,
-            labelText: 'Nombre:',
+            label: 'Nombre:',
             validator: FormValidators.textValidator,
             textInputAction: TextInputAction.done,
           ),

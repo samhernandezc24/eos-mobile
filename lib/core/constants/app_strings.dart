@@ -8,6 +8,7 @@ class AppStrings {
   String activityTitle                = 'Actividad';
 
   String appPageDefaultTitlePage      = 'página';
+  String appPageSemanticSwipe         = '{pageTitle} {count} de {total}.';
 
   String dashboardTitle               = 'Dashboard';
 

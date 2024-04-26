@@ -1,5 +1,3 @@
-import 'package:eos_mobile/core/common/widgets/controls/buttons.dart';
-import 'package:eos_mobile/core/common/widgets/controls/circle_buttons.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class ListInspeccionSearchInput extends StatelessWidget {
@@ -160,7 +158,7 @@ class ListInspeccionSearchInput extends StatelessWidget {
               visible: textController.value.text.isNotEmpty,
               child: Padding(
                 padding: EdgeInsets.only(right: $styles.insets.xs),
-                child: CircleIconBtn(
+                child: CircleIconButton(
                   backgroundColor: Theme.of(context).disabledColor,
                   color: Colors.white,
                   icon: AppIcons.close,

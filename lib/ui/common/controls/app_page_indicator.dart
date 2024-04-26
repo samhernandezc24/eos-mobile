@@ -53,13 +53,14 @@ class _AppPageIndicatorState extends State<AppPageIndicator> {
             valueListenable: _currentPage,
             builder: (_, value, child) {
               return Semantics(
-                liveRegion: true,
-                focusable: false,
-                readOnly: true,
-                // label: $strings.appPageSemanticsSwipe(
-
-                // ),
-                child: Container(),
+                liveRegion  : true,
+                focusable   : false,
+                readOnly    : true,
+                label       : $strings.appPageSemanticSwipe
+                                .replaceAll('{pageTitle}', widget.semanticPageTitle)
+                                .replaceAll('{count}', (_controllerPage % (widget.count) + 1).toString())
+                                .replaceAll('{total}', widget.count.toString()),
+                child       : Container(),
               );
             },
           ),
@@ -69,9 +70,16 @@ class _AppPageIndicatorState extends State<AppPageIndicator> {
           child: Center(
             child: ExcludeSemantics(
               child: SmoothPageIndicator(
-                controller: widget.controller,
-                count: widget.count,
-                onDotClicked: widget.onDotPressed,
+                controller    : widget.controller,
+                count         : widget.count,
+                onDotClicked  : widget.onDotPressed,
+                effect        : ExpandingDotsEffect(
+                  dotWidth        : widget.dotSize ?? 6,
+                  dotHeight       : widget.dotSize ?? 6,
+                  strokeWidth     : (widget.dotSize ?? 6) / 2,
+                  dotColor        : widget.color ?? Theme.of(context).primaryColor,
+                  activeDotColor  : widget.color ?? Theme.of(context).primaryColor,
+                ),
               ),
             ),
           ),

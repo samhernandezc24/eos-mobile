@@ -1,5 +1,4 @@
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
-import 'package:eos_mobile/core/common/widgets/controls/circle_buttons.dart';
 import 'package:eos_mobile/core/data/welcome_data.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/controls/app_page_indicator.dart';
@@ -209,7 +208,7 @@ class _WelcomePageState extends State<WelcomePage> {
         return AnimatedOpacity(
           opacity: pageIndex == pageData.length - 1 ? 1 : 0,
           duration: $styles.times.fast,
-          child: CircleIconBtn(
+          child: CircleIconButton(
             icon: AppIcons.next_large,
             onPressed: _handleWelcomeCompletePressed,
             semanticLabel: $strings.welcomeSemanticEnterApp,

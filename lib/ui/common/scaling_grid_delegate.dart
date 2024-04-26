@@ -1,4 +1,4 @@
-import 'package:eos_mobile/core/common/widgets/scaling_grid_layout.dart';
+import 'package:eos_mobile/ui/common/scaling_grid_layout.dart';
 import 'package:flutter/rendering.dart';
 
 class ScalingGridDelegate extends SliverGridDelegate {
@@ -15,9 +15,9 @@ class ScalingGridDelegate extends SliverGridDelegate {
     }
     final double squareDimension = constraints.crossAxisExtent / count;
     return ScalingGridLayout(
-      crossAxisCount: count,
-      fullRowPeriod: 3,           // numero de filas por bloque
-      dimension: squareDimension,
+      crossAxisCount  : count,
+      fullRowPeriod   : 3,           // numero de filas por bloque
+      dimension       : squareDimension,
     );
   }
 

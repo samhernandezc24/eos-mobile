@@ -52,9 +52,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             // CORREO ELECTRÓNICO
-                            LabeledTextField(
+                            LabeledTextFormField(
                               controller: _emailController,
-                              labelText: 'Correo electrónico',
+                              label: 'Correo electrónico',
                               hintText: 'ejem@plo.com',
                               keyboardType: TextInputType.emailAddress,
                               textInputAction: TextInputAction.done,

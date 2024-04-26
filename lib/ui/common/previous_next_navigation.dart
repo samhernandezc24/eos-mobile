@@ -1,7 +1,6 @@
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
-import 'package:eos_mobile/core/common/widgets/controls/circle_buttons.dart';
-import 'package:eos_mobile/core/common/widgets/modals/full_screen_keyboard_listener.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/full_screen_keyboard_listener.dart';
 import 'package:flutter/gestures.dart';
 
 class PreviousNextNavigation extends StatefulWidget {
@@ -80,14 +79,14 @@ class _PreviousNextNavigation extends State<PreviousNextNavigation> {
                   padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm),
                   child: Row(
                     children: <Widget>[
-                      CircleIconBtn(
+                      CircleIconButton(
                         icon: AppIcons.prev,
                         onPressed: widget.onPreviousPressed,
                         semanticLabel: 'Anterior',
                         backgroundColor: widget.previousButtonColor,
                       ),
                       const Spacer(),
-                      CircleIconBtn(
+                      CircleIconButton(
                         icon: AppIcons.prev,
                         onPressed: widget.onNextPressed,
                         semanticLabel: 'Siguiente',

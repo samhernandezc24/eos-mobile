@@ -114,21 +114,17 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
       child: Column(
         children: <Widget>[
           // CÓDIGO:
-          LabeledTextField(
-            controller: _codigoController,
-            labelText: 'Código:',
-            isReadOnly: true,
-          ),
+          LabeledTextFormField(controller: _codigoController, label: 'Código:', isReadOnly: true),
 
           Gap($styles.insets.md) ,
 
           // NOMBRE:
-          LabeledTextField(
-            autoFocus: true,
-            controller: _nameController,
-            labelText: 'Nombre:',
-            validator: FormValidators.textValidator,
-            textInputAction: TextInputAction.done,
+          LabeledTextFormField(
+            autoFocus       : true,
+            controller      : _nameController,
+            label           : 'Nombre:',
+            validator       : FormValidators.textValidator,
+            textInputAction : TextInputAction.done,
           ),
 
           Gap($styles.insets.lg),

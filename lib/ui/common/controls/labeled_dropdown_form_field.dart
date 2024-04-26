@@ -3,41 +3,43 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 class LabeledDropdownFormField<T> extends StatelessWidget {
   const LabeledDropdownFormField({
     required this.label,
+    required this.items,
     Key? key,
     this.hintText,
-    this.items,
-    this.value,
     this.onChanged,
+    this.value,
     this.itemBuilder,
     this.validator,
   }) : super(key: key);
 
   final String label;
   final String? hintText;
-  final List<T>? items;
+  final List<T> items;
   final T? value;
   final ValueChanged<T?>? onChanged;
   final Widget Function(T)? itemBuilder;
-  final String? Function(T?)? validator;
+  final FormFieldValidator<T>? validator;
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(label, style: $styles.textStyles.label),
+
         Gap($styles.insets.xs),
+
         DropdownButtonFormField<T>(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(
-              vertical: $styles.insets.sm - 3,
-              horizontal: $styles.insets.xs + 2,
+              vertical    : $styles.insets.sm - 3,
+              horizontal  : $styles.insets.xs + 2,
             ),
-            hintText: hintText,
+            hintText: hintText ?? '',
           ),
-          isExpanded: true,
-          items: items?.map<DropdownMenuItem<T>>((item) {
+          value: value,
+          items: items.map((item) {
             return DropdownMenuItem<T>(
               value: item,
               child: itemBuilder != null ? itemBuilder!(item) : Text(item.toString()),
@@ -46,6 +48,7 @@ class LabeledDropdownFormField<T> extends StatelessWidget {
           onChanged: onChanged,
           menuMaxHeight: 280,
           validator: validator,
+          isExpanded: true,
         ),
       ],
     );

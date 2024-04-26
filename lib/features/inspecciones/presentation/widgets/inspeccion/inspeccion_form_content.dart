@@ -1,4 +1,3 @@
-import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_field.dart';
 import 'package:eos_mobile/core/enums/unidad_inspeccion_tipo.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
@@ -59,7 +58,7 @@ class _InspeccionFormContentState extends State<InspeccionFormContent> {
           LabeledDropdownFormField<InspeccionTipoEntity>(
             label: '* Unidad:',
             hintText: 'Seleccionar',
-            items: widget.inspeccionesTipos,
+            items: widget.inspeccionesTipos!,
             itemBuilder: (inspeccionTipo) => Text(inspeccionTipo.name),
             onChanged: (_) {},
             validator: FormValidators.dropdownValidator,
@@ -97,7 +96,7 @@ class _InspeccionFormContentState extends State<InspeccionFormContent> {
           LabeledDropdownFormField<InspeccionTipoEntity>(
             label: '* Tipo de inspección:',
             hintText: 'Seleccionar',
-            items: widget.inspeccionesTipos,
+            items: widget.inspeccionesTipos!,
             itemBuilder: (inspeccionTipo) => Text(inspeccionTipo.name),
             onChanged: (_) {},
             validator: FormValidators.dropdownValidator,
@@ -106,30 +105,22 @@ class _InspeccionFormContentState extends State<InspeccionFormContent> {
           Gap($styles.insets.sm),
 
           // FECHA DE LA INSPECCIÓN:
-          LabeledTextField(
-            controller: _fechaInspeccionController,
-            isReadOnly: true,
-            labelText: '* Fecha de la inspección:',
-            textAlign: TextAlign.end,
+          LabeledTextFormField(
+            controller  : _fechaInspeccionController,
+            isReadOnly  : true,
+            label       : '* Fecha de la inspección:',
+            textAlign   : TextAlign.end,
           ),
 
           Gap($styles.insets.sm),
 
           // LOCACIÓN:
-          LabeledTextField(
-            controller: _locacionController,
-            labelText: '* Locación:',
-            hintText: 'Ingresa locación...',
-          ),
+          LabeledTextFormField(controller: _locacionController, label: '* Locación:', hintText: 'Ingresa locación...'),
 
           Gap($styles.insets.sm),
 
           // TIPO DE PLATAFORMA:
-          LabeledTextField(
-            controller: _tipoPlataformaController,
-            labelText: 'Tipo de plataforma:',
-            hintText: 'Ingresa tipo plataforma...',
-          ),
+          LabeledTextFormField(controller: _tipoPlataformaController, label: 'Tipo de plataforma:', hintText: 'Ingresa tipo plataforma...'),
         ],
       ),
     );

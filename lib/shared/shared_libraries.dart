@@ -13,7 +13,7 @@ export 'package:eos_mobile/config/logic/settings_logic.dart';
 export 'package:eos_mobile/config/router/app_router.dart';
 
 // CORE
-export 'package:eos_mobile/core/common/widgets/controls/labeled_text_field.dart';
+export 'package:eos_mobile/core/constants/app_constants.dart';
 export 'package:eos_mobile/core/constants/app_strings.dart';
 export 'package:eos_mobile/core/constants/assets.dart';
 export 'package:eos_mobile/core/enums/app_icons.dart';
@@ -32,6 +32,15 @@ export 'package:eos_mobile/main.dart';
 // STYLES
 export 'package:eos_mobile/styles/app_styles.dart';
 
+// COMMON ELEMENTS
+export 'package:eos_mobile/ui/common/controls/app_loading_indicator.dart';
+export 'package:eos_mobile/ui/common/controls/buttons.dart';
+export 'package:eos_mobile/ui/common/controls/circle_buttons.dart';
+export 'package:eos_mobile/ui/common/controls/labeled_dropdown_form_field.dart';
+export 'package:eos_mobile/ui/common/controls/labeled_password_form_field.dart';
+export 'package:eos_mobile/ui/common/controls/labeled_text_form_field.dart';
+export 'package:eos_mobile/ui/common/controls/scroll_decorator.dart';
+
 // EQUATABLE
 export 'package:equatable/equatable.dart';
 
@@ -41,7 +50,6 @@ export 'package:flex_color_scheme/flex_color_scheme.dart';
 // FLUTTER (FRAMEWORK)
 export 'package:flutter/material.dart';
 export 'package:flutter/services.dart';
-
 // ANIMATIONS
 export 'package:flutter_animate/flutter_animate.dart';
 

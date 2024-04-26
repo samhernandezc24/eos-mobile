@@ -3,11 +3,11 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 class FullScreenKeyboardListener extends StatefulWidget {
   const FullScreenKeyboardListener({
     required this.child,
-    super.key,
+    Key? key,
     this.onKeyDown,
     this.onKeyUp,
     this.onKeyRepeat,
-  });
+  }) : super(key: key);
 
   final Widget child;
   final bool Function(KeyDownEvent event)? onKeyDown;
@@ -32,6 +32,7 @@ class _FullScreenKeyboardListenerState extends State<FullScreenKeyboardListener>
     super.dispose();
   }
 
+  /// METHODS
   bool _handleKey(KeyEvent event) {
     bool result = false;
 

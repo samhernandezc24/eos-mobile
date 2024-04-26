@@ -1,4 +1,3 @@
-import 'package:eos_mobile/core/common/widgets/controls/scroll_decorator.dart';
 import 'package:eos_mobile/core/extensions/panel_extension.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/create/create_inspeccion_page.dart';

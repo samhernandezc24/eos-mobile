@@ -1,6 +1,6 @@
-import 'package:eos_mobile/core/common/widgets/scaling_grid_delegate.dart';
 import 'package:eos_mobile/core/data/home_module_data.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/scaling_grid_delegate.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

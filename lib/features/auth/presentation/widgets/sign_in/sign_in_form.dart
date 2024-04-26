@@ -4,7 +4,6 @@ import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/remote/remote_auth_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/pages/forgot_password/forgot_password_page.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
-import 'package:eos_mobile/ui/common/controls/app_loading_indicator.dart';
 
 class AuthSignInForm extends StatefulWidget {
   const AuthSignInForm({Key? key}) : super(key: key);
@@ -116,27 +115,25 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
               child: Column(
                 children: <Widget>[
                   // USUARIO / CORREO ELECTRÓNICO:
-                  LabeledTextField(
-                    controller: _emailController,
-                    hintText: 'ejem@plo.com',
-                    labelText: 'Usuario:',
-                    keyboardType: TextInputType.emailAddress,
-                    validator: FormValidators.emailValidator,
+                  LabeledTextFormField(
+                    controller    : _emailController,
+                    label         : 'Usuario:',
+                    hintText      : 'ejem@plo.com',
+                    keyboardType  : TextInputType.emailAddress,
+                    validator     : FormValidators.emailValidator,
                   ),
 
                   Gap($styles.insets.md),
 
                   // USUARIO / CORREO ELECTRÓNICO:
-                  LabeledTextField(
-                    controller: _passwordController,
-                    labelText: 'Contraseña:',
-                    isPassword: true,
-                    keyboardType: TextInputType.visiblePassword,
-                    validator: FormValidators.passwordValidator,
-                    textInputAction: TextInputAction.done,
+                  LabeledPasswordFormField(
+                    controller      : _passwordController,
+                    label           : 'Contraseña',
+                    validator       : FormValidators.passwordValidator,
+                    textInputAction : TextInputAction.done,
                   ),
 
-                  Gap($styles.insets.md),
+                  Gap($styles.insets.lg),
 
                   // ¿HAS OLVIDADO TU CONTRASEÑA?:
                   // GestureDetector(

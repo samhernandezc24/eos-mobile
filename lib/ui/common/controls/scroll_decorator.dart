@@ -1,8 +1,6 @@
-import 'dart:math';
-
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
-/// Añade fácilmente decoraciones visuales a un widget de desplazamiento basado en el estado de su controlador.
+/// Agrega fácilmente decoraciones visuales a un widget de desplazamiento basado en el estado de su controlador.
 class ScrollDecorator extends StatefulWidget {
   /// Crea un widget que construye decoraciones foreground y/o background para un widget de
   /// desplazamiento basado en el estado de su ScrollController.
@@ -67,15 +65,16 @@ class ScrollDecorator extends StatefulWidget {
     backgroundBuilder = null;
     foregroundBuilder = (ScrollController controller) {
       final double ratio = controller.hasClients ? min<double>(1, controller.position.extentBefore / 60) : 0;
+
       return IgnorePointer(
         child: Container(
-          height: 24,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: <Color>[color.withOpacity(ratio * color.opacity), Colors.transparent],
-              stops: <double>[0, ratio],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+          height      : 24,
+          decoration  : BoxDecoration(
+            gradient  : LinearGradient(
+              colors  : <Color>[color.withOpacity(ratio * color.opacity), Colors.transparent],
+              stops   : <double>[0, ratio],
+              begin   : Alignment.topCenter,
+              end     : Alignment.bottomCenter,
             ),
           ),
         ),
@@ -105,10 +104,13 @@ class ScrollDecorator extends StatefulWidget {
 }
 
 class _ScrollDecoratorState extends State<ScrollDecorator> {
+  /// CONTROLLERS
   ScrollController? _controller;
 
+  /// PROPERTIES
   late Widget content;
 
+  /// ACCESSORS
   ScrollController get currentController => (widget.controller ?? _controller)!;
 
   @override

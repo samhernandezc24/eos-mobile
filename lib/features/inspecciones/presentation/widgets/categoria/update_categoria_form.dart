@@ -2,7 +2,6 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categ
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
-import 'package:eos_mobile/ui/common/controls/app_loading_indicator.dart';
 
 class UpdateCategoriaForm extends StatefulWidget {
   const UpdateCategoriaForm({Key? key, this.categoria, this.inspeccionTipo}) : super(key: key);
@@ -122,10 +121,10 @@ class _UpdateCategoriaFormState extends State<UpdateCategoriaForm> {
       child: Column(
         children: <Widget>[
           // NOMBRE:
-          LabeledTextField(
+          LabeledTextFormField(
             controller: _nameController,
             autoFocus: true,
-            labelText: 'Nombre:',
+            label: 'Nombre:',
             validator: FormValidators.textValidator,
           ),
 

@@ -4,13 +4,11 @@ import 'package:eos_mobile/core/common/data/catalogos/unidad_marca_data.dart';
 import 'package:eos_mobile/core/common/data/catalogos/unidad_placa_tipo_data.dart';
 import 'package:eos_mobile/core/common/data/catalogos/unidad_tipo_data.dart';
 import 'package:eos_mobile/core/common/widgets/controls/error_box_container.dart';
-import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_field.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_search_field.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_textarea_field.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
-import 'package:eos_mobile/ui/common/controls/app_loading_indicator.dart';
 
 class CreateUnidadForm extends StatefulWidget {
   const CreateUnidadForm({Key? key}) : super(key: key);
@@ -193,10 +191,10 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
       child: Column(
         children: <Widget>[
           // NÚMERO ECONÓMICO:
-          LabeledTextField(
+          LabeledTextFormField(
             autoFocus: true,
             controller: _numeroEconomicoController,
-            labelText: '* Número económico:',
+            label: '* Número económico:',
             hintText: 'Ingrese número económico...',
             validator: FormValidators.textValidator,
           ),
@@ -362,9 +360,9 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
 
               SizedBox(width: $styles.insets.sm),
               Expanded(
-                child: LabeledTextField(
+                child: LabeledTextFormField(
                   controller: _modeloController,
-                  labelText: 'Modelo:',
+                  label: 'Modelo:',
                   hintText: 'Ingrese el modelo...',
                 ),
               ),
@@ -394,17 +392,17 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
-                child: LabeledTextField(
+                child: LabeledTextFormField(
                   controller: _placaController,
-                  labelText: 'Placa:',
+                  label: 'Placa:',
                   hintText: 'Ingrese placa...',
                 ),
               ),
               SizedBox(width: $styles.insets.sm),
               Expanded(
-                child: LabeledTextField(
+                child: LabeledTextFormField(
                   controller: _numeroSerieController,
-                  labelText: 'Número de serie:',
+                  label: 'Número de serie:',
                   hintText: 'Ingrese número serie...',
                 ),
               ),
@@ -418,9 +416,9 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
-                child: LabeledTextField(
+                child: LabeledTextFormField(
                   controller: _capacidadController,
-                  labelText: 'Capacidad:',
+                  label: 'Capacidad:',
                   hintText: 'Ingrese cantidad',
                   keyboardType: TextInputType.number,
                   validator: FormValidators.decimalValidator,
@@ -428,9 +426,9 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
               ),
               SizedBox(width: $styles.insets.sm),
               Expanded(
-                child: LabeledTextField(
+                child: LabeledTextFormField(
                   controller: _anioEquipoController,
-                  labelText: 'Año del equipo:',
+                  label: 'Año del equipo:',
                   hintText: 'Ingrese año de equipo...',
                 ),
               ),
@@ -444,9 +442,9 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
-                child: LabeledTextField(
+                child: LabeledTextFormField(
                   controller: _odometroController,
-                  labelText: 'Odómetro:',
+                  label: 'Odómetro:',
                   hintText: 'Ingrese cantidad',
                   keyboardType: TextInputType.number,
                   validator: FormValidators.integerValidator,
@@ -454,9 +452,9 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
               ),
               SizedBox(width: $styles.insets.sm),
               Expanded(
-                child: LabeledTextField(
+                child: LabeledTextFormField(
                   controller: _horometroController,
-                  labelText: 'Horómetro:',
+                  label: 'Horómetro:',
                   hintText: 'Ingrese cantidad',
                   keyboardType: TextInputType.number,
                   validator: FormValidators.integerValidator,

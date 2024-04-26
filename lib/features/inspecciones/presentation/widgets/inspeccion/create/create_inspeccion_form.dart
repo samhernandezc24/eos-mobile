@@ -1,6 +1,5 @@
 import 'package:eos_mobile/core/common/data/catalogos/predictive_search_req.dart';
 import 'package:eos_mobile/core/common/widgets/controls/error_box_container.dart';
-import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_field.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_search_field.dart';
 import 'package:eos_mobile/core/enums/unidad_inspeccion_tipo.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_req_entity.dart';
@@ -12,7 +11,6 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad_inventario/remote/remote_unidad_inventario_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/unidad/create_unidad_page.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
-import 'package:eos_mobile/ui/common/controls/app_loading_indicator.dart';
 import 'package:intl/intl.dart';
 
 class CreateInspeccionForm extends StatefulWidget {
@@ -51,27 +49,28 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
   late List<UnidadEntity> lstUnidades                       = <UnidadEntity>[];
 
   /// PROPERTIES
+  InspeccionTipoEntity? _selectedInspeccionTipo;
   UnidadInspeccionTipo? _selectedUnidad;
   UnidadInventarioEntity? _selectedUnidadInventario;
   UnidadEntity? _selectedUnidadTemporal;
 
-  String? selectedInspeccionTipoId;
-  String? selectedInspeccionTipoCodigo;
-  String? selectedInspeccionTipoName;
+  String? _selectedInspeccionTipoId;
+  String? _selectedInspeccionTipoCodigo;
+  String? _selectedInspeccionTipoName;
 
-  String? selectedUnidadId;
-  String? selectedUnidadIdBase;
-  String? selectedUnidadBaseName;
-  String? selectedUnidadNumeroEconomico;
-  String? selectedUnidadIdTipo;
-  String? selectedUnidadTipoName;
-  String? selectedUnidadIdMarca;
-  String? selectedUnidadMarcaName;
-  String? selectedUnidadIdPlacaTipo;
-  String? selectedUnidadPlacaTipoName;
-  String? selectedUnidadPlaca;
-  String? selectedUnidadNumeroSerie;
-  String? selectedUnidadAnioEquipo;
+  String? _selectedUnidadId;
+  String? _selectedUnidadIdBase;
+  String? _selectedUnidadBaseName;
+  String? _selectedUnidadNumeroEconomico;
+  String? _selectedUnidadIdTipo;
+  String? _selectedUnidadTipoName;
+  String? _selectedUnidadIdMarca;
+  String? _selectedUnidadMarcaName;
+  String? _selectedUnidadIdPlacaTipo;
+  String? _selectedUnidadPlacaTipoName;
+  String? _selectedUnidadPlaca;
+  String? _selectedUnidadNumeroSerie;
+  String? _selectedUnidadAnioEquipo;
 
   @override
   void initState() {
@@ -200,19 +199,19 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
 
     final InspeccionReqEntity objData = InspeccionReqEntity(
       fecha                       : fecha,
-      idBase                      : selectedUnidadIdBase ?? '',
-      baseName                    : selectedUnidadBaseName ?? '',
-      idInspeccionTipo            : selectedInspeccionTipoId ?? '',
-      inspeccionTipoCodigo        : selectedInspeccionTipoCodigo ?? '',
-      inspeccionTipoName          : selectedInspeccionTipoName ?? '',
-      idUnidad                    : selectedUnidadId ?? '',
+      idBase                      : _selectedUnidadIdBase ?? '',
+      baseName                    : _selectedUnidadBaseName ?? '',
+      idInspeccionTipo            : _selectedInspeccionTipoId ?? '',
+      inspeccionTipoCodigo        : _selectedInspeccionTipoCodigo ?? '',
+      inspeccionTipoName          : _selectedInspeccionTipoName ?? '',
+      idUnidad                    : _selectedUnidadId ?? '',
       unidadNumeroEconomico       : _numeroEconomicoController.text,
       isUnidadTemporal            : _selectedUnidad == UnidadInspeccionTipo.temporal,
-      idUnidadTipo                : selectedUnidadIdTipo ?? '',
-      unidadTipoName              : selectedUnidadTipoName ?? '',
-      idUnidadMarca               : selectedUnidadIdMarca ?? '',
+      idUnidadTipo                : _selectedUnidadIdTipo ?? '',
+      unidadTipoName              : _selectedUnidadTipoName ?? '',
+      idUnidadMarca               : _selectedUnidadIdMarca ?? '',
       unidadMarcaName             : _marcaController.text,
-      idUnidadPlacaTipo           : selectedUnidadIdPlacaTipo ?? '',
+      idUnidadPlacaTipo           : _selectedUnidadIdPlacaTipo ?? '',
       unidadPlacaTipoName         : _placaTipoController.text,
       placa                       : _placaController.text,
       numeroSerie                 : _numeroSerieController.text,
@@ -323,30 +322,30 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
                     value: _selectedUnidadTemporal,
                     onChanged: (newValue) {
                       setState(() {
-                          _selectedUnidadTemporal       = newValue;
-                          selectedUnidadId              = newValue?.idUnidad;
-                          selectedUnidadIdBase          = newValue?.idBase;
-                          selectedUnidadBaseName        = newValue?.baseName;
-                          selectedUnidadNumeroEconomico = newValue?.numeroEconomico;
-                          selectedUnidadIdTipo          = newValue?.idUnidadTipo;
-                          selectedUnidadTipoName        = newValue?.unidadTipoName;
-                          selectedUnidadIdMarca         = newValue?.idUnidadMarca;
-                          selectedUnidadMarcaName       = newValue?.unidadMarcaName;
-                          selectedUnidadIdPlacaTipo     = newValue?.idUnidadPlacaTipo;
-                          selectedUnidadPlacaTipoName   = newValue?.unidadPlacaTipoName;
-                          selectedUnidadPlaca           = newValue?.placa;
-                          selectedUnidadNumeroSerie     = newValue?.numeroSerie;
-                          selectedUnidadAnioEquipo      = newValue?.anioEquipo;
+                          _selectedUnidadTemporal         = newValue;
+                          _selectedUnidadId               = newValue?.idUnidad;
+                          _selectedUnidadIdBase           = newValue?.idBase;
+                          _selectedUnidadBaseName         = newValue?.baseName;
+                          _selectedUnidadNumeroEconomico  = newValue?.numeroEconomico;
+                          _selectedUnidadIdTipo           = newValue?.idUnidadTipo;
+                          _selectedUnidadTipoName         = newValue?.unidadTipoName;
+                          _selectedUnidadIdMarca          = newValue?.idUnidadMarca;
+                          _selectedUnidadMarcaName        = newValue?.unidadMarcaName;
+                          _selectedUnidadIdPlacaTipo      = newValue?.idUnidadPlacaTipo;
+                          _selectedUnidadPlacaTipoName    = newValue?.unidadPlacaTipoName;
+                          _selectedUnidadPlaca            = newValue?.placa;
+                          _selectedUnidadNumeroSerie      = newValue?.numeroSerie;
+                          _selectedUnidadAnioEquipo       = newValue?.anioEquipo;
 
                           // Actualización de valores.
-                          _baseNameController.text          = selectedUnidadBaseName ?? '';
-                          _numeroEconomicoController.text   = selectedUnidadNumeroEconomico ?? '';
-                          _unidadTipoController.text        = selectedUnidadTipoName ?? '';
-                          _marcaController.text             = selectedUnidadMarcaName ?? '';
-                          _placaTipoController.text         = selectedUnidadPlacaTipoName ?? '';
-                          _placaController.text             = selectedUnidadPlaca ?? '';
-                          _numeroSerieController.text       = selectedUnidadNumeroSerie ?? '';
-                          _anioEquipoController.text        = selectedUnidadAnioEquipo ?? '';
+                          _baseNameController.text          = _selectedUnidadBaseName ?? '';
+                          _numeroEconomicoController.text   = _selectedUnidadNumeroEconomico ?? '';
+                          _unidadTipoController.text        = _selectedUnidadTipoName ?? '';
+                          _marcaController.text             = _selectedUnidadMarcaName ?? '';
+                          _placaTipoController.text         = _selectedUnidadPlacaTipoName ?? '';
+                          _placaController.text             = _selectedUnidadPlaca ?? '';
+                          _numeroSerieController.text       = _selectedUnidadNumeroSerie ?? '';
+                          _anioEquipoController.text        = _selectedUnidadAnioEquipo ?? '';
                       });
                     },
                     searchMatchFn: (DropdownMenuItem<UnidadEntity> item, String searchValue) {
@@ -400,30 +399,30 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
                     value: _selectedUnidadInventario,
                     onChanged: (newValue) {
                       setState(() {
-                          _selectedUnidadInventario     = newValue;
-                          selectedUnidadId              = newValue?.idUnidad;
-                          selectedUnidadIdBase          = newValue?.idBase;
-                          selectedUnidadBaseName        = newValue?.baseName;
-                          selectedUnidadNumeroEconomico = newValue?.numeroEconomico;
-                          selectedUnidadIdTipo          = newValue?.idUnidadTipo;
-                          selectedUnidadTipoName        = newValue?.unidadTipoName;
-                          selectedUnidadIdMarca         = '';
-                          selectedUnidadMarcaName       = '';
-                          selectedUnidadIdPlacaTipo     = '';
-                          selectedUnidadPlacaTipoName   = '';
-                          selectedUnidadPlaca           = '';
-                          selectedUnidadNumeroSerie     = '';
-                          selectedUnidadAnioEquipo      = '';
+                          _selectedUnidadInventario       = newValue;
+                          _selectedUnidadId               = newValue?.idUnidad;
+                          _selectedUnidadIdBase           = newValue?.idBase;
+                          _selectedUnidadBaseName         = newValue?.baseName;
+                          _selectedUnidadNumeroEconomico  = newValue?.numeroEconomico;
+                          _selectedUnidadIdTipo           = newValue?.idUnidadTipo;
+                          _selectedUnidadTipoName         = newValue?.unidadTipoName;
+                          _selectedUnidadIdMarca          = '';
+                          _selectedUnidadMarcaName        = '';
+                          _selectedUnidadIdPlacaTipo      = '';
+                          _selectedUnidadPlacaTipoName    = '';
+                          _selectedUnidadPlaca            = '';
+                          _selectedUnidadNumeroSerie      = '';
+                          _selectedUnidadAnioEquipo       = '';
 
                           // Actualización de valores.
-                          _baseNameController.text          = selectedUnidadBaseName ?? '';
-                          _numeroEconomicoController.text   = selectedUnidadNumeroEconomico ?? '';
-                          _unidadTipoController.text        = selectedUnidadTipoName ?? '';
-                          _marcaController.text             = selectedUnidadMarcaName ?? '';
-                          _placaTipoController.text         = selectedUnidadPlacaTipoName ?? '';
-                          _placaController.text             = selectedUnidadPlaca ?? '';
-                          _numeroSerieController.text       = selectedUnidadNumeroSerie ?? '';
-                          _anioEquipoController.text        = selectedUnidadAnioEquipo ?? '';
+                          _baseNameController.text          = _selectedUnidadBaseName ?? '';
+                          _numeroEconomicoController.text   = _selectedUnidadNumeroEconomico ?? '';
+                          _unidadTipoController.text        = _selectedUnidadTipoName ?? '';
+                          _marcaController.text             = _selectedUnidadMarcaName ?? '';
+                          _placaTipoController.text         = _selectedUnidadPlacaTipoName ?? '';
+                          _placaController.text             = _selectedUnidadPlaca ?? '';
+                          _numeroSerieController.text       = _selectedUnidadNumeroSerie ?? '';
+                          _anioEquipoController.text        = _selectedUnidadAnioEquipo ?? '';
                       });
                     },
                     searchMatchFn: (DropdownMenuItem<UnidadInventarioEntity> item, String searchValue) {
@@ -501,12 +500,14 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
                   label: '* Tipo de inspección:',
                   hintText: 'Seleccionar',
                   items: lstInspeccionesTipos,
+                  value: _selectedInspeccionTipo,
                   itemBuilder: (inspeccionTipo) => Text(inspeccionTipo.name),
                   onChanged: (newValue) {
                     setState(() {
-                      selectedInspeccionTipoId      = newValue?.idInspeccionTipo;
-                      selectedInspeccionTipoCodigo  = newValue?.codigo;
-                      selectedInspeccionTipoName    = newValue?.name;
+                      _selectedInspeccionTipo         = newValue;
+                      _selectedInspeccionTipoId       = newValue?.idInspeccionTipo;
+                      _selectedInspeccionTipoCodigo   = newValue?.codigo;
+                      _selectedInspeccionTipoName     = newValue?.name;
                     });
                   },
                   validator: FormValidators.dropdownValidator,
@@ -519,19 +520,19 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
           Gap($styles.insets.sm),
 
           // FECHA DE LA INSPECCIÓN:
-          LabeledTextField(
-            controller: _fechaInspeccionController,
-            isReadOnly: true,
-            labelText: '* Fecha de la inspección:',
-            textAlign: TextAlign.end,
+          LabeledTextFormField(
+            controller  : _fechaInspeccionController,
+            isReadOnly  : true,
+            label       : '* Fecha de la inspección:',
+            textAlign   : TextAlign.end,
           ),
 
           Gap($styles.insets.sm),
 
           // NO. ECONÓMICO
-          LabeledTextField(
+          LabeledTextFormField(
             controller: _numeroEconomicoController,
-            labelText: '* No. económico:',
+            label: '* No. económico:',
             isReadOnly: true,
             validator: FormValidators.textValidator,
           ),
@@ -539,9 +540,9 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
           Gap($styles.insets.sm),
 
           // NO. ECONÓMICO
-          LabeledTextField(
+          LabeledTextFormField(
             controller: _unidadTipoController,
-            labelText: '* Tipo de unidad:',
+            label: '* Tipo de unidad:',
             isReadOnly: true,
             validator: FormValidators.textValidator,
           ),
@@ -553,17 +554,17 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
-                child: LabeledTextField(
+                child: LabeledTextFormField(
                   controller: _marcaController,
-                  labelText: 'Marca:',
+                  label: 'Marca:',
                   isReadOnly: true,
                 ),
               ),
               SizedBox(width: $styles.insets.sm),
               Expanded(
-                child: LabeledTextField(
+                child: LabeledTextFormField(
                   controller: _modeloController,
-                  labelText: 'Modelo:',
+                  label: 'Modelo:',
                   isReadOnly: true,
                 ),
               ),
@@ -573,19 +574,19 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
           Gap($styles.insets.sm),
 
           // NO. DE SERIE
-          LabeledTextField(
+          LabeledTextFormField(
             controller: _numeroSerieController,
             isReadOnly: true,
-            labelText: 'Número de serie:',
+            label: 'Número de serie:',
           ),
 
           Gap($styles.insets.sm),
 
            // NO. DE SERIE
-          LabeledTextField(
+          LabeledTextFormField(
             controller: _anioEquipoController,
             isReadOnly: true,
-            labelText: 'Año del equipo:',
+            label: 'Año del equipo:',
           ),
 
           Gap($styles.insets.sm),
@@ -595,18 +596,18 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
-                child: LabeledTextField(
+                child: LabeledTextFormField(
                   controller: _placaTipoController,
                   isReadOnly: true,
-                  labelText: 'Tipo de placa:',
+                  label: 'Tipo de placa:',
                 ),
               ),
               SizedBox(width: $styles.insets.sm),
               Expanded(
-                child: LabeledTextField(
+                child: LabeledTextFormField(
                   controller: _placaController,
                   isReadOnly: true,
-                  labelText: 'Placa:',
+                  label: 'Placa:',
                 ),
               ),
             ],
@@ -615,18 +616,18 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
           Gap($styles.insets.sm),
 
           // LOCACIÓN
-          LabeledTextField(
+          LabeledTextFormField(
             controller: _locacionController,
-            labelText: '* Locación:',
+            label: '* Locación:',
             validator: FormValidators.textValidator,
           ),
 
           Gap($styles.insets.sm),
 
           // BASE DE LA UNIDAD
-          LabeledTextField(
+          LabeledTextFormField(
             controller: _baseNameController,
-            labelText: '* Base de la unidad:',
+            label: '* Base de la unidad:',
             isReadOnly: true,
             validator: FormValidators.textValidator,
           ),
@@ -634,9 +635,9 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
           Gap($styles.insets.sm),
 
           // CAPACIDAD
-          LabeledTextField(
+          LabeledTextFormField(
             controller: _capacidadController,
-            labelText: 'Capacidad:',
+            label: 'Capacidad:',
             keyboardType: TextInputType.number,
             validator: FormValidators.decimalValidator,
           ),
@@ -648,18 +649,18 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
-                child: LabeledTextField(
+                child: LabeledTextFormField(
                   controller: _horometroController,
-                  labelText: 'Horómetro:',
+                  label: 'Horómetro:',
                   keyboardType: TextInputType.number,
                   validator: FormValidators.integerValidator,
                 ),
               ),
               SizedBox(width: $styles.insets.sm),
               Expanded(
-                child: LabeledTextField(
+                child: LabeledTextFormField(
                   controller: _odometroController,
-                  labelText: 'Odómetro:',
+                  label: 'Odómetro:',
                   keyboardType: TextInputType.number,
                   validator: FormValidators.integerValidator,
                 ),
