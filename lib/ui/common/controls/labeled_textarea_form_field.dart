@@ -1,7 +1,7 @@
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
-class LabeledTextAreaField extends StatelessWidget {
-  const LabeledTextAreaField({
+class LabeledTextareaFormField extends StatelessWidget {
+  const LabeledTextareaFormField({
     required this.controller,
     required this.labelText,
     Key? key,

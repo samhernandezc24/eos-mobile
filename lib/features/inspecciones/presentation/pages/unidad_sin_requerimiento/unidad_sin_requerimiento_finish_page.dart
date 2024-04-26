@@ -1,4 +1,3 @@
-import 'package:eos_mobile/core/common/widgets/controls/labeled_textarea_field.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/draw_signature.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
@@ -71,7 +70,7 @@ class _InspeccionSinRequerimientoFinishPageState
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   // OBSERVACIONES
-                  LabeledTextAreaField(
+                  LabeledTextareaFormField(
                     controller: _observacionesController,
                     labelText: 'Observaciones de la Unidad (opcional)',
                     validator: FormValidators.textValidator,

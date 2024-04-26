@@ -1,6 +1,4 @@
-import 'package:eos_mobile/core/common/data/catalogos/predictive_search_req.dart';
-import 'package:eos_mobile/core/common/widgets/controls/error_box_container.dart';
-import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_search_field.dart';
+import 'package:eos_mobile/core/data/predictive_search_req_data.dart';
 import 'package:eos_mobile/core/enums/unidad_inspeccion_tipo.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';

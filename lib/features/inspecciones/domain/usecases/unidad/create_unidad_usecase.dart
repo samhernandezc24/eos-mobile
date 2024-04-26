@@ -1,4 +1,4 @@
-import 'package:eos_mobile/core/common/data/catalogos/unidad_data.dart';
+import 'package:eos_mobile/core/data/catalogos_data/unidad_data.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
 import 'package:eos_mobile/core/usecases/usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/unidad_repository.dart';

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:eos_mobile/core/common/data/catalogos/predictive_search_req.dart';
+import 'package:eos_mobile/core/data/predictive_search_req_data.dart';
 import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
 import 'package:eos_mobile/core/network/errors/exceptions.dart';

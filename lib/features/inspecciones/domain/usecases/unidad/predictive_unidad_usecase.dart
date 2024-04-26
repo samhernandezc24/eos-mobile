@@ -1,4 +1,4 @@
-import 'package:eos_mobile/core/common/data/catalogos/predictive_search_req.dart';
+import 'package:eos_mobile/core/data/predictive_search_req_data.dart';
 import 'package:eos_mobile/core/network/data_state.dart';
 import 'package:eos_mobile/core/usecases/usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_predictive_data_entity.dart';

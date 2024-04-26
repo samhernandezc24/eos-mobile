@@ -37,9 +37,13 @@ export 'package:eos_mobile/ui/common/controls/app_loading_indicator.dart';
 export 'package:eos_mobile/ui/common/controls/buttons.dart';
 export 'package:eos_mobile/ui/common/controls/circle_buttons.dart';
 export 'package:eos_mobile/ui/common/controls/labeled_dropdown_form_field.dart';
+export 'package:eos_mobile/ui/common/controls/labeled_dropdown_form_search_field.dart';
 export 'package:eos_mobile/ui/common/controls/labeled_password_form_field.dart';
 export 'package:eos_mobile/ui/common/controls/labeled_text_form_field.dart';
+export 'package:eos_mobile/ui/common/controls/labeled_textarea_form_field.dart';
 export 'package:eos_mobile/ui/common/controls/scroll_decorator.dart';
+export 'package:eos_mobile/ui/common/error_box_container.dart';
+export 'package:eos_mobile/ui/common/modals/form_modal.dart';
 
 // EQUATABLE
 export 'package:equatable/equatable.dart';

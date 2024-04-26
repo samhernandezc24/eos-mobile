@@ -1,11 +1,8 @@
-import 'package:eos_mobile/core/common/data/catalogos/base_data.dart';
-import 'package:eos_mobile/core/common/data/catalogos/predictive_search_req.dart';
-import 'package:eos_mobile/core/common/data/catalogos/unidad_marca_data.dart';
-import 'package:eos_mobile/core/common/data/catalogos/unidad_placa_tipo_data.dart';
-import 'package:eos_mobile/core/common/data/catalogos/unidad_tipo_data.dart';
-import 'package:eos_mobile/core/common/widgets/controls/error_box_container.dart';
-import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_search_field.dart';
-import 'package:eos_mobile/core/common/widgets/controls/labeled_textarea_field.dart';
+import 'package:eos_mobile/core/data/catalogos_data/base_data.dart';
+import 'package:eos_mobile/core/data/catalogos_data/unidad_marca_data.dart';
+import 'package:eos_mobile/core/data/catalogos_data/unidad_placa_tipo_data.dart';
+import 'package:eos_mobile/core/data/catalogos_data/unidad_tipo_data.dart';
+import 'package:eos_mobile/core/data/predictive_search_req_data.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
@@ -466,7 +463,7 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
           Gap($styles.insets.sm),
 
           // DESCRIPCIÓN:
-          LabeledTextAreaField(
+          LabeledTextareaFormField(
             controller: _descripcionController,
             labelText: 'Descripción de la unidad (opcional):',
             hintText: 'Ingrese descripción...',
