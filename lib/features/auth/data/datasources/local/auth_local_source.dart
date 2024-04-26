@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:eos_mobile/core/utils/password_utils.dart';
 import 'package:eos_mobile/features/auth/data/models/user_model.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class AuthLocalSource {
   /// LOCAL STORAGE

@@ -6,7 +6,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/formulario_tipo
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria_item/remote/remote_categoria_item_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/categoria_item/categoria_item_tile.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class InspeccionConfiguracionCategoriasItemsPage extends StatefulWidget {
   const InspeccionConfiguracionCategoriasItemsPage({Key? key, this.inspeccionTipo, this.categoria}) : super(key: key);

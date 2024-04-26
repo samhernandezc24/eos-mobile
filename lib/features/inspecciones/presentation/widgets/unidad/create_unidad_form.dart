@@ -10,7 +10,7 @@ import 'package:eos_mobile/core/common/widgets/controls/labeled_textarea_field.d
 import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class CreateUnidadForm extends StatefulWidget {
   const CreateUnidadForm({Key? key}) : super(key: key);

@@ -1,6 +1,6 @@
 import 'package:eos_mobile/core/common/widgets/controls/buttons.dart';
 import 'package:eos_mobile/core/common/widgets/controls/circle_buttons.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class ListInspeccionSearchInput extends StatelessWidget {
   const ListInspeccionSearchInput({required this.onSubmit, Key? key}) : super(key: key);

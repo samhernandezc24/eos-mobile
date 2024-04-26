@@ -1,17 +1,15 @@
-import 'dart:io';
-
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/config/logic/common/platform_info.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:flutter/foundation.dart';
 
-class HapticsUtils {
-  // nota: los sonidos del sistema tienen bastantes fallos en
-  // Android: https://github.com/flutter/flutter/issues/57531
-  static bool debugSound      = kDebugMode;
-  static bool debugLog        = kDebugMode;
-  static bool enableDebugLogs = false;
+class AppHapticsUtils {
+  // nota: los sonidos del sistema tienen bastantes fallos en Android: https://github.com/flutter/flutter/issues/57531
+  static bool debugSound        = kDebugMode && enableDebugLogs;
+  static bool debugLog          = kDebugMode && enableDebugLogs;
+  static bool enableDebugLogs   = false;
 
   static void onButtonPressed() {
-    if (Platform.isAndroid) {
+    if (!kIsWeb && PlatformInfo.isAndroid) {
       lightImpact();
     }
   }
@@ -44,7 +42,8 @@ class HapticsUtils {
   static void _debug(String label) {
     if (debugLog) debugPrint('Haptic.$label');
     if (debugSound) {
-      SystemSound.play(SystemSoundType.click);
+      SystemSound.play(SystemSoundType.alert); // sólo se reproduce en dispositivos de escritorio
+      SystemSound.play(SystemSoundType.click); // sólo se reproduce en dispositivos móviles
     }
   }
 }

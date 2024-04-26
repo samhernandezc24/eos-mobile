@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class DioConnectivityRequestRetrier {
   DioConnectivityRequestRetrier({

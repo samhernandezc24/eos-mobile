@@ -10,7 +10,7 @@ import 'package:eos_mobile/features/auth/domain/usecases/remove_user_session_use
 import 'package:eos_mobile/features/auth/domain/usecases/save_credentials_usecase.dart';
 import 'package:eos_mobile/features/auth/domain/usecases/save_user_info_usecase.dart';
 import 'package:eos_mobile/features/auth/domain/usecases/save_user_session_usecase.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 part 'local_auth_event.dart';
 part 'local_auth_state.dart';

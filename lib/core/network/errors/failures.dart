@@ -1,5 +1,5 @@
 import 'package:eos_mobile/core/network/data_state.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 abstract class Failure extends Equatable {
   const Failure();

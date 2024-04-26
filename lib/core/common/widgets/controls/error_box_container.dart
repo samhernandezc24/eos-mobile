@@ -1,4 +1,4 @@
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class ErrorBoxContainer extends StatelessWidget {
   const ErrorBoxContainer({required this.errorMessage, required this.onPressed, Key? key}) : super(key: key);

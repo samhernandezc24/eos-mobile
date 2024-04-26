@@ -8,7 +8,7 @@ import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspecci
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_repository.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class InspeccionRepositoryImpl implements InspeccionRepository {
   InspeccionRepositoryImpl(this._inspeccionRemoteApiService);

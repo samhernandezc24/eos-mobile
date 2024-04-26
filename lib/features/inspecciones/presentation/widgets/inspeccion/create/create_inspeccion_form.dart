@@ -12,7 +12,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/re
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad_inventario/remote/remote_unidad_inventario_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/unidad/create_unidad_page.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:intl/intl.dart';
 
 class CreateInspeccionForm extends StatefulWidget {

@@ -3,7 +3,7 @@ import 'package:eos_mobile/core/network/errors/exceptions.dart';
 import 'package:eos_mobile/features/auth/domain/entities/account_entity.dart';
 import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
 import 'package:eos_mobile/features/auth/domain/usecases/sign_in_usecase.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 part 'remote_auth_event.dart';
 part 'remote_auth_state.dart';

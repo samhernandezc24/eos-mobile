@@ -14,7 +14,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/categoria_item_repository.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class CategoriaItemRepositoryImpl implements CategoriaItemRepository {
   CategoriaItemRepositoryImpl(this._categoriaItemRemoteApiService);

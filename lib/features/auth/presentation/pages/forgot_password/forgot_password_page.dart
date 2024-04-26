@@ -1,4 +1,4 @@
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -53,7 +53,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           children: <Widget>[
                             // CORREO ELECTRÓNICO
                             LabeledTextField(
-                              controller: _emailController, 
+                              controller: _emailController,
                               labelText: 'Correo electrónico',
                               hintText: 'ejem@plo.com',
                               keyboardType: TextInputType.emailAddress,

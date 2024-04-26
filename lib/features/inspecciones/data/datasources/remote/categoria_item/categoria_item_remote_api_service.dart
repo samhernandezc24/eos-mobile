@@ -6,7 +6,7 @@ import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_duplicate_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_req_model.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'categoria_item_remote_api_service.g.dart';

@@ -1,4 +1,4 @@
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class GradientContainer extends StatelessWidget {
   const GradientContainer(
@@ -75,7 +75,7 @@ class VerticalGradient extends GradientContainer {
     super.blendMode,
     super.borderRadius,
   }) : super(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
+          begin : Alignment.topCenter,
+          end   : Alignment.bottomCenter,
         );
 }

@@ -6,7 +6,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria/rem
 import 'package:eos_mobile/features/inspecciones/presentation/pages/configuracion/categorias_items/categorias_items_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/categoria/categoria_tile.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/categoria/create_categoria_form.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class InspeccionConfiguracionCategoriasPage extends StatefulWidget {
   const InspeccionConfiguracionCategoriasPage({Key? key, this.inspeccionTipo}) : super(key: key);

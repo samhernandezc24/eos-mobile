@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:eos_mobile/core/network/dio_connectivity_request_retrier.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class RetryOnConnectionChangeInterceptor extends Interceptor {
   RetryOnConnectionChangeInterceptor({

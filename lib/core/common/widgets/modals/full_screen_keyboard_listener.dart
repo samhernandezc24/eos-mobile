@@ -1,8 +1,8 @@
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class FullScreenKeyboardListener extends StatefulWidget {
   const FullScreenKeyboardListener({
-    required this.child, 
+    required this.child,
     super.key,
     this.onKeyDown,
     this.onKeyUp,

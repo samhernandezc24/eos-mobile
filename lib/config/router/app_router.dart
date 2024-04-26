@@ -1,6 +1,3 @@
-import 'package:eos_mobile/core/common/pages/empty/empty_page.dart';
-import 'package:eos_mobile/core/common/pages/errors/error_404_page.dart';
-import 'package:eos_mobile/core/common/pages/welcome/welcome_page.dart';
 import 'package:eos_mobile/features/actividades/presentation/pages/actividad_page.dart';
 import 'package:eos_mobile/features/auth/presentation/pages/home/home_page.dart';
 import 'package:eos_mobile/features/auth/presentation/pages/sign_in/sign_in_page.dart';
@@ -11,7 +8,10 @@ import 'package:eos_mobile/features/inspecciones/presentation/pages/list/list_pa
 import 'package:eos_mobile/features/inspecciones/presentation/pages/search_unidad/search_unidad_page.dart';
 import 'package:eos_mobile/features/notificaciones/presentation/pages/notificacion_page.dart';
 import 'package:eos_mobile/layouts/app_scaffold_with_navbar.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/pages/not_found/not_found_page.dart';
+import 'package:eos_mobile/ui/pages/under_construction/under_construction_page.dart';
+import 'package:eos_mobile/ui/pages/welcome/welcome_page.dart';
 import 'package:flutter/foundation.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey     = GlobalKey<NavigatorState>(debugLabel: 'root');
@@ -35,7 +35,7 @@ final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   redirect: _handleRedirect,
   debugLogDiagnostics: true,
-  errorPageBuilder: (BuildContext context, GoRouterState state) => const MaterialPage(child: Error404Page()),
+  errorPageBuilder: (BuildContext context, GoRouterState state) => const MaterialPage(child: NotFoundPage()),
   routes: <RouteBase>[
     /// SPLASH SCREEN, ESTO SE OCULTARÁ
     AppRoute(ScreenPaths.splash, 'splash', (_) => const Scaffold(body: Center(child: CircularProgressIndicator()))),
@@ -105,9 +105,9 @@ final GoRouter appRouter = GoRouter(
                   useFade: true,
                 ),
 
-                AppRoute('compras', 'home.compras', (_) => const EmptyPage(), useFade: true),
-                AppRoute('embarques', 'home.embarques', (_) => const EmptyPage(), useFade: true),
-                AppRoute('unidades', 'home.unidades', (_) => const EmptyPage(), useFade: true),
+                AppRoute('compras', 'home.compras', (_) => const UnderConstructionPage(), useFade: true),
+                AppRoute('embarques', 'home.embarques', (_) => const UnderConstructionPage(), useFade: true),
+                AppRoute('unidades', 'home.unidades', (_) => const UnderConstructionPage(), useFade: true),
               ],
             ),
           ],

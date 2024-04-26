@@ -1,4 +1,4 @@
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class FullScreenWebView extends StatelessWidget {

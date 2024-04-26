@@ -4,7 +4,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categ
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/categoria/update_categoria_form.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class CategoriaTile extends StatelessWidget {
   const CategoriaTile({Key? key, this.categoria, this.inspeccionTipo, this.onCategoriaPressed}) : super(key : key);

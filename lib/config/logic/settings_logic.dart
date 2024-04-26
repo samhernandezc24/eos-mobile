@@ -1,6 +1,6 @@
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
 import 'package:eos_mobile/config/logic/common/save_load_mixin.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class SettingsLogic with ThrottledSaveLoadMixin {
   @override

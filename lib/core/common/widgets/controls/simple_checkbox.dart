@@ -1,5 +1,5 @@
-import 'package:eos_mobile/core/utils/haptics_utils.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/utils/app_haptics_utils.dart';
 
 class SimpleCheckbox extends StatelessWidget {
   const SimpleCheckbox({
@@ -34,7 +34,7 @@ class SimpleCheckbox extends StatelessWidget {
             checkColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.75),
             activeColor: Theme.of(context).primaryColor.withOpacity(0.75),
             onChanged: (bool? isActive) {
-              HapticsUtils.mediumImpact();
+              AppHapticsUtils.mediumImpact();
               _onChanged.call(isActive);
             },
           ),

@@ -1,5 +1,5 @@
 import 'package:eos_mobile/core/utils/auth_utils.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class SessionManager {
   final FlutterSecureStorage storage = const FlutterSecureStorage();

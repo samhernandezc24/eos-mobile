@@ -3,7 +3,7 @@
 import 'package:eos_mobile/core/common/data/catalogos/base_data.dart';
 import 'package:eos_mobile/core/common/data/catalogos/unidad_marca_data.dart';
 import 'package:eos_mobile/core/common/data/catalogos/unidad_tipo_data.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class UnidadDataModel extends UnidadDataEntity {
   const UnidadDataModel({

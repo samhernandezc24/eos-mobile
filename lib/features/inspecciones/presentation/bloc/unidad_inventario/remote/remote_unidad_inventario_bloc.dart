@@ -4,7 +4,7 @@ import 'package:eos_mobile/core/network/data_state.dart';
 import 'package:eos_mobile/core/network/errors/exceptions.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad_inventario/unidad_inventario_data_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad_inventario/predictive_unidad_inventario_usecase.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 part 'remote_unidad_inventario_event.dart';
 part 'remote_unidad_inventario_state.dart';

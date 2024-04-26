@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class JsonPrefsFile {
   JsonPrefsFile(this.name);

@@ -61,7 +61,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_ti
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad_inventario/remote/remote_unidad_inventario_bloc.dart';
 
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 final GetIt sl = GetIt.instance;
 

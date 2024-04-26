@@ -8,7 +8,7 @@ import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/delet
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/list_categorias_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/store_categoria_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/update_categoria_usecase.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 part 'remote_categoria_event.dart';
 part 'remote_categoria_state.dart';

@@ -1,14 +1,14 @@
 import 'dart:convert';
 
 import 'package:eos_mobile/core/common/widgets/app_scroll_behavior.dart';
-import 'package:eos_mobile/core/common/widgets/eos_mobile_logo.dart';
 import 'package:eos_mobile/core/di/injection_container.dart';
 import 'package:eos_mobile/core/utils/string_utils.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/widgets/home/about_dialog_content.dart';
 import 'package:eos_mobile/features/auth/presentation/widgets/home/drawer_header_effect.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/pages/index/index_page.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/eos_mobile_logo.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class AppScaffoldWithNavBar extends StatelessWidget {
@@ -270,7 +270,7 @@ class AppScaffoldWithNavBar extends StatelessWidget {
         backgroundColor: Theme.of(context).chipTheme.backgroundColor,
         child: Text(StringUtils.getInitials(accountName ?? ''), style: $styles.textStyles.h2),
       ),
-      decoration: const BoxDecoration(image: DecorationImage(image: AssetImage(ImagePaths.drawerHeaderBackground), fit: BoxFit.cover)),
+      decoration: const BoxDecoration(image: DecorationImage(image: AssetImage(ImagePaths.background001), fit: BoxFit.cover)),
     );
   }
 

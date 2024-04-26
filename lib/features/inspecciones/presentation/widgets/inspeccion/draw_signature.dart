@@ -1,5 +1,5 @@
 import 'package:dotted_border/dotted_border.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 class DrawSignature extends StatefulWidget {

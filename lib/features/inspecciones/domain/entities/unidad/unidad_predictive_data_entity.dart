@@ -1,5 +1,5 @@
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_entity.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class UnidadPredictiveDataEntity extends Equatable {
   const UnidadPredictiveDataEntity({this.rows});

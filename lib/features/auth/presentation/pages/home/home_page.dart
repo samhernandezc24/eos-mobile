@@ -1,6 +1,6 @@
-import 'package:eos_mobile/core/common/data/elementos/module_data.dart';
 import 'package:eos_mobile/core/common/widgets/scaling_grid_delegate.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/core/data/home_module_data.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -11,16 +11,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   /// LIST
-  static List<ModuleData> lstModules = <ModuleData>[];
+  static List<HomeModuleData> lstModules = <HomeModuleData>[];
 
   @override
   Widget build(BuildContext context) {
     // Establecer los datos para los módulos.
-    lstModules = <ModuleData>[
-      ModuleData($strings.homePageModule1, Icons.checklist),
-      ModuleData($strings.homePageModule2, Icons.shopping_cart),
-      ModuleData($strings.homePageModule3, Icons.forklift),
-      ModuleData($strings.homePageModule6, Icons.local_shipping),
+    lstModules = <HomeModuleData>[
+      HomeModuleData($strings.homePageModule1, Icons.checklist),
+      HomeModuleData($strings.homePageModule2, Icons.shopping_cart),
+      HomeModuleData($strings.homePageModule3, Icons.forklift),
+      HomeModuleData($strings.homePageModule6, Icons.local_shipping),
     ];
 
     return Scaffold(

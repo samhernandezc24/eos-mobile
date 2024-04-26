@@ -7,7 +7,7 @@ import 'package:eos_mobile/core/network/errors/exceptions.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/unidad_inventario/unidad_inventario_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/unidad_inventario/unidad_inventario_data_model.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/unidad_inventario_repository.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class UnidadInventarioRepositoryImpl implements UnidadInventarioRepository {
   UnidadInventarioRepositoryImpl(this._unidadInventarioRemoteApiService);

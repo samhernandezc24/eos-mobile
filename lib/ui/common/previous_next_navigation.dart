@@ -1,7 +1,7 @@
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
 import 'package:eos_mobile/core/common/widgets/controls/circle_buttons.dart';
 import 'package:eos_mobile/core/common/widgets/modals/full_screen_keyboard_listener.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:flutter/gestures.dart';
 
 class PreviousNextNavigation extends StatefulWidget {

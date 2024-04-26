@@ -1,5 +1,5 @@
 import 'package:eos_mobile/core/enums/flexible_toast_type.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class FlexibleToast extends StatefulWidget {
   const FlexibleToast({required this.message, required this.type, required this.onClose, super.key});

@@ -1,14 +1,11 @@
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class DefaultTextColor extends StatelessWidget {
-  const DefaultTextColor({
-    required this.color,
-    required this.child,
-    super.key,
-  });
+  const DefaultTextColor({required this.color, required this.child, Key? key}) : super(key: key);
 
   final Color color;
   final Widget child;
+
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(

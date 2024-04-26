@@ -12,7 +12,7 @@ import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_predi
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/unidad_repository.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class UnidadRepositoryImpl implements UnidadRepository {
   UnidadRepositoryImpl(this._unidadRemoteApiService);

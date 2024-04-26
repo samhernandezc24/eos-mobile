@@ -1,4 +1,4 @@
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class ConfiguracionesIndexPage extends StatefulWidget {
   const ConfiguracionesIndexPage({Key? key}) : super(key: key);

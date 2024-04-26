@@ -1,13 +1,13 @@
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
-import 'package:eos_mobile/core/common/data/elementos/page_data.dart';
 import 'package:eos_mobile/core/common/widgets/controls/app_page_indicator.dart';
 import 'package:eos_mobile/core/common/widgets/controls/circle_buttons.dart';
-import 'package:eos_mobile/core/common/widgets/gradient_container.dart';
-import 'package:eos_mobile/core/common/widgets/previous_next_navigation.dart';
-import 'package:eos_mobile/core/common/widgets/static_text_scale.dart';
-import 'package:eos_mobile/core/common/widgets/themed_text.dart';
-import 'package:eos_mobile/core/utils/haptics_utils.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/core/data/welcome_data.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/gradient_container.dart';
+import 'package:eos_mobile/ui/common/previous_next_navigation.dart';
+import 'package:eos_mobile/ui/common/static_text_scale.dart';
+import 'package:eos_mobile/ui/common/themed_text.dart';
+import 'package:eos_mobile/ui/common/utils/app_haptics_utils.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -25,7 +25,7 @@ class _WelcomePageState extends State<WelcomePage> {
   static const double _textHeight           = 110;
   static const double _pageIndicatorHeight  = 55;
 
-  static List<PageData> pageData = <PageData>[];
+  static List<WelcomeData> pageData = <WelcomeData>[];
 
   bool get _isOnLastPage    => _currentPage.value == pageData.length - 1;
   bool get _isOnFirstPage   => _currentPage.value == 0;
@@ -68,10 +68,10 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     // Establecer los datos de la página.
-    pageData = <PageData>[
-      PageData($strings.welcomeTitleOne, $strings.welcomeContentOne, 'one'),
-      PageData($strings.welcomeTitleTwo, $strings.welcomeContentTwo, 'two'),
-      PageData($strings.welcomeTitleThree, $strings.welcomeContentThree, 'three'),
+    pageData = <WelcomeData>[
+      WelcomeData($strings.welcomeTitleOne, $strings.welcomeContentOne, 'one'),
+      WelcomeData($strings.welcomeTitleTwo, $strings.welcomeContentTwo, 'two'),
+      WelcomeData($strings.welcomeTitleThree, $strings.welcomeContentThree, 'three'),
     ];
 
     // Esta vista utiliza un PageView a pantalla completa para permitir
@@ -112,7 +112,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         child: PageView(
                           controller: _pageController,
                           children: pages,
-                          onPageChanged: (_) => HapticsUtils.lightImpact(),
+                          onPageChanged: (_) => AppHapticsUtils.lightImpact(),
                         ),
                       ),
                     ),
@@ -262,7 +262,7 @@ class _WelcomePageState extends State<WelcomePage> {
 class _Page extends StatelessWidget {
   const _Page({required this.data});
 
-  final PageData data;
+  final WelcomeData data;
 
   @override
   Widget build(BuildContext context) {
@@ -300,7 +300,7 @@ class _Page extends StatelessWidget {
 class _PageImage extends StatelessWidget {
   const _PageImage({required this.data});
 
-  final PageData data;
+  final WelcomeData data;
 
   @override
   Widget build(BuildContext context) {

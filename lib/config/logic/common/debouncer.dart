@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class Debouncer {
   Debouncer(this.interval);

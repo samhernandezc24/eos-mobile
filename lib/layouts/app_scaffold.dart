@@ -1,5 +1,5 @@
 import 'package:eos_mobile/core/common/widgets/app_scroll_behavior.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class AppScaffold extends StatelessWidget {
   const AppScaffold({required this.child, Key? key}) : super(key: key);

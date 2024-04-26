@@ -3,7 +3,7 @@ import 'package:eos_mobile/core/common/widgets/modals/form_modal.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion_tipo/update_inspeccion_tipo_form.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class InspeccionTipoTile extends StatelessWidget {
   const InspeccionTipoTile({Key? key, this.inspeccionTipo, this.onInspeccionTipoPressed}) : super(key: key);

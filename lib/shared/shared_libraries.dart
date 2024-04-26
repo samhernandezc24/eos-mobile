@@ -1,14 +1,16 @@
-/// Unificación de las importaciones que son comunes en toda la aplicación.
+/// Unificación de las librerías que son comunes en toda la aplicación.
 library;
+
+export 'dart:math';
 
 // DIO (HTTP)
 export 'package:dio/dio.dart';
+
 
 // CONFIGURATION
 export 'package:eos_mobile/config/logic/app_logic.dart';
 export 'package:eos_mobile/config/logic/settings_logic.dart';
 export 'package:eos_mobile/config/router/app_router.dart';
-export 'package:eos_mobile/config/styles/app_styles.dart';
 
 // CORE
 export 'package:eos_mobile/core/common/widgets/controls/labeled_text_field.dart';
@@ -23,8 +25,12 @@ export 'package:eos_mobile/core/validators/form_validators.dart';
 // LAYOUTS
 export 'package:eos_mobile/layouts/app_scaffold.dart';
 
+
 // MAIN
 export 'package:eos_mobile/main.dart';
+
+// STYLES
+export 'package:eos_mobile/styles/app_styles.dart';
 
 // EQUATABLE
 export 'package:equatable/equatable.dart';
@@ -32,7 +38,7 @@ export 'package:equatable/equatable.dart';
 // FLEX SEED SCHEME
 export 'package:flex_color_scheme/flex_color_scheme.dart';
 
-// FLUTTER MATERIAL DESIGN
+// FLUTTER (FRAMEWORK)
 export 'package:flutter/material.dart';
 export 'package:flutter/services.dart';
 
@@ -60,6 +66,9 @@ export 'package:go_router/go_router.dart';
 
 // LOGGER
 export 'package:logger/logger.dart';
+
+// LOTTIE
+export 'package:lottie/lottie.dart';
 
 // PROVIDER
 export 'package:provider/provider.dart';

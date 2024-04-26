@@ -1,6 +1,6 @@
 import 'package:eos_mobile/core/common/widgets/controls/labeled_textarea_field.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/draw_signature.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class InspeccionUnidadSinRequerimientoFinishPage extends StatefulWidget {
   const InspeccionUnidadSinRequerimientoFinishPage({Key? key})

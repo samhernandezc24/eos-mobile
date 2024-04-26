@@ -1,4 +1,4 @@
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class InspeccionSearchUnidadPage extends StatefulWidget {
   const InspeccionSearchUnidadPage({Key? key}) : super(key: key);

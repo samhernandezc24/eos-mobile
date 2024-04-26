@@ -38,11 +38,11 @@ class AppStrings {
 
   String emptyListMessage             = 'Intenta actualizar el listado para sincronizar los últimos cambios del servidor.';
 
-  String error404Message              = 'Nos hemos perdido en el vasto desierto digital y has llegado a una página que no existe.';
   String error404SemanticLabel        = 'Error 404';
-  String error404Title                = '¡Oops! 404';
+  String error404Title                = '¡Oh, no! \nPágina no encontrada.';
 
-  String error500Title                = '¡Oops, algo ha salido mal!';
+  String error500SemanticLabel        = 'Error 500';
+  String error500Title                = '¡Oh, no! \nSe produjo un error en nuestro sistema.';
 
   String forgotPasswordAppBarText     = '¿Has olvidado tu contraseña?';
   String forgotPasswordButtonText     = 'Enviar enlace';

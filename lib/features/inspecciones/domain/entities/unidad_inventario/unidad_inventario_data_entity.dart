@@ -1,5 +1,5 @@
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad_inventario/unidad_inventario_entity.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class UnidadInventarioDataEntity extends Equatable {
   const UnidadInventarioDataEntity({this.rows});

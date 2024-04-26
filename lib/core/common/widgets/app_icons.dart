@@ -1,4 +1,4 @@
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class AppIcon extends StatelessWidget {
   const AppIcon(this.icon, {super.key, this.size = 22, this.color});

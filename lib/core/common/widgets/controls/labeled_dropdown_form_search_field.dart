@@ -1,5 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class LabeledDropdownFormSearchField<T> extends StatelessWidget {
   const LabeledDropdownFormSearchField({

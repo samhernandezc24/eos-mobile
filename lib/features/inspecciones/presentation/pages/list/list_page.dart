@@ -1,11 +1,11 @@
 import 'package:eos_mobile/core/common/widgets/controls/scroll_decorator.dart';
-import 'package:eos_mobile/core/common/widgets/themed_text.dart';
 import 'package:eos_mobile/core/extensions/panel_extension.dart';
-import 'package:eos_mobile/core/utils/haptics_utils.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/create/create_inspeccion_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/list/list_inspeccion_search_input.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/themed_text.dart';
+import 'package:eos_mobile/ui/common/utils/app_haptics_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
@@ -32,7 +32,7 @@ class _InspeccionListPageState extends State<InspeccionListPage>  {
   @override
   void initState() {
     _panelController.addListener(() {
-      HapticsUtils.lightImpact();
+      AppHapticsUtils.lightImpact();
     });
     super.initState();
   }

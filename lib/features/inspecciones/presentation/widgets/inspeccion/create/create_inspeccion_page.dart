@@ -1,5 +1,5 @@
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/create/create_inspeccion_form.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class CreateInspeccionPage extends StatefulWidget {
   const CreateInspeccionPage({Key? key}) : super(key: key);

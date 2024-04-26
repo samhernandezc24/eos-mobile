@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class Throttler {
   Throttler(this.interval);
@@ -10,7 +10,7 @@ class Throttler {
   Timer? _timer;
 
   /// Llama a la acción.
-  /// 
+  ///
   /// Si [immediateCall] es true, la acción se ejecutará inmediatamente
   /// después de establecerla.
   void call(VoidCallback action, {bool immediateCall = true}) {
@@ -33,7 +33,7 @@ class Throttler {
   /// Ejecuta la acción y reinicia el temporizador si es necesario.
   void _callAction() {
     _action?.call();  // Si tenemos una acción en cola, la completamos.
-    _action = null;   // Una vez se ha llamado la acción, no la volvemos a llamar a menos que otra acción este en la cola.    
+    _action = null;   // Una vez se ha llamado la acción, no la volvemos a llamar a menos que otra acción este en la cola.
     _timer  = null;
   }
 

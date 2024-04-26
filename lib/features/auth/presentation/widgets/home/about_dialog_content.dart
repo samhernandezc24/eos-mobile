@@ -1,6 +1,6 @@
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
 import 'package:eos_mobile/core/common/widgets/modals/full_screen_web_view.dart';
-import 'package:eos_mobile/shared/shared.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
