@@ -1,4 +1,3 @@
-import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_req_entity.dart';
@@ -7,6 +6,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria_item/remote/remote_categoria_item_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/categoria_item/categoria_item_tile.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/controls/app_loading_indicator.dart';
 
 class InspeccionConfiguracionCategoriasItemsPage extends StatefulWidget {
   const InspeccionConfiguracionCategoriasItemsPage({Key? key, this.inspeccionTipo, this.categoria}) : super(key: key);
@@ -74,7 +74,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                 },
                 builder: (BuildContext context, RemoteCategoriaItemState state) {
                   if (state is RemoteCategoriaItemLoading) {
-                    return Center(child: LoadingIndicator(color: Theme.of(context).primaryColor, strokeWidth: 3));
+                    return const Center(child: AppLoadingIndicator());
                   }
 
                   if (state is RemoteCategoriaItemFailure) {

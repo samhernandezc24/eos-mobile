@@ -1,8 +1,8 @@
-import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/inspeccion_form_content.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/controls/app_loading_indicator.dart';
 
 class InspeccionUnidadSinRequerimientoPage extends StatefulWidget {
   const InspeccionUnidadSinRequerimientoPage({Key? key}) : super(key: key);
@@ -134,7 +134,7 @@ class _InspeccionUnidadSinRequerimientoPageState extends State<InspeccionUnidadS
           child: BlocBuilder<RemoteInspeccionBloc, RemoteInspeccionState>(
             builder: (BuildContext context, RemoteInspeccionState state) {
               if (state is RemoteInspeccionLoading) {
-                return Center(child: LoadingIndicator(color: Theme.of(context).primaryColor, strokeWidth: 3));
+                return const Center(child: AppLoadingIndicator());
               }
 
               if (state is RemoteInspeccionFailedMessage) {

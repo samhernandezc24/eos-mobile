@@ -1,8 +1,8 @@
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
-import 'package:eos_mobile/core/common/widgets/controls/app_page_indicator.dart';
 import 'package:eos_mobile/core/common/widgets/controls/circle_buttons.dart';
 import 'package:eos_mobile/core/data/welcome_data.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/controls/app_page_indicator.dart';
 import 'package:eos_mobile/ui/common/gradient_container.dart';
 import 'package:eos_mobile/ui/common/previous_next_navigation.dart';
 import 'package:eos_mobile/ui/common/static_text_scale.dart';
@@ -163,7 +163,7 @@ class _WelcomePageState extends State<WelcomePage> {
                             alignment: Alignment.center,
                             child: AppPageIndicator(
                               count: pageData.length,
-                              pageController: _pageController,
+                              controller: _pageController,
                             ),
                           ),
                           const Spacer(flex: 2),

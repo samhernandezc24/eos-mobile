@@ -2,7 +2,6 @@ import 'package:eos_mobile/core/common/data/catalogos/predictive_search_req.dart
 import 'package:eos_mobile/core/common/widgets/controls/error_box_container.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_field.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_search_field.dart';
-import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/core/enums/unidad_inspeccion_tipo.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
@@ -13,6 +12,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad_inventario/remote/remote_unidad_inventario_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/unidad/create_unidad_page.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/controls/app_loading_indicator.dart';
 import 'package:intl/intl.dart';
 
 class CreateInspeccionForm extends StatefulWidget {
@@ -290,13 +290,8 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
             BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
               builder: (BuildContext context, RemoteUnidadState state) {
                 if (state is RemoteUnidadLoading) {
-                  return Center(
-                    child: LoadingIndicator(
-                      color: Theme.of(context).primaryColor,
-                      width: 20,
-                      height: 20,
-                      strokeWidth: 3,
-                    ),
+                  return const Center(
+                    child: AppLoadingIndicator(width: 20, height: 20),
                   );
                 }
 
@@ -372,13 +367,8 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
             BlocBuilder<RemoteUnidadInventarioBloc, RemoteUnidadInventarioState>(
               builder: (BuildContext context, RemoteUnidadInventarioState state) {
                 if (state is RemoteUnidadInventarioLoading) {
-                  return Center(
-                    child: LoadingIndicator(
-                      color: Theme.of(context).primaryColor,
-                      width: 20,
-                      height: 20,
-                      strokeWidth: 3,
-                    ),
+                  return const Center(
+                    child: AppLoadingIndicator(width: 20, height: 20),
                   );
                 }
 
@@ -483,13 +473,8 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
           BlocBuilder<RemoteInspeccionBloc, RemoteInspeccionState>(
             builder: (BuildContext context, RemoteInspeccionState state) {
               if (state is RemoteInspeccionLoading) {
-                return Center(
-                  child: LoadingIndicator(
-                    color: Theme.of(context).primaryColor,
-                    width: 20,
-                    height: 20,
-                    strokeWidth: 3,
-                  ),
+                return const Center(
+                  child: AppLoadingIndicator(width: 20, height: 20),
                 );
               }
 
@@ -718,12 +703,7 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
                       const Size(double.infinity, 48),
                     ),
                   ),
-                  child: LoadingIndicator(
-                    color: Theme.of(context).primaryColor,
-                    width: 20,
-                    height: 20,
-                    strokeWidth: 2,
-                  ),
+                  child: const AppLoadingIndicator(width: 20, height: 20),
                 );
               }
 

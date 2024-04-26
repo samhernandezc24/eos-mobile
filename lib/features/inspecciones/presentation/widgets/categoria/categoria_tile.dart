@@ -1,10 +1,10 @@
-import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/core/common/widgets/modals/form_modal.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/categoria/update_categoria_form.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/controls/app_loading_indicator.dart';
 
 class CategoriaTile extends StatelessWidget {
   const CategoriaTile({Key? key, this.categoria, this.inspeccionTipo, this.onCategoriaPressed}) : super(key : key);
@@ -115,12 +115,7 @@ class CategoriaTile extends StatelessWidget {
               return AlertDialog(
                 content: Row(
                   children: <Widget>[
-                    LoadingIndicator(
-                      color: Theme.of(context).primaryColor,
-                      width: 20,
-                      height: 20,
-                      strokeWidth: 2,
-                    ),
+                    const AppLoadingIndicator(width: 20, height: 20),
                     SizedBox(width: $styles.insets.xs + 2),
                     Flexible(
                       child: Text('Espere por favor...', style: $styles.textStyles.title2.copyWith(height: 1.5)),

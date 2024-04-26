@@ -7,10 +7,10 @@ import 'package:eos_mobile/core/common/widgets/controls/error_box_container.dart
 import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_field.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_dropdown_form_search_field.dart';
 import 'package:eos_mobile/core/common/widgets/controls/labeled_textarea_field.dart';
-import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/controls/app_loading_indicator.dart';
 
 class CreateUnidadForm extends StatefulWidget {
   const CreateUnidadForm({Key? key}) : super(key: key);
@@ -207,13 +207,8 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
           BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
             builder: (BuildContext context, RemoteUnidadState state) {
               if (state is RemoteUnidadLoading) {
-                return Center(
-                  child: LoadingIndicator(
-                    color: Theme.of(context).primaryColor,
-                    width: 20,
-                    height: 20,
-                    strokeWidth: 3,
-                  ),
+                return const Center(
+                  child: AppLoadingIndicator(width: 20, height: 20),
                 );
               }
 
@@ -260,13 +255,8 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
           BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
             builder: (BuildContext context, RemoteUnidadState state) {
               if (state is RemoteUnidadLoading) {
-                return Center(
-                  child: LoadingIndicator(
-                    color: Theme.of(context).primaryColor,
-                    width: 20,
-                    height: 20,
-                    strokeWidth: 3,
-                  ),
+                return const Center(
+                  child: AppLoadingIndicator(width: 20, height: 20),
                 );
               }
 
@@ -328,13 +318,8 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
                 child: BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
                   builder: (BuildContext context, RemoteUnidadState state) {
                     if (state is RemoteUnidadLoading) {
-                      return Center(
-                        child: LoadingIndicator(
-                          color: Theme.of(context).primaryColor,
-                          width: 20,
-                          height: 20,
-                          strokeWidth: 3,
-                        ),
+                      return const Center(
+                        child: AppLoadingIndicator(width: 20, height: 20),
                       );
                     }
 
@@ -531,12 +516,7 @@ class _CreateUnidadFormState extends State<CreateUnidadForm> {
                       const Size(double.infinity, 48),
                     ),
                   ),
-                  child: LoadingIndicator(
-                    color: Theme.of(context).primaryColor,
-                    width: 20,
-                    height: 20,
-                    strokeWidth: 2,
-                  ),
+                  child: const AppLoadingIndicator(width: 20, height: 20),
                 );
               }
 

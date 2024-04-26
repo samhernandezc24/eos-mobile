@@ -7,6 +7,8 @@ class AppStrings {
 
   String activityTitle                = 'Actividad';
 
+  String appPageDefaultTitlePage      = 'página';
+
   String dashboardTitle               = 'Dashboard';
 
   String defaultAppName               = 'EOS Mobile';

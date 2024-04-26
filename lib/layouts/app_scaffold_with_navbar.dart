@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:eos_mobile/core/common/widgets/app_scroll_behavior.dart';
 import 'package:eos_mobile/core/di/injection_container.dart';
 import 'package:eos_mobile/core/utils/string_utils.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth_bloc.dart';
@@ -8,6 +7,7 @@ import 'package:eos_mobile/features/auth/presentation/widgets/home/about_dialog_
 import 'package:eos_mobile/features/auth/presentation/widgets/home/drawer_header_effect.dart';
 import 'package:eos_mobile/features/configuraciones/presentation/pages/index/index_page.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/app_scroll_behavior.dart';
 import 'package:eos_mobile/ui/common/eos_mobile_logo.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 

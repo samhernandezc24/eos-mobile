@@ -11,6 +11,7 @@ class AppIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final String i = icon.name.toLowerCase().replaceAll('_', '-');
     final String path = 'assets/icons/icon-$i.png';
+
     return SizedBox(
       width: size,
       height: size,
@@ -19,7 +20,7 @@ class AppIcon extends StatelessWidget {
           path,
           width: size,
           height: size,
-          color: color ?? Theme.of(context).canvasColor,
+          color: color,
           filterQuality: FilterQuality.high,
         ),
       ),

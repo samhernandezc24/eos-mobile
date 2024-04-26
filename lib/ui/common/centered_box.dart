@@ -1,13 +1,7 @@
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class CenteredBox extends StatelessWidget {
-  const CenteredBox({
-    required this.child,
-    Key? key,
-    this.width,
-    this.height,
-    this.padding,
-  }) : super(key: key);
+  const CenteredBox({required this.child, Key? key, this.width, this.height, this.padding}) : super(key: key);
 
   final Widget child;
   final double? width;
@@ -19,11 +13,7 @@ class CenteredBox extends StatelessWidget {
     return Padding(
       padding: padding ?? EdgeInsets.zero,
       child: Center(
-        child: SizedBox(
-          width: width,
-          height: height,
-          child: child,
-        ),
+        child: SizedBox(width: width, height: height, child: child),
       ),
     );
   }

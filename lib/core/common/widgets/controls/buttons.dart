@@ -1,5 +1,5 @@
-import 'package:eos_mobile/core/common/widgets/app_icons.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/app_icon.dart';
 
 /// Métodos compartidos entre tipos de botones
 Widget _buildIcon(BuildContext context, AppIcons icon,

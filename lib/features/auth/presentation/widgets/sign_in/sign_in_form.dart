@@ -1,10 +1,10 @@
-import 'package:eos_mobile/core/common/widgets/controls/loading_indicator.dart';
 import 'package:eos_mobile/core/di/injection_container.dart';
 import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/remote/remote_auth_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/pages/forgot_password/forgot_password_page.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/controls/app_loading_indicator.dart';
 
 class AuthSignInForm extends StatefulWidget {
   const AuthSignInForm({Key? key}) : super(key: key);
@@ -192,12 +192,7 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
                               const Size(double.infinity, 48),
                             ),
                           ),
-                          child: LoadingIndicator(
-                            color: Theme.of(context).primaryColor,
-                            width: 20,
-                            height: 20,
-                            strokeWidth: 2,
-                          ),
+                          child: const AppLoadingIndicator(width: 20, height: 20),
                         );
                       }
 
