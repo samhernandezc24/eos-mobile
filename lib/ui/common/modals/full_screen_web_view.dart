@@ -6,10 +6,9 @@ class FullScreenWebView extends StatelessWidget {
 
   final String url;
 
-  late final BuildContext context         = context;
   late final WebViewController controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(Theme.of(context).colorScheme.background)
+      ..setBackgroundColor(const Color(0xFFFFFFFF))
       ..loadRequest(Uri.parse(url));
 
   @override
