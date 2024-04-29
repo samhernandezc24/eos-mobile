@@ -17,3 +17,12 @@ class StoreInspeccion extends RemoteInspeccionEvent {
   @override
   List<Object?> get props => [ inspeccion ];
 }
+
+class DataSourceInspeccion extends RemoteInspeccionEvent {
+  const DataSourceInspeccion(this.objData);
+
+  final Map<String, dynamic> objData;
+
+  @override
+  List<Object?> get props => [ objData ];
+}

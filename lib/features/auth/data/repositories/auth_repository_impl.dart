@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:eos_mobile/core/network/data_state.dart';
-import 'package:eos_mobile/core/network/errors/exceptions.dart';
 import 'package:eos_mobile/features/auth/data/datasources/local/auth_local_source.dart';
 import 'package:eos_mobile/features/auth/data/datasources/remote/auth_remote_api_service.dart';
 import 'package:eos_mobile/features/auth/data/models/account_model.dart';

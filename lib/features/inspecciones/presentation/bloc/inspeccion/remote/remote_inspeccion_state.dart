@@ -27,6 +27,15 @@ class RemoteInspeccionResponseSuccess extends RemoteInspeccionState {
   List<Object?> get props => [ apiResponse ];
 }
 
+class RemoteInspeccionDataSourceSuccess extends RemoteInspeccionState {
+  const RemoteInspeccionDataSourceSuccess(this.dataSource);
+
+  final InspeccionDataSourceResEntity dataSource;
+
+  @override
+  List<Object?> get props => [ dataSource ];
+}
+
 class RemoteInspeccionFailure extends RemoteInspeccionState {
   const RemoteInspeccionFailure(this.failure);
 

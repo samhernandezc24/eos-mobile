@@ -22,6 +22,12 @@ export 'package:eos_mobile/core/extensions/alignments_extension.dart';
 export 'package:eos_mobile/core/extensions/sized_context_extension.dart';
 export 'package:eos_mobile/core/extensions/string_extension.dart';
 
+export 'package:eos_mobile/core/network/api_response.dart';
+export 'package:eos_mobile/core/network/data_state.dart';
+export 'package:eos_mobile/core/network/errors/exceptions.dart';
+
+export 'package:eos_mobile/core/usecases/usecase.dart';
+
 export 'package:eos_mobile/core/validators/form_validators.dart';
 
 // LAYOUTS

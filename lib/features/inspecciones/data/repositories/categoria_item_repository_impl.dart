@@ -1,8 +1,5 @@
 import 'dart:io';
 
-import 'package:eos_mobile/core/network/api_response.dart';
-import 'package:eos_mobile/core/network/data_state.dart';
-import 'package:eos_mobile/core/network/errors/exceptions.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/categoria_item/categoria_item_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_data_model.dart';

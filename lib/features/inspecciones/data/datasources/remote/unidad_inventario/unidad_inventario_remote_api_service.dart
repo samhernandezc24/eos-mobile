@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/core/data/predictive_search_req_data.dart';
-import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:retrofit/retrofit.dart';
 

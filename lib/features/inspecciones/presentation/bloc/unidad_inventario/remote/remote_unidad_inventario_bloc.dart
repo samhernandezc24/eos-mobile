@@ -1,7 +1,4 @@
 import 'package:eos_mobile/core/data/predictive_search_req_data.dart';
-import 'package:eos_mobile/core/network/api_response.dart';
-import 'package:eos_mobile/core/network/data_state.dart';
-import 'package:eos_mobile/core/network/errors/exceptions.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad_inventario/unidad_inventario_data_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad_inventario/predictive_unidad_inventario_usecase.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';

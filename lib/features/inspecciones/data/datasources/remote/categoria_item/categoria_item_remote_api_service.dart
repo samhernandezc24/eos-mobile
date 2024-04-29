@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:eos_mobile/core/constants/list_api.dart';
-import 'package:eos_mobile/core/network/api_response.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_duplicate_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_model.dart';

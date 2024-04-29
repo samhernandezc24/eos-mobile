@@ -86,8 +86,8 @@ class _HomePageState extends State<HomePage> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Theme.of(context).brightness == Brightness.dark
-                                  ? Theme.of(context).colorScheme.secondary.withOpacity(0.3)
-                                  : Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                                  ? Theme.of(context).colorScheme.secondary.withOpacity(0.2)
+                                  : Theme.of(context).colorScheme.primary.withOpacity(0.2),
                           ),
                           child: Center(
                             child: Icon(

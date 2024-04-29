@@ -1,10 +1,8 @@
 import 'dart:io';
 
-import 'package:eos_mobile/core/network/api_response.dart';
-import 'package:eos_mobile/core/network/data_state.dart';
-import 'package:eos_mobile/core/network/errors/exceptions.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion/inspeccion_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_data_model.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_data_source_res_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_repository.dart';
@@ -75,6 +73,51 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
         if (httpResponse.data.session) {
           if (httpResponse.data.action) {
             return DataSuccess(httpResponse.data);
+          } else {
+            return DataFailedMessage(httpResponse.data.message);
+          }
+        } else {
+          return DataFailedMessage(httpResponse.data.message);
+        }
+      } else {
+        return DataFailed(
+          ServerException.fromDioException(
+            DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
+          ),
+        );
+      }
+    } on DioException catch (ex) {
+      return DataFailed(ServerException.fromDioException(ex));
+    }
+  }
+
+  /// DATA SOURCE DE INSPECCIONES
+  @override
+  Future<DataState<InspeccionDataSourceResModel>> dataSourceInspeccion(Map<String, dynamic> objData) async {
+    try {
+      // Obtener el token localmente.
+      final String? token = await authTokenHelper.retrieveRefreshToken();
+
+      // Realizar la solicitud usando el token actualizado o el actual.
+      final httpResponse = await _inspeccionRemoteApiService.dataSourceInspeccion(
+        'Bearer $token',
+        'application/json',
+        objData,
+      );
+
+      if (httpResponse.response.statusCode == HttpStatus.ok) {
+        final ApiResponse apiResponse = httpResponse.data;
+        if (httpResponse.data.session) {
+          if (httpResponse.data.action) {
+            final result = apiResponse.result as Map<String, dynamic>;
+            final InspeccionDataSourceResModel dataSource = InspeccionDataSourceResModel.fromJson(result);
+
+            return DataSuccess(dataSource);
           } else {
             return DataFailedMessage(httpResponse.data.message);
           }

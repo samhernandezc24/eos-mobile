@@ -4,9 +4,6 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/data/catalogos_data/unidad_data.dart';
 import 'package:eos_mobile/core/data/predictive_search_req_data.dart';
-import 'package:eos_mobile/core/network/api_response.dart';
-import 'package:eos_mobile/core/network/data_state.dart';
-import 'package:eos_mobile/core/network/errors/exceptions.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/unidad/unidad_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_predictive_data_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_req_model.dart';

@@ -11,14 +11,14 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 part '../../widgets/inspeccion/list/list_inspecciones_results.dart';
 part '../../widgets/inspeccion/filter/filter_inspeccion.dart';
 
-class InspeccionListPage extends StatefulWidget {
-  const InspeccionListPage({Key? key}) : super(key: key);
+class InspeccionListPage extends StatefulWidget with GetItStatefulWidgetMixin {
+  InspeccionListPage({Key? key}) : super(key: key);
 
   @override
   State<InspeccionListPage> createState() => _InspeccionListPageState();
 }
 
-class _InspeccionListPageState extends State<InspeccionListPage>  {
+class _InspeccionListPageState extends State<InspeccionListPage> with GetItStateMixin  {
   /// CONTROLLERS
   late final PanelController _panelController = PanelController(
     settingsLogic.isSearchPanelOpen.value,
@@ -26,7 +26,6 @@ class _InspeccionListPageState extends State<InspeccionListPage>  {
 
   /// PROPERTIES
   String _query = '';
-  List<String> options = ['Opcion 1', 'Opcion 2', 'Opcion 3'];
 
   @override
   void initState() {

@@ -1,4 +1,3 @@
-import 'package:eos_mobile/core/usecases/usecase.dart';
 import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
 import 'package:eos_mobile/features/auth/domain/entities/user_entity.dart';
 import 'package:eos_mobile/features/auth/domain/usecases/get_credentials_usecase.dart';

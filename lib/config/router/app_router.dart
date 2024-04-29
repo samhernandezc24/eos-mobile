@@ -88,7 +88,7 @@ final GoRouter appRouter = GoRouter(
                     AppRoute(
                       'list',
                       'home.inspecciones.list',
-                      (_) => const InspeccionListPage(),
+                      (_) => InspeccionListPage(),
                       useFade: true,
                       parentKey: _rootNavigatorKey,
                     ),
