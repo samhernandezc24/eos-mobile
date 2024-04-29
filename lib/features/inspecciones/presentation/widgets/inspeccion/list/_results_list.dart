@@ -1,15 +1,16 @@
 part of '../../../pages/list/list_page.dart';
 
-class _ListInspeccionesResults extends StatefulWidget {
-  const _ListInspeccionesResults({required this.onPressed, Key? key}) : super(key: key);
+class _ResultsList extends StatefulWidget {
+  const _ResultsList({required this.onPressed, Key? key, this.lstRows}) : super(key: key);
 
   final void Function(String?) onPressed;
+  final List<InspeccionDataSourceEntity>? lstRows;
 
   @override
-  State<_ListInspeccionesResults> createState() => _ListInspeccionesResultsState();
+  State<_ResultsList> createState() => _ResultsListState();
 }
 
-class _ListInspeccionesResultsState extends State<_ListInspeccionesResults> {
+class _ResultsListState extends State<_ResultsList> {
   late ScrollController _controller;
 
   double _prevVelocity = -1;
@@ -35,7 +36,7 @@ class _ListInspeccionesResultsState extends State<_ListInspeccionesResults> {
           slivers: <Widget>[
             SliverPadding(
               padding: EdgeInsets.all($styles.insets.sm).copyWith(bottom: $styles.insets.offset),
-              sliver: _buildInspeccionesList(),
+              sliver: _buildInspeccionesList(widget.lstRows ?? []),
             ),
           ],
         );
@@ -43,33 +44,34 @@ class _ListInspeccionesResultsState extends State<_ListInspeccionesResults> {
     );
   }
 
-  Widget _buildInspeccionesList() {
+  Widget _buildInspeccionesList(List<InspeccionDataSourceEntity> lstRows) {
     // Aquí debes reemplazar `inspeccionesList` con la lista real de inspecciones de unidades
-    final inspeccionesList = <InspeccionEntity>[
-      const InspeccionEntity(idInspeccion: '1', folio: 'Inspección 1'),
-      const InspeccionEntity(idInspeccion: '2', folio: 'Inspección 2'),
-      const InspeccionEntity(idInspeccion: '3', folio: 'Inspección 3'),
-      const InspeccionEntity(idInspeccion: '4', folio: 'Inspección 3'),
-      const InspeccionEntity(idInspeccion: '5', folio: 'Inspección 3'),
-      const InspeccionEntity(idInspeccion: '6', folio: 'Inspección 3'),
-      const InspeccionEntity(idInspeccion: '7', folio: 'Inspección 3'),
-      const InspeccionEntity(idInspeccion: '8', folio: 'Inspección 3'),
-      const InspeccionEntity(idInspeccion: '9', folio: 'Inspección 3'),
-      const InspeccionEntity(idInspeccion: '10', folio: 'Inspección 3'),
-    ];
+    // final inspeccionesList = <InspeccionEntity>[
+    //   const InspeccionEntity(idInspeccion: '1', folio: 'Inspección 1'),
+    //   const InspeccionEntity(idInspeccion: '2', folio: 'Inspección 2'),
+    //   const InspeccionEntity(idInspeccion: '3', folio: 'Inspección 3'),
+    //   const InspeccionEntity(idInspeccion: '4', folio: 'Inspección 3'),
+    //   const InspeccionEntity(idInspeccion: '5', folio: 'Inspección 3'),
+    //   const InspeccionEntity(idInspeccion: '6', folio: 'Inspección 3'),
+    //   const InspeccionEntity(idInspeccion: '7', folio: 'Inspección 3'),
+    //   const InspeccionEntity(idInspeccion: '8', folio: 'Inspección 3'),
+    //   const InspeccionEntity(idInspeccion: '9', folio: 'Inspección 3'),
+    //   const InspeccionEntity(idInspeccion: '10', folio: 'Inspección 3'),
+    // ];
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          final inspeccion = inspeccionesList[index];
+        (BuildContext context, int index) {
+          // final inspeccion = inspeccionesList[index];
+          final inspeccion = lstRows[index];
           return _buildInspeccionCard(inspeccion);
         },
-        childCount: inspeccionesList.length,
+        childCount: lstRows.length,
       ),
     );
   }
 
-   Widget _buildInspeccionCard(InspeccionEntity inspeccion) {
+   Widget _buildInspeccionCard(InspeccionDataSourceEntity inspeccion) {
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
@@ -89,10 +91,13 @@ class _ListInspeccionesResultsState extends State<_ListInspeccionesResults> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      _buildInspeccionInfoText('Folio inspección: ', 'INS-24-VH-000001'),
-                      _buildInspeccionInfoText('Requerimiento: ', 'REQ-EPB-24-000001'),
-                      _buildInspeccionInfoText('No. económico: ', 'HL-010'),
-                      _buildInspeccionInfoText('Tipo de unidad: ', 'MINICARGADOR'),
+                      _buildInspeccionInfoText('Folio inspección: ', inspeccion.folio),
+                      _buildInspeccionInfoText(
+                        'Requerimiento: ',
+                        inspeccion.hasRequerimiento == false ? 'SIN REQUERIMIENTO' : inspeccion.requerimientoFolio ?? '',
+                      ),
+                      _buildInspeccionInfoText('No. económico: ', inspeccion.unidadNumeroEconomico),
+                      _buildInspeccionInfoText('Tipo de unidad: ', inspeccion.unidadTipoName),
                     ],
                   ),
                 ),

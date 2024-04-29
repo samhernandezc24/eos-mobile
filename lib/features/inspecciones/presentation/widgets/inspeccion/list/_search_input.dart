@@ -1,7 +1,7 @@
-import 'package:eos_mobile/shared/shared_libraries.dart';
+part of '../../../pages/list/list_page.dart';
 
-class ListInspeccionSearchInput extends StatelessWidget {
-  const ListInspeccionSearchInput({required this.onSubmit, Key? key}) : super(key: key);
+class _SearchInput extends StatelessWidget {
+  const _SearchInput({required this.onSubmit, Key? key}) : super(key: key);
 
   final void Function(String) onSubmit;
 

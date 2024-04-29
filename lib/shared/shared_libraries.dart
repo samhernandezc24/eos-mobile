@@ -15,6 +15,7 @@ export 'package:eos_mobile/config/router/app_router.dart';
 export 'package:eos_mobile/core/constants/app_constants.dart';
 export 'package:eos_mobile/core/constants/app_strings.dart';
 export 'package:eos_mobile/core/constants/assets.dart';
+export 'package:eos_mobile/core/constants/globals.dart';
 
 export 'package:eos_mobile/core/enums/app_icons.dart';
 
