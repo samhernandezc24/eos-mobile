@@ -13,10 +13,10 @@ class AuthSignInForm extends StatefulWidget {
 }
 
 class _AuthSignInFormState extends State<AuthSignInForm> {
-  // GENERAL INSTANCES
+  /// GENERAL INSTANCES
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  // CONTROLLERS
+  /// CONTROLLERS
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
 
@@ -34,7 +34,7 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
     super.dispose();
   }
 
-  // METHODS
+  /// METHODS
   Future<void> _buildForgotPasswordPage() {
     return Navigator.push<void>(
       context,
@@ -160,13 +160,13 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
                         // GUARDADO DE INFORMACIÓN DEL USUARIO EN ALMACENAMIENTO LOCAL
                         context.read<LocalAuthBloc>().add(
                               SaveUserInfo(
-                                id: state.account!.id,
-                                user: state.account!.user,
-                                expiration: state.account!.expiration,
-                                nombre: state.account!.nombre.toProperCase(),
-                                key: state.account!.key,
-                                privilegies: state.account!.privilegies,
-                                foto: state.account!.foto,
+                                id            : state.account!.id,
+                                user          : state.account!.user,
+                                expiration    : state.account!.expiration,
+                                nombre        : state.account!.nombre.toProperCase(),
+                                key           : state.account!.key,
+                                privilegies   : state.account!.privilegies,
+                                foto          : state.account!.foto,
                               ),
                             );
 

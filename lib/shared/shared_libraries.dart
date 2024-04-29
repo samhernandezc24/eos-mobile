@@ -6,7 +6,6 @@ export 'dart:math';
 // DIO (HTTP)
 export 'package:dio/dio.dart';
 
-
 // CONFIGURATION
 export 'package:eos_mobile/config/logic/app_logic.dart';
 export 'package:eos_mobile/config/logic/settings_logic.dart';
@@ -16,15 +15,18 @@ export 'package:eos_mobile/config/router/app_router.dart';
 export 'package:eos_mobile/core/constants/app_constants.dart';
 export 'package:eos_mobile/core/constants/app_strings.dart';
 export 'package:eos_mobile/core/constants/assets.dart';
+
 export 'package:eos_mobile/core/enums/app_icons.dart';
+
 export 'package:eos_mobile/core/extensions/alignments_extension.dart';
 export 'package:eos_mobile/core/extensions/sized_context_extension.dart';
 export 'package:eos_mobile/core/extensions/string_extension.dart';
+
 export 'package:eos_mobile/core/validators/form_validators.dart';
 
 // LAYOUTS
 export 'package:eos_mobile/layouts/app_scaffold.dart';
-
+export 'package:eos_mobile/layouts/app_scaffold_with_navbar.dart';
 
 // MAIN
 export 'package:eos_mobile/main.dart';
@@ -54,6 +56,7 @@ export 'package:flex_color_scheme/flex_color_scheme.dart';
 // FLUTTER (FRAMEWORK)
 export 'package:flutter/material.dart';
 export 'package:flutter/services.dart';
+
 // ANIMATIONS
 export 'package:flutter_animate/flutter_animate.dart';
 
@@ -81,9 +84,6 @@ export 'package:logger/logger.dart';
 
 // LOTTIE
 export 'package:lottie/lottie.dart';
-
-// PROVIDER
-export 'package:provider/provider.dart';
 
 // SHARED PREFERENCES
 export 'package:shared_preferences/shared_preferences.dart';

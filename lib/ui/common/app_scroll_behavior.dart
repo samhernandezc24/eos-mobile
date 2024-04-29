@@ -21,11 +21,11 @@ class AppScrollBehavior extends ScrollBehavior {
   Widget buildScrollbar(BuildContext context, Widget child, ScrollableDetails details) {
     if (PlatformInfo.isMobile) return child;
     return RawScrollbar(
-      controller: details.controller,
-      thumbVisibility: PlatformInfo.isDesktopOrWeb,
-      thickness: 8,
-      interactive: true,
-      child: child,
+      controller      : details.controller,
+      thumbVisibility : PlatformInfo.isDesktopOrWeb,
+      thickness       : 8,
+      interactive     : true,
+      child           : child,
     );
   }
 }

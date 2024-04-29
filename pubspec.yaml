@@ -123,9 +123,6 @@ dependencies:
   # Obtiene ubicaciones de uso común en los sitemas de archivos
   path_provider: ^2.1.2
 
-  # Wrapper de InheritedWidget para reutilizaciones globales
-  provider: ^6.1.1
-
   # Generador de código para cliente Dio
   retrofit: ^4.1.0
 

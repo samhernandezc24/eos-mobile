@@ -98,57 +98,6 @@ class _InspeccionListPageState extends State<InspeccionListPage>  {
         fullscreenDialog: true,
       ),
     );
-    // showModalBottomSheet<void>(
-    //   context: context,
-    //   builder: (BuildContext context) {
-    //     return Column(
-    //       mainAxisSize: MainAxisSize.min,
-    //       children: <Widget>[
-    //         Padding(
-    //           padding: EdgeInsets.symmetric(vertical: $styles.insets.sm),
-    //           child: Center(
-    //             child: Text(
-    //               'Filtros de inspecciones',
-    //               style: $styles.textStyles.h3.copyWith(fontSize: 18),
-    //               overflow: TextOverflow.ellipsis,
-    //             ),
-    //           ),
-    //         ),
-    //         ListTile(
-    //           onTap: (){},
-    //           title: const Text('Estatus:'),
-    //           trailing: DropdownMenu(
-    //             initialSelection: options.first,
-    //             onSelected: (String? value) {
-    //               setState(() {
-    //                 options.first = value!;
-    //               });
-    //             },
-    //             dropdownMenuEntries: options.map((String value) {
-    //               return DropdownMenuEntry(value: value, label: value);
-    //             }).toList(),
-    //           )
-    //         ),
-    //         ListTile(
-    //           onTap: (){},
-    //           title: const Text('Tipo de inspección:'),
-    //         ),
-    //         ListTile(
-    //           onTap: (){},
-    //           title: const Text('Tipo de unidad:'),
-    //         ),
-    //         ListTile(
-    //           onTap: (){},
-    //           title: const Text('Creado por:'),
-    //         ),
-    //         ListTile(
-    //           onTap: (){},
-    //           title: const Text('Actualizado por:'),
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
   }
 
   void _handleSortModal(BuildContext context) {

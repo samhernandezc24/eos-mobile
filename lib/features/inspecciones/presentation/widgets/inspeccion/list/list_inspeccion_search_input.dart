@@ -126,7 +126,7 @@ class ListInspeccionSearchInput extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).inputDecorationTheme.fillColor,
         borderRadius: BorderRadius.circular($styles.insets.xxs),
-        border: Border.all(color: Theme.of(context).colorScheme.secondary.withOpacity(0.3), width: 1.6),
+        border: Border.all(color: Theme.of(context).colorScheme.primary, width: 1.6),
       ),
       child: Row(
         children: <Widget>[

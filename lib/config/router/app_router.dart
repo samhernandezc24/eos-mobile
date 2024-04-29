@@ -7,7 +7,6 @@ import 'package:eos_mobile/features/inspecciones/presentation/pages/index/index_
 import 'package:eos_mobile/features/inspecciones/presentation/pages/list/list_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/pages/search_unidad/search_unidad_page.dart';
 import 'package:eos_mobile/features/notificaciones/presentation/pages/notificacion_page.dart';
-import 'package:eos_mobile/layouts/app_scaffold_with_navbar.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/pages/not_found/not_found_page.dart';
 import 'package:eos_mobile/ui/pages/under_construction/under_construction_page.dart';

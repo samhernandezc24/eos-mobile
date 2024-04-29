@@ -31,12 +31,9 @@ class LabeledDropdownFormField<T> extends StatelessWidget {
 
         DropdownButtonFormField<T>(
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(
-              vertical    : $styles.insets.sm - 3,
-              horizontal  : $styles.insets.xs + 2,
-            ),
-            hintText: hintText ?? '',
+          decoration  : InputDecoration(
+            contentPadding  : AppConstants.kDefaultContentPadding,
+            hintText        : hintText ?? '',
           ),
           value: value,
           items: items.map((item) {

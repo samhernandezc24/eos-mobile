@@ -49,7 +49,9 @@ class _HomePageState extends State<HomePage> {
                   title: Text(
                     lstModules[index].name,
                     style: $styles.textStyles.bodySmall.copyWith(
-                      color: Theme.of(context).colorScheme.onTertiaryContainer,
+                      color: Theme.of(context).brightness == Brightness.dark
+                                  ? Theme.of(context).colorScheme.onSecondaryContainer
+                                  : Theme.of(context).colorScheme.onPrimaryContainer,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -62,8 +64,16 @@ class _HomePageState extends State<HomePage> {
                     ),
                     gradient: RadialGradient(
                       colors: <Color>[
-                        Theme.of(context).colorScheme.tertiaryContainer.withOpacity(0.8),
-                        Theme.of(context).colorScheme.tertiaryContainer,
+                        if (Theme.of(context).brightness == Brightness.dark)
+                          ...[
+                            Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.8),
+                            Theme.of(context).colorScheme.secondaryContainer,
+                          ]
+                        else
+                          ...[
+                            Theme.of(context).colorScheme.primaryContainer.withOpacity(0.8),
+                            Theme.of(context).colorScheme.primaryContainer,
+                          ],
                       ],
                     ),
                   ),
@@ -75,13 +85,17 @@ class _HomePageState extends State<HomePage> {
                           height: constraints.maxWidth * 0.38,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Theme.of(context).primaryColor.withOpacity(0.2),
+                            color: Theme.of(context).brightness == Brightness.dark
+                                  ? Theme.of(context).colorScheme.secondary.withOpacity(0.3)
+                                  : Theme.of(context).colorScheme.primary.withOpacity(0.3),
                           ),
                           child: Center(
                             child: Icon(
                               lstModules[index].icon,
                               size: constraints.maxWidth * 0.28,
-                              color: Theme.of(context).primaryColor,
+                              color: Theme.of(context).brightness == Brightness.dark
+                                  ? Theme.of(context).colorScheme.secondary
+                                  : Theme.of(context).colorScheme.primary,
                             ),
                           ),
                         ),
