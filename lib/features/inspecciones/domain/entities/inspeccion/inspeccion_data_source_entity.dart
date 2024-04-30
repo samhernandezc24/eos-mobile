@@ -11,6 +11,9 @@ class InspeccionDataSourceEntity extends Equatable {
     required this.baseName,
     required this.idInspeccionEstatus,
     required this.inspeccionEstatusName,
+    required this.idInspeccionTipo,
+    required this.inspeccionTipoCodigo,
+    required this.inspeccionTipoName,
     required this.isValid,
     required this.hasRequerimiento,
     required this.idUnidad,
@@ -44,6 +47,9 @@ class InspeccionDataSourceEntity extends Equatable {
   final String baseName;
   final String idInspeccionEstatus;
   final String inspeccionEstatusName;
+  final String idInspeccionTipo;
+  final String inspeccionTipoCodigo;
+  final String inspeccionTipoName;
   final bool isValid;
   final String? idRequerimiento;
   final String? requerimientoFolio;
@@ -78,6 +84,9 @@ class InspeccionDataSourceEntity extends Equatable {
         baseName,
         idInspeccionEstatus,
         inspeccionEstatusName,
+        idInspeccionTipo,
+        inspeccionTipoCodigo,
+        inspeccionTipoName,
         isValid,
         idRequerimiento,
         requerimientoFolio,

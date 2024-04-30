@@ -27,6 +27,62 @@ class _ResultsListState extends State<_ResultsList> {
     _prevVelocity = velocity ?? _prevVelocity;
   }
 
+  void _handleInspeccionDetailsPressed(BuildContext context, InspeccionDataSourceEntity inspeccion) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text('Folio inspección:', style: $styles.textStyles.label),
+              Text(inspeccion.folio, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600, height: 1.3)),
+              Divider(color: Theme.of(context).dividerColor, thickness: 1.5),
+            ],
+          ),
+          titlePadding: EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, 0),
+          content: SizedBox(
+            height: 200,
+            width: 400,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  _buildInspeccionInfoText(
+                    'Requerimiento:',
+                    inspeccion.hasRequerimiento == false
+                        ? 'SIN REQUERIMIENTO'
+                        : inspeccion.requerimientoFolio ?? '',
+                  ),
+                  _buildInspeccionInfoText('No. económico:', inspeccion.unidadNumeroEconomico),
+                  _buildInspeccionInfoText('Tipo de unidad:', inspeccion.unidadTipoName),
+                  _buildInspeccionInfoText('Tipo de inspección:', inspeccion.inspeccionTipoName),
+                  _buildInspeccionInfoText('Base:', inspeccion.baseName),
+                  _buildInspeccionInfoText('Lugar de inspección:', inspeccion.locacion),
+                  _buildInspeccionInfoText('Fecha programada:', inspeccion.fechaNatural),
+                  _buildInspeccionInfoText('Estatus:', inspeccion.inspeccionEstatusName),
+                  _buildInspeccionInfoText('Creado por:', inspeccion.createdUserName),
+                ],
+              ),
+            ),
+          ),
+          contentPadding: EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, 0),
+          actions: <Widget>[
+            TextButton.icon(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: const Icon(Icons.assignment_turned_in_outlined),
+              label: Text('Evaluar', style: $styles.textStyles.button),
+            ),
+
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cerrar', style: $styles.textStyles.button)),
+          ],
+          actionsPadding: EdgeInsets.fromLTRB(0, 0, $styles.insets.sm, $styles.insets.xs),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScrollDecorator.shadow(
@@ -99,7 +155,7 @@ class _ResultsListState extends State<_ResultsList> {
             top: 0,
             right: $styles.insets.xxs,
             child: IconButton(
-              onPressed: () {},
+              onPressed: () => _handleInspeccionDetailsPressed(context, inspeccion),
               icon: Icon(Icons.info, color: Theme.of(context).primaryColor),
               tooltip: 'Ver detalles',
             ),
