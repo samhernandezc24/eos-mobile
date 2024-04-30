@@ -36,7 +36,8 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   String _txtSearch = '';
 
   /// SEARCH FILTERS:
-  late final List<Map<String, dynamic>> searchFilters = [];
+  // late List<Map<String, dynamic>> searchFilters = [];
+  late List<Map<String, dynamic>> searchFilters = getSearchFilters();
 
   /// DATE OPTIONS:
   List<dynamic> dateOptions = [
@@ -52,6 +53,8 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     super.initState();
 
     _loadDataSource();
+
+    _updateResults();
 
     _panelController.addListener(() {
       AppHapticsUtils.lightImpact();
@@ -95,7 +98,9 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   }
 
   void _updateResults() {
-    if (_txtSearch.isEmpty) {}
+    if (_txtSearch.isEmpty) {
+      _searchResults;
+    }
   }
 
   void _handleCreateInspeccionPressed(BuildContext context) {
@@ -118,6 +123,60 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
         fullscreenDialog: true,
       ),
     );
+  }
+
+  void _handleSearchFilterPressed(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: $styles.insets.sm),
+              child: Center(
+                child: Text(
+                  'Buscar resultados en:',
+                  style: $styles.textStyles.h3.copyWith(fontSize: 18),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: searchFilters.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final Map<String, dynamic> filter = searchFilters[index];
+                  return CheckboxListTile(
+                    title: Text(filter['title'].toString()),
+                    value: filter['isChecked'] as bool?,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        searchFilters[index]['isChecked'] = value;
+                      });
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// DATASOURCE:
+  List<Map<String, dynamic>> getSearchFilters() {
+    final List<Map<String, dynamic>> arrSearchFilters = [
+      { 'field': 'Folio',                   'isChecked': true,    'title': 'Folio'                          },
+      { 'field': 'InspeccionTipoCodigo',    'isChecked': false,   'title': 'Código de tipo de inspección'   },
+      { 'field': 'RequerimientoFolio',      'isChecked': false,   'title': 'Folio de requerimiento'         },
+      { 'field': 'UnidadNumeroEconomico',   'isChecked': true,    'title': 'Unidad número ecónomico'        },
+      { 'field': 'UnidadTipoName',          'isChecked': true,    'title': 'Tipo de unidad'                 },
+      { 'field': 'Locacion',                'isChecked': true,    'title': 'Lugar de inspección'            },
+    ];
+
+    return arrSearchFilters;
   }
 
   @override
@@ -207,6 +266,11 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
           ),
           Row(
             children: [
+              IconButton(
+                onPressed: () => _handleSearchFilterPressed(context),
+                icon: const Icon(Icons.manage_search),
+                tooltip: 'Filtros de búsqueda',
+              ),
               IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.filter_list),

@@ -22,30 +22,19 @@ class _SearchInput extends StatelessWidget {
   }
 
   Iterable<String> _getSuggestions(TextEditingValue textEditingValue) {
-     final List<String> fakeData = <String>[
-      'Inspección 1',
-      'Inspección 2',
-      'Inspección 3',
-      'Inspección 4',
-      'Inspección 5',
-      'Inspección 6',
-      'Inspección 7',
-      'Inspección 8',
-      'Inspección 9',
-      'Inspección 10',
-      'Inspección 11',
-    ];
+    final List<String> searchSuggestions = ['A', 'B', 'C'];
 
     if (textEditingValue.text == '') {
-      return fakeData.getRange(0, 10);
+      return searchSuggestions.take(10);
     }
 
-    return fakeData.where((element) => element.toLowerCase().contains(textEditingValue.text.toLowerCase()));
+    return searchSuggestions.where((str) => str.toLowerCase().contains(textEditingValue.text.toLowerCase()));
   }
 
   Widget _buildSuggestionsView(BuildContext context, void Function(String) onSelected, Iterable<String> results, BoxConstraints constraints) {
     final List<Widget> items = results.map((str) => _buildSuggestion(context, str, () => onSelected(str))).toList();
     items.insert(0, _buildSuggestionTitle(context));
+
     return Stack(
       children: <Widget>[
         ExcludeSemantics(
