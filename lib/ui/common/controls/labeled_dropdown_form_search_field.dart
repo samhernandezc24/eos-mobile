@@ -40,7 +40,7 @@ class LabeledDropdownFormSearchField<T> extends StatelessWidget {
           autovalidateMode  : AutovalidateMode.onUserInteraction,
           isExpanded        : true,
           decoration        : InputDecoration(
-            contentPadding  : AppConstants.kDefaultContentPadding,
+            contentPadding  : Globals.kDefaultContentPadding,
             hintText        : hintText,
           ),
           hint: Row(

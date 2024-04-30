@@ -40,7 +40,7 @@ class LabeledTextareaFormField extends StatelessWidget {
           maxLines: maxLines,
           maxLength: maxCharacters,
           decoration: InputDecoration(
-            contentPadding  : AppConstants.kDefaultContentPadding,
+            contentPadding  : Globals.kDefaultContentPadding,
             hintText        : hintText,
           ),
           keyboardType: keyboardType,

@@ -1,4 +1,14 @@
+import 'package:eos_mobile/shared/shared_libraries.dart';
+
 class Globals {
+  Globals._();
+
+  /// Padding por defecto para el contenido en un contenedor (ej. InputDecoration).
+  static const EdgeInsets kDefaultContentPadding = EdgeInsets.symmetric(
+    horizontal: 10.2,
+    vertical: 13.2,
+  );
+
   static bool isValidValue(dynamic argObject) {
     bool objReturn = false;
     if (argObject != null) {

@@ -38,7 +38,7 @@ class LabeledTextFormField extends StatelessWidget {
           autofocus         : autoFocus,
           controller        : controller,
           decoration        : InputDecoration(
-            contentPadding  : AppConstants.kDefaultContentPadding,
+            contentPadding  : Globals.kDefaultContentPadding,
             hintText        : hintText ?? '',
           ),
           readOnly        : isReadOnly,

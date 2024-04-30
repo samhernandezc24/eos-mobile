@@ -44,7 +44,7 @@ class _LabeledPasswordFormFieldState extends State<LabeledPasswordFormField> {
           autofocus         : widget.autoFocus,
           controller        : widget.controller,
           decoration        : InputDecoration(
-            contentPadding  : AppConstants.kDefaultContentPadding,
+            contentPadding  : Globals.kDefaultContentPadding,
             hintText        : widget.hintText ?? '',
             suffixIcon      : widget.isPassword
                 ? IconButton(
