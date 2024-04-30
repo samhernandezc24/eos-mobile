@@ -52,6 +52,8 @@ class AppStrings {
   String forgotPasswordMessage        = 'Completa el formulario para restablecer su contraseña';
   String forgotPasswordSemanticImage  = 'Se te ha olvidado la contraseña';
 
+  String inspectionEmptyTitle         = 'Aún no hay inspecciones';
+
   String inspectionTypeDescription    = 'Crea un tipo de inspección para agrupar los formularios de las inspecciones.';
   String inspectionTypeEmptyTitle     = 'No hay tipos de inspecciones';
   String inspectionTypeTitle          = 'Listado de tipos de inspecciones';

@@ -160,10 +160,14 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                   }
 
                   if (state is RemoteInspeccionDataSourceSuccess) {
-                    return _ResultsList(
-                      onPressed: _handleResultPressed,
-                      lstRows: lstRows,
-                    );
+                    if (lstRows.isEmpty) {
+                      return _buildEmptyInspecciones(context);
+                    } else {
+                      return _ResultsList(
+                        onPressed : _handleResultPressed,
+                        lstRows   : lstRows,
+                      );
+                    }
                   }
 
                   return const SizedBox.shrink();
@@ -212,6 +216,35 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
               ),
               Gap($styles.insets.xs),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Center _buildEmptyInspecciones(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(Icons.info, color: Theme.of(context).colorScheme.secondary, size: 64),
+
+          Gap($styles.insets.sm),
+
+          Text($strings.inspectionEmptyTitle, style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600)),
+
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
+            child: Text(
+              $strings.emptyListMessage,
+              textAlign: TextAlign.center,
+            ),
+          ),
+
+          FilledButton.icon(
+            onPressed: () => _loadDataSource(),
+            icon: const Icon(Icons.refresh),
+            label: Text($strings.refreshButtonText, style: $styles.textStyles.button),
           ),
         ],
       ),

@@ -71,7 +71,7 @@ class _ResultsListState extends State<_ResultsList> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _buildInspeccionFechaSection(inspeccion.fecha),
+                _buildInspeccionFechaSection(inspeccion, inspeccion.fecha),
 
                 Gap($styles.insets.sm),
 
@@ -117,7 +117,7 @@ class _ResultsListState extends State<_ResultsList> {
     );
   }
 
-  Widget _buildInspeccionFechaSection(DateTime fechaInspeccion) {
+  Widget _buildInspeccionFechaSection(InspeccionDataSourceEntity inspeccion, DateTime fechaInspeccion) {
     final double borderRadius = $styles.corners.md;
 
     return DefaultTextColor(
@@ -137,12 +137,23 @@ class _ResultsListState extends State<_ResultsList> {
                   DateFormat('MMM').format(fechaInspeccion).toUpperCase(),
                   style: $styles.textStyles.bodySmallBold,
                 ),
+
                 Text(DateFormat('dd').format(fechaInspeccion), style: $styles.textStyles.h3),
+
                 Divider(color: Theme.of(context).colorScheme.onPrimary, thickness: 1.5),
+
                 Gap($styles.insets.xs),
+
                 Icon(Icons.pending_actions, color: Theme.of(context).colorScheme.onPrimary),
+
                 Gap($styles.insets.xs),
-                Text('Por Evaluar', style: $styles.textStyles.label.copyWith(fontSize: 13, height: 1.3), softWrap: true, textAlign: TextAlign.center),
+
+                Text(
+                  inspeccion.inspeccionEstatusName.toProperCase(),
+                  style: $styles.textStyles.label.copyWith(fontSize: 13, height: 1.3),
+                  softWrap: true,
+                  textAlign: TextAlign.center,
+                ),
               ],
             ),
           ),

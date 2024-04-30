@@ -189,6 +189,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
               textAlign: TextAlign.center,
             ),
           ),
+
           FilledButton.icon(
             onPressed: () => BlocProvider.of<RemoteCategoriaItemBloc>(context).add(ListCategoriasItems(widget.categoria!)),
             icon: const Icon(Icons.refresh),
