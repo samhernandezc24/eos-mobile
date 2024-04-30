@@ -12,6 +12,7 @@ class LabeledTextFormField extends StatelessWidget {
     this.textAlign        = TextAlign.start,
     this.autoFocus        = false,
     this.isReadOnly       = false,
+    this.onTap,
   }) : super(key: key);
 
   final TextEditingController controller;
@@ -23,6 +24,7 @@ class LabeledTextFormField extends StatelessWidget {
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
   final FormFieldValidator<String>? validator;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +45,7 @@ class LabeledTextFormField extends StatelessWidget {
           ),
           readOnly        : isReadOnly,
           keyboardType    : keyboardType,
+          onTap           : onTap,
           textInputAction : textInputAction,
           textAlign       : textAlign,
           validator       : validator,

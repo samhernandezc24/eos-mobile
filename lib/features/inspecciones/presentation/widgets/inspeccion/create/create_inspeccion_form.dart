@@ -1,5 +1,6 @@
 import 'package:eos_mobile/core/data/predictive_search_req_data.dart';
 import 'package:eos_mobile/core/enums/unidad_inspeccion_tipo.dart';
+import 'package:eos_mobile/core/utils/data_source_utils.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_entity.dart';
@@ -70,6 +71,12 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
   String? _selectedUnidadNumeroSerie;
   String? _selectedUnidadAnioEquipo;
 
+  /// FILTERS
+  final List<dynamic> sltFilter = [];
+
+  /// SEARCH FILTERS:
+  late final List<Map<String, dynamic>> searchFilters = [];
+
   @override
   void initState() {
     super.initState();
@@ -81,7 +88,7 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
     _selectedUnidad = UnidadInspeccionTipo.inventario;
 
     _searchUnidadController             = TextEditingController();
-    _fechaInspeccionController          = TextEditingController(text: DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now()));
+    _fechaInspeccionController          = TextEditingController();
     _baseNameController                 = TextEditingController();
     _numeroEconomicoController          = TextEditingController();
     _unidadTipoController               = TextEditingController();
@@ -119,6 +126,33 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
   }
 
   /// METHODS
+  Future<DateTime?> _selectFechaInspeccion(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context     : context,
+      initialDate : DateTime.now(),
+      firstDate   : DateTime(2000),
+      lastDate    : DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context     : context,
+        initialTime : TimeOfDay.fromDateTime(DateTime.now()),
+      );
+
+      if (pickedTime != null) {
+        return DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+      }
+    }
+    return null;
+  }
+
   Future<void> _showFailureDialog(BuildContext context, RemoteInspeccionFailure state) {
     return showDialog<void>(
       context: context,
@@ -177,6 +211,24 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
         ],
       ),
     );
+  }
+
+  void _loadDataSource() {
+    final Map<String, dynamic> objData = {
+      'search'            : '',
+      'searchFilters'     : DataSourceUtils.searchFilters(searchFilters),
+      'filters'           : sltFilter,
+      'filtersMultiple'   : sltFilter,
+      'dateFrom'          : '',
+      'dateTo'            : '',
+      'dateOptions'       : [{'field': ''}],
+      'strFields'         : '',
+      'length'            : 25,
+      'page'              : 1,
+      'sort'              : {'column': '', 'direction': ''},
+    };
+
+    context.read<RemoteInspeccionBloc>().add(DataSourceInspeccion(objData));
   }
 
   void _loadPredictiveSearch(String search) {
@@ -521,8 +573,17 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
           LabeledTextFormField(
             controller  : _fechaInspeccionController,
             isReadOnly  : true,
-            label       : '* Fecha de la inspección:',
+            label       : '* Fecha programada:',
             textAlign   : TextAlign.end,
+            onTap       : () async {
+              final DateTime? pickedDate = await _selectFechaInspeccion(context);
+              if (pickedDate != null) {
+                setState(() {
+                  _fechaInspeccionController.text = DateFormat('dd/MM/yyyy HH:mm').format(pickedDate);
+                });
+              }
+            },
+            validator   : FormValidators.textValidator,
           ),
 
           Gap($styles.insets.sm),
@@ -691,6 +752,8 @@ class _CreateInspeccionFormState extends State<CreateInspeccionForm> {
                     elevation: 0,
                   ),
                 );
+
+                _loadDataSource();
               }
             },
             builder: (BuildContext context, RemoteInspeccionState state) {

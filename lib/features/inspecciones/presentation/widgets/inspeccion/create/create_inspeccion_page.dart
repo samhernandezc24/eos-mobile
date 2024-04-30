@@ -1,3 +1,5 @@
+import 'package:eos_mobile/core/utils/data_source_utils.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/create/create_inspeccion_form.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
@@ -9,7 +11,32 @@ class CreateInspeccionPage extends StatefulWidget {
 }
 
 class _CreateInspeccionPageState extends State<CreateInspeccionPage> {
+  /// PROPERTIES
+  /// FILTERS
+  final List<dynamic> sltFilter = [];
+
+  /// SEARCH FILTERS:
+  late final List<Map<String, dynamic>> searchFilters = [];
+
   /// METHODS
+  void _loadDataSource() {
+    final Map<String, dynamic> objData = {
+      'search'            : '',
+      'searchFilters'     : DataSourceUtils.searchFilters(searchFilters),
+      'filters'           : sltFilter,
+      'filtersMultiple'   : sltFilter,
+      'dateFrom'          : '',
+      'dateTo'            : '',
+      'dateOptions'       : [{'field': ''}],
+      'strFields'         : '',
+      'length'            : 25,
+      'page'              : 1,
+      'sort'              : {'column': '', 'direction': ''},
+    };
+
+    context.read<RemoteInspeccionBloc>().add(DataSourceInspeccion(objData));
+  }
+
   void _handleDidPopPressed(BuildContext context) {
     showDialog<void>(
       context: context,
@@ -32,7 +59,9 @@ class _CreateInspeccionPageState extends State<CreateInspeccionPage> {
           ),
         ],
       ),
-    );
+    ).then((_) {
+      _loadDataSource();
+    });
   }
 
   @override

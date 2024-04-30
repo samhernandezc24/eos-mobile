@@ -5,6 +5,7 @@ class InspeccionDataSourceEntity extends Equatable {
     required this.index,
     required this.idInspeccion,
     required this.folio,
+    required this.fecha,
     required this.fechaNatural,
     required this.idBase,
     required this.baseName,
@@ -37,6 +38,7 @@ class InspeccionDataSourceEntity extends Equatable {
   final int index;
   final String idInspeccion;
   final String folio;
+  final DateTime fecha;
   final String fechaNatural;
   final String idBase;
   final String baseName;
@@ -70,6 +72,7 @@ class InspeccionDataSourceEntity extends Equatable {
         index,
         idInspeccion,
         folio,
+        fecha,
         fechaNatural,
         idBase,
         baseName,

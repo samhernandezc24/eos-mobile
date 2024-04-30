@@ -11,10 +11,13 @@ class _ResultsList extends StatefulWidget {
 }
 
 class _ResultsListState extends State<_ResultsList> {
+  /// CONTROLLERS
   late ScrollController _controller;
 
+  /// PROPERTIES
   double _prevVelocity = -1;
 
+  /// METHODS
   void _handleResultsScrolled() {
     // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     final velocity = _controller.position.activity?.velocity;
@@ -45,25 +48,10 @@ class _ResultsListState extends State<_ResultsList> {
   }
 
   Widget _buildInspeccionesList(List<InspeccionDataSourceEntity> lstRows) {
-    // Aquí debes reemplazar `inspeccionesList` con la lista real de inspecciones de unidades
-    // final inspeccionesList = <InspeccionEntity>[
-    //   const InspeccionEntity(idInspeccion: '1', folio: 'Inspección 1'),
-    //   const InspeccionEntity(idInspeccion: '2', folio: 'Inspección 2'),
-    //   const InspeccionEntity(idInspeccion: '3', folio: 'Inspección 3'),
-    //   const InspeccionEntity(idInspeccion: '4', folio: 'Inspección 3'),
-    //   const InspeccionEntity(idInspeccion: '5', folio: 'Inspección 3'),
-    //   const InspeccionEntity(idInspeccion: '6', folio: 'Inspección 3'),
-    //   const InspeccionEntity(idInspeccion: '7', folio: 'Inspección 3'),
-    //   const InspeccionEntity(idInspeccion: '8', folio: 'Inspección 3'),
-    //   const InspeccionEntity(idInspeccion: '9', folio: 'Inspección 3'),
-    //   const InspeccionEntity(idInspeccion: '10', folio: 'Inspección 3'),
-    // ];
-
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          // final inspeccion = inspeccionesList[index];
-          final inspeccion = lstRows[index];
+          final InspeccionDataSourceEntity inspeccion = lstRows[index];
           return _buildInspeccionCard(inspeccion);
         },
         childCount: lstRows.length,
@@ -83,7 +71,7 @@ class _ResultsListState extends State<_ResultsList> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _buildInspeccionFechaSection(DateTime.now()),
+                _buildInspeccionFechaSection(inspeccion.fecha),
 
                 Gap($styles.insets.sm),
 
