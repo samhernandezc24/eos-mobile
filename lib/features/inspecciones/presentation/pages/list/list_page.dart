@@ -30,6 +30,8 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   /// FILTERS
   final List<dynamic> sltFilter = [];
 
+  int _searchResults = 0;
+
   /// SEARCH
   String _txtSearch = '';
 
@@ -142,7 +144,8 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                 listener: (BuildContext context, RemoteInspeccionState state) {
                   if (state is RemoteInspeccionDataSourceSuccess) {
                     setState(() {
-                      lstRows = state.dataSource.rows ?? [];
+                      lstRows         = state.dataSource.rows ?? [];
+                      _searchResults  = state.dataSource.count ?? 0;
                     });
                   }
                 },
@@ -199,7 +202,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
           Row(
             children: [
               Gap($styles.insets.xs),
-              Text('498 resultados', style: $styles.textStyles.body),
+              Text('$_searchResults resultados', style: $styles.textStyles.body),
             ],
           ),
           Row(
