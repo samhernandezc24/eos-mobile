@@ -17,6 +17,8 @@ class _ResultsListState extends State<_ResultsList> {
   /// PROPERTIES
   double _prevVelocity = -1;
 
+  AnimationStyle? _animationMenuStyle;
+
   /// METHODS
   void _handleResultsScrolled() {
     // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
@@ -25,6 +27,28 @@ class _ResultsListState extends State<_ResultsList> {
       FocusManager.instance.primaryFocus?.unfocus();
     }
     _prevVelocity = velocity ?? _prevVelocity;
+  }
+
+  void _handleChecklistInspeccionPressed(BuildContext context, InspeccionDataSourceEntity inspeccion) {
+    Navigator.push<void>(
+      context,
+      PageRouteBuilder<void>(
+        transitionDuration: $styles.times.pageTransition,
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+          const Offset begin    = Offset(0, 1);
+          const Offset end      = Offset.zero;
+          const Cubic curve     = Curves.ease;
+
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive<Offset>(tween),
+            child: ChecklistInspeccionPage(inspeccionDataSource: inspeccion),
+          );
+        },
+        fullscreenDialog: true,
+      ),
+    );
   }
 
   void _handleInspeccionDetailsPressed(BuildContext context, InspeccionDataSourceEntity inspeccion) {
@@ -70,7 +94,10 @@ class _ResultsListState extends State<_ResultsList> {
           contentPadding: EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, 0),
           actions: <Widget>[
             TextButton.icon(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _handleChecklistInspeccionPressed(context, inspeccion);
+              },
               icon: const Icon(Icons.assignment_turned_in_outlined),
               label: Text('Evaluar', style: $styles.textStyles.button),
             ),
@@ -154,10 +181,47 @@ class _ResultsListState extends State<_ResultsList> {
           Positioned(
             top: 0,
             right: $styles.insets.xxs,
-            child: IconButton(
-              onPressed: () => _handleInspeccionDetailsPressed(context, inspeccion),
-              icon: Icon(Icons.info, color: Theme.of(context).primaryColor),
-              tooltip: 'Ver detalles',
+            child: PopupMenuButton<InspeccionMenu>(
+              popUpAnimationStyle: _animationMenuStyle,
+              icon: const Icon(Icons.more_vert),
+              onSelected: (InspeccionMenu item) {
+                switch (item) {
+                  case InspeccionMenu.details:
+                    _handleInspeccionDetailsPressed(context, inspeccion);
+                  case InspeccionMenu.edit:
+                  case InspeccionMenu.cancel:
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                return <PopupMenuEntry<InspeccionMenu>>[
+                  const PopupMenuItem<InspeccionMenu>(
+                    value: InspeccionMenu.details,
+                    child: ListTile(
+                      leading: Icon(Icons.info),
+                      title: Text('Detalles'),
+                      // onTap: (){},
+                    ),
+                  ),
+                  const PopupMenuItem<InspeccionMenu>(
+                    value: InspeccionMenu.edit,
+                    child: ListTile(
+                      leading: Icon(Icons.edit),
+                      title: Text('Editar'),
+                      // onTap: (){},
+                    ),
+                  ),
+                  PopupMenuItem<InspeccionMenu>(
+                    value: InspeccionMenu.cancel,
+                    child: ListTile(
+                      leading: const Icon(Icons.delete_forever),
+                      textColor: Theme.of(context).colorScheme.error,
+                      iconColor: Theme.of(context).colorScheme.error,
+                      title: const Text('Cancelar'),
+                      // onTap: (){},
+                    ),
+                  ),
+                ];
+              },
             ),
           ),
 
@@ -183,7 +247,7 @@ class _ResultsListState extends State<_ResultsList> {
               bottom: 0,
               right: $styles.insets.xxs,
               child: TextButton.icon(
-                onPressed: (){},
+                onPressed: () => _handleChecklistInspeccionPressed(context, inspeccion),
                 icon: const Icon(Icons.assignment_turned_in_outlined),
                 label: const Text('Evaluar'),
               ),

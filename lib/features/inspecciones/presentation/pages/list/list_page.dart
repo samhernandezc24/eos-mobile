@@ -1,7 +1,9 @@
+import 'package:eos_mobile/core/enums/inspeccion_menu.dart';
 import 'package:eos_mobile/core/extensions/panel_extension.dart';
 import 'package:eos_mobile/core/utils/data_source_utils.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/checklist/checklist_inspeccion_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/create/create_inspeccion_page.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/themed_text.dart';
@@ -41,9 +43,9 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
 
   /// DATE OPTIONS:
   List<dynamic> dateOptions = [
-    {'label': 'Fecha de inspección', 'field': 'Fecha'},
-    {'label': 'Fecha de creación', 'field': 'CreatedFecha'},
-    {'label': 'Fecha de actualización', 'field': 'UpdatedFecha'},
+    { 'label': 'Fecha de inspección',      'field': 'Fecha'         },
+    { 'label': 'Fecha de creación',        'field': 'CreatedFecha'  },
+    { 'label': 'Fecha de actualización',   'field': 'UpdatedFecha'  },
   ];
 
   late List<InspeccionDataSourceEntity> lstRows = <InspeccionDataSourceEntity>[];
