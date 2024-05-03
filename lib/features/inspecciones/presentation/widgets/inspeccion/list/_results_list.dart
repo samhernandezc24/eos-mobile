@@ -17,7 +17,7 @@ class _ResultsListState extends State<_ResultsList> {
   /// PROPERTIES
   double _prevVelocity = -1;
 
-  AnimationStyle? _animationMenuStyle;
+  // AnimationStyle? _animationMenuStyle;
 
   /// METHODS
   void _handleResultsScrolled() {
@@ -182,7 +182,7 @@ class _ResultsListState extends State<_ResultsList> {
             top: 0,
             right: $styles.insets.xxs,
             child: PopupMenuButton<InspeccionMenu>(
-              popUpAnimationStyle: _animationMenuStyle,
+              // popUpAnimationStyle: _animationMenuStyle,
               icon: const Icon(Icons.more_vert),
               onSelected: (InspeccionMenu item) {
                 switch (item) {
