@@ -22,6 +22,9 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
   late List<CategoriaItemEntity> lstCategoriasItems     = <CategoriaItemEntity>[];
   late List<FormularioTipoEntity> lstFormulariosTipos   = <FormularioTipoEntity>[];
 
+  /// PROPERTIES
+  bool _dataLoaded = false;
+
   @override
   void initState() {
     super.initState();
@@ -68,6 +71,8 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                     setState(() {
                       lstCategoriasItems  = state.objCategoriaItem!.categoriasItems!;
                       lstFormulariosTipos = state.objCategoriaItem!.formulariosTipos!;
+
+                      _dataLoaded = true;
                     });
                   }
                 },
@@ -113,7 +118,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
       ),
       // AGREGAR NUEVA CATEGORÍA ITEM:
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-      floatingActionButton: _buildFloatingActionButton(context),
+      floatingActionButton: _dataLoaded ? _buildFloatingActionButton(context) : null,
     );
   }
 
