@@ -1,19 +1,13 @@
-import 'package:eos_mobile/core/enums/inspeccion_menu.dart';
-import 'package:eos_mobile/core/extensions/panel_extension.dart';
+import 'package:eos_mobile/core/data/catalogos/inspeccion_estatus.dart';
+import 'package:eos_mobile/core/data/catalogos/unidad_tipo.dart';
+import 'package:eos_mobile/core/data/catalogos/usuario.dart';
+import 'package:eos_mobile/core/data/data_source_persistence.dart';
+import 'package:eos_mobile/core/data/filters_multiple.dart';
 import 'package:eos_mobile/core/utils/data_source_utils.dart';
-import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/checklist/checklist_inspeccion_page.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/create/create_inspeccion_page.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
-import 'package:eos_mobile/ui/common/themed_text.dart';
-import 'package:eos_mobile/ui/common/utils/app_haptics_utils.dart';
-import 'package:intl/intl.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
-
-part '../../widgets/inspeccion/list/_results_list.dart';
-part '../../widgets/inspeccion/list/_search_input.dart';
-part '../../widgets/inspeccion/filter/filter_inspeccion.dart';
+import 'package:rxdart/rxdart.dart';
 
 class InspeccionListPage extends StatefulWidget with GetItStatefulWidgetMixin {
   InspeccionListPage({Key? key}) : super(key: key);
@@ -22,160 +16,112 @@ class InspeccionListPage extends StatefulWidget with GetItStatefulWidgetMixin {
   State<InspeccionListPage> createState() => _InspeccionListPageState();
 }
 
-class _InspeccionListPageState extends State<InspeccionListPage> with GetItStateMixin  {
-  /// CONTROLLERS
-  late final PanelController _panelController = PanelController(
-    settingsLogic.isSearchPanelOpen.value,
-  )..addListener(_handlePanelControllerChanged);
+class _InspeccionListPageState extends State<InspeccionListPage> {
+  // PROPERTIES
+  bool _isLoading = false;
 
-  /// ====== PROPERTIES ======
-  /// FILTERS
-  final List<dynamic> sltFilter = [];
+  // SEARCH
+  late final TextEditingController _txtSearchController;
 
-  int _searchResults = 0;
+  // DATES FILTER
+  late final TextEditingController _rdDateOptionsController;
+  late final TextEditingController _txtDateDesdeController;
+  late final TextEditingController _txtDateHastaController;
 
-  /// SEARCH
-  String _txtSearch = '';
+  // FILTERS
+  List<UnidadTipo> lstUnidadesTipos                 = [];
+  List<InspeccionEstatus> lstInspeccionesEstatus    = [];
+  List<InspeccionTipoEntity> lstInspeccionesTipos   = [];
 
-  /// SEARCH FILTERS:
-  // late List<Map<String, dynamic>> searchFilters = [];
-  late List<Map<String, dynamic>> searchFilters = getSearchFilters();
+  List<Map<String, dynamic>> lstHasRequerimiento    = [{'value': true, 'name': 'Con requerimiento'}, {'value': false, 'name': 'Sin requerimiento'}];
 
-  /// DATE OPTIONS:
-  List<dynamic> dateOptions = [
-    { 'label': 'Fecha de inspección',      'field': 'Fecha'         },
-    { 'label': 'Fecha de creación',        'field': 'CreatedFecha'  },
-    { 'label': 'Fecha de actualización',   'field': 'UpdatedFecha'  },
+  List<Usuario> lstUsuarios = [];
+
+  // COLUMNS
+
+  // SEARCH FILTERS
+  List<dynamic> searchFilters = [];
+
+  // DATE OPTIONS
+  List<Map<String, String>> dateOptions = [
+    {'label': 'Fecha programada', 'field': 'FechaProgramada'},
+    {'label': 'Fecha inspección inicial', 'field': 'FechaInspeccionInicial'},
+    {'label': 'Fecha inspección final', 'field': 'FechaInspeccionFinal'},
+    {'label': 'Fecha evaluación', 'field': 'FechaEvaluacion'},
+    {'label': 'Fecha de creación', 'field': 'CreatedFecha'},
+    {'label': 'Fecha de actualización', 'field': 'UpdatedFecha'},
   ];
 
-  late List<InspeccionDataSourceEntity> lstRows = <InspeccionDataSourceEntity>[];
+  late final BehaviorSubject<void> _unsubscribeAll = BehaviorSubject<void>();
+  late List<dynamic> lstRows = [];
 
   @override
   void initState() {
     super.initState();
 
-    _loadDataSource();
+    initialization();
 
-    _updateResults();
-
-    _panelController.addListener(() {
-      AppHapticsUtils.lightImpact();
-    });
+    _txtSearchController      = TextEditingController();
+    _rdDateOptionsController  = TextEditingController();
+    _txtDateDesdeController   = TextEditingController();
+    _txtDateHastaController   = TextEditingController();
   }
 
   @override
   void dispose() {
-    _panelController.dispose();
+    _txtSearchController.dispose();
+    _rdDateOptionsController.dispose();
+    _txtDateDesdeController.dispose();
+    _txtDateHastaController.dispose();
+
+    _unsubscribeAll.close();
+
     super.dispose();
   }
 
-  /// METHODS
-  Future<void> _loadDataSource() async {
-    final Map<String, dynamic> objData = {
-      'search'            : Globals.isValidValue(_txtSearch) ? _txtSearch : '',
-      'searchFilters'     : DataSourceUtils.searchFilters(searchFilters),
-      'filters'           : sltFilter,
-      'filtersMultiple'   : sltFilter,
-      'dateFrom'          : '',
-      'dateTo'            : '',
-      'dateOptions'       : [{'field': ''}],
-      'strFields'         : '',
-      'length'            : 25,
-      'page'              : 1,
-      'sort'              : {'column': '', 'direction': ''},
+  // METHODS
+  Future<void> initialization() async {
+    context.read<RemoteInspeccionBloc>().add(FetchInspeccionInit());
+  }
+
+  // DATASOURCE:
+  void renderFilters(DataSourcePersistence? dataSourcePersistence) {
+    // RECUPERACION DE COMBOBOX CON MULTIFILTROS
+    final List<FiltersMultiple> arrFiltersMultiple = dataSourcePersistence == null ? [] : dataSourcePersistence.filtersMultiple ?? [];
+    print(arrFiltersMultiple);
+
+    DataSourceUtils.renderFilterMultiple(arrFiltersMultiple, lstInspeccionesEstatus, '', '');
+
+    // RECUPERACION DE COMBOBOX SIN MULTIFILTROS
+  }
+
+  void buildDataSource() {
+    final Map<String, dynamic> varArgs = {
+      'search'              : Globals.isValidValue(_txtSearchController.text) ? _txtSearchController.text : '',
+      'searchFilters'       : DataSourceUtils.searchFilters(searchFilters),
+      'filters'             : <dynamic>[],
+      'filtersMultiple'     : <dynamic>[],
+      'dateFrom'            : _txtDateDesdeController.text.isEmpty ? '' : _txtDateDesdeController.text,
+      'dateTo'              : _txtDateHastaController.text.isEmpty ? '' : _txtDateHastaController.text,
+      'dateOptions'         : [{'field': _rdDateOptionsController.text}],
+      'columns'             : <dynamic>[],
+      'persistenceColumns'  : <dynamic>[],
+      'length'              : !Globals.isValidValue(_txtSearchController.value) ? 25 : '',
+      'page'                : 1,
+      'sort'                : {'column': '', 'direction': ''},
     };
 
-    context.read<RemoteInspeccionBloc>().add(DataSourceInspeccion(objData));
+    _isLoading = true;
   }
 
-  void _handleSearchSubmitted(String search) {
-    _txtSearch = search;
-    _updateResults();
-  }
-
-  void _handleResultPressed(String? o) {}
-
-  void _handlePanelControllerChanged() {
-    settingsLogic.isSearchPanelOpen.value = _panelController.value;
-  }
-
-  void _updateResults() {
-    if (_txtSearch.isEmpty) {
-      _searchResults;
-    }
-  }
-
-  void _handleCreateInspeccionPressed(BuildContext context) {
-    Navigator.push<void>(
-      context,
-      PageRouteBuilder<void>(
-        transitionDuration: $styles.times.pageTransition,
-        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-          const Offset begin  = Offset(0, 1);
-          const Offset end    = Offset.zero;
-          const Cubic curve   = Curves.ease;
-
-          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position: animation.drive<Offset>(tween),
-            child: const CreateInspeccionPage(),
-          );
-        },
-        fullscreenDialog: true,
-      ),
-    );
-  }
-
-  void _handleSearchFilterPressed(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: $styles.insets.sm),
-              child: Center(
-                child: Text(
-                  'Buscar resultados en:',
-                  style: $styles.textStyles.h3.copyWith(fontSize: 18),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: searchFilters.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final Map<String, dynamic> filter = searchFilters[index];
-                  return CheckboxListTile(
-                    title: Text(filter['title'].toString()),
-                    value: filter['isChecked'] as bool?,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        searchFilters[index]['isChecked'] = value;
-                      });
-                    },
-                  );
-                },
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  /// DATASOURCE:
   List<Map<String, dynamic>> getSearchFilters() {
     final List<Map<String, dynamic>> arrSearchFilters = [
-      { 'field': 'Folio',                   'isChecked': true,    'title': 'Folio'                          },
-      { 'field': 'InspeccionTipoCodigo',    'isChecked': false,   'title': 'Código de tipo de inspección'   },
-      { 'field': 'RequerimientoFolio',      'isChecked': false,   'title': 'Folio de requerimiento'         },
-      { 'field': 'UnidadNumeroEconomico',   'isChecked': true,    'title': 'Unidad número ecónomico'        },
-      { 'field': 'UnidadTipoName',          'isChecked': true,    'title': 'Tipo de unidad'                 },
-      { 'field': 'Locacion',                'isChecked': true,    'title': 'Lugar de inspección'            },
+      { 'field': 'Folio',                 'isChecked': true,    'title': 'Folio'                        },
+      { 'field': 'RequerimientoFolio',    'isChecked': false,   'title': 'Requerimiento / folio'        },
+      { 'field': 'InspeccionTipoCodigo',  'isChecked': true,    'title': 'Tipo de inspección / código'  },
+      { 'field': 'UnidadNumeroEconomico', 'isChecked': true,    'title': 'Número económico'             },
+      { 'field': 'UnidadTipoName',        'isChecked': true,    'title': 'Tipo de unidad'               },
+      { 'field': 'Locacion',              'isChecked': true,    'title': 'Locación'                     },
     ];
 
     return arrSearchFilters;
@@ -184,59 +130,35 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   @override
   Widget build(BuildContext context) {
     final Widget content = GestureDetector(
-      onTap: FocusManager.instance.primaryFocus?.unfocus,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, 0),
-            child: _SearchInput(onSubmit: _handleSearchSubmitted),
-          ),
-
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: $styles.insets.xs * 1.5),
-            child: _buildStatusBar(context),
-          ),
-
           Expanded(
-            child: RefreshIndicator(
-              onRefresh: _loadDataSource,
-              child:  BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
-                listener: (BuildContext context, RemoteInspeccionState state) {
-                  if (state is RemoteInspeccionDataSourceSuccess) {
-                    setState(() {
-                      lstRows         = state.dataSource.rows ?? [];
-                      _searchResults  = state.dataSource.count ?? 0;
-                    });
-                  }
-                },
-                builder: (BuildContext context, RemoteInspeccionState state) {
-                  if (state is RemoteInspeccionLoading) {
-                    return const Center(child: AppLoadingIndicator());
-                  }
+            child: BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
+              listener: (context, state) {
+                if (state is RemoteInspeccionInitialization) {
+                  setState(() {
+                    // FRAGMENTO MODIFICABLE - LISTAS
+                    lstUnidadesTipos        = state.inspeccionIndex?.unidadesTipos ?? [];
+                    lstInspeccionesEstatus  = state.inspeccionIndex?.inspeccionesEstatus ?? [];
+                    lstUsuarios             = state.inspeccionIndex?.usuarios ?? [];
 
-                  if (state is RemoteInspeccionFailedMessage) {
-                    return _buildFailedMessageInspeccion(context, state);
-                  }
+                    // FRAGMENTO NO MODIFICABLE - COLUMNAS
+                    final dataSourcePersistence = state.inspeccionIndex?.dataSourcePersistence;
 
-                  if (state is RemoteInspeccionFailure) {
-                    return _buildFailureInspeccion(context, state);
-                  }
+                    searchFilters = dataSourcePersistence?.searchFilters ?? getSearchFilters();
 
-                  if (state is RemoteInspeccionDataSourceSuccess) {
-                    if (lstRows.isEmpty) {
-                      return _buildEmptyInspecciones(context);
-                    } else {
-                      return _ResultsList(
-                        onPressed : _handleResultPressed,
-                        lstRows   : lstRows,
-                      );
-                    }
-                  }
+                    // FRAGMENTO NO MODIFICABLE - FILTROS
+                    // renderFilters(dataSourcePersistence);
+                  });
+                }
+              },
+              builder: (context, state) {
+                if (state is RemoteInspeccionLoading) {
+                  return const Center(child: AppLoadingIndicator());
+                }
 
-                  return const SizedBox.shrink();
-                },
-              ),
+                return const SizedBox.shrink();
+              },
             ),
           ),
         ],
@@ -250,135 +172,6 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
           Positioned.fill(child: ColoredBox(color: Theme.of(context).colorScheme.background, child: content)),
         ],
       ),
-      // NUEVA INSPECCIÓN DE UNIDAD SIN REQUERIMIENTO:
-      floatingActionButton: _buildFloatingActionButton(context),
-    );
-  }
-
-  Widget _buildStatusBar(BuildContext context) {
-    return MergeSemantics(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Gap($styles.insets.xs),
-              Text('$_searchResults resultados', style: $styles.textStyles.body),
-            ],
-          ),
-          Row(
-            children: [
-              IconButton(
-                onPressed: () => _handleSearchFilterPressed(context),
-                icon: const Icon(Icons.manage_search),
-                tooltip: 'Filtros de búsqueda',
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.filter_list),
-                tooltip: 'Filtros',
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.format_line_spacing),
-                tooltip: 'Ordenar',
-              ),
-              Gap($styles.insets.xs),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Center _buildEmptyInspecciones(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(Icons.info, color: Theme.of(context).colorScheme.secondary, size: 64),
-
-          Gap($styles.insets.sm),
-
-          Text($strings.inspectionEmptyTitle, style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600)),
-
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
-            child: Text(
-              $strings.emptyListMessage,
-              textAlign: TextAlign.center,
-            ),
-          ),
-
-          FilledButton.icon(
-            onPressed: () => _loadDataSource(),
-            icon: const Icon(Icons.refresh),
-            label: Text($strings.refreshButtonText, style: $styles.textStyles.button),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFailedMessageInspeccion(BuildContext context, RemoteInspeccionFailedMessage state) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 64),
-          Gap($styles.insets.sm),
-          Text($strings.error500Title, style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600, height: 1.5), textAlign: TextAlign.center),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
-            child: Text(
-              state.errorMessage ?? 'Se produjo un error inesperado. Intenta actualizar de nuevo la lista.',
-              overflow: TextOverflow.ellipsis,
-              maxLines: 10,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          FilledButton.icon(
-            onPressed: () => _loadDataSource(),
-            icon: const Icon(Icons.refresh),
-            label: Text($strings.retryButtonText, style: $styles.textStyles.button),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFailureInspeccion(BuildContext context, RemoteInspeccionFailure state) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 64),
-          Gap($styles.insets.sm),
-          Text($strings.error500Title, style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600, height: 1.5), textAlign: TextAlign.center),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
-            child: Text(
-              state.failure?.errorMessage ?? 'Se produjo un error inesperado. Intenta actualizar de nuevo la lista.',
-              overflow: TextOverflow.ellipsis,
-              maxLines: 10,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          FilledButton.icon(
-            onPressed: () => _loadDataSource(),
-            icon: const Icon(Icons.refresh),
-            label: Text($strings.retryButtonText, style: $styles.textStyles.button),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFloatingActionButton(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () => _handleCreateInspeccionPressed(context),
-      tooltip: 'Nueva inspección',
-      child: const Icon(Icons.add),
     );
   }
 }

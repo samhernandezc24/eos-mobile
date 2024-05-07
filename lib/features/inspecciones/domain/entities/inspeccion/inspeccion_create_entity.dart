@@ -1,8 +1,8 @@
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
-class InspeccionDataEntity extends Equatable {
-  const InspeccionDataEntity({this.inspeccionesTipos});
+class InspeccionCreateEntity extends Equatable {
+  const InspeccionCreateEntity({this.inspeccionesTipos});
 
   final List<InspeccionTipoEntity>? inspeccionesTipos;
 

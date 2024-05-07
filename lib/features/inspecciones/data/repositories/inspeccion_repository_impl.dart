@@ -1,11 +1,15 @@
 import 'dart:io';
 
+import 'package:eos_mobile/core/network/data/server_response.dart';
+
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion/inspeccion_remote_api_service.dart';
-import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_data_model.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_create_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_data_source_res_model.dart';
-import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_req_model.dart';
-import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_index_model.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_store_req_model.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_repository.dart';
+
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class InspeccionRepositoryImpl implements InspeccionRepository {
@@ -13,71 +17,29 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
 
   final InspeccionRemoteApiService _inspeccionRemoteApiService;
 
-  /// CREACIÓN DE UNA INSPECCIÓN
+  /// CARGA DE INFORMACION DE INSPECCION
   @override
-  Future<DataState<InspeccionDataModel>> createInspeccion() async {
+  Future<DataState<InspeccionIndexModel>> index() async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
 
       // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _inspeccionRemoteApiService.createInspeccion('Bearer $token', 'application/json');
+      final httpResponse = await _inspeccionRemoteApiService.index('application/json', 'Bearer $token');
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        final ApiResponse apiResponse = httpResponse.data;
+        final ServerResponse objResponse = httpResponse.data;
 
-        if (apiResponse.session) {
-          if (apiResponse.action) {
-            final result = apiResponse.result as Map<String, dynamic>;
-            final InspeccionDataModel objInspeccion = InspeccionDataModel.fromJson(result);
+        if (objResponse.session!) {
+          if (objResponse.action!) {
+            final inspeccionIndex = InspeccionIndexModel.fromJson(objResponse.result as Map<String, dynamic>);
 
-            return DataSuccess(objInspeccion);
+            return DataSuccess(inspeccionIndex);
           } else {
-            return DataFailedMessage(apiResponse.message);
+            return DataFailedMessage(objResponse.message ?? 'Error inesperado');
           }
         } else {
-          return DataFailedMessage(apiResponse.message);
-        }
-      } else {
-        return DataFailed(
-          ServerException.fromDioException(
-              DioException(
-              error           : httpResponse.response.statusMessage,
-              response        : httpResponse.response,
-              type            : DioExceptionType.badResponse,
-              requestOptions  : httpResponse.response.requestOptions,
-            ),
-          ),
-        );
-      }
-    } on DioException catch (ex) {
-      return DataFailed(ServerException.fromDioException(ex));
-    }
-  }
-
-  /// GUARDADO DE INSPECCIÓN
-  @override
-  Future<DataState<ApiResponse>> storeInspeccion(InspeccionReqEntity inspeccion) async {
-    try {
-      // Obtener el token localmente.
-      final String? token = await authTokenHelper.retrieveRefreshToken();
-
-      // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _inspeccionRemoteApiService.storeInspeccion(
-        'Bearer $token',
-        'application/json',
-        InspeccionReqModel.fromEntity(inspeccion),
-      );
-
-      if (httpResponse.response.statusCode == HttpStatus.ok) {
-        if (httpResponse.data.session) {
-          if (httpResponse.data.action) {
-            return DataSuccess(httpResponse.data);
-          } else {
-            return DataFailedMessage(httpResponse.data.message);
-          }
-        } else {
-          return DataFailedMessage(httpResponse.data.message);
+          return DataFailedMessage(objResponse.message ?? 'Error inesperado');
         }
       } else {
         return DataFailed(
@@ -96,33 +58,109 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
     }
   }
 
-  /// DATA SOURCE DE INSPECCIONES
+  /// DATASOURCE DE INSPECCION
   @override
-  Future<DataState<InspeccionDataSourceResModel>> dataSourceInspeccion(Map<String, dynamic> objData) async {
+  Future<DataState<InspeccionDataSourceResModel>> dataSource(Map<String, dynamic> objData) async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
 
       // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _inspeccionRemoteApiService.dataSourceInspeccion(
-        'Bearer $token',
-        'application/json',
-        objData,
-      );
+      final httpResponse = await _inspeccionRemoteApiService.dataSource('application/json', 'Bearer $token', objData);
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        final ApiResponse apiResponse = httpResponse.data;
-        if (httpResponse.data.session) {
-          if (httpResponse.data.action) {
-            final result = apiResponse.result as Map<String, dynamic>;
-            final InspeccionDataSourceResModel dataSource = InspeccionDataSourceResModel.fromJson(result);
+        final ServerResponse objResponse = httpResponse.data;
 
-            return DataSuccess(dataSource);
+        if (objResponse.session!) {
+          if (objResponse.action!) {
+            final inspeccionDataSource = InspeccionDataSourceResModel.fromJson(objResponse.result as Map<String, dynamic>);
+
+            return DataSuccess(inspeccionDataSource);
           } else {
-            return DataFailedMessage(httpResponse.data.message);
+            return DataFailedMessage(objResponse.message ?? 'Error inesperado');
           }
         } else {
-          return DataFailedMessage(httpResponse.data.message);
+          return DataFailedMessage(objResponse.message ?? 'Error inesperado');
+        }
+      } else {
+        return DataFailed(
+          ServerException.fromDioException(
+            DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
+          ),
+        );
+      }
+    } on DioException catch (ex) {
+      return DataFailed(ServerException.fromDioException(ex));
+    }
+  }
+
+  /// OBTENCION DE INFORMACION PARA CREAR INSPECCION
+  @override
+  Future<DataState<InspeccionCreateModel>> create() async {
+    try {
+      // Obtener el token localmente.
+      final String? token = await authTokenHelper.retrieveRefreshToken();
+
+      // Realizar la solicitud usando el token actualizado o el actual.
+      final httpResponse = await _inspeccionRemoteApiService.create('application/json', 'Bearer $token');
+
+      if (httpResponse.response.statusCode == HttpStatus.ok) {
+        final ServerResponse objResponse = httpResponse.data;
+
+        if (objResponse.session!) {
+          if (objResponse.action!) {
+            final inspeccionCreate = InspeccionCreateModel.fromJson(objResponse.result as Map<String, dynamic>);
+
+            return DataSuccess(inspeccionCreate);
+          } else {
+            return DataFailedMessage(objResponse.message ?? 'Error inesperado');
+          }
+        } else {
+          return DataFailedMessage(objResponse.message ?? 'Error inesperado');
+        }
+      } else {
+        return DataFailed(
+          ServerException.fromDioException(
+            DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
+          ),
+        );
+      }
+    } on DioException catch (ex) {
+      return DataFailed(ServerException.fromDioException(ex));
+    }
+  }
+
+  /// GUARDADO DE INSPECCION
+  @override
+  Future<DataState<ServerResponse>> store(InspeccionStoreReqEntity objData) async {
+    try {
+      // Obtener el token localmente.
+      final String? token = await authTokenHelper.retrieveRefreshToken();
+
+      // Realizar la solicitud usando el token actualizado o el actual.
+      final httpResponse = await _inspeccionRemoteApiService.store('application/json', 'Bearer $token', InspeccionStoreReqModel.fromEntity(objData));
+
+      if (httpResponse.response.statusCode == HttpStatus.ok) {
+        final ServerResponse objResponse = httpResponse.data;
+
+        if (objResponse.session!) {
+          if (objResponse.action!) {
+            return DataSuccess(objResponse);
+          } else {
+            return DataFailedMessage(objResponse.message ?? 'Error inesperado');
+          }
+        } else {
+          return DataFailedMessage(objResponse.message ?? 'Error inesperado');
         }
       } else {
         return DataFailed(

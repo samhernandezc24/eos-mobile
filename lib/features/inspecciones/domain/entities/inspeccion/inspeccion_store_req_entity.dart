@@ -1,27 +1,19 @@
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
-/// [InspeccionReqEntity]
-///
-/// Representa los datos de la request para la inspección, se mandara esta informacion
-/// en el body de la petición.
-class InspeccionReqEntity extends Equatable {
-  const InspeccionReqEntity({
+class InspeccionStoreReqEntity extends Equatable {
+  const InspeccionStoreReqEntity({
+    required this.fechaProgramada,
     required this.idInspeccionTipo,
     required this.inspeccionTipoCodigo,
     required this.inspeccionTipoName,
     required this.idUnidad,
     required this.unidadNumeroEconomico,
     required this.isUnidadTemporal,
-    required this.idUnidadTipo,
-    required this.unidadTipoName,
     required this.locacion,
-    this.fecha,
     this.idBase,
     this.baseName,
-    this.fechaInspeccionFinal,
-    this.fechaInspeccionFinalUpdate,
-    this.idRequerimiento,
-    this.requerimientoFolio,
+    this.idUnidadTipo,
+    this.unidadTipoName,
     this.idUnidadMarca,
     this.unidadMarcaName,
     this.idUnidadPlacaTipo,
@@ -30,30 +22,25 @@ class InspeccionReqEntity extends Equatable {
     this.numeroSerie,
     this.modelo,
     this.anioEquipo,
-    this.tipoPlataforma,
     this.capacidad,
+    this.idUnidadCapacidadMedida,
+    this.unidadCapacidadMedidaName,
+    this.tipoPlataforma,
     this.odometro,
     this.horometro,
-    this.observaciones,
-    this.firmaOperador,
-    this.firmaVerificador,
   });
 
-  final DateTime? fecha;
-  final String? idBase;
-  final String? baseName;
+  final DateTime fechaProgramada;
   final String idInspeccionTipo;
   final String inspeccionTipoCodigo;
   final String inspeccionTipoName;
-  final DateTime? fechaInspeccionFinal;
-  final DateTime? fechaInspeccionFinalUpdate;
-  final String? idRequerimiento;
-  final String? requerimientoFolio;
+  final String? idBase;
+  final String? baseName;
   final String idUnidad;
   final String unidadNumeroEconomico;
   final bool isUnidadTemporal;
-  final String idUnidadTipo;
-  final String unidadTipoName;
+  final String? idUnidadTipo;
+  final String? unidadTipoName;
   final String? idUnidadMarca;
   final String? unidadMarcaName;
   final String? idUnidadPlacaTipo;
@@ -62,27 +49,22 @@ class InspeccionReqEntity extends Equatable {
   final String? numeroSerie;
   final String? modelo;
   final String? anioEquipo;
+  final double? capacidad;
+  final String? idUnidadCapacidadMedida;
+  final String? unidadCapacidadMedidaName;
   final String locacion;
   final String? tipoPlataforma;
-  final double? capacidad;
   final int? odometro;
   final int? horometro;
-  final String? observaciones;
-  final String? firmaOperador;
-  final String? firmaVerificador;
 
   @override
   List<Object?> get props => [
-        fecha,
-        idBase,
-        baseName,
+        fechaProgramada,
         idInspeccionTipo,
         inspeccionTipoCodigo,
         inspeccionTipoName,
-        fechaInspeccionFinal,
-        fechaInspeccionFinalUpdate,
-        idRequerimiento,
-        requerimientoFolio,
+        idBase,
+        baseName,
         idUnidad,
         unidadNumeroEconomico,
         isUnidadTemporal,
@@ -96,13 +78,12 @@ class InspeccionReqEntity extends Equatable {
         numeroSerie,
         modelo,
         anioEquipo,
+        capacidad,
+        idUnidadCapacidadMedida,
+        unidadCapacidadMedidaName,
         locacion,
         tipoPlataforma,
-        capacidad,
         odometro,
         horometro,
-        observaciones,
-        firmaOperador,
-        firmaVerificador,
       ];
 }

@@ -1,23 +1,27 @@
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class DataSourceUtils {
-  // static List<Map<String, dynamic>> filters(List<DropdownButton<String>> sltFilter) {
-  //   final List<Map<String, dynamic>> lstFilters = <Map<String, dynamic>>[];
+  static dynamic renderFilter(List<dynamic> arrFilters, List<dynamic> lstValues, String field, String key) {
+    final Map<String, dynamic>? objFilter = arrFilters.firstWhere((x) => x['field'] == field, orElse: () => null) as Map<String, dynamic>?;
 
-  //   if (Globals.isValidValue(sltFilter)) {
-  //     sltFilter.forEach((itemFilter) {
-  //       String? value = itemFilter.value;
-  //     });
-  //   }
+    final id = objFilter != null ? objFilter['value'] : null;
 
-  //   return lstFilters;
-  // }
+    return lstValues.any((a) => a[key] == id) ? id : null;
+  }
 
-  static List<Map<String, dynamic>> searchFilters(List<Map<String, dynamic>> arrSearchFilters) {
-    final List<Map<String, dynamic>> lstSearchFilters = <Map<String, dynamic>>[];
+  static List<dynamic> renderFilterMultiple(List<dynamic> arrFiltersMultiple, List<dynamic> lstValues, String field, String key) {
+    final objFilterMultiple = arrFiltersMultiple.firstWhere((x) => x['field'] == field, orElse: () => null) as Map<String, dynamic>?;
+
+    final arrFilters = Globals.isValidValue(objFilterMultiple) ? objFilterMultiple!['value'] as List<dynamic> : <dynamic>[];
+
+    return arrFilters.where((a) => lstValues.any((b) => b[key] == a)).toList();
+  }
+
+  static List<Map<String, dynamic>> searchFilters(List<dynamic> arrSearchFilters) {
+    List<Map<String, dynamic>> lstSearchFilters = <Map<String, dynamic>>[];
 
     if (Globals.isValidValue(arrSearchFilters)) {
-      lstSearchFilters.addAll(arrSearchFilters.where((x) => x['isChecked'] as bool? ?? false).map<Map<String, dynamic>>((x) => {'field':  x['field']}));
+      lstSearchFilters = arrSearchFilters.where((x) => x['isChecked'] as bool).map((x) => {'field': x['field']}).toList();
     }
 
     return lstSearchFilters;

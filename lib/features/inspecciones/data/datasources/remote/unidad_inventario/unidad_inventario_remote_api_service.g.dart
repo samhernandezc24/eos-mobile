@@ -14,7 +14,7 @@ class _UnidadInventarioRemoteApiService
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= ListAPI.unidadesEOS;
+    baseUrl ??= 'http://10.0.2.2:7000/api/unidades';
   }
 
   final Dio _dio;

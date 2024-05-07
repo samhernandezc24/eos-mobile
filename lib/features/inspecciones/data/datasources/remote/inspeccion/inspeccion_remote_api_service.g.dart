@@ -13,7 +13,7 @@ class _InspeccionRemoteApiService implements InspeccionRemoteApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= ListAPI.inspecciones;
+    baseUrl ??= 'http://10.0.2.2:7000/api/Inspecciones';
   }
 
   final Dio _dio;
@@ -21,20 +21,20 @@ class _InspeccionRemoteApiService implements InspeccionRemoteApiService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<ApiResponse>> createInspeccion(
-    String token,
+  Future<HttpResponse<ServerResponse>> index(
     String contentType,
+    String token,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'authorization': token,
       r'content-type': contentType,
+      r'authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ApiResponse>>(Options(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -42,7 +42,7 @@ class _InspeccionRemoteApiService implements InspeccionRemoteApiService {
     )
             .compose(
               _dio.options,
-              '/Create',
+              '/Index',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -51,66 +51,28 @@ class _InspeccionRemoteApiService implements InspeccionRemoteApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ApiResponse.fromJson(_result.data!);
+    final value = ServerResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<ApiResponse>> storeInspeccion(
-    String token,
+  Future<HttpResponse<ServerResponse>> dataSource(
     String contentType,
-    InspeccionReqModel inspeccion,
-  ) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{
-      r'authorization': token,
-      r'content-type': contentType,
-    };
-    _headers.removeWhere((k, v) => v == null);
-    final _data = <String, dynamic>{};
-    _data.addAll(inspeccion.toJson());
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ApiResponse>>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-      contentType: contentType,
-    )
-            .compose(
-              _dio.options,
-              '/Store',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = ApiResponse.fromJson(_result.data!);
-    final httpResponse = HttpResponse(value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<ApiResponse>> dataSourceInspeccion(
     String token,
-    String contentType,
     Map<String, dynamic> objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'authorization': token,
       r'content-type': contentType,
+      r'authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(objData);
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ApiResponse>>(Options(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -127,7 +89,81 @@ class _InspeccionRemoteApiService implements InspeccionRemoteApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ApiResponse.fromJson(_result.data!);
+    final value = ServerResponse.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<ServerResponse>> create(
+    String contentType,
+    String token,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'content-type': contentType,
+      r'authorization': token,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+            .compose(
+              _dio.options,
+              '/Create',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ServerResponse.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<ServerResponse>> store(
+    String contentType,
+    String token,
+    InspeccionStoreReqModel objData,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'content-type': contentType,
+      r'authorization': token,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(objData.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+            .compose(
+              _dio.options,
+              '/Store',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ServerResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

@@ -10,6 +10,6 @@ class DataSourceInspeccionUseCase implements UseCase<DataState<InspeccionDataSou
 
   @override
   Future<DataState<InspeccionDataSourceResEntity>> call({required Map<String, dynamic> params}) {
-    return _inspeccionRepository.dataSourceInspeccion(params);
+    return _inspeccionRepository.dataSource(params);
   }
 }
