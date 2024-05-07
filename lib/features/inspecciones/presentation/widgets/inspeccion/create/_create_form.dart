@@ -12,6 +12,8 @@ class _CreateFormState extends State<_CreateForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // CONTROLLERS
+  late final TextEditingController _searchUnidadController;
+
   late final TextEditingController _fechaProgramadaController;
   late final TextEditingController _baseNameController;
   late final TextEditingController _unidadNumeroEconomicoController;
@@ -30,10 +32,26 @@ class _CreateFormState extends State<_CreateForm> {
   late final TextEditingController _horometroController;
 
   // LIST
-  List<InspeccionTipoEntity> lstInspeccionesTipos = [];
-  List<UnidadCapacidadMedida> lstUnidadesCapacidadesMedidas = [];
+  List<InspeccionTipoEntity> lstInspeccionesTipos             = <InspeccionTipoEntity>[];
+  List<UnidadCapacidadMedida> lstUnidadesCapacidadesMedidas   = <UnidadCapacidadMedida>[];
 
-  List<String> list = <String>['One', 'Two', 'Three', 'Four'];
+  // SELECTED UNIDAD
+  UnidadInspeccion? _selectedUnidadInspeccion;
+
+  String? _selectedUnidadBaseId;
+  String? _selectedUnidadBaseName;
+  String? _selectedUnidadId;
+  String? _selectedUnidadNumeroEconomico;
+  String? _selectedUnidadTipoId;
+  String? _selectedUnidadTipoName;
+  String? _selectedUnidadMarcaId;
+  String? _selectedUnidadMarcaName;
+  String? _selectedUnidadPlacaTipoId;
+  String? _selectedUnidadPlacaTipoName;
+  String? _selectedUnidadPlaca;
+  String? _selectedUnidadNumeroSerie;
+  String? _selectedUnidadModelo;
+  String? _selectedUnidadAnioEquipo;
 
   // SELECTED INSPECCION TIPO
   String? _selectedInspeccionTipoId;
@@ -49,6 +67,8 @@ class _CreateFormState extends State<_CreateForm> {
     super.initState();
 
     context.read<RemoteInspeccionBloc>().add(CreateInspeccion());
+
+    _searchUnidadController               = TextEditingController();
 
     _fechaProgramadaController            = TextEditingController();
     _baseNameController                   = TextEditingController();
@@ -70,6 +90,7 @@ class _CreateFormState extends State<_CreateForm> {
 
   @override
   void dispose() {
+    _searchUnidadController.dispose();
     _fechaProgramadaController.dispose();
     _baseNameController.dispose();
     _unidadNumeroEconomicoController.dispose();
@@ -99,25 +120,25 @@ class _CreateFormState extends State<_CreateForm> {
     final int? horometro            = int.tryParse(_horometroController.text);
 
     final InspeccionStoreReqEntity objData = InspeccionStoreReqEntity(
-      fechaProgramada             : fechaProgramada ?? DateTime.now(),
+      fechaProgramada             : fechaProgramada                 ?? DateTime.now(),
       idInspeccionTipo            : _selectedInspeccionTipoId       ?? '',
       inspeccionTipoCodigo        : _selectedInspeccionTipoCodigo   ?? '',
       inspeccionTipoName          : _selectedInspeccionTipoName     ?? '',
-      idBase                      : 'idBase',
-      baseName                    : 'baseName',
-      idUnidad                    : 'idUnidad',
-      unidadNumeroEconomico       : 'unidadNumeroEconomico',
-      isUnidadTemporal            : false,
-      idUnidadTipo                : 'idUnidadTipo',
-      unidadTipoName              : 'unidadTipoName',
-      idUnidadMarca               : 'idUnidadMarca',
-      unidadMarcaName             : 'unidadMarcaName',
-      idUnidadPlacaTipo           : 'idUnidadPlacaTipo',
-      unidadPlacaTipoName         : 'unidadPlacaTipoName',
-      placa                       : 'placa',
-      numeroSerie                 : 'numeroSerie',
-      modelo                      : 'modelo',
-      anioEquipo                  : 'anioEquipo',
+      idBase                      : _selectedUnidadBaseId           ?? '',
+      baseName                    : _selectedUnidadBaseName         ?? '',
+      idUnidad                    : _selectedUnidadId               ?? '',
+      unidadNumeroEconomico       : _selectedUnidadNumeroEconomico  ?? '',
+      isUnidadTemporal            : _selectedUnidadInspeccion == UnidadInspeccion.temporal,
+      idUnidadTipo                : _selectedUnidadTipoId           ?? '',
+      unidadTipoName              : _selectedUnidadTipoName         ?? '',
+      idUnidadMarca               : _selectedUnidadMarcaId          ?? '',
+      unidadMarcaName             : _selectedUnidadMarcaName        ?? '',
+      idUnidadPlacaTipo           : _selectedUnidadPlacaTipoId      ?? '',
+      unidadPlacaTipoName         : _selectedUnidadPlacaTipoName    ?? '',
+      placa                       : _selectedUnidadPlaca            ?? '',
+      numeroSerie                 : _selectedUnidadNumeroSerie      ?? '',
+      modelo                      : _selectedUnidadModelo           ?? '',
+      anioEquipo                  : _selectedUnidadAnioEquipo       ?? '',
       capacidad                   : capacidad,
       idUnidadCapacidadMedida     : _selectedUnidadCapacidadMedidaId    ?? '',
       unidadCapacidadMedidaName   : _selectedUnidadCapacidadMedidaName  ?? '',
@@ -171,7 +192,42 @@ class _CreateFormState extends State<_CreateForm> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           // CAMBIAR DINAMICAMENTE ENTRE UNIDAD INVENTARIO / UNIDAD TEMPORAL:
-          _buildUnidadCheckbox(UnidadInspeccionTipo.temporal, 'Unidad temporal'),
+          _buildUnidadCheckbox(UnidadInspeccion.temporal, 'Unidad temporal'),
+
+          Gap($styles.insets.sm),
+
+          // SELECCIONAR Y BUSCAR UNIDAD A INSPECCIONAR:
+          if (_selectedUnidadInspeccion == UnidadInspeccion.temporal)
+            Padding(padding: EdgeInsets.all($styles.insets.sm))
+          else Container(),
+
+          // NUEVA UNIDAD TEMPORAL:
+          AnimatedSwitcher(
+            duration: $styles.times.fast,
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return FadeTransition(
+                opacity: animation,
+                child: SizeTransition(sizeFactor: animation, child: child),
+              );
+            },
+            child: _selectedUnidadInspeccion == UnidadInspeccion.temporal
+                ? Padding(
+                    padding: EdgeInsets.only(top: $styles.insets.sm),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        FilledButton.icon(
+                          onPressed : (){},
+                          icon      : const Icon(Icons.add),
+                          label     : Text('Nueva unidad', style: $styles.textStyles.button),
+                        ),
+                      ],
+                    ),
+                  )
+                : const SizedBox.shrink(),
+          ),
+
+          Gap($styles.insets.sm),
 
           // SELECCIONAR TIPO DE INSPECCIÓN:
           BlocBuilder<RemoteInspeccionBloc, RemoteInspeccionState>(
@@ -231,7 +287,7 @@ class _CreateFormState extends State<_CreateForm> {
             controller  : _unidadNumeroEconomicoController,
             isReadOnly  : true,
             label       : '* Número económico:',
-            validator   : FormValidators.textValidator,
+            // validator   : FormValidators.textValidator,
           ),
 
           Gap($styles.insets.sm),
@@ -241,7 +297,7 @@ class _CreateFormState extends State<_CreateForm> {
             controller  : _unidadTipoNameController,
             isReadOnly  : true,
             label       : '* Tipo de unidad:',
-            validator   : FormValidators.textValidator,
+            // validator   : FormValidators.textValidator,
           ),
 
           Gap($styles.insets.sm),
@@ -444,20 +500,34 @@ class _CreateFormState extends State<_CreateForm> {
     );
   }
 
-  Widget _buildUnidadCheckbox(UnidadInspeccionTipo unidad, String value) {
-    return Container();
-    // if (unidad == UnidadInspeccionTipo.temporal) {
-    //   return GestureDetector(
-    //     onTap: () {},
-    //     child: Row(
-    //       children: <Widget>[
-    //         Checkbox(value: null, onChanged: (_){}),
-    //         Text(value, style: $styles.textStyles.label),
-    //       ],
-    //     ),
-    //   );
-    // } else {
-    //   return const SizedBox.shrink();
-    // }
+  Widget _buildUnidadCheckbox(UnidadInspeccion unidad, String value) {
+    if (unidad == UnidadInspeccion.temporal) {
+      final bool isSelectedUnidad = _selectedUnidadInspeccion == unidad;
+
+      return GestureDetector(
+        onTap: () {
+          setState(() {
+            _selectedUnidadInspeccion = isSelectedUnidad ? null : unidad;
+          });
+        },
+        child: Row(
+          children: <Widget>[
+            Checkbox(
+              value: isSelectedUnidad,
+              onChanged: (value) {
+                if (value != null) {
+                   setState(() {
+                    _selectedUnidadInspeccion = value ? unidad : null;
+                  });
+                }
+              },
+            ),
+            Text(value, style: $styles.textStyles.label),
+          ],
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
   }
 }

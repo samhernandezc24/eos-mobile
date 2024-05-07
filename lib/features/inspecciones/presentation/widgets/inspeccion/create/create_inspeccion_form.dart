@@ -241,47 +241,6 @@
 //     context.read<RemoteUnidadBloc>().add(PredictiveUnidad(predictiveSearch));
 //   }
 
-//   void _handleStoreInspeccion() {
-//     final DateTime fecha    = DateFormat('dd/MM/yyyy HH:mm').parse(_fechaInspeccionController.text);
-//     final double? capacidad = double.tryParse(_capacidadController.text);
-//     final int? odometro     = int.tryParse(_odometroController.text);
-//     final int? horometro    = int.tryParse(_horometroController.text);
-
-//     final InspeccionReqEntity objData = InspeccionReqEntity(
-//       fecha                       : fecha,
-//       idBase                      : _selectedUnidadIdBase ?? '',
-//       baseName                    : _selectedUnidadBaseName ?? '',
-//       idInspeccionTipo            : _selectedInspeccionTipoId ?? '',
-//       inspeccionTipoCodigo        : _selectedInspeccionTipoCodigo ?? '',
-//       inspeccionTipoName          : _selectedInspeccionTipoName ?? '',
-//       idUnidad                    : _selectedUnidadId ?? '',
-//       unidadNumeroEconomico       : _numeroEconomicoController.text,
-//       isUnidadTemporal            : _selectedUnidad == UnidadInspeccionTipo.temporal,
-//       idUnidadTipo                : _selectedUnidadIdTipo ?? '',
-//       unidadTipoName              : _selectedUnidadTipoName ?? '',
-//       idUnidadMarca               : _selectedUnidadIdMarca ?? '',
-//       unidadMarcaName             : _marcaController.text,
-//       idUnidadPlacaTipo           : _selectedUnidadIdPlacaTipo ?? '',
-//       unidadPlacaTipoName         : _placaTipoController.text,
-//       placa                       : _placaController.text,
-//       numeroSerie                 : _numeroSerieController.text,
-//       modelo                      : _modeloController.text,
-//       locacion                    : _locacionController.text,
-//       anioEquipo                  : _anioEquipoController.text,
-//       tipoPlataforma              : _tipoPlataformaController.text,
-//       capacidad                   : capacidad,
-//       odometro                    : odometro,
-//       horometro                   : horometro,
-//     );
-
-//     final bool isValidForm = _formKey.currentState!.validate();
-
-//     if (isValidForm) {
-//       _formKey.currentState!.save();
-//       BlocProvider.of<RemoteInspeccionBloc>(context).add(StoreInspeccion(objData));
-//     }
-//   }
-
 //   void _handleCreateUnidadPressed(BuildContext context) {
 //     Navigator.push<void>(
 //       context,
@@ -489,32 +448,6 @@
 //                 return const SizedBox.shrink();
 //               },
 //             ),
-
-//           // MOSTRAR BOTON PARA NUEVA UNIDAD CON ANIMACION:
-//           AnimatedSwitcher(
-//             duration: $styles.times.fast,
-//             transitionBuilder: (Widget child, Animation<double> animation) {
-//               return FadeTransition(
-//                 opacity: animation,
-//                 child: SizeTransition(sizeFactor: animation, child: child),
-//               );
-//             },
-//             child: _selectedUnidad == UnidadInspeccionTipo.temporal
-//                 ? Padding(
-//                     padding: EdgeInsets.only(top: $styles.insets.sm),
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.end,
-//                       children: <Widget>[
-//                         FilledButton.icon(
-//                           onPressed: () => _handleCreateUnidadPressed(context),
-//                           icon: const Icon(Icons.add),
-//                           label: Text('Nueva unidad', style: $styles.textStyles.button),
-//                         ),
-//                       ],
-//                     ),
-//                   )
-//                 : const SizedBox.shrink(),
-//           ),
 
 //           Gap($styles.insets.sm),
 
@@ -784,43 +717,3 @@
 //       ),
 //     );
 //   }
-
-//   Widget _buildUnidadCheckbox(UnidadInspeccionTipo unidad, String label) {
-//     if (unidad == UnidadInspeccionTipo.temporal) {
-//       return GestureDetector(
-//         onTap: () {
-//           setState(() {
-//             if (_selectedUnidad == unidad) {
-//               _selectedUnidad = null;
-//               _resetFields();
-//             } else {
-//               _selectedUnidad = unidad;
-//               _resetFields();
-//             }
-//           });
-//         },
-//         child: Row(
-//           children: <Widget>[
-//             Checkbox(
-//               value: _selectedUnidad == unidad,
-//               onChanged: (value) {
-//                 setState(() {
-//                   if (value!) {
-//                     _selectedUnidad = unidad;
-//                     _resetFields();
-//                   } else {
-//                     _selectedUnidad = null;
-//                     _resetFields();
-//                   }
-//                 });
-//               },
-//             ),
-//             Text(label, style: $styles.textStyles.label),
-//           ],
-//         ),
-//       );
-//     } else {
-//       return const SizedBox.shrink();
-//     }
-//   }
-// }

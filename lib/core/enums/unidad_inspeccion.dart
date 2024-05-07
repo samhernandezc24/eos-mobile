@@ -1,0 +1,1 @@
+enum UnidadInspeccion { inventario, temporal }

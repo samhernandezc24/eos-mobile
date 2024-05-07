@@ -1,1 +1,0 @@
-enum UnidadInspeccionTipo { inventario, temporal }
