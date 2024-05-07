@@ -17,6 +17,7 @@ export 'package:eos_mobile/core/constants/assets.dart';
 export 'package:eos_mobile/core/constants/globals.dart';
 
 export 'package:eos_mobile/core/enums/app_icons.dart';
+export 'package:eos_mobile/core/enums/unidad_inspeccion_tipo.dart';
 
 export 'package:eos_mobile/core/extensions/alignments_extension.dart';
 export 'package:eos_mobile/core/extensions/sized_context_extension.dart';

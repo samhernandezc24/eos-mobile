@@ -30,12 +30,25 @@ class _CreateFormState extends State<_CreateForm> {
   late final TextEditingController _horometroController;
 
   // LIST
+  List<InspeccionTipoEntity> lstInspeccionesTipos = [];
+  List<UnidadCapacidadMedida> lstUnidadesCapacidadesMedidas = [];
 
-  // PROPERTIES
+  List<String> list = <String>['One', 'Two', 'Three', 'Four'];
+
+  // SELECTED INSPECCION TIPO
+  String? _selectedInspeccionTipoId;
+  String? _selectedInspeccionTipoCodigo;
+  String? _selectedInspeccionTipoName;
+
+  // SELECTED UNIDAD CAPACIDAD MEDIDA
+  String? _selectedUnidadCapacidadMedidaId;
+  String? _selectedUnidadCapacidadMedidaName;
 
   @override
   void initState() {
     super.initState();
+
+    context.read<RemoteInspeccionBloc>().add(CreateInspeccion());
 
     _fechaProgramadaController            = TextEditingController();
     _baseNameController                   = TextEditingController();
@@ -79,13 +92,17 @@ class _CreateFormState extends State<_CreateForm> {
 
   // METHODS
   void _handleStoreInspeccion() {
-    final DateTime fechaProgramada = DateFormat('dd/MM/yyyy HH:mm').parse(_fechaProgramadaController.text);
+    final DateTime? fechaProgramada  = _fechaProgramadaController.text.isNotEmpty ? DateFormat('dd/MM/yyyy HH:mm').parse(_fechaProgramadaController.text) : null;
+
+    final double? capacidad         = double.tryParse(_capacidadController.text);
+    final int? odometro             = int.tryParse(_odometroController.text);
+    final int? horometro            = int.tryParse(_horometroController.text);
 
     final InspeccionStoreReqEntity objData = InspeccionStoreReqEntity(
-      fechaProgramada             : fechaProgramada,
-      idInspeccionTipo            : 'idInspeccionTipo',
-      inspeccionTipoCodigo        : 'inspeccionTipoCodigo',
-      inspeccionTipoName          : 'inspeccionTipoName',
+      fechaProgramada             : fechaProgramada ?? DateTime.now(),
+      idInspeccionTipo            : _selectedInspeccionTipoId       ?? '',
+      inspeccionTipoCodigo        : _selectedInspeccionTipoCodigo   ?? '',
+      inspeccionTipoName          : _selectedInspeccionTipoName     ?? '',
       idBase                      : 'idBase',
       baseName                    : 'baseName',
       idUnidad                    : 'idUnidad',
@@ -101,21 +118,49 @@ class _CreateFormState extends State<_CreateForm> {
       numeroSerie                 : 'numeroSerie',
       modelo                      : 'modelo',
       anioEquipo                  : 'anioEquipo',
-      capacidad                   : 0,
-      idUnidadCapacidadMedida     : 'idUnidadCapacidadMedida',
-      unidadCapacidadMedidaName   : 'unidadCapacidadMedidaName',
-      locacion                    : 'locacion',
-      tipoPlataforma              : 'tipoPlataforma',
-      odometro                    : 0,
-      horometro                   : 0,
+      capacidad                   : capacidad,
+      idUnidadCapacidadMedida     : _selectedUnidadCapacidadMedidaId    ?? '',
+      unidadCapacidadMedidaName   : _selectedUnidadCapacidadMedidaName  ?? '',
+      locacion                    : _locacionController.text,
+      tipoPlataforma              : _tipoPlataformaController.text,
+      odometro                    : odometro,
+      horometro                   : horometro,
     );
 
     final bool isValidForm = _formKey.currentState!.validate();
 
+    // Verificar la validacion en el formulario.
     if (isValidForm) {
       _formKey.currentState!.save();
       BlocProvider.of<RemoteInspeccionBloc>(context).add(StoreInspeccion(objData));
     }
+  }
+
+  Future<DateTime?> _handleFechaProgramadaPressed(BuildContext context) async {
+    final DateTime currentDate = DateTime.now();
+
+    // Mostrar el selector de fecha.
+    final DateTime? pickedDate = await showDatePicker(
+      context     : context,
+      initialDate : currentDate,
+      firstDate   : DateTime(2000),
+      lastDate    : DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      // Mostrar el selector de la hora
+      final TimeOfDay? pickedTime = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(currentDate));
+
+      if (pickedTime != null) {
+        final DateTime selectedFechaProgramada = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute);
+
+        setState(() {
+          _fechaProgramadaController.text = DateFormat('dd/MM/yyyy HH:mm').format(selectedFechaProgramada);
+        });
+      }
+    }
+
+    return null;
   }
 
   @override
@@ -126,14 +171,55 @@ class _CreateFormState extends State<_CreateForm> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           // CAMBIAR DINAMICAMENTE ENTRE UNIDAD INVENTARIO / UNIDAD TEMPORAL:
-          _buildUnidadCheckbox('Unidad'),
+          _buildUnidadCheckbox(UnidadInspeccionTipo.temporal, 'Unidad temporal'),
+
+          // SELECCIONAR TIPO DE INSPECCIÓN:
+          BlocBuilder<RemoteInspeccionBloc, RemoteInspeccionState>(
+            builder: (BuildContext context, RemoteInspeccionState state) {
+              if (state is RemoteInspeccionCreating) {
+                return const Center(child: AppLoadingIndicator(width: 20, height: 20));
+              }
+
+              if (state is RemoteInspeccionServerFailedMessage) {
+                return const Center(child: AppLoadingIndicator(width: 20, height: 20));
+              }
+
+              if (state is RemoteInspeccionServerFailure) {
+                return const Center(child: AppLoadingIndicator(width: 20, height: 20));
+              }
+
+              if (state is RemoteInspeccionCreateLoaded) {
+                // FRAGMENTO NO MODIFICABLE - LISTAS
+                lstInspeccionesTipos = state.objResponse?.inspeccionesTipos ?? [];
+
+                return LabeledDropdownFormField<InspeccionTipoEntity>(
+                  hintText    : 'Seleccionar',
+                  label       : '* Tipo de inspección:',
+                  items       : lstInspeccionesTipos,
+                  itemBuilder : (item) => Text(item.name),
+                  onChanged   : (selectedType) {
+                    setState(() {
+                      _selectedInspeccionTipoId       = selectedType?.idInspeccionTipo;
+                      _selectedInspeccionTipoCodigo   = selectedType?.codigo;
+                      _selectedInspeccionTipoName     = selectedType?.name;
+                    });
+                  },
+                  validator : FormValidators.dropdownValidator,
+                );
+              }
+
+              return const SizedBox.shrink();
+            },
+          ),
+
+          Gap($styles.insets.sm),
 
           // FECHA PROGRAMADA:
           LabeledTextFormField(
             controller  : _fechaProgramadaController,
             isReadOnly  : true,
             label       : '* Fecha programada:',
-            onTap       : (){},
+            onTap       : () async => _handleFechaProgramadaPressed(context),
             textAlign   : TextAlign.end,
             validator   : FormValidators.textValidator,
           ),
@@ -249,19 +335,58 @@ class _CreateFormState extends State<_CreateForm> {
 
           Gap($styles.insets.sm),
 
-          // UNIDAD CAPACIDAD:
+          // UNIDAD CAPACIDAD / UNIDAD CAPACIDAD MEDIDA:
           Row(
             children: <Widget>[
               Expanded(
+                flex: 2,
                 child: LabeledTextFormField(
                   controller    : _capacidadController,
                   hintText      : 'Ingresa cantidad',
                   label         : '* Capacidad:',
-                  keyboardType  : const TextInputType.numberWithOptions(signed: true, decimal: true),
+                  keyboardType  : TextInputType.number,
+                  validator     : FormValidators.decimalValidator,
                 ),
               ),
-              Gap($styles.insets.sm),
-              DropdownButton(items: [], onChanged: (_){}),
+              Gap($styles.insets.xs),
+              Expanded(
+                child: BlocBuilder<RemoteInspeccionBloc, RemoteInspeccionState>(
+                  builder: (BuildContext context, RemoteInspeccionState state) {
+                    if (state is RemoteInspeccionCreating) {
+                      return const Center(child: AppLoadingIndicator(width: 20, height: 20));
+                    }
+
+                    if (state is RemoteInspeccionServerFailedMessage) {
+                      return const Center(child: AppLoadingIndicator(width: 20, height: 20));
+                    }
+
+                    if (state is RemoteInspeccionServerFailure) {
+                      return const Center(child: AppLoadingIndicator(width: 20, height: 20));
+                    }
+
+                    if (state is RemoteInspeccionCreateLoaded) {
+                      // FRAGMENTO NO MODIFICABLE - LISTAS
+                      lstUnidadesCapacidadesMedidas = state.objResponse?.unidadesCapacidadesMedidas ?? [];
+
+                      return LabeledDropdownFormField<UnidadCapacidadMedida>(
+                        hintText    : 'Seleccionar',
+                        label       : '',
+                        items       : lstUnidadesCapacidadesMedidas,
+                        itemBuilder : (item) => Text(item.name ?? ''),
+                        onChanged   : (selectedType) {
+                          setState(() {
+                            _selectedUnidadCapacidadMedidaId     = selectedType?.idUnidadCapacidadMedida;
+                            _selectedUnidadCapacidadMedidaName   = selectedType?.name;
+                          });
+                        },
+                        validator : FormValidators.dropdownValidator,
+                      );
+                    }
+
+                    return const SizedBox.shrink();
+                  },
+                ),
+              ),
             ],
           ),
 
@@ -289,12 +414,50 @@ class _CreateFormState extends State<_CreateForm> {
               ),
             ],
           ),
+
+          Gap($styles.insets.lg),
+
+          BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
+            listener: (context, state) {
+              if (state is RemoteInspeccionStored) {
+
+              }
+            },
+            builder: (context, state) {
+              if (state is RemoteInspeccionStoring) {
+                return FilledButton(
+                  onPressed : null,
+                  style     : ButtonStyle(minimumSize: MaterialStateProperty.all<Size?>(const Size(double.infinity, 48))),
+                  child     : const AppLoadingIndicator(width: 20, height: 20),
+                );
+              }
+
+              return FilledButton(
+                onPressed : _handleStoreInspeccion,
+                style     : ButtonStyle(minimumSize: MaterialStateProperty.all<Size?>(const Size(double.infinity, 48))),
+                child     : Text($strings.saveButtonText, style: $styles.textStyles.button),
+              );
+            },
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildUnidadCheckbox(String value) {
+  Widget _buildUnidadCheckbox(UnidadInspeccionTipo unidad, String value) {
     return Container();
+    // if (unidad == UnidadInspeccionTipo.temporal) {
+    //   return GestureDetector(
+    //     onTap: () {},
+    //     child: Row(
+    //       children: <Widget>[
+    //         Checkbox(value: null, onChanged: (_){}),
+    //         Text(value, style: $styles.textStyles.label),
+    //       ],
+    //     ),
+    //   );
+    // } else {
+    //   return const SizedBox.shrink();
+    // }
   }
 }

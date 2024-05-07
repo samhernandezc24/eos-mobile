@@ -40,8 +40,19 @@ class FormValidators {
   }
 
   /// Validación de campos de números decimales.
-  static String? decimalValidator(String? value) {
+  static String? decimalValidatorNull(String? value) {
     if (value == null || value.isEmpty) return null;
+
+    final RegExp numericRegex = RegExp(r'^-?[0-9]+(?:\.[0-9]+)?$');
+    if (!numericRegex.hasMatch(value)) {
+      return 'Por favor, ingresa un número decimal válido.';
+    }
+    return null;
+  }
+
+  /// Validación de campos de números decimales.
+  static String? decimalValidator(String? value) {
+    if (value == null) { return 'Este campo es obligatorio'; }
 
     final RegExp numericRegex = RegExp(r'^-?[0-9]+(?:\.[0-9]+)?$');
     if (!numericRegex.hasMatch(value)) {
