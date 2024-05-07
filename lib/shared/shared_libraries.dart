@@ -23,6 +23,7 @@ export 'package:eos_mobile/core/extensions/sized_context_extension.dart';
 export 'package:eos_mobile/core/extensions/string_extension.dart';
 
 export 'package:eos_mobile/core/network/api_response.dart';
+export 'package:eos_mobile/core/network/data/server_response.dart';
 export 'package:eos_mobile/core/network/data_state.dart';
 export 'package:eos_mobile/core/network/errors/exceptions.dart';
 

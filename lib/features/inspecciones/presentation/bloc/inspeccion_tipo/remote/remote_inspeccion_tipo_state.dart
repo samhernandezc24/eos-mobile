@@ -7,8 +7,10 @@ class RemoteInspeccionTipoState extends Equatable {
   List<Object?> get props => [];
 }
 
+/// LOADING
 class RemoteInspeccionTipoLoading extends RemoteInspeccionTipoState {}
 
+/// LIST
 class RemoteInspeccionTipoSuccess extends RemoteInspeccionTipoState {
   const RemoteInspeccionTipoSuccess(this.inspeccionesTipos);
 
@@ -18,29 +20,32 @@ class RemoteInspeccionTipoSuccess extends RemoteInspeccionTipoState {
   List<Object?> get props => [ inspeccionesTipos ];
 }
 
-class RemoteInspeccionTipoResponseSuccess extends RemoteInspeccionTipoState {
-  const RemoteInspeccionTipoResponseSuccess(this.apiResponse);
+/// STORE / UPDATE / DELETE
+class RemoteInspeccionTipoServerResponseSuccess extends RemoteInspeccionTipoState {
+  const RemoteInspeccionTipoServerResponseSuccess(this.objResponse);
 
-  final ApiResponseEntity apiResponse;
-
-  @override
-  List<Object?> get props => [ apiResponse ];
-}
-
-class RemoteInspeccionTipoFailure extends RemoteInspeccionTipoState {
-  const RemoteInspeccionTipoFailure(this.failure);
-
-  final ServerException? failure;
+  final ServerResponse objResponse;
 
   @override
-  List<Object?> get props => [ failure ];
+  List<Object?> get props => [ objResponse ];
 }
 
-class RemoteInspeccionTipoFailedMessage extends RemoteInspeccionTipoState {
-  const RemoteInspeccionTipoFailedMessage(this.errorMessage);
+/// SERVER FAILED MESSAGE
+class RemoteInspeccionTipoServerFailedMessage extends RemoteInspeccionTipoState {
+  const RemoteInspeccionTipoServerFailedMessage(this.errorMessage);
 
   final String? errorMessage;
 
   @override
   List<Object?> get props => [ errorMessage ];
+}
+
+/// SERVER FAILURE
+class RemoteInspeccionTipoServerFailure extends RemoteInspeccionTipoState {
+  const RemoteInspeccionTipoServerFailure(this.failure);
+
+  final ServerException? failure;
+
+  @override
+  List<Object?> get props => [ failure ];
 }

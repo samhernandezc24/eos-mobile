@@ -93,11 +93,11 @@ class _InspeccionConfiguracionInspeccionesTiposPageState extends State<Inspeccio
                     return const Center(child: AppLoadingIndicator());
                   }
 
-                  if (state is RemoteInspeccionTipoFailedMessage) {
+                  if (state is RemoteInspeccionTipoServerFailedMessage) {
                     return _buildFailedMessageInspeccionTipo(context, state);
                   }
 
-                  if (state is RemoteInspeccionTipoFailure) {
+                  if (state is RemoteInspeccionTipoServerFailure) {
                     return _buildFailureInspeccionTipo(context, state);
                   }
 
@@ -127,7 +127,7 @@ class _InspeccionConfiguracionInspeccionesTiposPageState extends State<Inspeccio
     );
   }
 
-  Widget _buildFailedMessageInspeccionTipo(BuildContext context, RemoteInspeccionTipoFailedMessage state) {
+  Widget _buildFailedMessageInspeccionTipo(BuildContext context, RemoteInspeccionTipoServerFailedMessage state) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -154,7 +154,7 @@ class _InspeccionConfiguracionInspeccionesTiposPageState extends State<Inspeccio
     );
   }
 
-  Widget _buildFailureInspeccionTipo(BuildContext context, RemoteInspeccionTipoFailure state) {
+  Widget _buildFailureInspeccionTipo(BuildContext context, RemoteInspeccionTipoServerFailure state) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

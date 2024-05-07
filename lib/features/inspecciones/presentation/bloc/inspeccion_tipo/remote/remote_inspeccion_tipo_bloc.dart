@@ -1,9 +1,10 @@
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
-import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_tipo/delete_inspeccion_tipo_usecase.dart';
-import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_tipo/list_inspecciones_tipos_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_tipo/list_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_tipo/store_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_tipo/update_inspeccion_tipo_usecase.dart';
+
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 part 'remote_inspeccion_tipo_event.dart';
@@ -23,7 +24,7 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
   }
 
   // Casos de uso
-  final ListInspeccionesTiposUseCase _listInspeccionesTiposUseCase;
+  final ListInspeccionTipoUseCase _listInspeccionesTiposUseCase;
   final StoreInspeccionTipoUseCase _storeInspeccionTipoUseCase;
   final UpdateInspeccionTipoUseCase _updateInspeccionTipoUseCase;
   final DeleteInspeccionTipoUseCase _deleteInspeccionTipoUseCase;
@@ -38,31 +39,31 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionTipoFailedMessage(objDataState.errorMessage));
+      emit(RemoteInspeccionTipoServerFailedMessage(objDataState.errorMessage));
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionTipoFailure(objDataState.serverException));
+      emit(RemoteInspeccionTipoServerFailure(objDataState.serverException));
     }
   }
 
   Future<void> onStoreInspeccionTipo(StoreInspeccionTipo event, Emitter<RemoteInspeccionTipoState> emit) async {
     emit(RemoteInspeccionTipoLoading());
 
-    final objDataState = await _storeInspeccionTipoUseCase(params: event.inspeccionTipo);
+    final objDataState = await _storeInspeccionTipoUseCase(params: event.objData);
 
     if (objDataState is DataSuccess) {
-      emit(RemoteInspeccionTipoResponseSuccess(objDataState.data!));
+      emit(RemoteInspeccionTipoServerResponseSuccess(objDataState.data!));
       await _reloadInspeccionesTipos(emit);
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionTipoFailedMessage(objDataState.errorMessage));
+      emit(RemoteInspeccionTipoServerFailedMessage(objDataState.errorMessage));
       await _reloadInspeccionesTipos(emit);
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionTipoFailure(objDataState.serverException));
+      emit(RemoteInspeccionTipoServerFailure(objDataState.serverException));
       await _reloadInspeccionesTipos(emit);
     }
   }
@@ -70,20 +71,20 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
   Future<void> onUpdateInspeccionTipo(UpdateInspeccionTipo event, Emitter<RemoteInspeccionTipoState> emit) async {
     emit(RemoteInspeccionTipoLoading());
 
-    final objDataState = await _updateInspeccionTipoUseCase(params: event.inspeccionTipo);
+    final objDataState = await _updateInspeccionTipoUseCase(params: event.objData);
 
     if (objDataState is DataSuccess) {
-      emit(RemoteInspeccionTipoResponseSuccess(objDataState.data!));
+      emit(RemoteInspeccionTipoServerResponseSuccess(objDataState.data!));
       await _reloadInspeccionesTipos(emit);
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionTipoFailedMessage(objDataState.errorMessage));
+      emit(RemoteInspeccionTipoServerFailedMessage(objDataState.errorMessage));
       await _reloadInspeccionesTipos(emit);
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionTipoFailure(objDataState.serverException));
+      emit(RemoteInspeccionTipoServerFailure(objDataState.serverException));
       await _reloadInspeccionesTipos(emit);
     }
   }
@@ -91,20 +92,20 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
   Future<void> onDeleteInspeccionTipo(DeleteInspeccionTipo event, Emitter<RemoteInspeccionTipoState> emit) async {
     emit(RemoteInspeccionTipoLoading());
 
-    final objDataState = await _deleteInspeccionTipoUseCase(params: event.inspeccionTipo);
+    final objDataState = await _deleteInspeccionTipoUseCase(params: event.objData);
 
     if (objDataState is DataSuccess) {
-      emit(RemoteInspeccionTipoResponseSuccess(objDataState.data!));
+      emit(RemoteInspeccionTipoServerResponseSuccess(objDataState.data!));
       await _reloadInspeccionesTipos(emit);
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionTipoFailedMessage(objDataState.errorMessage));
+      emit(RemoteInspeccionTipoServerFailedMessage(objDataState.errorMessage));
       await _reloadInspeccionesTipos(emit);
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionTipoFailure(objDataState.serverException));
+      emit(RemoteInspeccionTipoServerFailure(objDataState.serverException));
       await _reloadInspeccionesTipos(emit);
     }
   }

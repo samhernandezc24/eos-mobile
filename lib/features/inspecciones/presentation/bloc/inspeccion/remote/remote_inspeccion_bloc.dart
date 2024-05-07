@@ -1,4 +1,3 @@
-import 'package:eos_mobile/core/network/data/server_response.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_create_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_res_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_index_entity.dart';
@@ -7,6 +6,7 @@ import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/crea
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/data_source_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/index_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/store_inspeccion_usecase.dart';
+
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 part 'remote_inspeccion_event.dart';

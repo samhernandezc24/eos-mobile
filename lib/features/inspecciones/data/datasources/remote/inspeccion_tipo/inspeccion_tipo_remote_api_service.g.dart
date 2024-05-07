@@ -14,7 +14,7 @@ class _InspeccionTipoRemoteApiService
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://10.0.2.2:7000/api/Inspecciones/Tipos';
+    baseUrl ??= ListAPI.inspeccionesTipos;
   }
 
   final Dio _dio;
@@ -22,20 +22,20 @@ class _InspeccionTipoRemoteApiService
   String? baseUrl;
 
   @override
-  Future<HttpResponse<ApiResponse>> listInspeccionesTipos(
-    String token,
+  Future<HttpResponse<ServerResponse>> list(
     String contentType,
+    String token,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'authorization': token,
       r'content-type': contentType,
+      r'authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ApiResponse>>(Options(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -52,28 +52,28 @@ class _InspeccionTipoRemoteApiService
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ApiResponse.fromJson(_result.data!);
+    final value = ServerResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<ApiResponse>> storeInspeccionTipo(
-    String token,
+  Future<HttpResponse<ServerResponse>> store(
     String contentType,
-    InspeccionTipoReqModel inspeccionTipo,
+    String token,
+    InspeccionTipoStoreReqModel objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'authorization': token,
       r'content-type': contentType,
+      r'authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(inspeccionTipo.toJson());
+    _data.addAll(objData.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ApiResponse>>(Options(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -90,28 +90,28 @@ class _InspeccionTipoRemoteApiService
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ApiResponse.fromJson(_result.data!);
+    final value = ServerResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<ApiResponse>> updateInspeccionTipo(
-    String token,
+  Future<HttpResponse<ServerResponse>> update(
     String contentType,
-    InspeccionTipoModel inspeccionTipo,
+    String token,
+    InspeccionTipoModel objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'authorization': token,
       r'content-type': contentType,
+      r'authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(inspeccionTipo.toJson());
+    _data.addAll(objData.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ApiResponse>>(Options(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -128,28 +128,28 @@ class _InspeccionTipoRemoteApiService
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ApiResponse.fromJson(_result.data!);
+    final value = ServerResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<ApiResponse>> deleteInspeccionTipo(
-    String token,
+  Future<HttpResponse<ServerResponse>> delete(
     String contentType,
-    InspeccionTipoModel inspeccionTipo,
+    String token,
+    InspeccionTipoModel objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'authorization': token,
       r'content-type': contentType,
+      r'authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(inspeccionTipo.toJson());
+    _data.addAll(objData.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ApiResponse>>(Options(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -166,7 +166,7 @@ class _InspeccionTipoRemoteApiService
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ApiResponse.fromJson(_result.data!);
+    final value = ServerResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

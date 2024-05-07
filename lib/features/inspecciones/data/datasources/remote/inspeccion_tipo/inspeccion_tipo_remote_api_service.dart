@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion_tipo/inspeccion_tipo_model.dart';
-import 'package:eos_mobile/features/inspecciones/data/models/inspeccion_tipo/inspeccion_tipo_req_model.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/inspeccion_tipo/inspeccion_tipo_store_req_model.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -14,32 +14,32 @@ abstract class InspeccionTipoRemoteApiService {
 
   /// LISTA DE INSPECCIONES TIPOS
   @POST('/List')
-  Future<HttpResponse<ApiResponse>> listInspeccionesTipos(
-    @Header(HttpHeaders.authorizationHeader) String token,
+  Future<HttpResponse<ServerResponse>> list(
     @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Header(HttpHeaders.authorizationHeader) String token,
   );
 
   /// GUARDAR INSPECCIÓN TIPO
   @POST('/Store')
-  Future<HttpResponse<ApiResponse>> storeInspeccionTipo(
-    @Header(HttpHeaders.authorizationHeader) String token,
+  Future<HttpResponse<ServerResponse>> store(
     @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Body() InspeccionTipoReqModel inspeccionTipo,
+    @Header(HttpHeaders.authorizationHeader) String token,
+    @Body() InspeccionTipoStoreReqModel objData,
   );
 
   /// ACTUALIZAR INSPECCIÓN TIPO
   @POST('/Update')
-  Future<HttpResponse<ApiResponse>> updateInspeccionTipo(
-    @Header(HttpHeaders.authorizationHeader) String token,
+  Future<HttpResponse<ServerResponse>> update(
     @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Body() InspeccionTipoModel inspeccionTipo,
+    @Header(HttpHeaders.authorizationHeader) String token,
+    @Body() InspeccionTipoModel objData,
   );
 
   /// ELIMINAR INSPECCIÓN TIPO
   @POST('/Delete')
-  Future<HttpResponse<ApiResponse>> deleteInspeccionTipo(
-    @Header(HttpHeaders.authorizationHeader) String token,
+  Future<HttpResponse<ServerResponse>> delete(
     @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Body() InspeccionTipoModel inspeccionTipo,
+    @Header(HttpHeaders.authorizationHeader) String token,
+    @Body() InspeccionTipoModel objData,
   );
 }

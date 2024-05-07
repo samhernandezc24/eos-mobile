@@ -10,7 +10,7 @@ class InspeccionTipoTile extends StatelessWidget {
   final void Function(InspeccionTipoEntity inspeccionTipo)? onInspeccionTipoPressed;
 
   /// METHODS
-  Future<void> _showFailureDialog(BuildContext context, RemoteInspeccionTipoFailure state) {
+  Future<void> _showFailureDialog(BuildContext context, RemoteInspeccionTipoServerFailure state) {
     return showDialog<void>(
       context: context,
       builder: (_) => AlertDialog(
@@ -40,7 +40,7 @@ class InspeccionTipoTile extends StatelessWidget {
     );
   }
 
-  Future<void> _showFailedMessageDialog(BuildContext context, RemoteInspeccionTipoFailedMessage state) {
+  Future<void> _showFailedMessageDialog(BuildContext context, RemoteInspeccionTipoServerFailedMessage state) {
     return showDialog<void>(
       context: context,
       builder: (_) => AlertDialog(
@@ -80,22 +80,22 @@ class InspeccionTipoTile extends StatelessWidget {
       builder: (BuildContext context) {
         return BlocConsumer<RemoteInspeccionTipoBloc, RemoteInspeccionTipoState>(
           listener: (BuildContext context, RemoteInspeccionTipoState state) {
-            if (state is RemoteInspeccionTipoFailure) {
+            if (state is RemoteInspeccionTipoServerFailure) {
                _showFailureDialog(context, state);
             }
 
-            if (state is RemoteInspeccionTipoFailedMessage) {
+            if (state is RemoteInspeccionTipoServerFailedMessage) {
               _showFailedMessageDialog(context, state);
             }
 
-            if (state is RemoteInspeccionTipoResponseSuccess) {
+            if (state is RemoteInspeccionTipoServerResponseSuccess) {
               Navigator.pop(context);
 
               ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(
-                  content: Text(state.apiResponse.message, softWrap: true),
+                  content: Text(state.objResponse.message.toString(), softWrap: true),
                   backgroundColor: Colors.green,
                   behavior: SnackBarBehavior.fixed,
                   elevation: 0,

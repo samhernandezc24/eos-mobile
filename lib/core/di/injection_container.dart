@@ -49,7 +49,7 @@ import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/data
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/index_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/store_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_tipo/delete_inspeccion_tipo_usecase.dart';
-import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_tipo/list_inspecciones_tipos_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_tipo/list_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_tipo/store_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_tipo/update_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/create_unidad_usecase.dart';
@@ -125,7 +125,7 @@ Future<void> initializeDependencies() async {
 
   sl.registerSingleton<ListCategoriasItemsUseCase>(ListCategoriasItemsUseCase(sl()));
   sl.registerSingleton<ListCategoriasUseCase>(ListCategoriasUseCase(sl()));
-  sl.registerSingleton<ListInspeccionesTiposUseCase>(ListInspeccionesTiposUseCase(sl()));
+  sl.registerSingleton<ListInspeccionTipoUseCase>(ListInspeccionTipoUseCase(sl()));
 
   sl.registerSingleton<PredictiveUnidadInventarioUseCase>(PredictiveUnidadInventarioUseCase(sl()));
   sl.registerSingleton<PredictiveUnidadUseCase>(PredictiveUnidadUseCase(sl()));

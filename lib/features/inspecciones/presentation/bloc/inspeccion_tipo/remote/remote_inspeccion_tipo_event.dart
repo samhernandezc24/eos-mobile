@@ -7,31 +7,35 @@ sealed class RemoteInspeccionTipoEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+/// [ListInspeccionTipoUseCase]
 class ListInspeccionesTipos extends RemoteInspeccionTipoEvent {}
 
+/// [StoreInspeccionTipoUseCase]
 class StoreInspeccionTipo extends RemoteInspeccionTipoEvent {
-  const StoreInspeccionTipo(this.inspeccionTipo);
+  const StoreInspeccionTipo(this.objData);
 
-  final InspeccionTipoReqEntity inspeccionTipo;
+  final InspeccionTipoStoreReqEntity objData;
 
   @override
-  List<Object?> get props => [ inspeccionTipo ];
+  List<Object?> get props => [ objData ];
 }
 
+/// [UpdateInspeccionTipoUseCase]
 class UpdateInspeccionTipo extends RemoteInspeccionTipoEvent {
-  const UpdateInspeccionTipo(this.inspeccionTipo);
+  const UpdateInspeccionTipo(this.objData);
 
-  final InspeccionTipoEntity inspeccionTipo;
+  final InspeccionTipoEntity objData;
 
   @override
-  List<Object?> get props => [ inspeccionTipo ];
+  List<Object?> get props => [ objData ];
 }
 
+/// [DeleteInspeccionTipoUseCase]
 class DeleteInspeccionTipo extends RemoteInspeccionTipoEvent {
-  const DeleteInspeccionTipo(this.inspeccionTipo);
+  const DeleteInspeccionTipo(this.objData);
 
-  final InspeccionTipoEntity inspeccionTipo;
+  final InspeccionTipoEntity objData;
 
   @override
-  List<Object?> get props => [ inspeccionTipo ];
+  List<Object?> get props => [ objData ];
 }

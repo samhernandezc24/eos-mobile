@@ -1,5 +1,5 @@
 import 'package:eos_mobile/core/utils/string_utils.dart';
-import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
@@ -36,7 +36,7 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
   }
 
   // METHODS
-  Future<void> _showFailureDialog(BuildContext context, RemoteInspeccionTipoFailure state) {
+  Future<void> _showFailureDialog(BuildContext context, RemoteInspeccionTipoServerFailure state) {
     return showDialog<void>(
       context: context,
       builder: (_) => AlertDialog(
@@ -66,7 +66,7 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
     );
   }
 
-  Future<void> _showFailedMessageDialog(BuildContext context, RemoteInspeccionTipoFailedMessage state) {
+  Future<void> _showFailedMessageDialog(BuildContext context, RemoteInspeccionTipoServerFailedMessage state) {
     return showDialog<void>(
       context: context,
       builder: (_) => AlertDialog(
@@ -97,7 +97,7 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
   }
 
   void _handleStoreInspeccionTipo() {
-    final InspeccionTipoReqEntity objData = InspeccionTipoReqEntity(codigo: _codigoController.text, name: _nameController.text);
+    final InspeccionTipoStoreReqEntity objData = InspeccionTipoStoreReqEntity(codigo: _codigoController.text, name: _nameController.text);
     final bool isValidForm = _formKey.currentState!.validate();
 
     if (isValidForm) {
@@ -130,22 +130,22 @@ class _CreateInspeccionTipoFormState extends State<CreateInspeccionTipoForm> {
 
           BlocConsumer<RemoteInspeccionTipoBloc, RemoteInspeccionTipoState>(
             listener: (BuildContext context, RemoteInspeccionTipoState state) {
-              if (state is RemoteInspeccionTipoFailure) {
+              if (state is RemoteInspeccionTipoServerFailure) {
                 _showFailureDialog(context, state);
               }
 
-              if (state is RemoteInspeccionTipoFailedMessage) {
+              if (state is RemoteInspeccionTipoServerFailedMessage) {
                 _showFailedMessageDialog(context, state);
               }
 
-              if (state is RemoteInspeccionTipoResponseSuccess) {
+              if (state is RemoteInspeccionTipoServerResponseSuccess) {
                 Navigator.pop(context);
 
                 ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   SnackBar(
-                    content: Text(state.apiResponse.message, softWrap: true),
+                    content: Text(state.objResponse.message.toString(), softWrap: true),
                     backgroundColor: Colors.green,
                     behavior: SnackBarBehavior.fixed,
                     elevation: 0,

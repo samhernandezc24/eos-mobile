@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion_tipo/inspeccion_tipo_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion_tipo/inspeccion_tipo_model.dart';
-import 'package:eos_mobile/features/inspecciones/data/models/inspeccion_tipo/inspeccion_tipo_req_model.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/inspeccion_tipo/inspeccion_tipo_store_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
-import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_tipo_repository.dart';
+
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
@@ -15,32 +16,33 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
 
   /// LISTADO DE INSPECCIONES TIPOS
   @override
-  Future<DataState<List<InspeccionTipoModel>>> listInspeccionesTipos() async {
+  Future<DataState<List<InspeccionTipoModel>>> list() async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
 
       // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _inspeccionTipoRemoteApiService.listInspeccionesTipos('Bearer $token', 'application/json');
+      final httpResponse = await _inspeccionTipoRemoteApiService.list('application/json', 'Bearer $token');
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        final ApiResponse apiResponse = httpResponse.data;
-        if (apiResponse.session) {
-          if (apiResponse.action) {
-            final dynamic result = apiResponse.result;
-            // ignore: avoid_dynamic_calls
-            final List<dynamic> lstResult = result['inspeccionesTipos'] as List<dynamic>;
+        final ServerResponse objResponse = httpResponse.data;
 
-            final List<InspeccionTipoModel> lstInspeccionesTipos = lstResult
+        if (objResponse.session!) {
+          if (objResponse.action!) {
+            final result = objResponse.result;
+            // ignore: avoid_dynamic_calls
+            final List<dynamic> lstInspeccionesTipos = result['inspeccionesTipos'] as List<dynamic>;
+
+            final List<InspeccionTipoModel> inspeccionTipoList = lstInspeccionesTipos
                 .map<InspeccionTipoModel>((dynamic i) => InspeccionTipoModel.fromJson(i as Map<String, dynamic>))
                 .toList();
 
-            return DataSuccess(lstInspeccionesTipos);
+            return DataSuccess(inspeccionTipoList);
           } else {
-            return DataFailedMessage(apiResponse.message);
+            return DataFailedMessage(objResponse.message ?? 'Error inesperado');
           }
         } else {
-          return DataFailedMessage(apiResponse.message);
+          return DataFailedMessage(objResponse.message ?? 'Error inesperado');
         }
       } else {
         return DataFailed(
@@ -61,27 +63,29 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
 
   /// GUARDADO DE INSPECCIÓN TIPO
   @override
-  Future<DataState<ApiResponse>> storeInspeccionTipo(InspeccionTipoReqEntity inspeccionTipo) async {
+  Future<DataState<ServerResponse>> store(InspeccionTipoStoreReqEntity objData) async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
 
       // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _inspeccionTipoRemoteApiService.storeInspeccionTipo(
-        'Bearer $token',
+      final httpResponse = await _inspeccionTipoRemoteApiService.store(
         'application/json',
-        InspeccionTipoReqModel.fromEntity(inspeccionTipo),
+        'Bearer $token',
+        InspeccionTipoStoreReqModel.fromEntity(objData),
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        if (httpResponse.data.session) {
-          if (httpResponse.data.action) {
-            return DataSuccess(httpResponse.data);
+        final ServerResponse objResponse = httpResponse.data;
+
+        if (objResponse.session!) {
+          if (objResponse.action!) {
+            return DataSuccess(objResponse);
           } else {
-            return DataFailedMessage(httpResponse.data.message);
+            return DataFailedMessage(objResponse.message ?? 'Error inesperado');
           }
         } else {
-          return DataFailedMessage(httpResponse.data.message);
+          return DataFailedMessage(objResponse.message ?? 'Error inesperado');
         }
       } else {
         return DataFailed(
@@ -102,27 +106,29 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
 
   /// ACTUALIZACIÓN DE INSPECCIÓN TIPO
   @override
-  Future<DataState<ApiResponse>> updateInspeccionTipo(InspeccionTipoEntity inspeccionTipo) async {
+  Future<DataState<ServerResponse>> update(InspeccionTipoEntity objData) async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
 
       // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _inspeccionTipoRemoteApiService.updateInspeccionTipo(
-        'Bearer $token',
+      final httpResponse = await _inspeccionTipoRemoteApiService.update(
         'application/json',
-        InspeccionTipoModel.fromEntity(inspeccionTipo),
+        'Bearer $token',
+        InspeccionTipoModel.fromEntity(objData),
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        if (httpResponse.data.session) {
-          if (httpResponse.data.action) {
-            return DataSuccess(httpResponse.data);
+        final ServerResponse objResponse = httpResponse.data;
+
+        if (objResponse.session!) {
+          if (objResponse.action!) {
+            return DataSuccess(objResponse);
           } else {
-            return DataFailedMessage(httpResponse.data.message);
+            return DataFailedMessage(objResponse.message ?? 'Error inesperado');
           }
         } else {
-          return DataFailedMessage(httpResponse.data.message);
+          return DataFailedMessage(objResponse.message ?? 'Error inesperado');
         }
       } else {
         return DataFailed(
@@ -143,27 +149,29 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
 
   /// ELIMINACIÓN DE INSPECCIÓN TIPO
   @override
-  Future<DataState<ApiResponse>> deleteInspeccionTipo(InspeccionTipoEntity inspeccionTipo) async {
+  Future<DataState<ServerResponse>> delete(InspeccionTipoEntity objData) async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
 
       // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _inspeccionTipoRemoteApiService.deleteInspeccionTipo(
-        'Bearer $token',
+      final httpResponse = await _inspeccionTipoRemoteApiService.delete(
         'application/json',
-        InspeccionTipoModel.fromEntity(inspeccionTipo),
+        'Bearer $token',
+        InspeccionTipoModel.fromEntity(objData),
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        if (httpResponse.data.session) {
-          if (httpResponse.data.action) {
-            return DataSuccess(httpResponse.data);
+        final ServerResponse objResponse = httpResponse.data;
+
+        if (objResponse.session!) {
+          if (objResponse.action!) {
+            return DataSuccess(objResponse);
           } else {
-            return DataFailedMessage(httpResponse.data.message);
+            return DataFailedMessage(objResponse.message ?? 'Error inesperado');
           }
         } else {
-          return DataFailedMessage(httpResponse.data.message);
+          return DataFailedMessage(objResponse.message ?? 'Error inesperado');
         }
       } else {
         return DataFailed(
