@@ -6,8 +6,13 @@ import 'package:eos_mobile/core/data/filters_multiple.dart';
 import 'package:eos_mobile/core/utils/data_source_utils.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/create/create_inspeccion_page.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/static_text_scale.dart';
 import 'package:rxdart/rxdart.dart';
+
+part '../../widgets/inspeccion/list/_results_list.dart';
+part '../../widgets/inspeccion/list/_search_input.dart';
 
 class InspeccionListPage extends StatefulWidget with GetItStatefulWidgetMixin {
   InspeccionListPage({Key? key}) : super(key: key);
@@ -80,8 +85,32 @@ class _InspeccionListPageState extends State<InspeccionListPage> {
   }
 
   // METHODS
-  Future<void> initialization() async {
+  void initialization() {
     context.read<RemoteInspeccionBloc>().add(FetchInspeccionInit());
+  }
+
+  void _handleSearchSubmitted(String query) {}
+
+  void _handleCreateInspeccionPressed(BuildContext context) {
+    Navigator.push<void>(
+      context,
+      PageRouteBuilder<void>(
+        transitionDuration : $styles.times.pageTransition,
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+          const Offset begin  = Offset(0, 1);
+          const Offset end    = Offset.zero;
+          const Cubic curve   = Curves.ease;
+
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive<Offset>(tween),
+            child: const CreateInspeccionPage(),
+          );
+        },
+        fullscreenDialog: true,
+      ),
+    );
   }
 
   // DATASOURCE:
@@ -112,6 +141,8 @@ class _InspeccionListPageState extends State<InspeccionListPage> {
     };
 
     _isLoading = true;
+
+    context.read<RemoteInspeccionBloc>().add(FetchInspeccionDataSource(varArgs));
   }
 
   List<Map<String, dynamic>> getSearchFilters() {
@@ -130,35 +161,24 @@ class _InspeccionListPageState extends State<InspeccionListPage> {
   @override
   Widget build(BuildContext context) {
     final Widget content = GestureDetector(
+      onTap: FocusManager.instance.primaryFocus?.unfocus,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          Container(
+            padding: EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, 0),
+            child: _SearchInput(onSubmit: _handleSearchSubmitted),
+          ),
+
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: $styles.insets.xs * 1.5),
+            child: _buildStatusBar(context),
+          ),
+
           Expanded(
-            child: BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
-              listener: (context, state) {
-                if (state is RemoteInspeccionInitialization) {
-                  setState(() {
-                    // FRAGMENTO MODIFICABLE - LISTAS
-                    lstUnidadesTipos        = state.inspeccionIndex?.unidadesTipos ?? [];
-                    lstInspeccionesEstatus  = state.inspeccionIndex?.inspeccionesEstatus ?? [];
-                    lstUsuarios             = state.inspeccionIndex?.usuarios ?? [];
-
-                    // FRAGMENTO NO MODIFICABLE - COLUMNAS
-                    final dataSourcePersistence = state.inspeccionIndex?.dataSourcePersistence;
-
-                    searchFilters = dataSourcePersistence?.searchFilters ?? getSearchFilters();
-
-                    // FRAGMENTO NO MODIFICABLE - FILTROS
-                    // renderFilters(dataSourcePersistence);
-                  });
-                }
-              },
-              builder: (context, state) {
-                if (state is RemoteInspeccionLoading) {
-                  return const Center(child: AppLoadingIndicator());
-                }
-
-                return const SizedBox.shrink();
-              },
+            child: RefreshIndicator(
+              onRefresh: () async {},
+              child: const _ResultsList(),
             ),
           ),
         ],
@@ -172,6 +192,45 @@ class _InspeccionListPageState extends State<InspeccionListPage> {
           Positioned.fill(child: ColoredBox(color: Theme.of(context).colorScheme.background, child: content)),
         ],
       ),
+      // AGREGAR NUEVA INSPECCION:
+      floatingActionButton: _buildFloatingActionButton(context),
+    );
+  }
+
+  Widget _buildStatusBar(BuildContext context) {
+    return MergeSemantics(
+      child: StaticTextScale(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Gap($styles.insets.sm),
+
+                Text('10 resultados', style: $styles.textStyles.body),
+              ],
+            ),
+
+            Row(
+              children: <Widget>[
+                // IconButton(onPressed: (){}, icon: const Icon(Icons.manage_search), tooltip: 'Filtros de búsqueda'),
+                IconButton(onPressed: (){}, icon: const Icon(Icons.filter_list), tooltip: 'Filtros'),
+                IconButton(onPressed: (){}, icon: const Icon(Icons.format_line_spacing), tooltip: 'Ordenar'),
+
+                Gap($styles.insets.xs),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+   Widget _buildFloatingActionButton(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () => _handleCreateInspeccionPressed(context),
+      tooltip: 'Nueva inspección',
+      child: const Icon(Icons.add),
     );
   }
 }

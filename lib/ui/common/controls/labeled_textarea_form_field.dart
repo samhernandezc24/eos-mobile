@@ -6,12 +6,12 @@ class LabeledTextareaFormField extends StatelessWidget {
     required this.labelText,
     Key? key,
     this.maxCharacters,
-    this.maxLines = 5,
-    this.keyboardType = TextInputType.text,
-    this.textInputAction = TextInputAction.next,
+    this.maxLines         = 5,
+    this.keyboardType     = TextInputType.text,
+    this.textInputAction  = TextInputAction.next,
+    this.autoFocus        = false,
     this.hintText,
     this.validator,
-    this.autoFocus = false,
   }) : super(key: key);
 
   final TextEditingController controller;
@@ -19,33 +19,33 @@ class LabeledTextareaFormField extends StatelessWidget {
   final String? hintText;
   final int? maxCharacters;
   final int maxLines;
+  final bool autoFocus;
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
-  final String? Function(String?)? validator;
-  final bool autoFocus;
+  final FormFieldValidator<String>? validator;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          labelText,
-          style: $styles.textStyles.label,
-        ),
+        Text(labelText, style: $styles.textStyles.label),
+
         Gap($styles.insets.xs),
+
         TextFormField(
-          controller: controller,
-          autofocus: autoFocus,
-          maxLines: maxLines,
-          maxLength: maxCharacters,
-          decoration: InputDecoration(
+          autovalidateMode  : AutovalidateMode.onUserInteraction,
+          autofocus         : autoFocus,
+          controller        : controller,
+          decoration        : InputDecoration(
             contentPadding  : Globals.kDefaultContentPadding,
             hintText        : hintText,
           ),
-          keyboardType: keyboardType,
-          textInputAction: textInputAction,
-          validator: validator,
+          keyboardType      : keyboardType,
+          maxLines          : maxLines,
+          maxLength         : maxCharacters,
+          textInputAction   : textInputAction,
+          validator         : validator,
         ),
       ],
     );

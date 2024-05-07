@@ -15,21 +15,21 @@ part 'remote_inspeccion_state.dart';
 class RemoteInspeccionBloc extends Bloc<RemoteInspeccionEvent, RemoteInspeccionState> {
   RemoteInspeccionBloc(
     this._indexInspeccionUseCase,
+    this._dataSourceInspeccionUseCase,
     this._createInspeccionUseCase,
     this._storeInspeccionUseCase,
-    this._dataSourceInspeccionUseCase,
   ) : super(RemoteInspeccionLoading()) {
     on<FetchInspeccionInit>(onFetchInspeccionInit);
-    on<CreateInspeccionData>(onCreateInspeccion);
+    on<FetchInspeccionDataSource>(onFetchInspeccionDataSource);
+    on<CreateInspeccion>(onCreateInspeccion);
     on<StoreInspeccion>(onStoreInspeccion);
-    on<DataSourceInspeccion>(onDataSourceInspeccion);
   }
 
   // Casos de uso
   final IndexInspeccionUseCase _indexInspeccionUseCase;
+  final DataSourceInspeccionUseCase _dataSourceInspeccionUseCase;
   final CreateInspeccionUseCase _createInspeccionUseCase;
   final StoreInspeccionUseCase _storeInspeccionUseCase;
-  final DataSourceInspeccionUseCase _dataSourceInspeccionUseCase;
 
   Future<void> onFetchInspeccionInit(FetchInspeccionInit event, Emitter<RemoteInspeccionState> emit) async {
     emit(RemoteInspeccionLoading());
@@ -41,65 +41,65 @@ class RemoteInspeccionBloc extends Bloc<RemoteInspeccionEvent, RemoteInspeccionS
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionFailedMessage(objDataState.errorMessage));
+      emit(RemoteInspeccionServerFailedMessage(objDataState.errorMessage));
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionFailure(objDataState.serverException));
+      emit(RemoteInspeccionServerFailure(objDataState.serverException));
     }
   }
 
-  Future<void> onCreateInspeccion(CreateInspeccionData event, Emitter<RemoteInspeccionState> emit) async {
-    emit(RemoteInspeccionLoading());
-
-    final objDataState = await _createInspeccionUseCase(params: NoParams());
-
-    if (objDataState is DataSuccess) {
-      emit(RemoteInspeccionCreateSuccess(objDataState.data));
-    }
-
-    if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionFailedMessage(objDataState.errorMessage));
-    }
-
-    if (objDataState is DataFailed) {
-      emit(RemoteInspeccionFailure(objDataState.serverException));
-    }
-  }
-
-  Future<void> onStoreInspeccion(StoreInspeccion event, Emitter<RemoteInspeccionState> emit) async {
-    emit(RemoteInspeccionLoading());
-
-    final objDataState = await _storeInspeccionUseCase(params: event.inspeccion);
-
-    if (objDataState is DataSuccess) {
-      emit(RemoteInspeccionResponseSuccess(objDataState.data!));
-    }
-
-    if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionFailedMessage(objDataState.errorMessage));
-    }
-
-    if (objDataState is DataFailed) {
-      emit(RemoteInspeccionFailure(objDataState.serverException));
-    }
-  }
-
-  Future<void> onDataSourceInspeccion(DataSourceInspeccion event, Emitter<RemoteInspeccionState> emit) async {
+    Future<void> onFetchInspeccionDataSource(FetchInspeccionDataSource event, Emitter<RemoteInspeccionState> emit) async {
     emit(RemoteInspeccionLoading());
 
     final objDataState = await _dataSourceInspeccionUseCase(params: event.objData);
 
     if (objDataState is DataSuccess) {
-      emit(RemoteInspeccionDataSourceSuccess(objDataState.data!));
+      emit(RemoteInspeccionDataSourceLoaded(objDataState.data));
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionFailedMessage(objDataState.errorMessage));
+      emit(RemoteInspeccionServerFailedMessage(objDataState.errorMessage));
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionFailure(objDataState.serverException));
+      emit(RemoteInspeccionServerFailure(objDataState.serverException));
+    }
+  }
+
+  Future<void> onCreateInspeccion(CreateInspeccion event, Emitter<RemoteInspeccionState> emit) async {
+    emit(RemoteInspeccionCreating());
+
+    final objDataState = await _createInspeccionUseCase(params: NoParams());
+
+    if (objDataState is DataSuccess) {
+      emit(RemoteInspeccionCreateLoaded(objDataState.data));
+    }
+
+    if (objDataState is DataFailedMessage) {
+      emit(RemoteInspeccionServerFailedMessage(objDataState.errorMessage));
+    }
+
+    if (objDataState is DataFailed) {
+      emit(RemoteInspeccionServerFailure(objDataState.serverException));
+    }
+  }
+
+  Future<void> onStoreInspeccion(StoreInspeccion event, Emitter<RemoteInspeccionState> emit) async {
+    emit(RemoteInspeccionStoring());
+
+    final objDataState = await _storeInspeccionUseCase(params: event.objData);
+
+    if (objDataState is DataSuccess) {
+      emit(RemoteInspeccionStored(objDataState.data));
+    }
+
+    if (objDataState is DataFailedMessage) {
+      emit(RemoteInspeccionServerFailedMessage(objDataState.errorMessage));
+    }
+
+    if (objDataState is DataFailed) {
+      emit(RemoteInspeccionServerFailure(objDataState.serverException));
     }
   }
 }

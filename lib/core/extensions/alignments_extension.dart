@@ -7,11 +7,41 @@ class TopLeft extends Align {
     double? heightFactor,
     Widget? child,
   }) : super(
-          key: key,
-          widthFactor: widthFactor,
-          heightFactor: heightFactor,
-          child: child,
-          alignment: Alignment.topLeft,
+          key           : key,
+          widthFactor   : widthFactor,
+          heightFactor  : heightFactor,
+          child         : child,
+          alignment     : Alignment.topLeft,
+        );
+}
+
+class TopCenter extends Align {
+  const TopCenter({
+    Key? key,
+    double? widthFactor,
+    double? heightFactor,
+    Widget? child,
+  }) : super(
+          key           : key,
+          widthFactor   : widthFactor,
+          heightFactor  : heightFactor,
+          child         : child,
+          alignment     : Alignment.topCenter,
+        );
+}
+
+class TopRight extends Align {
+  const TopRight({
+    Key? key,
+    double? widthFactor,
+    double? heightFactor,
+    Widget? child,
+  }) : super(
+          key           : key,
+          widthFactor   : widthFactor,
+          heightFactor  : heightFactor,
+          child         : child,
+          alignment     : Alignment.topRight,
         );
 }
 
@@ -22,11 +52,41 @@ class CenterLeft extends Align {
     double? heightFactor,
     Widget? child,
   }) : super(
-          key: key,
-          widthFactor: widthFactor,
-          heightFactor: heightFactor,
-          child: child,
-          alignment: Alignment.centerLeft,
+          key           : key,
+          widthFactor   : widthFactor,
+          heightFactor  : heightFactor,
+          child         : child,
+          alignment     : Alignment.centerLeft,
+        );
+}
+
+class CenterRight extends Align {
+  const CenterRight({
+    Key? key,
+    double? widthFactor,
+    double? heightFactor,
+    Widget? child,
+  }) : super(
+          key           : key,
+          widthFactor   : widthFactor,
+          heightFactor  : heightFactor,
+          child         : child,
+          alignment     : Alignment.centerRight,
+        );
+}
+
+class BottomLeft extends Align {
+  const BottomLeft({
+    Key? key,
+    double? widthFactor,
+    double? heightFactor,
+    Widget? child,
+  }) : super(
+          key           : key,
+          widthFactor   : widthFactor,
+          heightFactor  : heightFactor,
+          child         : child,
+          alignment     : Alignment.bottomLeft,
         );
 }
 
@@ -37,10 +97,25 @@ class BottomCenter extends Align {
     double? heightFactor,
     Widget? child,
   }) : super(
-          key: key,
-          widthFactor: widthFactor,
-          heightFactor: heightFactor,
-          child: child,
-          alignment: Alignment.bottomCenter,
+          key           : key,
+          widthFactor   : widthFactor,
+          heightFactor  : heightFactor,
+          child         : child,
+          alignment     : Alignment.bottomCenter,
+        );
+}
+
+class BottomRight extends Align {
+  const BottomRight({
+    Key? key,
+    double? widthFactor,
+    double? heightFactor,
+    Widget? child,
+  }) : super(
+          key           : key,
+          widthFactor   : widthFactor,
+          heightFactor  : heightFactor,
+          child         : child,
+          alignment     : Alignment.bottomRight,
         );
 }
