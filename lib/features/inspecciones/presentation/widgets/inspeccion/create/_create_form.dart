@@ -107,11 +107,28 @@ class _CreateFormState extends State<_CreateForm> {
     _tipoPlataformaController.dispose();
     _odometroController.dispose();
     _horometroController.dispose();
-
     super.dispose();
   }
 
   // METHODS
+  void _handleCreateUnidadPressed(BuildContext context) {
+    Navigator.push<void>(
+      context,
+      PageRouteBuilder<void>(
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+          const Offset begin  = Offset(0, 1);
+          const Offset end    = Offset.zero;
+          const Cubic curve   = Curves.ease;
+
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(position: animation.drive<Offset>(tween), child: const CreateUnidadPage());
+        },
+        fullscreenDialog: true,
+      ),
+    );
+  }
+
   void _handleStoreInspeccion() {
     final DateTime? fechaProgramada  = _fechaProgramadaController.text.isNotEmpty ? DateFormat('dd/MM/yyyy HH:mm').parse(_fechaProgramadaController.text) : null;
 
@@ -217,7 +234,7 @@ class _CreateFormState extends State<_CreateForm> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         FilledButton.icon(
-                          onPressed : (){},
+                          onPressed : () => _handleCreateUnidadPressed(context),
                           icon      : const Icon(Icons.add),
                           label     : Text('Nueva unidad', style: $styles.textStyles.button),
                         ),

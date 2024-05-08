@@ -3,6 +3,7 @@ import 'package:eos_mobile/core/data/catalogos/unidad_capacidad_medida.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/widgets/unidad/create_unidad_page.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 

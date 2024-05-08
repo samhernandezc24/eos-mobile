@@ -91,8 +91,8 @@ class RemoteUnidadDeleted extends RemoteUnidadState {
 }
 
 /// SERVER FAILED MESSAGE
-class RemoteInspeccionServerFailedMessage extends RemoteUnidadState {
-  const RemoteInspeccionServerFailedMessage(this.errorMessage);
+class RemoteUnidadServerFailedMessage extends RemoteUnidadState {
+  const RemoteUnidadServerFailedMessage(this.errorMessage);
 
   final String? errorMessage;
 
@@ -101,8 +101,8 @@ class RemoteInspeccionServerFailedMessage extends RemoteUnidadState {
 }
 
 /// SERVER FAILURE
-class RemoteInspeccionServerFailure extends RemoteUnidadState {
-  const RemoteInspeccionServerFailure(this.failure);
+class RemoteUnidadServerFailure extends RemoteUnidadState {
+  const RemoteUnidadServerFailure(this.failure);
 
   final ServerException? failure;
 

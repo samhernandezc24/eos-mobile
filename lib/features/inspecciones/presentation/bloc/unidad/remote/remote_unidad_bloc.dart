@@ -55,11 +55,11 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionServerFailedMessage(objDataState.errorMessage));
+      emit(RemoteUnidadServerFailedMessage(objDataState.errorMessage));
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionServerFailure(objDataState.serverException));
+      emit(RemoteUnidadServerFailure(objDataState.serverException));
     }
   }
 
@@ -73,11 +73,11 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionServerFailedMessage(objDataState.errorMessage));
+      emit(RemoteUnidadServerFailedMessage(objDataState.errorMessage));
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionServerFailure(objDataState.serverException));
+      emit(RemoteUnidadServerFailure(objDataState.serverException));
     }
   }
 
@@ -91,11 +91,11 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionServerFailedMessage(objDataState.errorMessage));
+      emit(RemoteUnidadServerFailedMessage(objDataState.errorMessage));
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionServerFailure(objDataState.serverException));
+      emit(RemoteUnidadServerFailure(objDataState.serverException));
     }
   }
 
@@ -109,11 +109,11 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionServerFailedMessage(objDataState.errorMessage));
+      emit(RemoteUnidadServerFailedMessage(objDataState.errorMessage));
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionServerFailure(objDataState.serverException));
+      emit(RemoteUnidadServerFailure(objDataState.serverException));
     }
   }
 
@@ -127,11 +127,11 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionServerFailedMessage(objDataState.errorMessage));
+      emit(RemoteUnidadServerFailedMessage(objDataState.errorMessage));
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionServerFailure(objDataState.serverException));
+      emit(RemoteUnidadServerFailure(objDataState.serverException));
     }
   }
 
@@ -145,11 +145,11 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionServerFailedMessage(objDataState.errorMessage));
+      emit(RemoteUnidadServerFailedMessage(objDataState.errorMessage));
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionServerFailure(objDataState.serverException));
+      emit(RemoteUnidadServerFailure(objDataState.serverException));
     }
   }
 
@@ -163,11 +163,11 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionServerFailedMessage(objDataState.errorMessage));
+      emit(RemoteUnidadServerFailedMessage(objDataState.errorMessage));
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionServerFailure(objDataState.serverException));
+      emit(RemoteUnidadServerFailure(objDataState.serverException));
     }
   }
 }
