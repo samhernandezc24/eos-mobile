@@ -34,13 +34,30 @@ class StoreUnidad extends RemoteUnidadEvent {
 }
 
 /// [EditUnidadUseCase]
-class EditUnidad extends RemoteUnidadEvent {}
+class EditUnidad extends RemoteUnidadEvent {
+  const EditUnidad(this.objData);
+
+  final UnidadEntity objData;
+
+  @override
+  List<Object?> get props => [ objData ];
+}
 
 /// [UpdateUnidadUseCase]
 class UpdateUnidad extends RemoteUnidadEvent {
   const UpdateUnidad(this.objData);
 
   final UnidadUpdateReqEntity objData;
+
+  @override
+  List<Object?> get props => [ objData ];
+}
+
+/// [DeleteUnidadUseCase]
+class DeleteUnidad extends RemoteUnidadEvent {
+  const DeleteUnidad(this.objData);
+
+  final UnidadEntity objData;
 
   @override
   List<Object?> get props => [ objData ];

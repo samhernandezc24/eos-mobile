@@ -1,11 +1,13 @@
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_create_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_data_source_res_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_edit_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_index_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_update_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/create_unidad_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/data_source_unidad_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/delete_unidad_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/edit_unidad_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/index_unidad_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/store_unidad_usecase.dart';
@@ -24,11 +26,14 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
     this._storeUnidadUseCase,
     this._editUnidadUseCase,
     this._updateUnidadUseCase,
+    this._deleteUnidadUseCase,
   ) : super(RemoteUnidadLoading()) {
     on<FetchUnidadInit>(onFetchUnidadInit);
     on<FetchUnidadDataSource>(onFetchUnidadDataSource);
     on<CreateUnidad>(onCreateUnidad);
     on<StoreUnidad>(onStoreUnidad);
+    on<EditUnidad>(onEditUnidad);
+    on<UpdateUnidad>(onUpdateUnidad);
   }
 
   // Casos de uso
@@ -38,6 +43,7 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
   final StoreUnidadUseCase _storeUnidadUseCase;
   final EditUnidadUseCase _editUnidadUseCase;
   final UpdateUnidadUseCase _updateUnidadUseCase;
+  final DeleteUnidadUseCase _deleteUnidadUseCase;
 
   Future<void> onFetchUnidadInit(FetchUnidadInit event, Emitter<RemoteUnidadState> emit) async {
     emit(RemoteUnidadLoading());
@@ -111,41 +117,57 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
     }
   }
 
-  // Future<void> onEditUnidad(EditUnidad event, Emitter<RemoteUnidadState> emit) async {
-  //   emit(RemoteUnidadEditing());
+  Future<void> onEditUnidad(EditUnidad event, Emitter<RemoteUnidadState> emit) async {
+    emit(RemoteUnidadEditing());
 
-  //   final objDataState = await _editUnidadUseCase(params: );
+    final objDataState = await _editUnidadUseCase(params: event.objData);
 
-  //   if (objDataState is DataSuccess) {
-  //     emit(RemoteUnidadCreateSuccess(objDataState.data));
-  //   }
+    if (objDataState is DataSuccess) {
+      emit(RemoteUnidadEditLoaded(objDataState.data));
+    }
 
-  //   if (objDataState is DataFailedMessage) {
-  //     emit(RemoteUnidadFailedMessage(objDataState.errorMessage));
-  //   }
+    if (objDataState is DataFailedMessage) {
+      emit(RemoteInspeccionServerFailedMessage(objDataState.errorMessage));
+    }
 
-  //   if (objDataState is DataFailed) {
-  //     emit(RemoteUnidadFailure(objDataState.serverException));
-  //   }
-  // }
+    if (objDataState is DataFailed) {
+      emit(RemoteInspeccionServerFailure(objDataState.serverException));
+    }
+  }
 
-  // Future<void> onStoreUnidad(StoreUnidad event, Emitter<RemoteUnidadState> emit) async {
-  //   emit(RemoteUnidadLoading());
+  Future<void> onUpdateUnidad(UpdateUnidad event, Emitter<RemoteUnidadState> emit) async {
+    emit(RemoteUnidadUpdating());
 
-  //   final objDataState = await _storeUnidadUseCase(params: event.unidad);
+    final objDataState = await _updateUnidadUseCase(params: event.objData);
 
-  //   if (objDataState is DataSuccess) {
-  //     emit(RemoteUnidadResponseSuccess(objDataState.data!));
+    if (objDataState is DataSuccess) {
+      emit(RemoteUnidadUpdated(objDataState.data));
+    }
 
-  //     emit(RemoteUnidadLoading());
-  //   }
+    if (objDataState is DataFailedMessage) {
+      emit(RemoteInspeccionServerFailedMessage(objDataState.errorMessage));
+    }
 
-  //   if (objDataState is DataFailedMessage) {
-  //     emit(RemoteUnidadFailedMessage(objDataState.errorMessage));
-  //   }
+    if (objDataState is DataFailed) {
+      emit(RemoteInspeccionServerFailure(objDataState.serverException));
+    }
+  }
 
-  //   if (objDataState is DataFailed) {
-  //     emit(RemoteUnidadFailure(objDataState.serverException));
-  //   }
-  // }
+  Future<void> onDeleteUnidad(DeleteUnidad event, Emitter<RemoteUnidadState> emit) async {
+    emit(RemoteUnidadDeleting());
+
+    final objDataState = await _deleteUnidadUseCase(params: event.objData);
+
+    if (objDataState is DataSuccess) {
+      emit(RemoteUnidadDeleted(objDataState.data));
+    }
+
+    if (objDataState is DataFailedMessage) {
+      emit(RemoteInspeccionServerFailedMessage(objDataState.errorMessage));
+    }
+
+    if (objDataState is DataFailed) {
+      emit(RemoteInspeccionServerFailure(objDataState.serverException));
+    }
+  }
 }

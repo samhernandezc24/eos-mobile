@@ -78,6 +78,18 @@ class RemoteUnidadUpdated extends RemoteUnidadState {
   List<Object?> get props => [ objResponse ];
 }
 
+/// DELETE
+class RemoteUnidadDeleting extends RemoteUnidadState {}
+
+class RemoteUnidadDeleted extends RemoteUnidadState {
+  const RemoteUnidadDeleted(this.objResponse);
+
+  final ServerResponse? objResponse;
+
+  @override
+  List<Object?> get props => [ objResponse ];
+}
+
 /// SERVER FAILED MESSAGE
 class RemoteInspeccionServerFailedMessage extends RemoteUnidadState {
   const RemoteInspeccionServerFailedMessage(this.errorMessage);
