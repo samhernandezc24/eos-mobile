@@ -7,49 +7,93 @@ class RemoteUnidadState extends Equatable {
   List<Object?> get props => [];
 }
 
+/// LOADING
 class RemoteUnidadLoading extends RemoteUnidadState {}
 
-class RemoteUnidadSuccess extends RemoteUnidadState {
-  const RemoteUnidadSuccess(this.unidades);
+/// INITIALIZATION
+class RemoteUnidadInitialization extends RemoteUnidadState {
+  const RemoteUnidadInitialization(this.objResponse);
 
-  final UnidadPredictiveDataEntity? unidades;
-
-  @override
-  List<Object?> get props => [ unidades ];
-}
-
-class RemoteUnidadCreateSuccess extends RemoteUnidadState {
-  const RemoteUnidadCreateSuccess(this.unidadData);
-
-  final UnidadDataEntity? unidadData;
+  final UnidadIndexEntity? objResponse;
 
   @override
-  List<Object?> get props => [ unidadData ];
+  List<Object?> get props => [ objResponse ];
 }
 
-class RemoteUnidadResponseSuccess extends RemoteUnidadState {
-  const RemoteUnidadResponseSuccess(this.apiResponse);
+/// DATASOURCE
+class RemoteUnidadDataSourceLoaded extends RemoteUnidadState {
+  const RemoteUnidadDataSourceLoaded(this.objResponse);
 
-  final ApiResponseEntity apiResponse;
+  final UnidadDataSourceResEntity? objResponse;
 
   @override
-  List<Object?> get props => [ apiResponse ];
+  List<Object?> get props => [ objResponse ];
 }
 
-class RemoteUnidadFailure extends RemoteUnidadState {
-  const RemoteUnidadFailure(this.failure);
+/// CREATE
+class RemoteUnidadCreating extends RemoteUnidadState {}
 
-  final ServerException? failure;
+class RemoteUnidadCreateLoaded extends RemoteUnidadState {
+  const RemoteUnidadCreateLoaded(this.objResponse);
+
+  final UnidadCreateEntity? objResponse;
 
   @override
-  List<Object?> get props => [ failure ];
+  List<Object?> get props => [ objResponse ];
 }
 
-class RemoteUnidadFailedMessage extends RemoteUnidadState {
-  const RemoteUnidadFailedMessage(this.errorMessage);
+/// STORE
+class RemoteUnidadStoring extends RemoteUnidadState {}
+
+class RemoteUnidadStored extends RemoteUnidadState {
+  const RemoteUnidadStored(this.objResponse);
+
+  final ServerResponse? objResponse;
+
+  @override
+  List<Object?> get props => [ objResponse ];
+}
+
+/// EDIT
+class RemoteUnidadEditing extends RemoteUnidadState {}
+
+class RemoteUnidadEditLoaded extends RemoteUnidadState {
+  const RemoteUnidadEditLoaded(this.objResponse);
+
+  final UnidadEditEntity? objResponse;
+
+  @override
+  List<Object?> get props => [ objResponse ];
+}
+
+/// UPDATE
+class RemoteUnidadUpdating extends RemoteUnidadState {}
+
+class RemoteUnidadUpdated extends RemoteUnidadState {
+  const RemoteUnidadUpdated(this.objResponse);
+
+  final ServerResponse? objResponse;
+
+  @override
+  List<Object?> get props => [ objResponse ];
+}
+
+/// SERVER FAILED MESSAGE
+class RemoteInspeccionServerFailedMessage extends RemoteUnidadState {
+  const RemoteInspeccionServerFailedMessage(this.errorMessage);
 
   final String? errorMessage;
 
   @override
   List<Object?> get props => [ errorMessage ];
+}
+
+/// SERVER FAILURE
+class RemoteInspeccionServerFailure extends RemoteUnidadState {
+  const RemoteInspeccionServerFailure(this.failure);
+
+  final ServerException? failure;
+
+  @override
+  List<Object?> get props => [ failure ];
 }

@@ -1,16 +1,12 @@
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
-/// [UnidadReqEntity]
-///
-/// Representa los datos de la request para la unidad (temporal), se mandara esta informacion
-/// en el body de la petición.
-class UnidadReqEntity extends Equatable {
-  const UnidadReqEntity({
+class UnidadStoreReqEntity extends Equatable {
+  const UnidadStoreReqEntity({
     required this.numeroEconomico,
-    required this.idBase,
-    required this.baseName,
-    required this.idUnidadTipo,
-    required this.unidadTipoName,
+    this.idBase,
+    this.baseName,
+    this.idUnidadTipo,
+    this.unidadTipoName,
     this.idUnidadMarca,
     this.unidadMarcaName,
     this.idUnidadPlacaTipo,
@@ -21,15 +17,17 @@ class UnidadReqEntity extends Equatable {
     this.anioEquipo,
     this.descripcion,
     this.capacidad,
-    this.odometro,
+    this.idUnidadCapacidadMedida,
+    this.unidadCapacidadMedidaName,
     this.horometro,
+    this.odometro,
   });
 
   final String numeroEconomico;
-  final String idBase;
-  final String baseName;
-  final String idUnidadTipo;
-  final String unidadTipoName;
+  final String? idBase;
+  final String? baseName;
+  final String? idUnidadTipo;
+  final String? unidadTipoName;
   final String? idUnidadMarca;
   final String? unidadMarcaName;
   final String? idUnidadPlacaTipo;
@@ -40,8 +38,10 @@ class UnidadReqEntity extends Equatable {
   final String? anioEquipo;
   final String? descripcion;
   final double? capacidad;
-  final int? odometro;
+  final String? idUnidadCapacidadMedida;
+  final String? unidadCapacidadMedidaName;
   final int? horometro;
+  final int? odometro;
 
   @override
   List<Object?> get props => [
@@ -60,7 +60,9 @@ class UnidadReqEntity extends Equatable {
         anioEquipo,
         descripcion,
         capacidad,
-        odometro,
+        idUnidadCapacidadMedida,
+        unidadCapacidadMedidaName,
         horometro,
+        odometro,
       ];
 }

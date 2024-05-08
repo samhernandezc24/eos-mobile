@@ -13,7 +13,7 @@ class _UnidadRemoteApiService implements UnidadRemoteApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://10.0.2.2:7000/api/Inspecciones/Unidades';
+    baseUrl ??= ListAPI.unidades;
   }
 
   final Dio _dio;
@@ -21,20 +21,94 @@ class _UnidadRemoteApiService implements UnidadRemoteApiService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<ApiResponse>> createUnidad(
-    String token,
+  Future<HttpResponse<ServerResponse>> index(
     String contentType,
+    String token,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'authorization': token,
       r'content-type': contentType,
+      r'authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ApiResponse>>(Options(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+            .compose(
+              _dio.options,
+              '/Index',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ServerResponse.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<ServerResponse>> dataSource(
+    String contentType,
+    String token,
+    Map<String, dynamic> objData,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'content-type': contentType,
+      r'authorization': token,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(objData);
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+            .compose(
+              _dio.options,
+              '/DataSource',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ServerResponse.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<ServerResponse>> create(
+    String contentType,
+    String token,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'content-type': contentType,
+      r'authorization': token,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -51,28 +125,28 @@ class _UnidadRemoteApiService implements UnidadRemoteApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ApiResponse.fromJson(_result.data!);
+    final value = ServerResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<ApiResponse>> storeUnidad(
-    String token,
+  Future<HttpResponse<ServerResponse>> store(
     String contentType,
-    UnidadReqModel unidad,
+    String token,
+    UnidadStoreReqModel objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'authorization': token,
       r'content-type': contentType,
+      r'authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(unidad.toJson());
+    _data.addAll(objData.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ApiResponse>>(Options(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -89,28 +163,28 @@ class _UnidadRemoteApiService implements UnidadRemoteApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ApiResponse.fromJson(_result.data!);
+    final value = ServerResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<ApiResponse>> predictiveUnidad(
-    String token,
+  Future<HttpResponse<ServerResponse>> edit(
     String contentType,
-    PredictiveSearchReqModel predictiveSearch,
+    String token,
+    UnidadModel objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'authorization': token,
       r'content-type': contentType,
+      r'authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(predictiveSearch.toJson());
+    _data.addAll(objData.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ApiResponse>>(Options(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -118,7 +192,7 @@ class _UnidadRemoteApiService implements UnidadRemoteApiService {
     )
             .compose(
               _dio.options,
-              '/PredictiveEOS',
+              '/Edit',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -127,7 +201,83 @@ class _UnidadRemoteApiService implements UnidadRemoteApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ApiResponse.fromJson(_result.data!);
+    final value = ServerResponse.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<ServerResponse>> update(
+    String contentType,
+    String token,
+    UnidadUpdateReqModel objData,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'content-type': contentType,
+      r'authorization': token,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(objData.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+            .compose(
+              _dio.options,
+              '/Update',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ServerResponse.fromJson(_result.data!);
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<ServerResponse>> delete(
+    String contentType,
+    String token,
+    UnidadModel objData,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'content-type': contentType,
+      r'authorization': token,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(objData.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+            .compose(
+              _dio.options,
+              '/Delete',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = ServerResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

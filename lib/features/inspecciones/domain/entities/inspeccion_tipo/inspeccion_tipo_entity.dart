@@ -2,8 +2,7 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 
 /// [InspeccionTipoEntity]
 ///
-/// Representa el tipo de inspección que se realizará a una unidad de inventario
-/// o a una unidad temporal.
+/// Representa el tipo de inspección que se aplicará para evaluar una unidad.
 class InspeccionTipoEntity extends Equatable {
   const InspeccionTipoEntity({
     required this.idInspeccionTipo,

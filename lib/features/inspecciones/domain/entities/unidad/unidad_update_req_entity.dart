@@ -1,13 +1,9 @@
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
-/// [UnidadEntity]
-///
-/// Representa los datos de la unidad que se obtendrá del servidor para
-/// realizar diferentes operaciones con su información.
-class UnidadEntity extends Equatable {
-  const UnidadEntity({
-    this.idUnidad,
-    this.numeroEconomico,
+class UnidadUpdateReqEntity extends Equatable {
+  const UnidadUpdateReqEntity({
+    required this.idUnidad,
+    required this.numeroEconomico,
     this.idBase,
     this.baseName,
     this.idUnidadTipo,
@@ -21,10 +17,15 @@ class UnidadEntity extends Equatable {
     this.modelo,
     this.anioEquipo,
     this.descripcion,
+    this.capacidad,
+    this.idUnidadCapacidadMedida,
+    this.unidadCapacidadMedidaName,
+    this.horometro,
+    this.odometro,
   });
 
-  final String? idUnidad;
-  final String? numeroEconomico;
+  final String idUnidad;
+  final String numeroEconomico;
   final String? idBase;
   final String? baseName;
   final String? idUnidadTipo;
@@ -38,6 +39,11 @@ class UnidadEntity extends Equatable {
   final String? modelo;
   final String? anioEquipo;
   final String? descripcion;
+  final double? capacidad;
+  final String? idUnidadCapacidadMedida;
+  final String? unidadCapacidadMedidaName;
+  final int? horometro;
+  final int? odometro;
 
   @override
   List<Object?> get props => [
@@ -56,5 +62,10 @@ class UnidadEntity extends Equatable {
         modelo,
         anioEquipo,
         descripcion,
+        capacidad,
+        idUnidadCapacidadMedida,
+        unidadCapacidadMedidaName,
+        horometro,
+        odometro,
       ];
 }

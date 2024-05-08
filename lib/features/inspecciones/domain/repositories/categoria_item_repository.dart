@@ -1,10 +1,10 @@
-import 'package:eos_mobile/core/network/api_response.dart';
-import 'package:eos_mobile/core/network/data_state.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_data_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_duplicate_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_req_entity.dart';
+
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 abstract class CategoriaItemRepository {
   /// API METHODS

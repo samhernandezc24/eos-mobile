@@ -7,26 +7,41 @@ sealed class RemoteUnidadEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class CreateUnidad extends RemoteUnidadEvent {}
+/// [IndexUnidadUseCase]
+class FetchUnidadInit extends RemoteUnidadEvent {}
 
-class LoadBases extends RemoteUnidadEvent {}
-class LoadUnidadesMarcas extends RemoteUnidadEvent {}
-class LoadUnidadesTipos extends RemoteUnidadEvent {}
+/// [DataSourceUnidadUseCase]
+class FetchUnidadDataSource extends RemoteUnidadEvent {
+  const FetchUnidadDataSource(this.objData);
 
-class PredictiveUnidad extends RemoteUnidadEvent {
-  const PredictiveUnidad(this.predictiveSearch);
-
-  final PredictiveSearchReqEntity predictiveSearch;
+  final Map<String, dynamic> objData;
 
   @override
-  List<Object?> get props => [ predictiveSearch ];
+  List<Object?> get props => [ objData ];
 }
 
-class StoreUnidad extends RemoteUnidadEvent {
-  const StoreUnidad(this.unidad);
+/// [CreateUnidadUseCase]
+class CreateUnidad extends RemoteUnidadEvent {}
 
-  final UnidadReqEntity unidad;
+/// [StoreUnidadUseCase]
+class StoreUnidad extends RemoteUnidadEvent {
+  const StoreUnidad(this.objData);
+
+  final UnidadStoreReqEntity objData;
 
   @override
-  List<Object?> get props => [ unidad ];
+  List<Object?> get props => [ objData ];
+}
+
+/// [EditUnidadUseCase]
+class EditUnidad extends RemoteUnidadEvent {}
+
+/// [UpdateUnidadUseCase]
+class UpdateUnidad extends RemoteUnidadEvent {
+  const UpdateUnidad(this.objData);
+
+  final UnidadUpdateReqEntity objData;
+
+  @override
+  List<Object?> get props => [ objData ];
 }
