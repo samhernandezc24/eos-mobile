@@ -32,11 +32,15 @@ class _CreateFormState extends State<_CreateForm> {
   late final TextEditingController _horometroController;
 
   // LIST
-  List<InspeccionTipoEntity> lstInspeccionesTipos             = <InspeccionTipoEntity>[];
-  List<UnidadCapacidadMedida> lstUnidadesCapacidadesMedidas   = <UnidadCapacidadMedida>[];
+  late List<UnidadSearchEntity> lstUnidades                        = <UnidadSearchEntity>[];
+  late List<InspeccionTipoEntity> lstInspeccionesTipos             = <InspeccionTipoEntity>[];
+  late List<UnidadCapacidadMedida> lstUnidadesCapacidadesMedidas   = <UnidadCapacidadMedida>[];
+
+  bool _dataLoaded = false;
 
   // SELECTED UNIDAD
   UnidadInspeccion? _selectedUnidadInspeccion;
+  UnidadSearchEntity? _selectedUnidad;
 
   String? _selectedUnidadBaseId;
   String? _selectedUnidadBaseName;
@@ -52,6 +56,7 @@ class _CreateFormState extends State<_CreateForm> {
   String? _selectedUnidadNumeroSerie;
   String? _selectedUnidadModelo;
   String? _selectedUnidadAnioEquipo;
+  String? _selectedUnidadCapacidad;
 
   // SELECTED INSPECCION TIPO
   String? _selectedInspeccionTipoId;
@@ -66,7 +71,12 @@ class _CreateFormState extends State<_CreateForm> {
   void initState() {
     super.initState();
 
-    context.read<RemoteInspeccionBloc>().add(CreateInspeccion());
+    if (!_dataLoaded) {
+      context.read<RemoteInspeccionBloc>().add(CreateInspeccion());
+      _dataLoaded = true;
+    }
+
+    _selectedUnidadInspeccion = UnidadInspeccion.inventario;
 
     _searchUnidadController               = TextEditingController();
 
@@ -107,6 +117,9 @@ class _CreateFormState extends State<_CreateForm> {
     _tipoPlataformaController.dispose();
     _odometroController.dispose();
     _horometroController.dispose();
+
+    _dataLoaded = false;
+
     super.dispose();
   }
 
@@ -197,8 +210,55 @@ class _CreateFormState extends State<_CreateForm> {
         });
       }
     }
-
     return null;
+  }
+
+  Future<void> _showFailureDialog(BuildContext context, RemoteInspeccionServerFailure state) {
+    return showDialog<void>(
+      context   : context,
+      builder   : (_) => AlertDialog(
+        title   : const SizedBox.shrink(),
+        content : Row(
+          children: <Widget>[
+            Icon(Icons.error, color: Theme.of(context).colorScheme.error),
+            Gap($styles.insets.sm),
+            Flexible(
+              child: Text(
+                state.failure?.errorMessage ?? 'Se produjo un error inesperado. Intenta crear la inspección de nuevo.',
+                style: $styles.textStyles.title2.copyWith(height: 1.5),
+              ),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(onPressed: () => context.pop(), child: Text($strings.acceptButtonText, style: $styles.textStyles.button)),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showFailedMessageDialog(BuildContext context, RemoteInspeccionServerFailedMessage state) {
+    return showDialog<void>(
+      context   : context,
+      builder   : (_) => AlertDialog(
+        title   : const SizedBox.shrink(),
+        content : Row(
+          children: <Widget>[
+            Icon(Icons.error, color: Theme.of(context).colorScheme.error),
+            Gap($styles.insets.sm),
+            Flexible(
+              child: Text(
+                state.errorMessage ?? 'Se produjo un error inesperado. Intenta crear la inspección de nuevo.',
+                style: $styles.textStyles.title2.copyWith(height: 1.5),
+              ),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(onPressed: () => context.pop(), child: Text($strings.acceptButtonText, style: $styles.textStyles.button)),
+        ],
+      ),
+    );
   }
 
   @override
@@ -215,8 +275,91 @@ class _CreateFormState extends State<_CreateForm> {
 
           // SELECCIONAR Y BUSCAR UNIDAD A INSPECCIONAR:
           if (_selectedUnidadInspeccion == UnidadInspeccion.temporal)
-            Padding(padding: EdgeInsets.all($styles.insets.sm))
-          else Container(),
+            BlocListener<RemoteInspeccionBloc, RemoteInspeccionState>(
+              listener: (BuildContext context, RemoteInspeccionState state) {
+                if (state is RemoteInspeccionCreateLoaded) {
+                  // FRAGMENTO NO MODIFICABLE - LISTAS
+                  setState(() {
+                    lstUnidades = state.objResponse?.unidades ?? [];
+                  });
+                }
+              },
+              child: LabeledDropdownFormSearchField<UnidadSearchEntity>(
+                hintText          : 'Buscar unidad...',
+                label             : '* Unidad:',
+                searchController  : _searchUnidadController,
+                items             : lstUnidades,
+                itemBuilder       : (item) => Text(item.numeroEconomico ?? ''),
+                value             : _selectedUnidad,
+                onChanged         : (selectedType) {
+                  setState(() {
+                    _selectedUnidad                       = selectedType;
+                    _selectedUnidadBaseId                 = selectedType?.idBase                      ?? '';
+                    _selectedUnidadBaseName               = selectedType?.baseName                    ?? '';
+                    _selectedUnidadId                     = selectedType?.idUnidad                    ?? '';
+                    _selectedUnidadNumeroEconomico        = selectedType?.numeroEconomico             ?? '';
+                    _selectedUnidadTipoId                 = selectedType?.idUnidadTipo                ?? '';
+                    _selectedUnidadTipoName               = selectedType?.unidadTipoName              ?? '';
+                    _selectedUnidadMarcaId                = selectedType?.idUnidadMarca               ?? '';
+                    _selectedUnidadMarcaName              = selectedType?.unidadMarcaName             ?? '';
+                    _selectedUnidadPlacaTipoId            = selectedType?.idUnidadPlacaTipo           ?? '';
+                    _selectedUnidadPlacaTipoName          = selectedType?.unidadPlacaTipoName         ?? '';
+                    _selectedUnidadPlaca                  = selectedType?.placa                       ?? '';
+                    _selectedUnidadNumeroSerie            = selectedType?.numeroSerie                 ?? '';
+                    _selectedUnidadModelo                 = selectedType?.modelo                      ?? '';
+                    _selectedUnidadAnioEquipo             = selectedType?.anioEquipo                  ?? '';
+                    _selectedUnidadCapacidad              = selectedType?.capacidad                   ?? '';
+                    _selectedUnidadCapacidadMedidaId      = selectedType?.idUnidadCapacidadMedida     ?? '';
+                    _selectedUnidadCapacidadMedidaName    = selectedType?.unidadCapacidadMedidaName   ?? '';
+
+                    _unidadNumeroEconomicoController.text = _selectedUnidadNumeroEconomico  ?? '';
+                    _unidadTipoNameController.text        = _selectedUnidadTipoName         ?? '';
+                    _unidadMarcaNameController.text       = _selectedUnidadMarcaName        ?? '';
+                    _modeloController.text                = _selectedUnidadModelo           ?? '';
+                    _unidadPlacaTipoNameController.text   = _selectedUnidadPlacaTipoName    ?? '';
+                    _numeroSerieController.text           = _selectedUnidadNumeroSerie      ?? '';
+                    _placaController.text                 = _selectedUnidadPlaca            ?? '';
+                    _anioEquipoController.text            = _selectedUnidadAnioEquipo       ?? '';
+                    _baseNameController.text              = _selectedUnidadBaseName         ?? '';
+                    _capacidadController.text             = _selectedUnidadBaseName         ?? '';
+                    _baseNameController.text              = _selectedUnidadBaseName         ?? '';
+                  });
+                },
+                searchMatchFn: (DropdownMenuItem<UnidadSearchEntity> item, String searchValue) {
+                  return item.value!.numeroEconomico!.toLowerCase().contains(searchValue.toLowerCase());
+                },
+                onMenuStateChange: (isOpen) {
+                  if (!isOpen) {
+                    _searchUnidadController.clear();
+                  }
+                },
+                validator: FormValidators.dropdownValidator,
+              ),
+            )
+          else BlocListener<RemoteInspeccionBloc, RemoteInspeccionState>(
+            listener: (BuildContext context, RemoteInspeccionState state) {
+              if (state is RemoteInspeccionCreateLoaded) {
+                // FRAGMENTO NO MODIFICABLE - LISTAS
+                setState(() {
+                  lstInspeccionesTipos = state.objResponse?.inspeccionesTipos ?? [];
+                });
+              }
+            },
+            child: LabeledDropdownFormField<InspeccionTipoEntity>(
+              hintText    : 'Seleccionar',
+              label       : '* Tipo de inspección:',
+              items       : lstInspeccionesTipos,
+              itemBuilder : (item) => Text(item.name),
+              onChanged   : (selectedType) {
+                setState(() {
+                  _selectedInspeccionTipoId       = selectedType?.idInspeccionTipo;
+                  _selectedInspeccionTipoCodigo   = selectedType?.codigo;
+                  _selectedInspeccionTipoName     = selectedType?.name;
+                });
+              },
+              validator : FormValidators.dropdownValidator,
+            ),
+          ),
 
           // NUEVA UNIDAD TEMPORAL:
           AnimatedSwitcher(
@@ -247,42 +390,29 @@ class _CreateFormState extends State<_CreateForm> {
           Gap($styles.insets.sm),
 
           // SELECCIONAR TIPO DE INSPECCIÓN:
-          BlocBuilder<RemoteInspeccionBloc, RemoteInspeccionState>(
-            builder: (BuildContext context, RemoteInspeccionState state) {
-              if (state is RemoteInspeccionCreating) {
-                return const Center(child: AppLoadingIndicator(width: 20, height: 20));
-              }
-
-              if (state is RemoteInspeccionServerFailedMessage) {
-                return const Center(child: AppLoadingIndicator(width: 20, height: 20));
-              }
-
-              if (state is RemoteInspeccionServerFailure) {
-                return const Center(child: AppLoadingIndicator(width: 20, height: 20));
-              }
-
+          BlocListener<RemoteInspeccionBloc, RemoteInspeccionState>(
+            listener: (BuildContext context, RemoteInspeccionState state) {
               if (state is RemoteInspeccionCreateLoaded) {
                 // FRAGMENTO NO MODIFICABLE - LISTAS
-                lstInspeccionesTipos = state.objResponse?.inspeccionesTipos ?? [];
-
-                return LabeledDropdownFormField<InspeccionTipoEntity>(
-                  hintText    : 'Seleccionar',
-                  label       : '* Tipo de inspección:',
-                  items       : lstInspeccionesTipos,
-                  itemBuilder : (item) => Text(item.name),
-                  onChanged   : (selectedType) {
-                    setState(() {
-                      _selectedInspeccionTipoId       = selectedType?.idInspeccionTipo;
-                      _selectedInspeccionTipoCodigo   = selectedType?.codigo;
-                      _selectedInspeccionTipoName     = selectedType?.name;
-                    });
-                  },
-                  validator : FormValidators.dropdownValidator,
-                );
+                setState(() {
+                  lstInspeccionesTipos = state.objResponse?.inspeccionesTipos ?? [];
+                });
               }
-
-              return const SizedBox.shrink();
             },
+            child: LabeledDropdownFormField<InspeccionTipoEntity>(
+              hintText    : 'Seleccionar',
+              label       : '* Tipo de inspección:',
+              items       : lstInspeccionesTipos,
+              itemBuilder : (item) => Text(item.name),
+              onChanged   : (selectedType) {
+                setState(() {
+                  _selectedInspeccionTipoId       = selectedType?.idInspeccionTipo;
+                  _selectedInspeccionTipoCodigo   = selectedType?.codigo;
+                  _selectedInspeccionTipoName     = selectedType?.name;
+                });
+              },
+              validator : FormValidators.dropdownValidator,
+            ),
           ),
 
           Gap($styles.insets.sm),
@@ -400,6 +530,15 @@ class _CreateFormState extends State<_CreateForm> {
 
           Gap($styles.insets.sm),
 
+          // BASE:
+          LabeledTextFormField(
+            controller  : _baseNameController,
+            isReadOnly  : true,
+            label       : '* Base:',
+          ),
+
+          Gap($styles.insets.sm),
+
           // TIPO DE PLATAFORMA:
           LabeledTextFormField(
             controller  : _tipoPlataformaController,
@@ -423,41 +562,28 @@ class _CreateFormState extends State<_CreateForm> {
               ),
               Gap($styles.insets.xs),
               Expanded(
-                child: BlocBuilder<RemoteInspeccionBloc, RemoteInspeccionState>(
-                  builder: (BuildContext context, RemoteInspeccionState state) {
-                    if (state is RemoteInspeccionCreating) {
-                      return const Center(child: AppLoadingIndicator(width: 20, height: 20));
-                    }
-
-                    if (state is RemoteInspeccionServerFailedMessage) {
-                      return const Center(child: AppLoadingIndicator(width: 20, height: 20));
-                    }
-
-                    if (state is RemoteInspeccionServerFailure) {
-                      return const Center(child: AppLoadingIndicator(width: 20, height: 20));
-                    }
-
+                child: BlocListener<RemoteInspeccionBloc, RemoteInspeccionState>(
+                  listener: (BuildContext context, RemoteInspeccionState state) {
                     if (state is RemoteInspeccionCreateLoaded) {
                       // FRAGMENTO NO MODIFICABLE - LISTAS
-                      lstUnidadesCapacidadesMedidas = state.objResponse?.unidadesCapacidadesMedidas ?? [];
-
-                      return LabeledDropdownFormField<UnidadCapacidadMedida>(
-                        hintText    : 'Seleccionar',
-                        label       : '',
-                        items       : lstUnidadesCapacidadesMedidas,
-                        itemBuilder : (item) => Text(item.name ?? ''),
-                        onChanged   : (selectedType) {
-                          setState(() {
-                            _selectedUnidadCapacidadMedidaId     = selectedType?.idUnidadCapacidadMedida;
-                            _selectedUnidadCapacidadMedidaName   = selectedType?.name;
-                          });
-                        },
-                        validator : FormValidators.dropdownValidator,
-                      );
+                      setState(() {
+                        lstUnidadesCapacidadesMedidas = state.objResponse?.unidadesCapacidadesMedidas ?? [];
+                      });
                     }
-
-                    return const SizedBox.shrink();
                   },
+                  child: LabeledDropdownFormField<UnidadCapacidadMedida>(
+                    hintText    : 'Seleccionar',
+                    label       : '',
+                    items       : lstUnidadesCapacidadesMedidas,
+                    itemBuilder : (item) => Text(item.name ?? ''),
+                    onChanged   : (selectedType) {
+                      setState(() {
+                        _selectedUnidadCapacidadMedidaId     = selectedType?.idUnidadCapacidadMedida;
+                        _selectedUnidadCapacidadMedidaName   = selectedType?.name;
+                      });
+                    },
+                    validator : FormValidators.dropdownValidator,
+                  ),
                 ),
               ),
             ],
@@ -491,12 +617,31 @@ class _CreateFormState extends State<_CreateForm> {
           Gap($styles.insets.lg),
 
           BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
-            listener: (context, state) {
-              if (state is RemoteInspeccionStored) {
+            listener: (BuildContext context, RemoteInspeccionState state) {
+              if (state is RemoteInspeccionServerFailure) {
+                _showFailureDialog(context, state);
+              }
 
+              if (state is RemoteInspeccionServerFailedMessage) {
+                _showFailedMessageDialog(context, state);
+              }
+
+              if (state is RemoteInspeccionStored) {
+                Navigator.pop(context);
+
+                ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content         : Text(state.objResponse?.message ?? '', softWrap: true),
+                    backgroundColor : Colors.green,
+                    behavior        : SnackBarBehavior.fixed,
+                    elevation       : 0,
+                  ),
+                );
               }
             },
-            builder: (context, state) {
+            builder: (BuildContext context, RemoteInspeccionState state) {
               if (state is RemoteInspeccionStoring) {
                 return FilledButton(
                   onPressed : null,
