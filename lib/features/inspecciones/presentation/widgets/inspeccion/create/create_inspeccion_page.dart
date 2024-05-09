@@ -12,6 +12,7 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:intl/intl.dart';
 
 part '_create_form.dart';
+part '_search_input.dart';
 
 class CreateInspeccionPage extends StatefulWidget {
   const CreateInspeccionPage({Key? key}) : super(key: key);

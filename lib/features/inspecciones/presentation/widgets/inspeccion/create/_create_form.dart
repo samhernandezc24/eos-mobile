@@ -262,43 +262,44 @@ class _CreateFormState extends State<_CreateForm> {
                 if (state is RemoteUnidadSearchLoaded) {
                   lstUnidades = state.unidades ?? [];
 
-                  return LabeledDropdownFormSearchField<UnidadSearchEntity>(
-                    hintText          : 'Seleccione la unidad a inspeccionar',
-                    label             : '* Unidad:',
-                    searchController  : _searchUnidadController,
-                    items             : lstUnidades,
-                    itemBuilder       : (unidad) => Text(unidad.value ?? ''),
-                    value             : _selectedUnidad,
-                    onChanged         : (selectedType) {
-                      setState(() {
-                        _selectedUnidad                     = selectedType;
-                        _selectedUnidadId                   = selectedType?.idUnidad                  ?? '';
-                        _selectedUnidadBaseId               = selectedType?.idBase                    ?? '';
-                        _selectedUnidadTipoId               = selectedType?.idUnidadTipo              ?? '';
-                        _selectedUnidadMarcaId              = selectedType?.idUnidadMarca             ?? '';
-                        _selectedUnidadPlacaTipoId          = selectedType?.idUnidadPlacaTipo         ?? '';
-                        _selectedUnidadCapacidadMedidaId    = selectedType?.idUnidadCapacidadMedida   ?? '';
+                  return _SearchInput(onSubmit: (_){}, unidades: lstUnidades);
+                  // return LabeledDropdownFormSearchField<UnidadSearchEntity>(
+                  //   hintText          : 'Seleccione la unidad a inspeccionar',
+                  //   label             : '* Unidad:',
+                  //   searchController  : _searchUnidadController,
+                  //   items             : lstUnidades,
+                  //   itemBuilder       : (unidad) => Text(unidad.value ?? ''),
+                  //   value             : _selectedUnidad,
+                  //   onChanged         : (selectedType) {
+                  //     setState(() {
+                  //       _selectedUnidad                     = selectedType;
+                  //       _selectedUnidadId                   = selectedType?.idUnidad                  ?? '';
+                  //       _selectedUnidadBaseId               = selectedType?.idBase                    ?? '';
+                  //       _selectedUnidadTipoId               = selectedType?.idUnidadTipo              ?? '';
+                  //       _selectedUnidadMarcaId              = selectedType?.idUnidadMarca             ?? '';
+                  //       _selectedUnidadPlacaTipoId          = selectedType?.idUnidadPlacaTipo         ?? '';
+                  //       _selectedUnidadCapacidadMedidaId    = selectedType?.idUnidadCapacidadMedida   ?? '';
 
-                        _unidadNumeroEconomicoController.text     = selectedType?.numeroEconomico           ?? '';
-                        _baseNameController.text                  = selectedType?.baseName                  ?? '';
-                        _unidadTipoNameController.text            = selectedType?.unidadTipoName            ?? '';
-                        _unidadMarcaNameController.text           = selectedType?.unidadMarcaName           ?? '';
-                        _unidadPlacaTipoNameController.text       = selectedType?.unidadPlacaTipoName       ?? '';
-                        _placaController.text                     = selectedType?.placa                     ?? '';
-                        _numeroSerieController.text               = selectedType?.numeroSerie               ?? '';
-                        _modeloController.text                    = selectedType?.modelo                    ?? '';
-                        _anioEquipoController.text                = selectedType?.anioEquipo                ?? '';
-                        _capacidadController.text                 = selectedType?.capacidad                 ?? '';
-                        _unidadCapacidadMedidaNameController.text = selectedType?.unidadCapacidadMedidaName ?? '';
-                        _odometroController.text                  = selectedType?.odometro                  ?? '';
-                        _horometroController.text                 = selectedType?.horometro                 ?? '';
-                      });
-                    },
-                    searchMatchFn     : (DropdownMenuItem<UnidadSearchEntity> item, String searchValue) {
-                      return item.value!.numeroEconomico!.toLowerCase().contains(searchValue.toLowerCase());
-                    },
-                    validator         : FormValidators.dropdownValidator,
-                  );
+                  //       _unidadNumeroEconomicoController.text     = selectedType?.numeroEconomico           ?? '';
+                  //       _baseNameController.text                  = selectedType?.baseName                  ?? '';
+                  //       _unidadTipoNameController.text            = selectedType?.unidadTipoName            ?? '';
+                  //       _unidadMarcaNameController.text           = selectedType?.unidadMarcaName           ?? '';
+                  //       _unidadPlacaTipoNameController.text       = selectedType?.unidadPlacaTipoName       ?? '';
+                  //       _placaController.text                     = selectedType?.placa                     ?? '';
+                  //       _numeroSerieController.text               = selectedType?.numeroSerie               ?? '';
+                  //       _modeloController.text                    = selectedType?.modelo                    ?? '';
+                  //       _anioEquipoController.text                = selectedType?.anioEquipo                ?? '';
+                  //       _capacidadController.text                 = selectedType?.capacidad                 ?? '';
+                  //       _unidadCapacidadMedidaNameController.text = selectedType?.unidadCapacidadMedidaName ?? '';
+                  //       _odometroController.text                  = selectedType?.odometro                  ?? '';
+                  //       _horometroController.text                 = selectedType?.horometro                 ?? '';
+                  //     });
+                  //   },
+                  //   searchMatchFn     : (DropdownMenuItem<UnidadSearchEntity> item, String searchValue) {
+                  //     return item.value!.numeroEconomico!.toLowerCase().contains(searchValue.toLowerCase());
+                  //   },
+                  //   validator         : FormValidators.dropdownValidator,
+                  // );
                 }
 
                 return const SizedBox.shrink();
