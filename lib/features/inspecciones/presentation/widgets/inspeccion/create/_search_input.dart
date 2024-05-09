@@ -1,9 +1,10 @@
 part of 'create_inspeccion_page.dart';
 
 class _SearchInput extends StatelessWidget {
-  const _SearchInput({required this.onSubmit, required this.unidades, Key? key}) : super(key: key);
+  const _SearchInput({required this.onSelected, required this.onSubmit, required this.unidades, Key? key}) : super(key: key);
 
-  final void Function(String) onSubmit;
+  final void Function(UnidadSearchEntity?) onSelected;
+  final void Function(String?) onSubmit;
   final List<UnidadSearchEntity> unidades;
 
   @override
@@ -14,7 +15,7 @@ class _SearchInput extends StatelessWidget {
           child: Autocomplete<UnidadSearchEntity>(
             displayStringForOption: (data) => data.numeroEconomico ?? '',
             optionsBuilder      : _getSuggestions,
-            onSelected          : (UnidadSearchEntity selection) { debugPrint('You just selected $selection'); },
+            onSelected          : onSelected,
             optionsViewBuilder  : (context, onSelected, results) => _buildSuggestionsView(context, onSelected, results, constraints),
             fieldViewBuilder    : _buildInput,
           ),
@@ -166,7 +167,7 @@ class _SearchInput extends StatelessWidget {
                     semanticLabel   : $strings.searchInputSemanticClear,
                     size            : $styles.insets.md,
                     iconSize        : $styles.insets.sm,
-                    onPressed       : () { textController.clear(); onSubmit(''); },
+                    onPressed       : () { textController.clear(); onSubmit(''); onSelected(null); },
                   ),
                 ),
               );
