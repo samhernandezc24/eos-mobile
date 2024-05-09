@@ -36,45 +36,29 @@ class _CreateFormState extends State<_CreateForm> {
   late List<InspeccionTipoEntity> lstInspeccionesTipos             = <InspeccionTipoEntity>[];
   late List<UnidadCapacidadMedida> lstUnidadesCapacidadesMedidas   = <UnidadCapacidadMedida>[];
 
-  bool _dataLoaded = false;
+  // SELECTED INSPECCION TIPO
+  String? _selectedInspeccionTipoId;
+  String? _selectedInspeccionTipoCodigo;
+  String? _selectedInspeccionTipoName;
 
   // SELECTED UNIDAD
   UnidadInspeccion? _selectedUnidadInspeccion;
   UnidadSearchEntity? _selectedUnidad;
 
   String? _selectedUnidadBaseId;
-  String? _selectedUnidadBaseName;
   String? _selectedUnidadId;
-  String? _selectedUnidadNumeroEconomico;
   String? _selectedUnidadTipoId;
-  String? _selectedUnidadTipoName;
   String? _selectedUnidadMarcaId;
-  String? _selectedUnidadMarcaName;
   String? _selectedUnidadPlacaTipoId;
-  String? _selectedUnidadPlacaTipoName;
-  String? _selectedUnidadPlaca;
-  String? _selectedUnidadNumeroSerie;
-  String? _selectedUnidadModelo;
-  String? _selectedUnidadAnioEquipo;
-  String? _selectedUnidadCapacidad;
-
-  // SELECTED INSPECCION TIPO
-  String? _selectedInspeccionTipoId;
-  String? _selectedInspeccionTipoCodigo;
-  String? _selectedInspeccionTipoName;
 
   // SELECTED UNIDAD CAPACIDAD MEDIDA
   String? _selectedUnidadCapacidadMedidaId;
-  String? _selectedUnidadCapacidadMedidaName;
 
   @override
   void initState() {
     super.initState();
 
-    if (!_dataLoaded) {
-      context.read<RemoteInspeccionBloc>().add(CreateInspeccion());
-      _dataLoaded = true;
-    }
+    context.read<RemoteInspeccionBloc>().add(CreateInspeccion());
 
     _selectedUnidadInspeccion = UnidadInspeccion.inventario;
 
@@ -118,8 +102,6 @@ class _CreateFormState extends State<_CreateForm> {
     _odometroController.dispose();
     _horometroController.dispose();
 
-    _dataLoaded = false;
-
     super.dispose();
   }
 
@@ -155,23 +137,23 @@ class _CreateFormState extends State<_CreateForm> {
       inspeccionTipoCodigo        : _selectedInspeccionTipoCodigo   ?? '',
       inspeccionTipoName          : _selectedInspeccionTipoName     ?? '',
       idBase                      : _selectedUnidadBaseId           ?? '',
-      baseName                    : _selectedUnidadBaseName         ?? '',
+      baseName                    : _baseNameController.text,
       idUnidad                    : _selectedUnidadId               ?? '',
-      unidadNumeroEconomico       : _selectedUnidadNumeroEconomico  ?? '',
+      unidadNumeroEconomico       : _unidadNumeroEconomicoController.text,
       isUnidadTemporal            : _selectedUnidadInspeccion == UnidadInspeccion.temporal,
       idUnidadTipo                : _selectedUnidadTipoId           ?? '',
-      unidadTipoName              : _selectedUnidadTipoName         ?? '',
+      unidadTipoName              : _unidadTipoNameController.text,
       idUnidadMarca               : _selectedUnidadMarcaId          ?? '',
-      unidadMarcaName             : _selectedUnidadMarcaName        ?? '',
+      unidadMarcaName             : _unidadMarcaNameController.text,
       idUnidadPlacaTipo           : _selectedUnidadPlacaTipoId      ?? '',
-      unidadPlacaTipoName         : _selectedUnidadPlacaTipoName    ?? '',
-      placa                       : _selectedUnidadPlaca            ?? '',
-      numeroSerie                 : _selectedUnidadNumeroSerie      ?? '',
-      modelo                      : _selectedUnidadModelo           ?? '',
-      anioEquipo                  : _selectedUnidadAnioEquipo       ?? '',
+      unidadPlacaTipoName         : _unidadPlacaTipoNameController.text,
+      placa                       : _unidadPlacaTipoNameController.text,
+      numeroSerie                 : _numeroSerieController.text,
+      modelo                      : _modeloController.text,
+      anioEquipo                  : _anioEquipoController.text,
       capacidad                   : capacidad,
-      idUnidadCapacidadMedida     : _selectedUnidadCapacidadMedidaId    ?? '',
-      unidadCapacidadMedidaName   : _selectedUnidadCapacidadMedidaName  ?? '',
+      idUnidadCapacidadMedida     : _selectedUnidadCapacidadMedidaId ?? '',
+      unidadCapacidadMedidaName   : _unidadCapacidadMedidaNameController.text,
       locacion                    : _locacionController.text,
       tipoPlataforma              : _tipoPlataformaController.text,
       odometro                    : odometro,
@@ -275,91 +257,54 @@ class _CreateFormState extends State<_CreateForm> {
 
           // SELECCIONAR Y BUSCAR UNIDAD A INSPECCIONAR:
           if (_selectedUnidadInspeccion == UnidadInspeccion.temporal)
-            BlocListener<RemoteInspeccionBloc, RemoteInspeccionState>(
-              listener: (BuildContext context, RemoteInspeccionState state) {
-                if (state is RemoteInspeccionCreateLoaded) {
-                  // FRAGMENTO NO MODIFICABLE - LISTAS
-                  setState(() {
-                    lstUnidades = state.objResponse?.unidades ?? [];
-                  });
-                }
-              },
-              child: LabeledDropdownFormSearchField<UnidadSearchEntity>(
-                hintText          : 'Buscar unidad...',
-                label             : '* Unidad:',
-                searchController  : _searchUnidadController,
-                items             : lstUnidades,
-                itemBuilder       : (item) => Text(item.numeroEconomico ?? ''),
-                value             : _selectedUnidad,
-                onChanged         : (selectedType) {
-                  setState(() {
-                    _selectedUnidad                       = selectedType;
-                    _selectedUnidadBaseId                 = selectedType?.idBase                      ?? '';
-                    _selectedUnidadBaseName               = selectedType?.baseName                    ?? '';
-                    _selectedUnidadId                     = selectedType?.idUnidad                    ?? '';
-                    _selectedUnidadNumeroEconomico        = selectedType?.numeroEconomico             ?? '';
-                    _selectedUnidadTipoId                 = selectedType?.idUnidadTipo                ?? '';
-                    _selectedUnidadTipoName               = selectedType?.unidadTipoName              ?? '';
-                    _selectedUnidadMarcaId                = selectedType?.idUnidadMarca               ?? '';
-                    _selectedUnidadMarcaName              = selectedType?.unidadMarcaName             ?? '';
-                    _selectedUnidadPlacaTipoId            = selectedType?.idUnidadPlacaTipo           ?? '';
-                    _selectedUnidadPlacaTipoName          = selectedType?.unidadPlacaTipoName         ?? '';
-                    _selectedUnidadPlaca                  = selectedType?.placa                       ?? '';
-                    _selectedUnidadNumeroSerie            = selectedType?.numeroSerie                 ?? '';
-                    _selectedUnidadModelo                 = selectedType?.modelo                      ?? '';
-                    _selectedUnidadAnioEquipo             = selectedType?.anioEquipo                  ?? '';
-                    _selectedUnidadCapacidad              = selectedType?.capacidad                   ?? '';
-                    _selectedUnidadCapacidadMedidaId      = selectedType?.idUnidadCapacidadMedida     ?? '';
-                    _selectedUnidadCapacidadMedidaName    = selectedType?.unidadCapacidadMedidaName   ?? '';
+            BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
+              builder: (context, state) {
+                if (state is RemoteUnidadSearchLoaded) {
+                  lstUnidades = state.unidades ?? [];
 
-                    _unidadNumeroEconomicoController.text = _selectedUnidadNumeroEconomico  ?? '';
-                    _unidadTipoNameController.text        = _selectedUnidadTipoName         ?? '';
-                    _unidadMarcaNameController.text       = _selectedUnidadMarcaName        ?? '';
-                    _modeloController.text                = _selectedUnidadModelo           ?? '';
-                    _unidadPlacaTipoNameController.text   = _selectedUnidadPlacaTipoName    ?? '';
-                    _numeroSerieController.text           = _selectedUnidadNumeroSerie      ?? '';
-                    _placaController.text                 = _selectedUnidadPlaca            ?? '';
-                    _anioEquipoController.text            = _selectedUnidadAnioEquipo       ?? '';
-                    _baseNameController.text              = _selectedUnidadBaseName         ?? '';
-                    _capacidadController.text             = _selectedUnidadBaseName         ?? '';
-                    _baseNameController.text              = _selectedUnidadBaseName         ?? '';
-                  });
-                },
-                searchMatchFn: (DropdownMenuItem<UnidadSearchEntity> item, String searchValue) {
-                  return item.value!.numeroEconomico!.toLowerCase().contains(searchValue.toLowerCase());
-                },
-                onMenuStateChange: (isOpen) {
-                  if (!isOpen) {
-                    _searchUnidadController.clear();
-                  }
-                },
-                validator: FormValidators.dropdownValidator,
-              ),
-            )
-          else BlocListener<RemoteInspeccionBloc, RemoteInspeccionState>(
-            listener: (BuildContext context, RemoteInspeccionState state) {
-              if (state is RemoteInspeccionCreateLoaded) {
-                // FRAGMENTO NO MODIFICABLE - LISTAS
-                setState(() {
-                  lstInspeccionesTipos = state.objResponse?.inspeccionesTipos ?? [];
-                });
-              }
-            },
-            child: LabeledDropdownFormField<InspeccionTipoEntity>(
-              hintText    : 'Seleccionar',
-              label       : '* Tipo de inspección:',
-              items       : lstInspeccionesTipos,
-              itemBuilder : (item) => Text(item.name),
-              onChanged   : (selectedType) {
-                setState(() {
-                  _selectedInspeccionTipoId       = selectedType?.idInspeccionTipo;
-                  _selectedInspeccionTipoCodigo   = selectedType?.codigo;
-                  _selectedInspeccionTipoName     = selectedType?.name;
-                });
+                  return LabeledDropdownFormSearchField<UnidadSearchEntity>(
+                    hintText          : 'Seleccione la unidad a inspeccionar',
+                    label             : '* Unidad:',
+                    searchController  : _searchUnidadController,
+                    items             : lstUnidades,
+                    itemBuilder       : (unidad) => Text(unidad.value ?? ''),
+                    value             : _selectedUnidad,
+                    onChanged         : (selectedType) {
+                      setState(() {
+                        _selectedUnidad                     = selectedType;
+                        _selectedUnidadId                   = selectedType?.idUnidad                  ?? '';
+                        _selectedUnidadBaseId               = selectedType?.idBase                    ?? '';
+                        _selectedUnidadTipoId               = selectedType?.idUnidadTipo              ?? '';
+                        _selectedUnidadMarcaId              = selectedType?.idUnidadMarca             ?? '';
+                        _selectedUnidadPlacaTipoId          = selectedType?.idUnidadPlacaTipo         ?? '';
+                        _selectedUnidadCapacidadMedidaId    = selectedType?.idUnidadCapacidadMedida   ?? '';
+
+                        _unidadNumeroEconomicoController.text     = selectedType?.numeroEconomico           ?? '';
+                        _baseNameController.text                  = selectedType?.baseName                  ?? '';
+                        _unidadTipoNameController.text            = selectedType?.unidadTipoName            ?? '';
+                        _unidadMarcaNameController.text           = selectedType?.unidadMarcaName           ?? '';
+                        _unidadPlacaTipoNameController.text       = selectedType?.unidadPlacaTipoName       ?? '';
+                        _placaController.text                     = selectedType?.placa                     ?? '';
+                        _numeroSerieController.text               = selectedType?.numeroSerie               ?? '';
+                        _modeloController.text                    = selectedType?.modelo                    ?? '';
+                        _anioEquipoController.text                = selectedType?.anioEquipo                ?? '';
+                        _capacidadController.text                 = selectedType?.capacidad                 ?? '';
+                        _unidadCapacidadMedidaNameController.text = selectedType?.unidadCapacidadMedidaName ?? '';
+                        _odometroController.text                  = selectedType?.odometro                  ?? '';
+                        _horometroController.text                 = selectedType?.horometro                 ?? '';
+                      });
+                    },
+                    searchMatchFn     : (DropdownMenuItem<UnidadSearchEntity> item, String searchValue) {
+                      return item.value!.numeroEconomico!.toLowerCase().contains(searchValue.toLowerCase());
+                    },
+                    validator         : FormValidators.dropdownValidator,
+                  );
+                }
+
+                return const SizedBox.shrink();
               },
-              validator : FormValidators.dropdownValidator,
-            ),
-          ),
+            )
+          else Container(),
 
           // NUEVA UNIDAD TEMPORAL:
           AnimatedSwitcher(
@@ -551,39 +496,18 @@ class _CreateFormState extends State<_CreateForm> {
           Row(
             children: <Widget>[
               Expanded(
-                flex: 2,
                 child: LabeledTextFormField(
                   controller    : _capacidadController,
-                  hintText      : 'Ingresa cantidad',
+                  isReadOnly    : true,
                   label         : '* Capacidad:',
-                  keyboardType  : TextInputType.number,
-                  validator     : FormValidators.decimalValidator,
                 ),
               ),
               Gap($styles.insets.xs),
               Expanded(
-                child: BlocListener<RemoteInspeccionBloc, RemoteInspeccionState>(
-                  listener: (BuildContext context, RemoteInspeccionState state) {
-                    if (state is RemoteInspeccionCreateLoaded) {
-                      // FRAGMENTO NO MODIFICABLE - LISTAS
-                      setState(() {
-                        lstUnidadesCapacidadesMedidas = state.objResponse?.unidadesCapacidadesMedidas ?? [];
-                      });
-                    }
-                  },
-                  child: LabeledDropdownFormField<UnidadCapacidadMedida>(
-                    hintText    : 'Seleccionar',
-                    label       : '',
-                    items       : lstUnidadesCapacidadesMedidas,
-                    itemBuilder : (item) => Text(item.name ?? ''),
-                    onChanged   : (selectedType) {
-                      setState(() {
-                        _selectedUnidadCapacidadMedidaId     = selectedType?.idUnidadCapacidadMedida;
-                        _selectedUnidadCapacidadMedidaName   = selectedType?.name;
-                      });
-                    },
-                    validator : FormValidators.dropdownValidator,
-                  ),
+                child: LabeledTextFormField(
+                  controller    : _unidadCapacidadMedidaNameController,
+                  isReadOnly    : true,
+                  label         : '* Tipo de capacidad',
                 ),
               ),
             ],

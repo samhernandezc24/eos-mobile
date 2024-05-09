@@ -4,6 +4,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/insp
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_search_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/widgets/unidad/create_unidad_page.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';

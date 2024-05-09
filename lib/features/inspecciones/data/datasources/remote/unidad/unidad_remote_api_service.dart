@@ -28,6 +28,13 @@ abstract class UnidadRemoteApiService {
     @Body() Map<String, dynamic> objData,
   );
 
+  /// LISTADO DE UNIDADES
+  @POST('/List')
+  Future<HttpResponse<ServerResponse>> list(
+    @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Header(HttpHeaders.authorizationHeader) String token,
+  );
+
   /// CARGAR INFORMACIÓN PARA CREAR UNA UNIDAD
   @POST('/Create')
   Future<HttpResponse<ServerResponse>> create(

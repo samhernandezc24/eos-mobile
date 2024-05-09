@@ -8,6 +8,7 @@ import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_data_
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_edit_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_index_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_model.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_search_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_store_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_update_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_entity.dart';
@@ -81,6 +82,52 @@ class UnidadRepositoryImpl implements UnidadRepository {
             final unidadDataSource = UnidadDataSourceResModel.fromJson(objResponse.result as Map<String, dynamic>);
 
             return DataSuccess(unidadDataSource);
+          } else {
+            return DataFailedMessage(objResponse.message ?? 'Error inesperado');
+          }
+        } else {
+          return DataFailedMessage(objResponse.message ?? 'Error inesperado');
+        }
+      } else {
+        return DataFailed(
+          ServerException.fromDioException(
+            DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
+          ),
+        );
+      }
+    } on DioException catch (ex) {
+      return DataFailed(ServerException.fromDioException(ex));
+    }
+  }
+
+  /// LISTADO DE UNIDADES
+  @override
+  Future<DataState<List<UnidadSearchModel>>> list() async {
+    try {
+      // Obtener el token localmente.
+      final String? token = await authTokenHelper.retrieveRefreshToken();
+
+      // Realizar la solicitud usando el token actualizado o el actual.
+      final httpResponse = await _unidadRemoteApiService.list('application/json', 'Bearer $token');
+
+      if (httpResponse.response.statusCode == HttpStatus.ok) {
+        final ServerResponse objResponse = httpResponse.data;
+
+        if (objResponse.session!) {
+          if (objResponse.action!) {
+            final result = objResponse.result;
+
+            final List<dynamic> lstUnidades = result['unidades'] as List<dynamic>;
+            final List<UnidadSearchModel> unidadJsonMap = lstUnidades
+                .map<UnidadSearchModel>((dynamic i) =>  UnidadSearchModel.fromJson(i as Map<String, dynamic>))
+                .toList();
+
+            return DataSuccess(unidadJsonMap);
           } else {
             return DataFailedMessage(objResponse.message ?? 'Error inesperado');
           }

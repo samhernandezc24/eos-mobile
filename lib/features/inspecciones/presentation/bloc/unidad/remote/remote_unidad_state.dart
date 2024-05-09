@@ -30,6 +30,18 @@ class RemoteUnidadDataSourceLoaded extends RemoteUnidadState {
   List<Object?> get props => [ objResponse ];
 }
 
+/// LIST
+class RemoteUnidadSearchLoading extends RemoteUnidadState {}
+
+class RemoteUnidadSearchLoaded extends RemoteUnidadState {
+  const RemoteUnidadSearchLoaded(this.unidades);
+
+  final List<UnidadSearchEntity>? unidades;
+
+  @override
+  List<Object?> get props => [ unidades ];
+}
+
 /// CREATE
 class RemoteUnidadCreating extends RemoteUnidadState {}
 

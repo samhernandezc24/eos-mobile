@@ -45,7 +45,7 @@ class MainApp extends StatelessWidget with GetItMixin {
         BlocProvider<RemoteCategoriaItemBloc>(create: (BuildContext context) => sl<RemoteCategoriaItemBloc>()),
         BlocProvider<RemoteInspeccionBloc>(create: (BuildContext context) => sl<RemoteInspeccionBloc>()),
         BlocProvider<RemoteInspeccionTipoBloc>(create: (BuildContext context) => sl<RemoteInspeccionTipoBloc>()..add(ListInspeccionesTipos())),
-        BlocProvider<RemoteUnidadBloc>(create: (BuildContext context) => sl<RemoteUnidadBloc>()),
+        BlocProvider<RemoteUnidadBloc>(create: (BuildContext context) => sl<RemoteUnidadBloc>()..add(ListUnidades())),
         BlocProvider<RemoteUnidadInventarioBloc>(create: (BuildContext context) => sl<RemoteUnidadInventarioBloc>()),
       ],
       child: MaterialApp.router(
