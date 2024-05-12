@@ -40,7 +40,7 @@ class _CreateUnidadPageState extends State<CreateUnidadPage> {
           ),
         ],
       ),
-    );
+    ).whenComplete(() => context.read<RemoteUnidadBloc>().add(ListUnidades()));
   }
 
   @override

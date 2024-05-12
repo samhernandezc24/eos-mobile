@@ -43,6 +43,7 @@ class _CreateFormState extends State<_CreateForm> {
 
   // SELECTED UNIDAD
   UnidadInspeccion? _selectedUnidadInspeccion;
+  // ignore: unused_field
   UnidadSearchEntity? _selectedUnidad;
 
   String? _selectedUnidadBaseId;
@@ -279,58 +280,113 @@ class _CreateFormState extends State<_CreateForm> {
           // CAMBIAR DINAMICAMENTE ENTRE UNIDAD INVENTARIO / UNIDAD TEMPORAL:
           _buildUnidadCheckbox(UnidadInspeccion.temporal, 'Unidad temporal'),
 
-          Gap($styles.insets.sm),
+          Gap($styles.insets.xs),
+
+          Text(
+            '(Es necesario que realice la búsqueda de la unidad antes de crear la inspección)',
+            style: $styles.textStyles.bodySmall.copyWith(fontSize: 12),
+          ),
+
+          Gap($styles.insets.xs),
 
           // SELECCIONAR Y BUSCAR UNIDAD A INSPECCIONAR:
           if (_selectedUnidadInspeccion == UnidadInspeccion.temporal)
             BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
-              builder: (context, state) {
-                if (state is RemoteUnidadSearchLoaded) {
-                  lstUnidades = state.unidades ?? [];
-                  return _SearchInput(onSelected : _handleSearchSubmitted, onSubmit: (_){}, unidades: lstUnidades);
-                  // return LabeledDropdownFormSearchField<UnidadSearchEntity>(
-                  //   hintText          : 'Seleccione la unidad a inspeccionar',
-                  //   label             : '* Unidad:',
-                  //   searchController  : _searchUnidadController,
-                  //   items             : lstUnidades,
-                  //   itemBuilder       : (unidad) => Text(unidad.value ?? ''),
-                  //   value             : _selectedUnidad,
-                  //   onChanged         : (selectedType) {
-                  //     setState(() {
-                  //       _selectedUnidad                     = selectedType;
-                  //       _selectedUnidadId                   = selectedType?.idUnidad                  ?? '';
-                  //       _selectedUnidadBaseId               = selectedType?.idBase                    ?? '';
-                  //       _selectedUnidadTipoId               = selectedType?.idUnidadTipo              ?? '';
-                  //       _selectedUnidadMarcaId              = selectedType?.idUnidadMarca             ?? '';
-                  //       _selectedUnidadPlacaTipoId          = selectedType?.idUnidadPlacaTipo         ?? '';
-                  //       _selectedUnidadCapacidadMedidaId    = selectedType?.idUnidadCapacidadMedida   ?? '';
-
-                  //       _unidadNumeroEconomicoController.text     = selectedType?.numeroEconomico           ?? '';
-                  //       _baseNameController.text                  = selectedType?.baseName                  ?? '';
-                  //       _unidadTipoNameController.text            = selectedType?.unidadTipoName            ?? '';
-                  //       _unidadMarcaNameController.text           = selectedType?.unidadMarcaName           ?? '';
-                  //       _unidadPlacaTipoNameController.text       = selectedType?.unidadPlacaTipoName       ?? '';
-                  //       _placaController.text                     = selectedType?.placa                     ?? '';
-                  //       _numeroSerieController.text               = selectedType?.numeroSerie               ?? '';
-                  //       _modeloController.text                    = selectedType?.modelo                    ?? '';
-                  //       _anioEquipoController.text                = selectedType?.anioEquipo                ?? '';
-                  //       _capacidadController.text                 = selectedType?.capacidad                 ?? '';
-                  //       _unidadCapacidadMedidaNameController.text = selectedType?.unidadCapacidadMedidaName ?? '';
-                  //       _odometroController.text                  = selectedType?.odometro                  ?? '';
-                  //       _horometroController.text                 = selectedType?.horometro                 ?? '';
-                  //     });
-                  //   },
-                  //   searchMatchFn     : (DropdownMenuItem<UnidadSearchEntity> item, String searchValue) {
-                  //     return item.value!.numeroEconomico!.toLowerCase().contains(searchValue.toLowerCase());
-                  //   },
-                  //   validator         : FormValidators.dropdownValidator,
-                  // );
+              builder: (BuildContext context, RemoteUnidadState state) {
+                if (state is RemoteUnidadSearchLoading) {
+                  return const Center(child: AppLoadingIndicator(width: 20, height: 20));
                 }
 
+                if (state is RemoteUnidadServerFailedMessage) {
+                  return ErrorBoxContainer(
+                    errorMessage  : state.errorMessage ?? 'Se produjo un error al cargar el listado de unidades. Inténtalo de nuevo.',
+                    onPressed     : () {
+                      // Cargar listado de unidades.
+                      context.read<RemoteUnidadBloc>().add(ListUnidades());
+
+                      // Cargar listado de tipos de inspecciones.
+                      context.read<RemoteInspeccionBloc>().add(CreateInspeccion());
+                    },
+                  );
+                }
+
+                if (state is RemoteUnidadServerFailure) {
+                  return ErrorBoxContainer(
+                    errorMessage  : state.failure?.errorMessage ?? 'Se produjo un error al cargar el listado de unidades. Inténtalo de nuevo.',
+                    onPressed     : () {
+                      // Cargar listado de unidades.
+                      context.read<RemoteUnidadBloc>().add(ListUnidades());
+
+                      // Cargar listado de tipos de inspecciones.
+                      context.read<RemoteInspeccionBloc>().add(CreateInspeccion());
+                    },
+                  );
+                }
+
+                if (state is RemoteUnidadSearchLoaded) {
+                  lstUnidades = state.unidades ?? [];
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _SearchInput(
+                        onSelected  : _handleSearchSubmitted,
+                        onSubmit    : (_){}, unidades: lstUnidades,
+                      ),
+                    ],
+                  );
+                }
                 return const SizedBox.shrink();
               },
             )
-          else Container(),
+          else BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
+            builder: (BuildContext context, RemoteUnidadState state) {
+              if (state is RemoteUnidadSearchLoading) {
+                return const Center(child: AppLoadingIndicator(width: 20, height: 20));
+              }
+
+              if (state is RemoteUnidadServerFailedMessage) {
+                return ErrorBoxContainer(
+                  errorMessage  : state.errorMessage ?? 'Se produjo un error al cargar el listado de unidades. Inténtalo de nuevo.',
+                  onPressed     : () {
+                    // Cargar listado de unidades.
+                    context.read<RemoteUnidadBloc>().add(ListUnidades());
+
+                    // Cargar listado de tipos de inspecciones.
+                    context.read<RemoteInspeccionBloc>().add(CreateInspeccion());
+                  }
+                );
+              }
+
+              if (state is RemoteUnidadServerFailure) {
+                return ErrorBoxContainer(
+                  errorMessage  : state.failure?.errorMessage ?? 'Se produjo un error al cargar el listado de unidades. Inténtalo de nuevo.',
+                  onPressed     : () {
+                    // Cargar listado de unidades.
+                    context.read<RemoteUnidadBloc>().add(ListUnidades());
+
+                    // Cargar listado de tipos de inspecciones.
+                    context.read<RemoteInspeccionBloc>().add(CreateInspeccion());
+                  },
+                );
+              }
+
+              if (state is RemoteUnidadSearchLoaded) {
+                lstUnidades = state.unidades ?? [];
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    _SearchInput(
+                      onSelected  : _handleSearchSubmitted,
+                      onSubmit    : (_){}, unidades: lstUnidades,
+                    ),
+                  ],
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
 
           // NUEVA UNIDAD TEMPORAL:
           AnimatedSwitcher(

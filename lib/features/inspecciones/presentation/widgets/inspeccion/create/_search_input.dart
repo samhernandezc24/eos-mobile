@@ -1,6 +1,7 @@
 part of 'create_inspeccion_page.dart';
 
 class _SearchInput extends StatelessWidget {
+  // ignore: unused_element
   const _SearchInput({required this.onSelected, required this.onSubmit, required this.unidades, Key? key}) : super(key: key);
 
   final void Function(UnidadSearchEntity?) onSelected;
@@ -132,8 +133,8 @@ class _SearchInput extends StatelessWidget {
           const Icon(Icons.search),
 
           Expanded(
-            child: TextField(
-              onSubmitted       : onSubmit,
+            child: TextFormField(
+              onFieldSubmitted  : onSubmit,
               controller        : textController,
               focusNode         : focusNode,
               style             : TextStyle(color: Theme.of(context).colorScheme.onSurface),

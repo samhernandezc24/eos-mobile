@@ -62,6 +62,10 @@ class AppScaffoldWithNavBar extends StatelessWidget {
           contentPadding: EdgeInsets.symmetric(horizontal: $styles.insets.sm),
           actions: <Widget>[
             TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text($strings.cancelButtonText, style: $styles.textStyles.button),
+            ),
+            TextButton(
               onPressed: () {
                 context.read<LocalAuthBloc>().add(LogoutRequested());
                 Navigator.of(context).pop();
@@ -69,10 +73,6 @@ class AppScaffoldWithNavBar extends StatelessWidget {
                 settingsLogic.hasAuthenticated.value = false;
               },
               child: Text($strings.leaveButtonText, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text($strings.cancelButtonText, style: $styles.textStyles.button),
             ),
           ],
         );

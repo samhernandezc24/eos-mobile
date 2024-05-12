@@ -427,6 +427,8 @@ class _CreateFormState extends State<_CreateForm> {
                     elevation       : 0,
                   ),
                 );
+
+                context.read<RemoteUnidadBloc>().add(ListUnidades());
               }
             },
             builder: (BuildContext context, RemoteUnidadState state) {
