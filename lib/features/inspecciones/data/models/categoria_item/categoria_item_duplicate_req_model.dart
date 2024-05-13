@@ -7,8 +7,6 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/
 class CategoriaItemDuplicateReqModel extends CategoriaItemDuplicateReqEntity {
   const CategoriaItemDuplicateReqModel({
     required String name,
-    required String idInspeccionTipo,
-    required String inspeccionTipoName,
     required String idCategoria,
     required String categoriaName,
     required String idFormularioTipo,
@@ -16,8 +14,6 @@ class CategoriaItemDuplicateReqModel extends CategoriaItemDuplicateReqEntity {
     String? formularioValor,
   }) : super(
         name                : name,
-        idInspeccionTipo    : idInspeccionTipo,
-        inspeccionTipoName  : inspeccionTipoName,
         idCategoria         : idCategoria,
         categoriaName       : categoriaName,
         idFormularioTipo    : idFormularioTipo,
@@ -30,8 +26,6 @@ class CategoriaItemDuplicateReqModel extends CategoriaItemDuplicateReqEntity {
   factory CategoriaItemDuplicateReqModel.fromJson(Map<String, dynamic> jsonMap) {
     return CategoriaItemDuplicateReqModel(
       name                : jsonMap['name'] as String,
-      idInspeccionTipo    : jsonMap['idInspeccionTipo'] as String,
-      inspeccionTipoName  : jsonMap['inspeccionTipoName'] as String,
       idCategoria         : jsonMap['idCategoria'] as String,
       categoriaName       : jsonMap['categoriaName'] as String,
       idFormularioTipo    : jsonMap['idFormularioTipo'] as String,
@@ -45,8 +39,6 @@ class CategoriaItemDuplicateReqModel extends CategoriaItemDuplicateReqEntity {
   factory CategoriaItemDuplicateReqModel.fromEntity(CategoriaItemDuplicateReqEntity entity) {
     return CategoriaItemDuplicateReqModel(
       name                : entity.name,
-      idInspeccionTipo    : entity.idInspeccionTipo,
-      inspeccionTipoName  : entity.inspeccionTipoName,
       idCategoria         : entity.idCategoria,
       categoriaName       : entity.categoriaName,
       idFormularioTipo    : entity.idFormularioTipo,
@@ -59,8 +51,6 @@ class CategoriaItemDuplicateReqModel extends CategoriaItemDuplicateReqEntity {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'name'                : name,
-      'idInspeccionTipo'    : idInspeccionTipo,
-      'inspeccionTipoName'  : inspeccionTipoName,
       'idCategoria'         : idCategoria,
       'categoriaName'       : categoriaName,
       'idFormularioTipo'    : idFormularioTipo,

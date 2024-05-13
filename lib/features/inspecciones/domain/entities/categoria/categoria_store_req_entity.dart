@@ -1,11 +1,11 @@
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
-/// [CategoriaReqEntity]
+/// [CategoriaStoreReqEntity]
 ///
 /// Representa los datos de la request para la categoría, se mandara esta informacion
 /// en el body de la petición.
-class CategoriaReqEntity extends Equatable {
-  const CategoriaReqEntity({
+class CategoriaStoreReqEntity extends Equatable {
+  const CategoriaStoreReqEntity({
     required this.name,
     required this.idInspeccionTipo,
     required this.inspeccionTipoCodigo,

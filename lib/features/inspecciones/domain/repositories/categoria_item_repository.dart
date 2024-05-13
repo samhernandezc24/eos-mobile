@@ -2,17 +2,17 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categ
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_data_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_duplicate_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_entity.dart';
-import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_store_req_entity.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 abstract class CategoriaItemRepository {
   /// API METHODS
-  Future<DataState<CategoriaItemDataEntity>> listCategoriasItems(CategoriaEntity categoria);
-  Future<DataState<ApiResponseEntity>> storeCategoriaItem(CategoriaItemReqEntity categoriaItem);
-  Future<DataState<ApiResponseEntity>> storeDuplicateCategoriaItem(CategoriaItemDuplicateReqEntity categoriaItem);
-  Future<DataState<ApiResponseEntity>> updateCategoriaItem(CategoriaItemEntity categoriaItem);
-  Future<DataState<ApiResponseEntity>> deleteCategoriaItem(CategoriaItemEntity categoriaItem);
+  Future<DataState<CategoriaItemDataEntity>> list(CategoriaEntity objData);
+  Future<DataState<ServerResponse>> store(CategoriaItemStoreReqEntity objData);
+  Future<DataState<ServerResponse>> storeDuplicate(CategoriaItemDuplicateReqEntity objData);
+  Future<DataState<ServerResponse>> update(CategoriaItemEntity objData);
+  Future<DataState<ServerResponse>> delete(CategoriaItemEntity objData);
 
   /// LOCAL METHODS
 }

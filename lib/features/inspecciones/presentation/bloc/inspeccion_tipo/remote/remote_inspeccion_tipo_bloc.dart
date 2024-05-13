@@ -48,70 +48,70 @@ class RemoteInspeccionTipoBloc extends Bloc<RemoteInspeccionTipoEvent, RemoteIns
   }
 
   Future<void> onStoreInspeccionTipo(StoreInspeccionTipo event, Emitter<RemoteInspeccionTipoState> emit) async {
-    emit(RemoteInspeccionTipoLoading());
+    emit(RemoteInspeccionTipoStoring());
 
     final objDataState = await _storeInspeccionTipoUseCase(params: event.objData);
 
     if (objDataState is DataSuccess) {
-      emit(RemoteInspeccionTipoServerResponseSuccess(objDataState.data!));
-      await _reloadInspeccionesTipos(emit);
+      emit(RemoteInspeccionTipoStored(objDataState.data));
+      // await _reloadInspeccionesTipos(emit);
     }
 
     if (objDataState is DataFailedMessage) {
       emit(RemoteInspeccionTipoServerFailedMessage(objDataState.errorMessage));
-      await _reloadInspeccionesTipos(emit);
+      // await _reloadInspeccionesTipos(emit);
     }
 
     if (objDataState is DataFailed) {
       emit(RemoteInspeccionTipoServerFailure(objDataState.serverException));
-      await _reloadInspeccionesTipos(emit);
+      // await _reloadInspeccionesTipos(emit);
     }
   }
 
   Future<void> onUpdateInspeccionTipo(UpdateInspeccionTipo event, Emitter<RemoteInspeccionTipoState> emit) async {
-    emit(RemoteInspeccionTipoLoading());
+    emit(RemoteInspeccionTipoUpdating());
 
     final objDataState = await _updateInspeccionTipoUseCase(params: event.objData);
 
     if (objDataState is DataSuccess) {
-      emit(RemoteInspeccionTipoServerResponseSuccess(objDataState.data!));
-      await _reloadInspeccionesTipos(emit);
+      emit(RemoteInspeccionTipoUpdated(objDataState.data));
+      // await _reloadInspeccionesTipos(emit);
     }
 
     if (objDataState is DataFailedMessage) {
       emit(RemoteInspeccionTipoServerFailedMessage(objDataState.errorMessage));
-      await _reloadInspeccionesTipos(emit);
+      // await _reloadInspeccionesTipos(emit);
     }
 
     if (objDataState is DataFailed) {
       emit(RemoteInspeccionTipoServerFailure(objDataState.serverException));
-      await _reloadInspeccionesTipos(emit);
+      // await _reloadInspeccionesTipos(emit);
     }
   }
 
   Future<void> onDeleteInspeccionTipo(DeleteInspeccionTipo event, Emitter<RemoteInspeccionTipoState> emit) async {
-    emit(RemoteInspeccionTipoLoading());
+    emit(RemoteInspeccionTipoDeleting());
 
     final objDataState = await _deleteInspeccionTipoUseCase(params: event.objData);
 
     if (objDataState is DataSuccess) {
-      emit(RemoteInspeccionTipoServerResponseSuccess(objDataState.data!));
-      await _reloadInspeccionesTipos(emit);
+      emit(RemoteInspeccionTipoDeleted(objDataState.data));
+      // await _reloadInspeccionesTipos(emit);
     }
 
     if (objDataState is DataFailedMessage) {
       emit(RemoteInspeccionTipoServerFailedMessage(objDataState.errorMessage));
-      await _reloadInspeccionesTipos(emit);
+      // await _reloadInspeccionesTipos(emit);
     }
 
     if (objDataState is DataFailed) {
       emit(RemoteInspeccionTipoServerFailure(objDataState.serverException));
-      await _reloadInspeccionesTipos(emit);
+      // await _reloadInspeccionesTipos(emit);
     }
   }
 
   /// Recargar el listado de inspecciones tipos.
-  Future<void> _reloadInspeccionesTipos(Emitter<RemoteInspeccionTipoState> emit) async {
-    await onListInspeccionesTipos(ListInspeccionesTipos(), emit);
-  }
+  // Future<void> _reloadInspeccionesTipos(Emitter<RemoteInspeccionTipoState> emit) async {
+  //   await onListInspeccionesTipos(ListInspeccionesTipos(), emit);
+  // }
 }

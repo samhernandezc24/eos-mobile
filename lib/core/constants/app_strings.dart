@@ -54,8 +54,10 @@ class AppStrings {
 
   String inspectionEmptyTitle         = 'Aún no hay inspecciones';
 
+  String inspectionTypeAppBarTitle    = 'Configuración de inspecciones';
   String inspectionTypeDescription    = 'Crea un tipo de inspección para agrupar los formularios de las inspecciones.';
-  String inspectionTypeEmptyTitle     = 'No hay tipos de inspecciones';
+  String inspectionTypeEmptyTitle     = 'Aún no hay tipos de inspecciones';
+  String inspectionTypeModalTitle     = 'Nuevo tipo de inspección';
   String inspectionTypeTitle          = 'Listado de tipos de inspecciones';
 
   String inspectionIndexListTitle     = 'Lista de inspecciones';

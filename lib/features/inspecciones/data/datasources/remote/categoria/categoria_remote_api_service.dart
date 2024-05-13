@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria_model.dart';
-import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria_req_model.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria_store_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion_tipo/inspeccion_tipo_model.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:retrofit/retrofit.dart';
@@ -13,35 +13,35 @@ part 'categoria_remote_api_service.g.dart';
 abstract class CategoriaRemoteApiService {
   factory CategoriaRemoteApiService(Dio dio, {String baseUrl}) = _CategoriaRemoteApiService;
 
-  /// LISTA DE CATEGORÍAS
+  /// LISTA DE CATEGORIAS
   @POST('/List')
-  Future<HttpResponse<ApiResponse>> listCategorias(
+  Future<HttpResponse<ServerResponse>> list(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Body() InspeccionTipoModel inpseccionTipo,
+    @Body() InspeccionTipoModel objData,
   );
 
-  /// GUARDAR CATEGORÍA
+  /// GUARDAR CATEGORIA
   @POST('/Store')
-  Future<HttpResponse<ApiResponse>> storeCategoria(
+  Future<HttpResponse<ServerResponse>> store(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Body() CategoriaReqModel categoria,
+    @Body() CategoriaStoreReqModel objData,
   );
 
-  /// ACTUALIZAR CATEGORÍA
+  /// ACTUALIZAR CATEGORIA
   @POST('/Update')
-  Future<HttpResponse<ApiResponse>> updateCategoria(
+  Future<HttpResponse<ServerResponse>> update(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Body() CategoriaModel categoria,
+    @Body() CategoriaModel objData,
   );
 
-  /// ELIMINAR CATEGORÍA
+  /// ELIMINAR CATEGORIA
   @POST('/Delete')
-  Future<HttpResponse<ApiResponse>> deleteCategoria(
+  Future<HttpResponse<ServerResponse>> delete(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Body() CategoriaModel categoria,
+    @Body() CategoriaModel objData,
   );
 }

@@ -12,19 +12,45 @@ class RemoteInspeccionTipoLoading extends RemoteInspeccionTipoState {}
 
 /// LIST
 class RemoteInspeccionTipoSuccess extends RemoteInspeccionTipoState {
-  const RemoteInspeccionTipoSuccess(this.inspeccionesTipos);
+  const RemoteInspeccionTipoSuccess(this.objResponse);
 
-  final List<InspeccionTipoEntity>? inspeccionesTipos;
+  final List<InspeccionTipoEntity>? objResponse;
 
   @override
-  List<Object?> get props => [ inspeccionesTipos ];
+  List<Object?> get props => [ objResponse ];
 }
 
-/// STORE / UPDATE / DELETE
-class RemoteInspeccionTipoServerResponseSuccess extends RemoteInspeccionTipoState {
-  const RemoteInspeccionTipoServerResponseSuccess(this.objResponse);
+/// STORE
+class RemoteInspeccionTipoStoring extends RemoteInspeccionTipoState {}
 
-  final ServerResponse objResponse;
+class RemoteInspeccionTipoStored extends RemoteInspeccionTipoState {
+  const RemoteInspeccionTipoStored(this.objResponse);
+
+  final ServerResponse? objResponse;
+
+  @override
+  List<Object?> get props => [ objResponse ];
+}
+
+/// UPDATE
+class RemoteInspeccionTipoUpdating extends RemoteInspeccionTipoState {}
+
+class RemoteInspeccionTipoUpdated extends RemoteInspeccionTipoState {
+  const RemoteInspeccionTipoUpdated(this.objResponse);
+
+  final ServerResponse? objResponse;
+
+  @override
+  List<Object?> get props => [ objResponse ];
+}
+
+/// DELETE
+class RemoteInspeccionTipoDeleting extends RemoteInspeccionTipoState {}
+
+class RemoteInspeccionTipoDeleted extends RemoteInspeccionTipoState {
+  const RemoteInspeccionTipoDeleted(this.objResponse);
+
+  final ServerResponse? objResponse;
 
   @override
   List<Object?> get props => [ objResponse ];

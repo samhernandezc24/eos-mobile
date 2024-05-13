@@ -33,11 +33,11 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
             // ignore: avoid_dynamic_calls
             final List<dynamic> lstInspeccionesTipos = result['inspeccionesTipos'] as List<dynamic>;
 
-            final List<InspeccionTipoModel> inspeccionTipoList = lstInspeccionesTipos
+            final List<InspeccionTipoModel> objInspeccionTipo = lstInspeccionesTipos
                 .map<InspeccionTipoModel>((dynamic i) => InspeccionTipoModel.fromJson(i as Map<String, dynamic>))
                 .toList();
 
-            return DataSuccess(inspeccionTipoList);
+            return DataSuccess(objInspeccionTipo);
           } else {
             return DataFailedMessage(objResponse.message ?? 'Error inesperado');
           }

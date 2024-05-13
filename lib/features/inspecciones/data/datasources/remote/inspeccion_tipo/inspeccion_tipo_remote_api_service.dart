@@ -19,7 +19,7 @@ abstract class InspeccionTipoRemoteApiService {
     @Header(HttpHeaders.authorizationHeader) String token,
   );
 
-  /// GUARDAR INSPECCIÓN TIPO
+  /// GUARDAR INSPECCION TIPO
   @POST('/Store')
   Future<HttpResponse<ServerResponse>> store(
     @Header(HttpHeaders.contentTypeHeader) String contentType,
@@ -27,7 +27,7 @@ abstract class InspeccionTipoRemoteApiService {
     @Body() InspeccionTipoStoreReqModel objData,
   );
 
-  /// ACTUALIZAR INSPECCIÓN TIPO
+  /// ACTUALIZAR INSPECCION TIPO
   @POST('/Update')
   Future<HttpResponse<ServerResponse>> update(
     @Header(HttpHeaders.contentTypeHeader) String contentType,
@@ -35,7 +35,7 @@ abstract class InspeccionTipoRemoteApiService {
     @Body() InspeccionTipoModel objData,
   );
 
-  /// ELIMINAR INSPECCIÓN TIPO
+  /// ELIMINAR INSPECCION TIPO
   @POST('/Delete')
   Future<HttpResponse<ServerResponse>> delete(
     @Header(HttpHeaders.contentTypeHeader) String contentType,

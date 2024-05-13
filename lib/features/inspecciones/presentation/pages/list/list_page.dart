@@ -133,8 +133,6 @@ class _InspeccionListPageState extends State<InspeccionListPage> {
       'dateFrom'            : _txtDateDesdeController.text.isEmpty ? '' : _txtDateDesdeController.text,
       'dateTo'              : _txtDateHastaController.text.isEmpty ? '' : _txtDateHastaController.text,
       'dateOptions'         : [{'field': _rdDateOptionsController.text}],
-      'columns'             : <dynamic>[],
-      'persistenceColumns'  : <dynamic>[],
       'length'              : !Globals.isValidValue(_txtSearchController.value) ? 25 : '',
       'page'                : 1,
       'sort'                : {'column': '', 'direction': ''},
@@ -149,9 +147,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> {
     final List<Map<String, dynamic>> arrSearchFilters = [
       { 'field': 'Folio',                 'isChecked': true,    'title': 'Folio'                        },
       { 'field': 'RequerimientoFolio',    'isChecked': false,   'title': 'Requerimiento / folio'        },
-      { 'field': 'InspeccionTipoCodigo',  'isChecked': true,    'title': 'Tipo de inspección / código'  },
       { 'field': 'UnidadNumeroEconomico', 'isChecked': true,    'title': 'Número económico'             },
-      { 'field': 'UnidadTipoName',        'isChecked': true,    'title': 'Tipo de unidad'               },
       { 'field': 'Locacion',              'isChecked': true,    'title': 'Locación'                     },
     ];
 

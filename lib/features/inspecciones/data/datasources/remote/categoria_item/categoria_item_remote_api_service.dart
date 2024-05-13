@@ -4,7 +4,8 @@ import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_duplicate_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_model.dart';
-import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_req_model.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_store_req_model.dart';
+
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -14,43 +15,43 @@ part 'categoria_item_remote_api_service.g.dart';
 abstract class CategoriaItemRemoteApiService {
   factory CategoriaItemRemoteApiService(Dio dio, {String baseUrl}) = _CategoriaItemRemoteApiService;
 
-  /// LISTA DE CATEGORÍAS ITEMS
+  /// LISTA DE CATEGORIAS ITEMS
   @POST('/List')
-  Future<HttpResponse<ApiResponse>> listCategoriasItems(
+  Future<HttpResponse<ServerResponse>> list(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Body() CategoriaModel categoria,
+    @Body() CategoriaModel objData,
   );
 
-  /// GUARDAR CATEGORÍA ITEM
+  /// GUARDAR CATEGORIA ITEM
   @POST('/Store')
-  Future<HttpResponse<ApiResponse>> storeCategoriaItem(
+  Future<HttpResponse<ServerResponse>> store(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Body() CategoriaItemReqModel categoriaItem,
+    @Body() CategoriaItemStoreReqModel objData,
   );
 
-  /// GUARDAR CATEGORÍA ITEM DUPLICADO
+  /// GUARDAR CATEGORIA ITEM DUPLICADO
   @POST('/StoreDuplicate')
-  Future<HttpResponse<ApiResponse>> storeDuplicateCategoriaItem(
+  Future<HttpResponse<ServerResponse>> storeDuplicate(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Body() CategoriaItemDuplicateReqModel categoriaItem,
+    @Body() CategoriaItemDuplicateReqModel objData,
   );
 
-  /// ACTUALIZAR CATEGORÍA ITEM
+  /// ACTUALIZAR CATEGORIA ITEM
   @POST('/Update')
-  Future<HttpResponse<ApiResponse>> updateCategoriaItem(
+  Future<HttpResponse<ServerResponse>> update(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Body() CategoriaItemModel categoriaItem,
+    @Body() CategoriaItemModel objData,
   );
 
-  /// ACTUALIZAR CATEGORÍA ITEM
+  /// ELIMINAR CATEGORIA ITEM
   @POST('/Delete')
-  Future<HttpResponse<ApiResponse>> deleteCategoriaItem(
+  Future<HttpResponse<ServerResponse>> delete(
     @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Body() CategoriaItemModel categoriaItem,
+    @Body() CategoriaItemModel objData,
   );
 }

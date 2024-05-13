@@ -5,11 +5,11 @@ import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_data_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_duplicate_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_model.dart';
-import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_req_model.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_store_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_duplicate_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_entity.dart';
-import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/categoria_item_repository.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
@@ -18,39 +18,36 @@ class CategoriaItemRepositoryImpl implements CategoriaItemRepository {
 
   final CategoriaItemRemoteApiService _categoriaItemRemoteApiService;
 
-  /// LISTADO DE CATEGORÍAS ITEMS
+  /// LISTADO DE CATEGORIAS ITEMS
   @override
-  Future<DataState<CategoriaItemDataModel>> listCategoriasItems(CategoriaEntity categoria) async {
+  Future<DataState<CategoriaItemDataModel>> list(CategoriaEntity objData) async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
 
       // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _categoriaItemRemoteApiService.listCategoriasItems(
-        'Bearer $token',
-        'application/json',
-        CategoriaModel.fromEntity(categoria),
-      );
+      final httpResponse = await _categoriaItemRemoteApiService.list('application/json', 'Bearer $token', CategoriaModel.fromEntity(objData));
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        final ApiResponse apiResponse = httpResponse.data;
+        final ServerResponse objResponse = httpResponse.data;
 
-        if (apiResponse.session) {
-          if (apiResponse.action) {
-            final result = apiResponse.result as Map<String, dynamic>;
+        if (objResponse.session!) {
+          if (objResponse.action!) {
+            // ignore: avoid_dynamic_calls
+            final result = objResponse.result['categoriasItems'] as Map<String, dynamic>;
             final CategoriaItemDataModel objCategoriaItem = CategoriaItemDataModel.fromJson(result);
 
             return DataSuccess(objCategoriaItem);
           } else {
-            return DataFailedMessage(apiResponse.message);
+            return DataFailedMessage(objResponse.message ?? 'Error inesperado');
           }
         } else {
-          return DataFailedMessage(apiResponse.message);
+          return DataFailedMessage(objResponse.message ?? 'Error inesperado');
         }
       } else {
         return DataFailed(
           ServerException.fromDioException(
-              DioException(
+            DioException(
               error           : httpResponse.response.statusMessage,
               response        : httpResponse.response,
               type            : DioExceptionType.badResponse,
@@ -64,34 +61,36 @@ class CategoriaItemRepositoryImpl implements CategoriaItemRepository {
     }
   }
 
-  /// GUARDADO DE CATEGORÍA ITEM
+  /// GUARDADO DE CATEGORIA ITEM
   @override
-  Future<DataState<ApiResponse>> storeCategoriaItem(CategoriaItemReqEntity categoriaItem) async {
+  Future<DataState<ServerResponse>> store(CategoriaItemStoreReqEntity objData) async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
 
       // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _categoriaItemRemoteApiService.storeCategoriaItem(
-        'Bearer $token',
+      final httpResponse = await _categoriaItemRemoteApiService.store(
         'application/json',
-        CategoriaItemReqModel.fromEntity(categoriaItem),
+        'Bearer $token',
+        CategoriaItemStoreReqModel.fromEntity(objData),
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        if (httpResponse.data.session) {
-          if (httpResponse.data.action) {
-            return DataSuccess(httpResponse.data);
+        final ServerResponse objResponse = httpResponse.data;
+
+        if (objResponse.session!) {
+          if (objResponse.action!) {
+            return DataSuccess(objResponse);
           } else {
-            return DataFailedMessage(httpResponse.data.message);
+            return DataFailedMessage(objResponse.message ?? 'Error inesperado');
           }
         } else {
-          return DataFailedMessage(httpResponse.data.message);
+          return DataFailedMessage(objResponse.message ?? 'Error inesperado');
         }
       } else {
         return DataFailed(
           ServerException.fromDioException(
-              DioException(
+            DioException(
               error           : httpResponse.response.statusMessage,
               response        : httpResponse.response,
               type            : DioExceptionType.badResponse,
@@ -105,34 +104,36 @@ class CategoriaItemRepositoryImpl implements CategoriaItemRepository {
     }
   }
 
-  /// GUARDADO DE CATEGORÍA ITEM DUPLICADA
+  /// GUARDADO DE CATEGORIA ITEM DUPLICADA
   @override
-  Future<DataState<ApiResponse>> storeDuplicateCategoriaItem(CategoriaItemDuplicateReqEntity categoriaItem) async {
+  Future<DataState<ServerResponse>> storeDuplicate(CategoriaItemDuplicateReqEntity objData) async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
 
       // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _categoriaItemRemoteApiService.storeDuplicateCategoriaItem(
-        'Bearer $token',
+      final httpResponse = await _categoriaItemRemoteApiService.storeDuplicate(
         'application/json',
-        CategoriaItemDuplicateReqModel.fromEntity(categoriaItem),
+        'Bearer $token',
+        CategoriaItemDuplicateReqModel.fromEntity(objData),
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        if (httpResponse.data.session) {
-          if (httpResponse.data.action) {
-            return DataSuccess(httpResponse.data);
+        final ServerResponse objResponse = httpResponse.data;
+
+        if (objResponse.session!) {
+          if (objResponse.action!) {
+            return DataSuccess(objResponse);
           } else {
-            return DataFailedMessage(httpResponse.data.message);
+            return DataFailedMessage(objResponse.message ?? 'Error inesperado');
           }
         } else {
-          return DataFailedMessage(httpResponse.data.message);
+          return DataFailedMessage(objResponse.message ?? 'Error inesperado');
         }
       } else {
         return DataFailed(
           ServerException.fromDioException(
-              DioException(
+            DioException(
               error           : httpResponse.response.statusMessage,
               response        : httpResponse.response,
               type            : DioExceptionType.badResponse,
@@ -146,34 +147,36 @@ class CategoriaItemRepositoryImpl implements CategoriaItemRepository {
     }
   }
 
-  /// ACTUALIZACIÓN DE CATEGORÍA ITEM
+  /// ACTUALIZACIÓN DE CATEGORIA ITEM
   @override
-  Future<DataState<ApiResponse>> updateCategoriaItem(CategoriaItemEntity categoriaItem) async {
+  Future<DataState<ServerResponse>> update(CategoriaItemEntity objData) async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
 
       // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _categoriaItemRemoteApiService.updateCategoriaItem(
-        'Bearer $token',
+      final httpResponse = await _categoriaItemRemoteApiService.update(
         'application/json',
-        CategoriaItemModel.fromEntity(categoriaItem),
+        'Bearer $token',
+        CategoriaItemModel.fromEntity(objData),
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        if (httpResponse.data.session) {
-          if (httpResponse.data.action) {
-            return DataSuccess(httpResponse.data);
+        final ServerResponse objResponse = httpResponse.data;
+
+        if (objResponse.session!) {
+          if (objResponse.action!) {
+            return DataSuccess(objResponse);
           } else {
-            return DataFailedMessage(httpResponse.data.message);
+            return DataFailedMessage(objResponse.message ?? 'Error inesperado');
           }
         } else {
-          return DataFailedMessage(httpResponse.data.message);
+          return DataFailedMessage(objResponse.message ?? 'Error inesperado');
         }
       } else {
         return DataFailed(
           ServerException.fromDioException(
-              DioException(
+            DioException(
               error           : httpResponse.response.statusMessage,
               response        : httpResponse.response,
               type            : DioExceptionType.badResponse,
@@ -187,34 +190,36 @@ class CategoriaItemRepositoryImpl implements CategoriaItemRepository {
     }
   }
 
-  /// ELIMINACIÓN DE CATEGORÍA ITEM
+  /// ELIMINACIÓN DE CATEGORIA ITEM
   @override
-  Future<DataState<ApiResponse>> deleteCategoriaItem(CategoriaItemEntity categoriaItem) async {
+  Future<DataState<ServerResponse>> delete(CategoriaItemEntity objData) async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
 
       // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _categoriaItemRemoteApiService.deleteCategoriaItem(
-        'Bearer $token',
+      final httpResponse = await _categoriaItemRemoteApiService.delete(
         'application/json',
-        CategoriaItemModel.fromEntity(categoriaItem),
+        'Bearer $token',
+        CategoriaItemModel.fromEntity(objData),
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        if (httpResponse.data.session) {
-          if (httpResponse.data.action) {
-            return DataSuccess(httpResponse.data);
+        final ServerResponse objResponse = httpResponse.data;
+
+        if (objResponse.session!) {
+          if (objResponse.action!) {
+            return DataSuccess(objResponse);
           } else {
-            return DataFailedMessage(httpResponse.data.message);
+            return DataFailedMessage(objResponse.message ?? 'Error inesperado');
           }
         } else {
-          return DataFailedMessage(httpResponse.data.message);
+          return DataFailedMessage(objResponse.message ?? 'Error inesperado');
         }
       } else {
         return DataFailed(
           ServerException.fromDioException(
-              DioException(
+            DioException(
               error           : httpResponse.response.statusMessage,
               response        : httpResponse.response,
               type            : DioExceptionType.badResponse,

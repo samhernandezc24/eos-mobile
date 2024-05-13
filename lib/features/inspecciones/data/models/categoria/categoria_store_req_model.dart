@@ -1,11 +1,11 @@
-import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_store_req_entity.dart';
 
-/// [CategoriaReqModel]
+/// [CategoriaStoreReqModel]
 ///
-/// Representa los datos de la request para la categoría, se mandara esta informacion
+/// Representa los datos de la request para la categoría, se mandara esta información
 /// en el body de la petición.
-class CategoriaReqModel extends CategoriaReqEntity {
-  const CategoriaReqModel({
+class CategoriaStoreReqModel extends CategoriaStoreReqEntity {
+  const CategoriaStoreReqModel({
     required String name,
     required String idInspeccionTipo,
     required String inspeccionTipoCodigo,
@@ -17,10 +17,10 @@ class CategoriaReqModel extends CategoriaReqEntity {
         inspeccionTipoName    : inspeccionTipoName,
       );
 
-  /// Constructor factory para crear la instancia de [CategoriaReqModel]
+  /// Constructor factory para crear la instancia de [CategoriaStoreReqModel]
   /// durante el mapeo del JSON.
-  factory CategoriaReqModel.fromJson(Map<String, dynamic> jsonMap) {
-    return CategoriaReqModel(
+  factory CategoriaStoreReqModel.fromJson(Map<String, dynamic> jsonMap) {
+    return CategoriaStoreReqModel(
       name                  : jsonMap['name'] as String,
       idInspeccionTipo      : jsonMap['idInspeccionTipo'] as String,
       inspeccionTipoCodigo  : jsonMap['inspeccionTipoCodigo'] as String,
@@ -28,10 +28,10 @@ class CategoriaReqModel extends CategoriaReqEntity {
     );
   }
 
-  /// Constructor factory para convertir la instancia de [CategoriaReqEntity]
-  /// en una instancia de [CategoriaReqModel].
-  factory CategoriaReqModel.fromEntity(CategoriaReqEntity entity) {
-    return CategoriaReqModel(
+  /// Constructor factory para convertir la instancia de [CategoriaStoreReqEntity]
+  /// en una instancia de [CategoriaStoreReqModel].
+  factory CategoriaStoreReqModel.fromEntity(CategoriaStoreReqEntity entity) {
+    return CategoriaStoreReqModel(
       name                  : entity.name,
       idInspeccionTipo      : entity.idInspeccionTipo,
       inspeccionTipoCodigo  : entity.inspeccionTipoCodigo,

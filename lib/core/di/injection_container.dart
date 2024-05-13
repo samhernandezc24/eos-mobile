@@ -22,25 +22,22 @@ import 'package:eos_mobile/features/inspecciones/data/datasources/remote/categor
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion/inspeccion_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion_tipo/inspeccion_tipo_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/unidad/unidad_remote_api_service.dart';
-import 'package:eos_mobile/features/inspecciones/data/datasources/remote/unidad_inventario/unidad_inventario_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/repositories/categoria_item_repository_impl.dart';
 import 'package:eos_mobile/features/inspecciones/data/repositories/categoria_repository_impl.dart';
 import 'package:eos_mobile/features/inspecciones/data/repositories/inspeccion_repository_impl.dart';
 import 'package:eos_mobile/features/inspecciones/data/repositories/inspeccion_tipo_repository_impl.dart';
-import 'package:eos_mobile/features/inspecciones/data/repositories/unidad_inventario_repository_impl.dart';
 import 'package:eos_mobile/features/inspecciones/data/repositories/unidad_repository_impl.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/categoria_item_repository.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/categoria_repository.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_repository.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_tipo_repository.dart';
-import 'package:eos_mobile/features/inspecciones/domain/repositories/unidad_inventario_repository.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/unidad_repository.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/delete_categoria_usecase.dart';
-import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/list_categorias_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/list_categoria_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/store_categoria_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/update_categoria_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/delete_categoria_item_usecase.dart';
-import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/list_categorias_items_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/list_categoria_item_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/store_categoria_item_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/store_duplicate_categoria_item_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/update_categoria_item_usecase.dart';
@@ -60,13 +57,11 @@ import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/index_un
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/list_unidad_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/store_unidad_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/update_unidad_usecase.dart';
-import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad_inventario/predictive_unidad_inventario_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria_item/remote/remote_categoria_item_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad_inventario/remote/remote_unidad_inventario_bloc.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
@@ -100,7 +95,6 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<InspeccionRemoteApiService>(InspeccionRemoteApiService(sl()));
   sl.registerSingleton<InspeccionTipoRemoteApiService>(InspeccionTipoRemoteApiService(sl()));
 
-  sl.registerSingleton<UnidadInventarioRemoteApiService>(UnidadInventarioRemoteApiService(sl()));
   sl.registerSingleton<UnidadRemoteApiService>(UnidadRemoteApiService(sl()));
 
   // Repositorios
@@ -110,7 +104,6 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<InspeccionRepository>(InspeccionRepositoryImpl(sl()));
   sl.registerSingleton<InspeccionTipoRepository>(InspeccionTipoRepositoryImpl(sl()));
   sl.registerSingleton<UnidadRepository>(UnidadRepositoryImpl(sl()));
-  sl.registerSingleton<UnidadInventarioRepository>(UnidadInventarioRepositoryImpl(sl()));
 
   // Casos de uso
   sl.registerSingleton<CreateInspeccionUseCase>(CreateInspeccionUseCase(sl()));
@@ -133,12 +126,10 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<IndexInspeccionUseCase>(IndexInspeccionUseCase(sl()));
   sl.registerSingleton<IndexUnidadUseCase>(IndexUnidadUseCase(sl()));
 
-  sl.registerSingleton<ListCategoriasItemsUseCase>(ListCategoriasItemsUseCase(sl()));
-  sl.registerSingleton<ListCategoriasUseCase>(ListCategoriasUseCase(sl()));
+  sl.registerSingleton<ListCategoriaUseCase>(ListCategoriaUseCase(sl()));
+  sl.registerSingleton<ListCategoriaItemUseCase>(ListCategoriaItemUseCase(sl()));
   sl.registerSingleton<ListInspeccionTipoUseCase>(ListInspeccionTipoUseCase(sl()));
   sl.registerSingleton<ListUnidadUseCase>(ListUnidadUseCase(sl()));
-
-  sl.registerSingleton<PredictiveUnidadInventarioUseCase>(PredictiveUnidadInventarioUseCase(sl()));
 
   sl.registerSingleton<RemoveCredentialsUseCase>(RemoveCredentialsUseCase(sl()));
   sl.registerSingleton<RemoveUserInfoUseCase>(RemoveUserInfoUseCase(sl()));
@@ -150,8 +141,8 @@ Future<void> initializeDependencies() async {
 
   sl.registerSingleton<SignInUseCase>(SignInUseCase(sl()));
 
-  sl.registerSingleton<StoreCategoriaItemUseCase>(StoreCategoriaItemUseCase(sl()));
   sl.registerSingleton<StoreCategoriaUseCase>(StoreCategoriaUseCase(sl()));
+  sl.registerSingleton<StoreCategoriaItemUseCase>(StoreCategoriaItemUseCase(sl()));
   sl.registerSingleton<StoreDuplicateCategoriaItemUseCase>(StoreDuplicateCategoriaItemUseCase(sl()));
   sl.registerSingleton<StoreInspeccionUseCase>(StoreInspeccionUseCase(sl()));
   sl.registerSingleton<StoreInspeccionTipoUseCase>(StoreInspeccionTipoUseCase(sl()));
@@ -168,11 +159,10 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<RemoteAuthBloc>(() => RemoteAuthBloc(sl()));
 
   sl.registerFactory<RemoteCategoriaBloc>(() => RemoteCategoriaBloc(sl(), sl(), sl(), sl()));
-  sl.registerFactory<RemoteCategoriaItemBloc>(() => RemoteCategoriaItemBloc(sl(), sl(), sl(), sl(), sl()));
+  // sl.registerFactory<RemoteCategoriaItemBloc>(() => RemoteCategoriaItemBloc(sl(), sl(), sl(), sl(), sl()));
 
   sl.registerFactory<RemoteInspeccionBloc>(() => RemoteInspeccionBloc(sl(), sl(), sl(), sl()));
   sl.registerFactory<RemoteInspeccionTipoBloc>(() => RemoteInspeccionTipoBloc(sl(), sl(), sl(), sl()));
 
   sl.registerFactory<RemoteUnidadBloc>(() => RemoteUnidadBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()));
-  sl.registerFactory<RemoteUnidadInventarioBloc>(() => RemoteUnidadInventarioBloc(sl()));
 }

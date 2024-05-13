@@ -13,7 +13,7 @@ class _CategoriaRemoteApiService implements CategoriaRemoteApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://10.0.2.2:7000/api/Inspecciones/Tipos/Categorias';
+    baseUrl ??= ListAPI.categorias;
   }
 
   final Dio _dio;
@@ -21,10 +21,10 @@ class _CategoriaRemoteApiService implements CategoriaRemoteApiService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<ApiResponse>> listCategorias(
+  Future<HttpResponse<ServerResponse>> list(
     String token,
     String contentType,
-    InspeccionTipoModel inpseccionTipo,
+    InspeccionTipoModel objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -34,9 +34,9 @@ class _CategoriaRemoteApiService implements CategoriaRemoteApiService {
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(inpseccionTipo.toJson());
+    _data.addAll(objData.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ApiResponse>>(Options(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -53,16 +53,16 @@ class _CategoriaRemoteApiService implements CategoriaRemoteApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ApiResponse.fromJson(_result.data!);
+    final value = ServerResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<ApiResponse>> storeCategoria(
+  Future<HttpResponse<ServerResponse>> store(
     String token,
     String contentType,
-    CategoriaReqModel categoria,
+    CategoriaStoreReqModel objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -72,9 +72,9 @@ class _CategoriaRemoteApiService implements CategoriaRemoteApiService {
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(categoria.toJson());
+    _data.addAll(objData.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ApiResponse>>(Options(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -91,16 +91,16 @@ class _CategoriaRemoteApiService implements CategoriaRemoteApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ApiResponse.fromJson(_result.data!);
+    final value = ServerResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<ApiResponse>> updateCategoria(
+  Future<HttpResponse<ServerResponse>> update(
     String token,
     String contentType,
-    CategoriaModel categoria,
+    CategoriaModel objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -110,9 +110,9 @@ class _CategoriaRemoteApiService implements CategoriaRemoteApiService {
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(categoria.toJson());
+    _data.addAll(objData.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ApiResponse>>(Options(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -129,16 +129,16 @@ class _CategoriaRemoteApiService implements CategoriaRemoteApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ApiResponse.fromJson(_result.data!);
+    final value = ServerResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<ApiResponse>> deleteCategoria(
+  Future<HttpResponse<ServerResponse>> delete(
     String token,
     String contentType,
-    CategoriaModel categoria,
+    CategoriaModel objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -148,9 +148,9 @@ class _CategoriaRemoteApiService implements CategoriaRemoteApiService {
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(categoria.toJson());
+    _data.addAll(objData.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<ApiResponse>>(Options(
+        _setStreamType<HttpResponse<ServerResponse>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -167,7 +167,7 @@ class _CategoriaRemoteApiService implements CategoriaRemoteApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ApiResponse.fromJson(_result.data!);
+    final value = ServerResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

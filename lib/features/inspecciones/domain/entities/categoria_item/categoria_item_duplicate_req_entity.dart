@@ -7,8 +7,6 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 class CategoriaItemDuplicateReqEntity extends Equatable {
   const CategoriaItemDuplicateReqEntity({
     required this.name,
-    required this.idInspeccionTipo,
-    required this.inspeccionTipoName,
     required this.idCategoria,
     required this.categoriaName,
     required this.idFormularioTipo,
@@ -17,8 +15,6 @@ class CategoriaItemDuplicateReqEntity extends Equatable {
   });
 
   final String name;
-  final String idInspeccionTipo;
-  final String inspeccionTipoName;
   final String idCategoria;
   final String categoriaName;
   final String idFormularioTipo;
@@ -28,8 +24,6 @@ class CategoriaItemDuplicateReqEntity extends Equatable {
   @override
   List<Object?> get props => [
     name,
-    idInspeccionTipo,
-    inspeccionTipoName,
     idCategoria,
     categoriaName,
     idFormularioTipo,
