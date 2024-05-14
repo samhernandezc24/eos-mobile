@@ -28,6 +28,6 @@ class CategoriaItemDuplicateReqEntity extends Equatable {
     categoriaName,
     idFormularioTipo,
     formularioTipoName,
-    formularioValor ,
+    formularioValor,
   ];
 }

@@ -2,7 +2,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo
 
 /// [InspeccionTipoModel]
 ///
-/// Representa el tipo de inspección que se realizará a una unidad de inventario
+/// Representa el modelo del tipo de inspección que se realizará a una unidad de inventario
 /// o a una unidad temporal.
 class InspeccionTipoModel extends InspeccionTipoEntity {
   const InspeccionTipoModel({

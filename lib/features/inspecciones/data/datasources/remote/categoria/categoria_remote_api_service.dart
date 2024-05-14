@@ -16,32 +16,32 @@ abstract class CategoriaRemoteApiService {
   /// LISTA DE CATEGORIAS
   @POST('/List')
   Future<HttpResponse<ServerResponse>> list(
-    @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Header(HttpHeaders.authorizationHeader) String token,
     @Body() InspeccionTipoModel objData,
   );
 
   /// GUARDAR CATEGORIA
   @POST('/Store')
   Future<HttpResponse<ServerResponse>> store(
-    @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Header(HttpHeaders.authorizationHeader) String token,
     @Body() CategoriaStoreReqModel objData,
   );
 
   /// ACTUALIZAR CATEGORIA
   @POST('/Update')
   Future<HttpResponse<ServerResponse>> update(
-    @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Header(HttpHeaders.authorizationHeader) String token,
     @Body() CategoriaModel objData,
   );
 
   /// ELIMINAR CATEGORIA
   @POST('/Delete')
   Future<HttpResponse<ServerResponse>> delete(
-    @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Header(HttpHeaders.authorizationHeader) String token,
     @Body() CategoriaModel objData,
   );
 }

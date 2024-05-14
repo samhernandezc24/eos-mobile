@@ -2,8 +2,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categ
 
 /// [CategoriaStoreReqModel]
 ///
-/// Representa los datos de la request para la categoría, se mandara esta información
-/// en el body de la petición.
+/// Representa el modelo para enviar datos al servidor de la categoría.
 class CategoriaStoreReqModel extends CategoriaStoreReqEntity {
   const CategoriaStoreReqModel({
     required String name,
@@ -11,11 +10,11 @@ class CategoriaStoreReqModel extends CategoriaStoreReqEntity {
     required String inspeccionTipoCodigo,
     required String inspeccionTipoName,
   }) : super(
-        name                  : name,
-        idInspeccionTipo      : idInspeccionTipo,
-        inspeccionTipoCodigo  : inspeccionTipoCodigo,
-        inspeccionTipoName    : inspeccionTipoName,
-      );
+          name                  : name,
+          idInspeccionTipo      : idInspeccionTipo,
+          inspeccionTipoCodigo  : inspeccionTipoCodigo,
+          inspeccionTipoName    : inspeccionTipoName,
+        );
 
   /// Constructor factory para crear la instancia de [CategoriaStoreReqModel]
   /// durante el mapeo del JSON.

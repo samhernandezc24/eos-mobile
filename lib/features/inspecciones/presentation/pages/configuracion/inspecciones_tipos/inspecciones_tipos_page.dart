@@ -1,10 +1,16 @@
+import 'package:eos_mobile/core/utils/string_utils.dart';
+
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/pages/configuracion/categorias/categorias_page.dart';
+
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/request_data_unavailable.dart';
 
 part '../../../widgets/inspeccion_tipo/_list_tile.dart';
 part '../../../widgets/inspeccion_tipo/_create_form.dart';
+part '../../../widgets/inspeccion_tipo/_edit_form.dart';
 
 class InspeccionConfiguracionInspeccionesTiposPage extends StatefulWidget {
   const InspeccionConfiguracionInspeccionesTiposPage({Key? key}) : super(key: key);
@@ -27,11 +33,17 @@ class _InspeccionConfiguracionInspeccionesTiposPageState extends State<Inspeccio
 
           final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-          return SlideTransition(position: animation.drive<Offset>(tween), child: FormModal(title: $strings.inspectionTypeModalTitle, child: const _CreateForm()));
+          return SlideTransition(position: animation.drive<Offset>(tween), child: const FormModal(title: 'Nuevo tipo de inspección', child: _CreateForm()));
         },
         fullscreenDialog: true,
       ),
     );
+  }
+
+  void _onInspeccionTipoPressed(BuildContext context, InspeccionTipoEntity inspeccionTipo) {
+    Future.delayed($styles.times.pageTransition, () {
+      Navigator.push<void>(context, MaterialPageRoute(builder: (_) => InspeccionConfiguracionCategoriasPage(inspeccionTipo: inspeccionTipo)));
+    });
   }
 
   @override
@@ -95,7 +107,8 @@ class _InspeccionConfiguracionInspeccionesTiposPageState extends State<Inspeccio
                         itemCount   : state.objResponse!.length,
                         itemBuilder : (BuildContext context, int index) {
                           return _ListTile(
-                            inspeccionTipo : state.objResponse![index],
+                            inspeccionTipo          : state.objResponse![index],
+                            onInspeccionTipoPressed : (inspeccionTipo) => _onInspeccionTipoPressed(context, inspeccionTipo),
                           );
                         },
                       );

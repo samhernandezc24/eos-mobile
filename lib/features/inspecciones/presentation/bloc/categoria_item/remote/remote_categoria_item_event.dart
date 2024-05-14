@@ -1,53 +1,58 @@
-// part of 'remote_categoria_item_bloc.dart';
+part of 'remote_categoria_item_bloc.dart';
 
-// sealed class RemoteCategoriaItemEvent extends Equatable {
-//   const RemoteCategoriaItemEvent();
+sealed class RemoteCategoriaItemEvent extends Equatable {
+  const RemoteCategoriaItemEvent();
 
-//   @override
-//   List<Object?> get props => [];
-// }
+  @override
+  List<Object?> get props => [];
+}
 
-// class ListCategoriasItems extends RemoteCategoriaItemEvent {
-//   const ListCategoriasItems(this.categoria);
+/// [ListCategoriaItemUseCase]
+class ListCategoriasItems extends RemoteCategoriaItemEvent {
+  const ListCategoriasItems(this.objData);
 
-//   final CategoriaEntity categoria;
+  final CategoriaEntity objData;
 
-//   @override
-//   List<Object?> get props => [ categoria ];
-// }
+  @override
+  List<Object?> get props => [ objData ];
+}
 
-// class StoreCategoriaItem extends RemoteCategoriaItemEvent {
-//   const StoreCategoriaItem(this.categoriaItem);
+/// [StoreCategoriaItemUseCase]
+class StoreCategoriaItem extends RemoteCategoriaItemEvent {
+  const StoreCategoriaItem(this.objData);
 
-//   final CategoriaItemReqEntity categoriaItem;
+  final CategoriaItemStoreReqEntity objData;
 
-//   @override
-//   List<Object?> get props => [ categoriaItem ];
-// }
+  @override
+  List<Object?> get props => [ objData ];
+}
 
-// class StoreDuplicateCategoriaItem extends RemoteCategoriaItemEvent {
-//   const StoreDuplicateCategoriaItem(this.categoriaItem);
+/// [StoreDuplicateCategoriaItemUseCase]
+class StoreDuplicateCategoriaItem extends RemoteCategoriaItemEvent {
+  const StoreDuplicateCategoriaItem(this.objData);
 
-//   final CategoriaItemDuplicateReqEntity categoriaItem;
+  final CategoriaItemDuplicateReqEntity objData;
 
-//   @override
-//   List<Object?> get props => [ categoriaItem ];
-// }
+  @override
+  List<Object?> get props => [ objData ];
+}
 
-// class UpdateCategoriaItem extends RemoteCategoriaItemEvent {
-//   const UpdateCategoriaItem(this.categoriaItem);
+/// [UpdateCategoriaItemUseCase]
+class UpdateCategoriaItem extends RemoteCategoriaItemEvent {
+  const UpdateCategoriaItem(this.objData);
 
-//   final CategoriaItemEntity categoriaItem;
+  final CategoriaItemEntity objData;
 
-//   @override
-//   List<Object?> get props => [ categoriaItem ];
-// }
+  @override
+  List<Object?> get props => [ objData ];
+}
 
-// class DeleteCategoriaItem extends RemoteCategoriaItemEvent {
-//   const DeleteCategoriaItem(this.categoriaItem);
+/// [DeleteCategoriaItemUseCase]
+class DeleteCategoriaItem extends RemoteCategoriaItemEvent {
+  const DeleteCategoriaItem(this.objData);
 
-//   final CategoriaItemEntity categoriaItem;
+  final CategoriaItemEntity objData;
 
-//   @override
-//   List<Object?> get props => [ categoriaItem ];
-// }
+  @override
+  List<Object?> get props => [ objData ];
+}

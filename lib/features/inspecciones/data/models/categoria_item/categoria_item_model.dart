@@ -2,8 +2,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/
 
 /// [CategoriaItemModel]
 ///
-/// Representa la pregunta del formulario de las inspecciones
-/// que se realizará a una unidad de inventario o a una unidad temporal.
+/// Representa el modelo de la pregunta del formulario de las inspecciones.
 class CategoriaItemModel extends CategoriaItemEntity {
   const CategoriaItemModel({
     required String idCategoriaItem,

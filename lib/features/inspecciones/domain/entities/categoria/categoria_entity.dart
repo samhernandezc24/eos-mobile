@@ -2,8 +2,8 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 
 /// [CategoriaEntity]
 ///
-/// Representa la categoría para clasificar las preguntas del formulario de las inspecciones
-/// que se realizará a una unidad de inventario o a una unidad temporal.
+/// Representa la categoría que clasificará las preguntas del formulario de las
+/// inspecciones.
 class CategoriaEntity extends Equatable {
   const CategoriaEntity({
     required this.idCategoria,
@@ -22,5 +22,12 @@ class CategoriaEntity extends Equatable {
   final int? orden;
 
   @override
-  List<Object?> get props => [ idCategoria, name, idInspeccionTipo, inspeccionTipoCodigo, inspeccionTipoName, orden ];
+  List<Object?> get props => [
+        idCategoria,
+        name,
+        idInspeccionTipo,
+        inspeccionTipoCodigo,
+        inspeccionTipoName,
+        orden,
+      ];
 }

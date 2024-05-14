@@ -112,8 +112,8 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<DataSourceInspeccionUseCase>(DataSourceInspeccionUseCase(sl()));
   sl.registerSingleton<DataSourceUnidadUseCase>(DataSourceUnidadUseCase(sl()));
 
-  sl.registerSingleton<DeleteCategoriaItemUseCase>(DeleteCategoriaItemUseCase(sl()));
   sl.registerSingleton<DeleteCategoriaUseCase>(DeleteCategoriaUseCase(sl()));
+  sl.registerSingleton<DeleteCategoriaItemUseCase>(DeleteCategoriaItemUseCase(sl()));
   sl.registerSingleton<DeleteInspeccionTipoUseCase>(DeleteInspeccionTipoUseCase(sl()));
   sl.registerSingleton<DeleteUnidadUseCase>(DeleteUnidadUseCase(sl()));
 
@@ -159,7 +159,7 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<RemoteAuthBloc>(() => RemoteAuthBloc(sl()));
 
   sl.registerFactory<RemoteCategoriaBloc>(() => RemoteCategoriaBloc(sl(), sl(), sl(), sl()));
-  // sl.registerFactory<RemoteCategoriaItemBloc>(() => RemoteCategoriaItemBloc(sl(), sl(), sl(), sl(), sl()));
+  sl.registerFactory<RemoteCategoriaItemBloc>(() => RemoteCategoriaItemBloc(sl(), sl(), sl(), sl(), sl()));
 
   sl.registerFactory<RemoteInspeccionBloc>(() => RemoteInspeccionBloc(sl(), sl(), sl(), sl()));
   sl.registerFactory<RemoteInspeccionTipoBloc>(() => RemoteInspeccionTipoBloc(sl(), sl(), sl(), sl()));

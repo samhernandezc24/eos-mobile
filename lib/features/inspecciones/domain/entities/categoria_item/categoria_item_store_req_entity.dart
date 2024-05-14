@@ -2,8 +2,7 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 
 /// [CategoriaItemStoreReqEntity]
 ///
-/// Representa los datos de la request para la pregunta, se mandara esta informacion
-/// en el body de la petición.
+/// Representa la estructura de datos que se enviará al servidor de la categoria item (pregunta).
 class CategoriaItemStoreReqEntity extends Equatable {
   const CategoriaItemStoreReqEntity({required this.idCategoria, required this.categoriaName});
 

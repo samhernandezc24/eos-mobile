@@ -22,15 +22,15 @@ class _CategoriaRemoteApiService implements CategoriaRemoteApiService {
 
   @override
   Future<HttpResponse<ServerResponse>> list(
-    String token,
     String contentType,
+    String token,
     InspeccionTipoModel objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'authorization': token,
       r'content-type': contentType,
+      r'authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
@@ -60,15 +60,15 @@ class _CategoriaRemoteApiService implements CategoriaRemoteApiService {
 
   @override
   Future<HttpResponse<ServerResponse>> store(
-    String token,
     String contentType,
+    String token,
     CategoriaStoreReqModel objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'authorization': token,
       r'content-type': contentType,
+      r'authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
@@ -98,15 +98,15 @@ class _CategoriaRemoteApiService implements CategoriaRemoteApiService {
 
   @override
   Future<HttpResponse<ServerResponse>> update(
-    String token,
     String contentType,
+    String token,
     CategoriaModel objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'authorization': token,
       r'content-type': contentType,
+      r'authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
@@ -136,15 +136,15 @@ class _CategoriaRemoteApiService implements CategoriaRemoteApiService {
 
   @override
   Future<HttpResponse<ServerResponse>> delete(
-    String token,
     String contentType,
+    String token,
     CategoriaModel objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'authorization': token,
       r'content-type': contentType,
+      r'authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};

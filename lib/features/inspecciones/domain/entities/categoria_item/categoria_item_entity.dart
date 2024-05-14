@@ -2,8 +2,7 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 
 /// [CategoriaItemEntity]
 ///
-/// Representa la pregunta del formulario de las inspecciones
-/// que se realizará a una unidad de inventario o a una unidad temporal.
+/// Representa la pregunta del formulario de las inspecciones.
 class CategoriaItemEntity extends Equatable {
   const CategoriaItemEntity({
     required this.idCategoriaItem,

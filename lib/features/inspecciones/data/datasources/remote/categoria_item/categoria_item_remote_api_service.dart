@@ -18,40 +18,40 @@ abstract class CategoriaItemRemoteApiService {
   /// LISTA DE CATEGORIAS ITEMS
   @POST('/List')
   Future<HttpResponse<ServerResponse>> list(
-    @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Header(HttpHeaders.authorizationHeader) String token,
     @Body() CategoriaModel objData,
   );
 
   /// GUARDAR CATEGORIA ITEM
   @POST('/Store')
   Future<HttpResponse<ServerResponse>> store(
-    @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Header(HttpHeaders.authorizationHeader) String token,
     @Body() CategoriaItemStoreReqModel objData,
   );
 
   /// GUARDAR CATEGORIA ITEM DUPLICADO
   @POST('/StoreDuplicate')
   Future<HttpResponse<ServerResponse>> storeDuplicate(
-    @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Header(HttpHeaders.authorizationHeader) String token,
     @Body() CategoriaItemDuplicateReqModel objData,
   );
 
   /// ACTUALIZAR CATEGORIA ITEM
   @POST('/Update')
   Future<HttpResponse<ServerResponse>> update(
-    @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Header(HttpHeaders.authorizationHeader) String token,
     @Body() CategoriaItemModel objData,
   );
 
   /// ELIMINAR CATEGORIA ITEM
   @POST('/Delete')
   Future<HttpResponse<ServerResponse>> delete(
-    @Header(HttpHeaders.authorizationHeader) String token,
     @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Header(HttpHeaders.authorizationHeader) String token,
     @Body() CategoriaItemModel objData,
   );
 }

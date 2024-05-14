@@ -1,4 +1,4 @@
-part of '../../pages/configuracion/inspecciones_tipos/inspecciones_tipos_page.dart';
+part of '../../pages/configuracion/categorias_items/categorias_items_page.dart';
 
 class _ListTile extends StatelessWidget {
   const _ListTile({Key? key, this.inspeccionTipo, this.onInspeccionTipoPressed}) : super(key: key);

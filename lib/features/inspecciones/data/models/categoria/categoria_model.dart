@@ -2,8 +2,8 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categ
 
 /// [CategoriaModel]
 ///
-/// Representa la categoría para clasificar las preguntas del formulario de las inspecciones
-/// que se realizará a una unidad de inventario o a una unidad temporal.
+/// Representa el modelo de la categoría que clasificará las preguntas del formulario de las
+/// inspecciones.
 class CategoriaModel extends CategoriaEntity {
   const CategoriaModel({
     required String idCategoria,
@@ -13,13 +13,13 @@ class CategoriaModel extends CategoriaEntity {
     required String inspeccionTipoName,
     int? orden,
   }) : super(
-        idCategoria           : idCategoria,
-        name                  : name,
-        idInspeccionTipo      : idInspeccionTipo,
-        inspeccionTipoCodigo  : inspeccionTipoCodigo,
-        inspeccionTipoName    : inspeccionTipoName,
-        orden                 : orden,
-      );
+          idCategoria           : idCategoria,
+          name                  : name,
+          idInspeccionTipo      : idInspeccionTipo,
+          inspeccionTipoCodigo  : inspeccionTipoCodigo,
+          inspeccionTipoName    : inspeccionTipoName,
+          orden                 : orden,
+        );
 
   /// Constructor factory para crear la instancia de [CategoriaModel]
   /// durante el mapeo del JSON.

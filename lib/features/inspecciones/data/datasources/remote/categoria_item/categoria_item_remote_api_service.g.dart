@@ -13,7 +13,7 @@ class _CategoriaItemRemoteApiService implements CategoriaItemRemoteApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://10.0.2.2:7000/api/Inspecciones/Tipos/Categorias/Items';
+    baseUrl ??= ListAPI.categoriasItems;
   }
 
   final Dio _dio;
@@ -22,15 +22,15 @@ class _CategoriaItemRemoteApiService implements CategoriaItemRemoteApiService {
 
   @override
   Future<HttpResponse<ServerResponse>> list(
-    String token,
     String contentType,
+    String token,
     CategoriaModel objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'authorization': token,
       r'content-type': contentType,
+      r'authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
@@ -60,15 +60,15 @@ class _CategoriaItemRemoteApiService implements CategoriaItemRemoteApiService {
 
   @override
   Future<HttpResponse<ServerResponse>> store(
-    String token,
     String contentType,
+    String token,
     CategoriaItemStoreReqModel objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'authorization': token,
       r'content-type': contentType,
+      r'authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
@@ -98,15 +98,15 @@ class _CategoriaItemRemoteApiService implements CategoriaItemRemoteApiService {
 
   @override
   Future<HttpResponse<ServerResponse>> storeDuplicate(
-    String token,
     String contentType,
+    String token,
     CategoriaItemDuplicateReqModel objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'authorization': token,
       r'content-type': contentType,
+      r'authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
@@ -136,15 +136,15 @@ class _CategoriaItemRemoteApiService implements CategoriaItemRemoteApiService {
 
   @override
   Future<HttpResponse<ServerResponse>> update(
-    String token,
     String contentType,
+    String token,
     CategoriaItemModel objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'authorization': token,
       r'content-type': contentType,
+      r'authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
@@ -174,15 +174,15 @@ class _CategoriaItemRemoteApiService implements CategoriaItemRemoteApiService {
 
   @override
   Future<HttpResponse<ServerResponse>> delete(
-    String token,
     String contentType,
+    String token,
     CategoriaItemModel objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
-      r'authorization': token,
       r'content-type': contentType,
+      r'authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};

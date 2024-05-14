@@ -1,5 +1,8 @@
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_store_req_entity.dart';
 
+/// [InspeccionTipoStoreReqModel]
+///
+/// Representa el modelo para enviar datos al servidor del inspeccion tipo.
 class InspeccionTipoStoreReqModel extends InspeccionTipoStoreReqEntity {
   const InspeccionTipoStoreReqModel({required String codigo, required String name}) : super(codigo: codigo, name: name);
 

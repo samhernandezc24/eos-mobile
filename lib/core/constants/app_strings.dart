@@ -9,6 +9,7 @@ class AppStrings {
 
   String appPageDefaultTitlePage      = 'página';
   String appPageSemanticSwipe         = '{pageTitle} {count} de {total}.';
+  String appProcessingData            = 'Procesando...';
 
   String dashboardTitle               = 'Dashboard';
 
@@ -26,10 +27,12 @@ class AppStrings {
 
   String createCategoryItemButtonText = 'Crear preguntas';
 
+  String categoryAppBarTitle          = 'Configuración de categorías';
   String categoryDescription          = 'Crea categorías para agrupar los formularios de las inspecciones.';
-  String categoryEmptyTitle           = 'No hay categorías';
+  String categoryEmptyTitle           = 'Aún no hay categorías';
   String categoryTitle                = 'Listado de categorías';
 
+  String categoryItemAppBarTitle      = 'Configuración de preguntas';
   String categoryItemDescription      = 'Configura y organiza las preguntas según tus necesidades.';
   String categoryItemEmptyTitle       = 'No hay preguntas.';
   String categoryItemTitle            = 'Preguntas dinámicas';
@@ -57,7 +60,6 @@ class AppStrings {
   String inspectionTypeAppBarTitle    = 'Configuración de inspecciones';
   String inspectionTypeDescription    = 'Crea un tipo de inspección para agrupar los formularios de las inspecciones.';
   String inspectionTypeEmptyTitle     = 'Aún no hay tipos de inspecciones';
-  String inspectionTypeModalTitle     = 'Nuevo tipo de inspección';
   String inspectionTypeTitle          = 'Listado de tipos de inspecciones';
 
   String inspectionIndexListTitle     = 'Lista de inspecciones';

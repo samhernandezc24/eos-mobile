@@ -2,8 +2,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/
 
 /// [CategoriaItemStoreReqModel]
 ///
-/// Representa la pregunta del formulario de las inspecciones
-/// que se realizará a una unidad de inventario o a una unidad temporal.
+/// Representa el modelo de datos que se enviará al servidor de la categoria item (pregunta).
 class CategoriaItemStoreReqModel extends CategoriaItemStoreReqEntity {
   const CategoriaItemStoreReqModel({
     required String idCategoria,

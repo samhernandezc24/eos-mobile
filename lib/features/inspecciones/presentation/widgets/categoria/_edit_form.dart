@@ -1,15 +1,16 @@
 part of '../../pages/configuracion/categorias/categorias_page.dart';
 
-class _CreateForm extends StatefulWidget {
-  const _CreateForm({Key? key, this.inspeccionTipo}) : super(key: key);
+class _EditForm extends StatefulWidget {
+  const _EditForm({Key? key, this.categoria, this.inspeccionTipo}) : super(key: key);
 
+  final CategoriaEntity? categoria;
   final InspeccionTipoEntity? inspeccionTipo;
 
   @override
-  State<_CreateForm> createState() => _CreateFormState();
+  State<_EditForm> createState() => _EditFormState();
 }
 
-class _CreateFormState extends State<_CreateForm> {
+class _EditFormState extends State<_EditForm> {
   // GLOBAL KEY
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -20,7 +21,7 @@ class _CreateFormState extends State<_CreateForm> {
   void initState() {
     super.initState();
 
-    _nameController   = TextEditingController();
+    _nameController   = TextEditingController(text: widget.categoria?.name.toProperCase() ?? '');
   }
 
   @override
@@ -30,12 +31,13 @@ class _CreateFormState extends State<_CreateForm> {
   }
 
   // METHODS
-  void _handleStoreCategoria() {
-    final CategoriaStoreReqEntity objData = CategoriaStoreReqEntity(
+  void _handleUpdateCategoria() {
+    final CategoriaEntity objData = CategoriaEntity(
+      idCategoria           : widget.categoria?.idCategoria           ?? '',
       name                  : _nameController.text,
-      idInspeccionTipo      : widget.inspeccionTipo?.idInspeccionTipo ?? '',
-      inspeccionTipoCodigo  : widget.inspeccionTipo?.codigo           ?? '',
-      inspeccionTipoName    : widget.inspeccionTipo?.name             ?? '',
+      idInspeccionTipo      : widget.categoria?.idInspeccionTipo      ?? '',
+      inspeccionTipoCodigo  : widget.categoria?.inspeccionTipoCodigo  ?? '',
+      inspeccionTipoName    : widget.categoria?.inspeccionTipoName    ?? '',
     );
 
     final bool isValidForm = _formKey.currentState!.validate();
@@ -43,11 +45,11 @@ class _CreateFormState extends State<_CreateForm> {
     // Verificar la validacion en el formulario.
     if (isValidForm) {
       _formKey.currentState!.save();
-      BlocProvider.of<RemoteCategoriaBloc>(context).add(StoreCategoria(objData));
+      BlocProvider.of<RemoteCategoriaBloc>(context).add(UpdateCategoria(objData));
     }
   }
 
-  Future<void> _showServerFailedMessageOnStore(BuildContext context, RemoteCategoriaServerFailedMessage state) async {
+  Future<void> _showServerFailedMessageOnUpdate(BuildContext context, RemoteCategoriaServerFailedMessage state) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -59,7 +61,7 @@ class _CreateFormState extends State<_CreateForm> {
             ],
           ),
           content: Text(
-            state.errorMessage ?? 'Se produjo un error inesperado. Intenta crear de nuevo la categoría.',
+            state.errorMessage ?? 'Se produjo un error inesperado. Intenta actualizar de nuevo la categoría.',
             style: $styles.textStyles.title2.copyWith(height: 1.5),
           ),
           actions: <Widget>[
@@ -73,7 +75,7 @@ class _CreateFormState extends State<_CreateForm> {
     );
   }
 
-  Future<void> _showServerFailureOnStore(BuildContext context, RemoteCategoriaServerFailure state) async {
+  Future<void> _showServerFailureOnUpdate(BuildContext context, RemoteCategoriaServerFailure state) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -85,7 +87,7 @@ class _CreateFormState extends State<_CreateForm> {
             ],
           ),
           content: Text(
-            state.failure?.errorMessage ?? 'Se produjo un error inesperado. Intenta crear de nuevo la categoría.',
+            state.failure?.errorMessage ?? 'Se produjo un error inesperado. Intenta actualizar de nuevo la categoría.',
             style: $styles.textStyles.title2.copyWith(height: 1.5),
           ),
           actions: <Widget>[
@@ -120,20 +122,20 @@ class _CreateFormState extends State<_CreateForm> {
           BlocConsumer<RemoteCategoriaBloc, RemoteCategoriaState>(
             listener: (BuildContext context, RemoteCategoriaState state) {
               if (state is RemoteCategoriaServerFailedMessage) {
-                _showServerFailedMessageOnStore(context, state);
+                _showServerFailedMessageOnUpdate(context, state);
 
                 // Actualizar listado de categorías.
                 context.read<RemoteCategoriaBloc>().add(ListCategorias(widget.inspeccionTipo!));
               }
 
               if (state is RemoteCategoriaServerFailure) {
-                _showServerFailureOnStore(context, state);
+                _showServerFailureOnUpdate(context, state);
 
                 // Actualizar listado de categorías.
                 context.read<RemoteCategoriaBloc>().add(ListCategorias(widget.inspeccionTipo!));
               }
 
-              if (state is RemoteCategoriaStored) {
+              if (state is RemoteCategoriaUpdated) {
                 // Cerrar el diálogo antes de mostrar el SnackBar.
                 Navigator.of(context).pop();
 
@@ -142,7 +144,7 @@ class _CreateFormState extends State<_CreateForm> {
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   SnackBar(
-                    content         : Text(state.objResponse?.message ?? 'Nueva categoría', softWrap: true),
+                    content         : Text(state.objResponse?.message ?? 'Actualizado', softWrap: true),
                     backgroundColor : Colors.green,
                     behavior        : SnackBarBehavior.fixed,
                     elevation       : 0,
@@ -154,7 +156,7 @@ class _CreateFormState extends State<_CreateForm> {
               }
             },
             builder: (BuildContext context, RemoteCategoriaState state) {
-              if (state is RemoteCategoriaStoring) {
+              if (state is RemoteCategoriaUpdating) {
                 return FilledButton(
                   onPressed : null,
                   style     : ButtonStyle(minimumSize: MaterialStateProperty.all<Size?>(const Size(double.infinity, 48))),
@@ -163,7 +165,7 @@ class _CreateFormState extends State<_CreateForm> {
               }
 
               return FilledButton(
-                onPressed : _handleStoreCategoria,
+                onPressed : _handleUpdateCategoria,
                 style     : ButtonStyle(minimumSize: MaterialStateProperty.all<Size?>(const Size(double.infinity, 48))),
                 child     : Text($strings.saveButtonText, style: $styles.textStyles.button),
               );
