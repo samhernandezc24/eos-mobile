@@ -1,11 +1,11 @@
 part of '../../pages/configuracion/categorias/categorias_page.dart';
 
 class _ListTile extends StatelessWidget {
-  const _ListTile({Key? key, this.categoria, this.inspeccionTipo, this.onInspeccionTipoPressed}) : super(key: key);
+  const _ListTile({Key? key, this.categoria, this.inspeccionTipo, this.onCategoriaPressed}) : super(key: key);
 
   final CategoriaEntity? categoria;
   final InspeccionTipoEntity? inspeccionTipo;
-  final void Function(InspeccionTipoEntity inspeccionTipo)? onInspeccionTipoPressed;
+  final void Function(CategoriaEntity categoria)? onCategoriaPressed;
 
   // METHODS
   void _handleActionsPressed(BuildContext context, CategoriaEntity? categoria, InspeccionTipoEntity? inspeccionTipo) {
@@ -65,7 +65,7 @@ class _ListTile extends StatelessWidget {
 
   // DETAILS:
   void _onTap() {
-    if (onInspeccionTipoPressed != null) return onInspeccionTipoPressed!(inspeccionTipo!);
+    if (onCategoriaPressed != null) return onCategoriaPressed!(categoria!);
   }
 
   // EDIT:

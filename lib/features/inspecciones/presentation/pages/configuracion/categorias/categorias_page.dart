@@ -2,6 +2,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categ
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/pages/configuracion/categorias_items/categorias_items_page.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/request_data_unavailable.dart';
@@ -47,9 +48,9 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
     );
   }
 
-  void _onCategoriaPressed(BuildContext context, InspeccionTipoEntity inspeccionTipo) {
+  void _onCategoriaPressed(BuildContext context, CategoriaEntity categoria) {
     Future.delayed($styles.times.pageTransition, () {
-      Navigator.push<void>(context, MaterialPageRoute(builder: (_) => InspeccionConfiguracionCategoriasPage(inspeccionTipo: inspeccionTipo)));
+      Navigator.push<void>(context, MaterialPageRoute(builder: (_) => InspeccionConfiguracionCategoriasItemsPage(categoria: categoria)));
     });
   }
 
@@ -69,6 +70,15 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
               children: <Widget>[
                 Text($strings.categoryTitle, style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600)),
                 Gap($styles.insets.xxs),
+                RichText(
+                  text: TextSpan(
+                    style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                    children: <TextSpan>[
+                      const TextSpan(text: 'Tipo de inspección', style: TextStyle(fontWeight: FontWeight.w600)),
+                      TextSpan(text: ': ${widget.inspeccionTipo?.name ?? ''}'),
+                    ],
+                  ),
+                ),
                 RichText(
                   text: TextSpan(
                     style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
@@ -116,7 +126,7 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
                           return _ListTile(
                             categoria          : state.objResponse![index],
                             inspeccionTipo     : widget.inspeccionTipo,
-                            // onCategoriaPressed : (inspeccionTipo) => _onCategoriaPressed(context, inspeccionTipo, categoria),
+                            onCategoriaPressed  : (categoria) => _onCategoriaPressed(context, categoria),
                           );
                         },
                       );

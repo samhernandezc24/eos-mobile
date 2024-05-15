@@ -4,16 +4,16 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/
 
 /// [CategoriaItemDataModel]
 ///
-/// Representa el modelo de listas que se muestran al cargar la pregunta, entre
-/// los tipos de formularios y las categorias items (preguntas).
+/// Representa el modelo de datos obtenidos del servidor para representar las preguntas,
+/// y los tipos de formularios.
 class CategoriaItemDataModel extends CategoriaItemDataEntity {
   const CategoriaItemDataModel({
-    required List<CategoriaItemModel>? categoriasItems,
-    required List<FormularioTipo>? formulariosTipos,
+    List<CategoriaItemModel>? categoriasItems,
+    List<FormularioTipo>? formulariosTipos,
   }) : super(
-        categoriasItems   : categoriasItems,
-        formulariosTipos  : formulariosTipos,
-      );
+          categoriasItems   : categoriasItems,
+          formulariosTipos  : formulariosTipos,
+        );
 
   /// Constructor factory para crear la instancia de [CategoriaItemDataModel]
   /// durante el mapeo del JSON.

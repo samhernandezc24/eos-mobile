@@ -4,8 +4,8 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 
 /// [CategoriaItemDataEntity]
 ///
-/// Representa la estructura de listas que se muestran al cargar la pregunta, entre
-/// los tipos de formularios y las categorias items (preguntas).
+/// Representa los datos obtenidos del servidor para representar las preguntas,
+/// y los tipos de formularios.
 class CategoriaItemDataEntity extends Equatable {
   const CategoriaItemDataEntity({this.categoriasItems, this.formulariosTipos});
 

@@ -2,7 +2,8 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 
 /// [CategoriaItemEntity]
 ///
-/// Representa la pregunta del formulario de las inspecciones.
+/// Representa la pregunta del formulario de las inspecciones que se realizarán
+/// a las unidades.
 class CategoriaItemEntity extends Equatable {
   const CategoriaItemEntity({
     required this.idCategoriaItem,
@@ -11,9 +12,9 @@ class CategoriaItemEntity extends Equatable {
     required this.categoriaName,
     required this.idFormularioTipo,
     required this.formularioTipoName,
-    this.formularioValor,
+    required this.formularioValor,
+    required this.isEdit,
     this.orden,
-    this.isEdit,
   });
 
   final String idCategoriaItem;
@@ -22,20 +23,20 @@ class CategoriaItemEntity extends Equatable {
   final String categoriaName;
   final String idFormularioTipo;
   final String formularioTipoName;
-  final String? formularioValor;
   final int? orden;
-  final bool? isEdit;
+  final String formularioValor;
+  final bool isEdit;
 
   @override
   List<Object?> get props => [
-    idCategoriaItem,
-    name,
-    idCategoria,
-    categoriaName,
-    idFormularioTipo,
-    formularioTipoName,
-    formularioValor,
-    orden,
-    isEdit,
-  ];
+        idCategoriaItem,
+        name,
+        idCategoria,
+        categoriaName,
+        idFormularioTipo,
+        formularioTipoName,
+        orden,
+        formularioValor,
+        isEdit,
+      ];
 }

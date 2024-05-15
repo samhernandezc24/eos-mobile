@@ -34,7 +34,7 @@ class AppStrings {
 
   String categoryItemAppBarTitle      = 'Configuración de preguntas';
   String categoryItemDescription      = 'Configura y organiza las preguntas según tus necesidades.';
-  String categoryItemEmptyTitle       = 'No hay preguntas.';
+  String categoryItemEmptyTitle       = 'Aún no hay preguntas.';
   String categoryItemTitle            = 'Preguntas dinámicas';
 
   String circleButtonsSemanticBack    = 'Volver';

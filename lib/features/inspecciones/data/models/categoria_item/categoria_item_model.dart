@@ -2,7 +2,8 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/
 
 /// [CategoriaItemModel]
 ///
-/// Representa el modelo de la pregunta del formulario de las inspecciones.
+/// Representa el modelo de la pregunta del formulario de las inspecciones que se realizarán
+/// a las unidades.
 class CategoriaItemModel extends CategoriaItemEntity {
   const CategoriaItemModel({
     required String idCategoriaItem,
@@ -11,20 +12,20 @@ class CategoriaItemModel extends CategoriaItemEntity {
     required String categoriaName,
     required String idFormularioTipo,
     required String formularioTipoName,
-    String? formularioValor,
+    required String formularioValor,
+    required bool isEdit,
     int? orden,
-    bool? isEdit,
   }) : super(
-        idCategoriaItem     : idCategoriaItem,
-        name                : name,
-        idCategoria         : idCategoria,
-        categoriaName       : categoriaName,
-        idFormularioTipo    : idFormularioTipo,
-        formularioTipoName  : formularioTipoName,
-        formularioValor     : formularioValor,
-        orden               : orden,
-        isEdit              : isEdit,
-      );
+          idCategoriaItem     : idCategoriaItem,
+          name                : name,
+          idCategoria         : idCategoria,
+          categoriaName       : categoriaName,
+          idFormularioTipo    : idFormularioTipo,
+          formularioTipoName  : formularioTipoName,
+          orden               : orden,
+          formularioValor     : formularioValor,
+          isEdit              : isEdit,
+        );
 
   /// Constructor factory para crear la instancia de [CategoriaItemModel]
   /// durante el mapeo del JSON.
@@ -36,9 +37,9 @@ class CategoriaItemModel extends CategoriaItemEntity {
       categoriaName       : jsonMap['categoriaName'] as String,
       idFormularioTipo    : jsonMap['idFormularioTipo'] as String,
       formularioTipoName  : jsonMap['formularioTipoName'] as String,
-      formularioValor     : jsonMap['formularioValor'] as String? ?? '',
       orden               : jsonMap['orden'] as int? ?? 0,
-      isEdit              : jsonMap['isEdit'] as bool? ?? false,
+      formularioValor     : jsonMap['formularioValor'] as String,
+      isEdit              : jsonMap['isEdit'] as bool,
     );
   }
 
@@ -52,8 +53,8 @@ class CategoriaItemModel extends CategoriaItemEntity {
       categoriaName       : entity.categoriaName,
       idFormularioTipo    : entity.idFormularioTipo,
       formularioTipoName  : entity.formularioTipoName,
-      formularioValor     : entity.formularioValor,
       orden               : entity.orden,
+      formularioValor     : entity.formularioValor,
       isEdit              : entity.isEdit,
     );
   }
@@ -67,8 +68,8 @@ class CategoriaItemModel extends CategoriaItemEntity {
       'categoriaName'       : categoriaName,
       'idFormularioTipo'    : idFormularioTipo,
       'formularioTipoName'  : formularioTipoName,
-      'formularioValor'     : formularioValor,
       'orden'               : orden,
+      'formularioValor'     : formularioValor,
       'isEdit'              : isEdit,
     };
   }
