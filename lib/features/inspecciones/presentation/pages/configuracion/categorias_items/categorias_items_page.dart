@@ -77,7 +77,8 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                           final CategoriaItemEntity categoriaItem = lstCategoriasItems[index];
 
                           return _ListCard(
-                            categoriaItem: categoriaItem,
+                            categoriaItem     : categoriaItem,
+                            formulariosTipos  : lstFormulariosTipos,
                           );
                         },
                       );
