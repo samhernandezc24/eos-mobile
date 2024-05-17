@@ -17,25 +17,25 @@ class ListCategoriasItems extends RemoteCategoriaItemEvent {
   List<Object?> get props => [ objData ];
 }
 
-// /// [StoreCategoriaItemUseCase]
-// class StoreCategoriaItem extends RemoteCategoriaItemEvent {
-//   const StoreCategoriaItem(this.objData);
+/// [StoreCategoriaItemUseCase]
+class StoreCategoriaItem extends RemoteCategoriaItemEvent {
+  const StoreCategoriaItem(this.objData);
 
-//   final CategoriaItemStoreReqEntity objData;
+  final CategoriaItemStoreReqEntity objData;
 
-//   @override
-//   List<Object?> get props => [ objData ];
-// }
+  @override
+  List<Object?> get props => [ objData ];
+}
 
-// /// [StoreDuplicateCategoriaItemUseCase]
-// class StoreDuplicateCategoriaItem extends RemoteCategoriaItemEvent {
-//   const StoreDuplicateCategoriaItem(this.objData);
+/// [StoreDuplicateCategoriaItemUseCase]
+class StoreDuplicateCategoriaItem extends RemoteCategoriaItemEvent {
+  const StoreDuplicateCategoriaItem(this.objData);
 
-//   final CategoriaItemDuplicateReqEntity objData;
+  final CategoriaItemStoreDuplicateReqEntity objData;
 
-//   @override
-//   List<Object?> get props => [ objData ];
-// }
+  @override
+  List<Object?> get props => [ objData ];
+}
 
 // /// [UpdateCategoriaItemUseCase]
 // class UpdateCategoriaItem extends RemoteCategoriaItemEvent {

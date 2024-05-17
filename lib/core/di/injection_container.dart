@@ -37,6 +37,8 @@ import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/list_
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/store_categoria_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/update_categoria_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/list_categoria_item_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/sotre_duplicate_categoria_item_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/store_categoria_item_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/create_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/data_source_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/index_inspeccion_usecase.dart';
@@ -137,6 +139,8 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<SignInUseCase>(SignInUseCase(sl()));
 
   sl.registerSingleton<StoreCategoriaUseCase>(StoreCategoriaUseCase(sl()));
+  sl.registerSingleton<StoreCategoriaItemUseCase>(StoreCategoriaItemUseCase(sl()));
+  sl.registerSingleton<StoreDuplicateCategoriaItemUseCase>(StoreDuplicateCategoriaItemUseCase(sl()));
   sl.registerSingleton<StoreInspeccionUseCase>(StoreInspeccionUseCase(sl()));
   sl.registerSingleton<StoreInspeccionTipoUseCase>(StoreInspeccionTipoUseCase(sl()));
   sl.registerSingleton<StoreUnidadUseCase>(StoreUnidadUseCase(sl()));
@@ -151,7 +155,7 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<RemoteAuthBloc>(() => RemoteAuthBloc(sl()));
 
   sl.registerFactory<RemoteCategoriaBloc>(() => RemoteCategoriaBloc(sl(), sl(), sl(), sl()));
-  sl.registerFactory<RemoteCategoriaItemBloc>(() => RemoteCategoriaItemBloc(sl()));
+  sl.registerFactory<RemoteCategoriaItemBloc>(() => RemoteCategoriaItemBloc(sl(), sl(), sl()));
 
   sl.registerFactory<RemoteInspeccionBloc>(() => RemoteInspeccionBloc(sl(), sl(), sl(), sl()));
   sl.registerFactory<RemoteInspeccionTipoBloc>(() => RemoteInspeccionTipoBloc(sl(), sl(), sl(), sl()));

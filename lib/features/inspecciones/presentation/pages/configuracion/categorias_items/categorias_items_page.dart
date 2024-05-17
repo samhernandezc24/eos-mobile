@@ -1,7 +1,10 @@
 import 'package:eos_mobile/core/data/catalogos/formulario_tipo.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_store_duplicate_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria_item/remote/remote_categoria_item_bloc.dart';
+
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/request_data_unavailable.dart';
 
@@ -28,6 +31,68 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
   void initState() {
     super.initState();
     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
+  }
+
+  // METHODS
+  void _handleStoreCategoriaItem() {
+    final CategoriaItemStoreReqEntity objData = CategoriaItemStoreReqEntity(
+      idCategoria   : widget.categoria?.idCategoria ?? '',
+      categoriaName : widget.categoria?.name        ?? '',
+    );
+
+    BlocProvider.of<RemoteCategoriaItemBloc>(context).add(StoreCategoriaItem(objData));
+  }
+
+  Future<void> _showServerFailedMessageOnStore(BuildContext context, RemoteCategoriaItemServerFailedMessage state) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment : MainAxisAlignment.center,
+            children          : <Widget>[
+              Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 48),
+            ],
+          ),
+          content: Text(
+            state.errorMessage ?? 'Se produjo un error inesperado. Intenta crear de nuevo la pregunta.',
+            style: $styles.textStyles.title2.copyWith(height: 1.5),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed : () => Navigator.pop(context, 'Aceptar'),
+              child     : Text($strings.acceptButtonText, style: $styles.textStyles.button),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showServerFailureOnStore(BuildContext context, RemoteCategoriaItemServerFailure state) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            mainAxisAlignment : MainAxisAlignment.center,
+            children          : <Widget>[
+              Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 48),
+            ],
+          ),
+          content: Text(
+            state.failure?.errorMessage ?? 'Se produjo un error inesperado. Intenta crear de nuevo la pregunta.',
+            style: $styles.textStyles.title2.copyWith(height: 1.5),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed : () => Navigator.pop(context, 'Aceptar'),
+              child     : Text($strings.acceptButtonText, style: $styles.textStyles.button),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -78,6 +143,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
 
                           return _ListCard(
                             categoriaItem     : categoriaItem,
+                            categoria         : widget.categoria,
                             formulariosTipos  : lstFormulariosTipos,
                           );
                         },
@@ -221,10 +287,47 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
   }
 
   Widget _buildFloatingActionButton(BuildContext context) {
-    return FloatingActionButton(
-      onPressed : (){},
-      tooltip   : 'Agregar pregunta',
-      child     : const Icon(Icons.add),
+    return BlocConsumer<RemoteCategoriaItemBloc, RemoteCategoriaItemState>(
+      listener: (BuildContext context, RemoteCategoriaItemState state) {
+        if (state is RemoteCategoriaItemServerFailedMessage) {
+          _showServerFailedMessageOnStore(context, state);
+
+          // Actualizar listado de categorías.
+          context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
+        }
+
+        if (state is RemoteCategoriaItemServerFailure) {
+          _showServerFailureOnStore(context, state);
+
+          // Actualizar listado de categorías.
+          context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
+        }
+
+        if (state is RemoteCategoriaItemStored) {
+          ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content         : Text(state.objResponse?.message ?? 'Nueva pregunta', softWrap: true),
+              backgroundColor : Colors.green,
+              behavior        : SnackBarBehavior.fixed,
+              elevation       : 0,
+            ),
+          );
+
+          // Actualizar listado de preguntas.
+          context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
+        }
+      },
+      builder: (BuildContext context, RemoteCategoriaItemState state) {
+        return FloatingActionButton(
+          onPressed : state is RemoteCategoriaItemStoring ? null : _handleStoreCategoriaItem,
+          tooltip   : 'Agregar pregunta',
+          child     : state is RemoteCategoriaItemStoring
+                        ? const AppLoadingIndicator(width: 20, height: 20)
+                        : const Icon(Icons.add),
+        );
+      },
     );
   }
 }

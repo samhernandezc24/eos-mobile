@@ -1,9 +1,10 @@
 part of '../../pages/configuracion/categorias_items/categorias_items_page.dart';
 
 class _ListCard extends StatefulWidget {
-  const _ListCard({Key? key, this.categoriaItem, this.formulariosTipos}) : super(key: key);
+  const _ListCard({Key? key, this.categoriaItem, this.categoria, this.formulariosTipos}) : super(key: key);
 
   final CategoriaItemEntity? categoriaItem;
+  final CategoriaEntity? categoria;
   final List<FormularioTipo>? formulariosTipos;
 
   @override
@@ -43,83 +44,134 @@ class _ListCardState extends State<_ListCard> {
   }
 
   // METHODS
-  void _handleStoreCategoriaItem() {
-
-  }
-
   void _editCategoriaItem(CategoriaItemEntity categoriaItem) {
     setState(() {
       _isEditMode = !_isEditMode;
     });
   }
 
+  void _handleStoreDuplicateCategoriaItem() {
+    final CategoriaItemStoreDuplicateReqEntity objData = CategoriaItemStoreDuplicateReqEntity(
+      name                  : widget.categoriaItem?.name                ?? '',
+      idCategoria           : widget.categoriaItem?.idCategoria         ?? '',
+      categoriaName         : widget.categoriaItem?.categoriaName       ?? '',
+      idFormularioTipo      : widget.categoriaItem?.idFormularioTipo    ?? '',
+      formularioTipoName    : widget.categoriaItem?.formularioTipoName  ?? '',
+      formularioValor       : widget.categoriaItem?.formularioValor     ?? '',
+    );
+
+    BlocProvider.of<RemoteCategoriaItemBloc>(context).add(StoreDuplicateCategoriaItem(objData));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation : 3,
-      shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
-      margin    : EdgeInsets.only(bottom: $styles.insets.lg),
-      child     : Column(
-        crossAxisAlignment  : CrossAxisAlignment.start,
-        children            : <Widget>[
-          // PREGUNTA:
-          ListTile(
-            leading : _isEditMode
-                ? null
-                : CircleAvatar(radius: 14, child: Text(widget.categoriaItem?.orden.toString() ?? '0', style: $styles.textStyles.h4)),
-            title   : _isEditMode
-                ? LabeledTextFormField(controller: _nameController, label: 'Pregunta:')
-                : Text(widget.categoriaItem?.name ?? ''),
-            onTap   : () => _editCategoriaItem(widget.categoriaItem!),
-          ),
-
-          // TIPOS DE FORMULARIOS:
-          ListTile(
-            title   : _isEditMode
-                ? _buildFormularioTipoSelect()
-                : _buildFormularioValuesContent(widget.categoriaItem!),
-            onTap   : () => _editCategoriaItem(widget.categoriaItem!),
-          ),
-
-          const Divider(),
-
-          // ACTIONS:
-          Padding(
-            padding : EdgeInsets.symmetric(horizontal: $styles.insets.xs),
-            child   : Row(
-              mainAxisAlignment : MainAxisAlignment.end,
-              children          : <Widget>[
-                if (_isEditMode)
-                  ...[
-                    TextButton(
-                      onPressed : (){},
-                      child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
-                    ),
-                    TextButton.icon(
-                      onPressed : (){},
-                      icon      : const Icon(Icons.check_circle),
-                      label     : Text($strings.saveButtonText, style: $styles.textStyles.button),
-                    ),
-                  ]
-                else
-                  ...[
-                    IconButton(
-                      onPressed : (){},
-                      icon      : const Icon(Icons.content_copy),
-                      tooltip   : 'Duplicar elemento',
-                    ),
-                    IconButton(
-                      onPressed : (){},
-                      color     : Theme.of(context).colorScheme.error,
-                      icon      : Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
-                      tooltip   : 'Eliminar',
-                    ),
-                  ],
-              ],
+    return BlocListener<RemoteCategoriaItemBloc, RemoteCategoriaItemState>(
+      listener: (context, state) {
+        if (state is RemoteCategoriaItemStoringDuplicate) {
+          Dialog(
+            shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
+            elevation : 0,
+            child     : Container(
+              padding : EdgeInsets.all($styles.insets.xs),
+              child   : Column(
+                mainAxisSize  : MainAxisSize.min,
+                children      : <Widget>[
+                  Container(
+                    margin  : EdgeInsets.symmetric(vertical: $styles.insets.sm),
+                    child   : const AppLoadingIndicator(width: 30, height: 30),
+                  ),
+                  Container(
+                    margin  : EdgeInsets.only(bottom: $styles.insets.xs),
+                    child   : Text($strings.appProcessingData, style: $styles.textStyles.bodyBold, textAlign: TextAlign.center),
+                  ),
+                ],
+              ),
             ),
+          );
+        }
+
+        if (state is RemoteCategoriaItemStoredDuplicate) {
+          ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content         : Text(state.objResponse?.message ?? 'Pregunta duplicada', softWrap: true),
+              backgroundColor : Colors.green,
+              behavior        : SnackBarBehavior.fixed,
+              elevation       : 0,
+            ),
+          );
+
+          // Actualizar listado de preguntas.
+          context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
+        }
+      },
+      child: Card(
+          elevation : 3,
+          shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
+          margin    : EdgeInsets.only(bottom: $styles.insets.lg),
+          child     : Column(
+            crossAxisAlignment  : CrossAxisAlignment.start,
+            children            : <Widget>[
+              // PREGUNTA:
+              ListTile(
+                leading : _isEditMode
+                    ? null
+                    : CircleAvatar(radius: 14, child: Text(widget.categoriaItem?.orden.toString() ?? '0', style: $styles.textStyles.h4)),
+                title   : _isEditMode
+                    ? LabeledTextFormField(controller: _nameController, label: 'Pregunta:')
+                    : Text(widget.categoriaItem?.name ?? ''),
+                onTap   : () => _editCategoriaItem(widget.categoriaItem!),
+              ),
+
+              // TIPOS DE FORMULARIOS:
+              ListTile(
+                title   : _isEditMode
+                    ? _buildFormularioTipoSelect()
+                    : _buildFormularioValuesContent(widget.categoriaItem!),
+                onTap   : () => _editCategoriaItem(widget.categoriaItem!),
+              ),
+
+              const Divider(),
+
+              // ACTIONS:
+              Padding(
+                padding : EdgeInsets.symmetric(horizontal: $styles.insets.xs),
+                child   : Row(
+                  mainAxisAlignment : MainAxisAlignment.end,
+                  children          : <Widget>[
+                    if (_isEditMode)
+                      ...[
+                        TextButton(
+                          onPressed : (){},
+                          child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
+                        ),
+                        TextButton.icon(
+                          onPressed : (){},
+                          icon      : const Icon(Icons.check_circle),
+                          label     : Text($strings.saveButtonText, style: $styles.textStyles.button),
+                        ),
+                      ]
+                    else
+                      ...[
+                        IconButton(
+                          onPressed : _handleStoreDuplicateCategoriaItem,
+                          icon      : const Icon(Icons.content_copy),
+                          tooltip   : 'Duplicar elemento',
+                        ),
+                        IconButton(
+                          onPressed : (){},
+                          color     : Theme.of(context).colorScheme.error,
+                          icon      : Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
+                          tooltip   : 'Eliminar',
+                        ),
+                      ],
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
     );
   }
 
