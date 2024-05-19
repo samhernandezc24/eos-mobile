@@ -69,8 +69,44 @@ class RemoteCategoriaItemStoredDuplicate extends RemoteCategoriaItemState {
 // }
 
 /// SERVER FAILED MESSAGE
-class RemoteCategoriaItemServerFailedMessage extends RemoteCategoriaItemState {
-  const RemoteCategoriaItemServerFailedMessage(this.errorMessage);
+class RemoteCategoriaItemServerFailedMessageList extends RemoteCategoriaItemState {
+  const RemoteCategoriaItemServerFailedMessageList(this.errorMessage);
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [ errorMessage ];
+}
+
+class RemoteCategoriaItemServerFailedMessageStore extends RemoteCategoriaItemState {
+  const RemoteCategoriaItemServerFailedMessageStore(this.errorMessage);
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [ errorMessage ];
+}
+
+class RemoteCategoriaItemServerFailedMessageDuplicate extends RemoteCategoriaItemState {
+  const RemoteCategoriaItemServerFailedMessageDuplicate(this.errorMessage);
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [ errorMessage ];
+}
+
+class RemoteCategoriaItemServerFailedMessageUpdate extends RemoteCategoriaItemState {
+  const RemoteCategoriaItemServerFailedMessageUpdate(this.errorMessage);
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [ errorMessage ];
+}
+
+class RemoteCategoriaItemServerFailedMessageDelete extends RemoteCategoriaItemState {
+  const RemoteCategoriaItemServerFailedMessageDelete(this.errorMessage);
 
   final String? errorMessage;
 
@@ -79,8 +115,44 @@ class RemoteCategoriaItemServerFailedMessage extends RemoteCategoriaItemState {
 }
 
 /// SERVER FAILURE
-class RemoteCategoriaItemServerFailure extends RemoteCategoriaItemState {
-  const RemoteCategoriaItemServerFailure(this.failure);
+class RemoteCategoriaItemServerFailureList extends RemoteCategoriaItemState {
+  const RemoteCategoriaItemServerFailureList(this.failure);
+
+  final ServerException? failure;
+
+  @override
+  List<Object?> get props => [ failure ];
+}
+
+class RemoteCategoriaItemServerFailureStore extends RemoteCategoriaItemState {
+  const RemoteCategoriaItemServerFailureStore(this.failure);
+
+  final ServerException? failure;
+
+  @override
+  List<Object?> get props => [ failure ];
+}
+
+class RemoteCategoriaItemServerFailureDuplicate extends RemoteCategoriaItemState {
+  const RemoteCategoriaItemServerFailureDuplicate(this.failure);
+
+  final ServerException? failure;
+
+  @override
+  List<Object?> get props => [ failure ];
+}
+
+class RemoteCategoriaItemServerFailureUpdate extends RemoteCategoriaItemState {
+  const RemoteCategoriaItemServerFailureUpdate(this.failure);
+
+  final ServerException? failure;
+
+  @override
+  List<Object?> get props => [ failure ];
+}
+
+class RemoteCategoriaItemServerFailureDelete extends RemoteCategoriaItemState {
+  const RemoteCategoriaItemServerFailureDelete(this.failure);
 
   final ServerException? failure;
 

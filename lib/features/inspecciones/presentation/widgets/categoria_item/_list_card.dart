@@ -1,11 +1,22 @@
 part of '../../pages/configuracion/categorias_items/categorias_items_page.dart';
 
 class _ListCard extends StatefulWidget {
-  const _ListCard({Key? key, this.categoriaItem, this.categoria, this.formulariosTipos}) : super(key: key);
+  const _ListCard({
+    Key? key,
+    this.categoriaItem,
+    this.categoria,
+    this.formulariosTipos,
+    this.onDuplicatePressed,
+    this.onUpdatePressed,
+    this.onDeletePressed,
+  }) : super(key: key);
 
   final CategoriaItemEntity? categoriaItem;
   final CategoriaEntity? categoria;
   final List<FormularioTipo>? formulariosTipos;
+  final void Function(CategoriaItemStoreDuplicateReqEntity)? onDuplicatePressed;
+  final void Function(CategoriaItemEntity)? onUpdatePressed;
+  final void Function(CategoriaItemEntity)? onDeletePressed;
 
   @override
   State<_ListCard> createState() => _ListCardState();
@@ -25,6 +36,11 @@ class _ListCardState extends State<_ListCard> {
   String? _selectedFormularioTipoId;
   String? _selectedFormularioTipoName;
 
+  // Valores guardados temporalmente
+  String? _originalName;
+  String? _originalFormularioValor;
+  FormularioTipo? _originalFormularioTipo;
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +50,10 @@ class _ListCardState extends State<_ListCard> {
     _formularioValorController  = TextEditingController(text: widget.categoriaItem?.formularioValor ?? '');
 
     _selectedFormularioTipo     = widget.formulariosTipos?.firstWhere((element) => element.name == widget.categoriaItem?.formularioTipoName);
+
+    _originalName               = _nameController.text;
+    _originalFormularioValor    = _formularioValorController.text;
+    _originalFormularioTipo     = _selectedFormularioTipo;
   }
 
   @override
@@ -47,10 +67,26 @@ class _ListCardState extends State<_ListCard> {
   void _editCategoriaItem(CategoriaItemEntity categoriaItem) {
     setState(() {
       _isEditMode = !_isEditMode;
+
+      if (_isEditMode) {
+        _originalName             = _nameController.text;
+        _originalFormularioValor  = _formularioValorController.text;
+        _originalFormularioTipo   = _selectedFormularioTipo;
+      }
     });
   }
 
-  void _handleStoreDuplicateCategoriaItem() {
+  void _cancelEdit() {
+    setState(() {
+      _isEditMode = false;
+
+      _nameController.text            = _originalName ?? '';
+      _formularioValorController.text = _originalFormularioValor ?? '';
+      _selectedFormularioTipo         = _originalFormularioTipo;
+    });
+  }
+
+  void _onDuplicateCategoriaItem() {
     final CategoriaItemStoreDuplicateReqEntity objData = CategoriaItemStoreDuplicateReqEntity(
       name                  : widget.categoriaItem?.name                ?? '',
       idCategoria           : widget.categoriaItem?.idCategoria         ?? '',
@@ -60,118 +96,76 @@ class _ListCardState extends State<_ListCard> {
       formularioValor       : widget.categoriaItem?.formularioValor     ?? '',
     );
 
-    BlocProvider.of<RemoteCategoriaItemBloc>(context).add(StoreDuplicateCategoriaItem(objData));
+    if (widget.onDuplicatePressed != null) return widget.onDuplicatePressed!(objData);
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<RemoteCategoriaItemBloc, RemoteCategoriaItemState>(
-      listener: (context, state) {
-        if (state is RemoteCategoriaItemStoringDuplicate) {
-          Dialog(
-            shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
-            elevation : 0,
-            child     : Container(
-              padding : EdgeInsets.all($styles.insets.xs),
-              child   : Column(
-                mainAxisSize  : MainAxisSize.min,
-                children      : <Widget>[
-                  Container(
-                    margin  : EdgeInsets.symmetric(vertical: $styles.insets.sm),
-                    child   : const AppLoadingIndicator(width: 30, height: 30),
-                  ),
-                  Container(
-                    margin  : EdgeInsets.only(bottom: $styles.insets.xs),
-                    child   : Text($strings.appProcessingData, style: $styles.textStyles.bodyBold, textAlign: TextAlign.center),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-
-        if (state is RemoteCategoriaItemStoredDuplicate) {
-          ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(
-            SnackBar(
-              content         : Text(state.objResponse?.message ?? 'Pregunta duplicada', softWrap: true),
-              backgroundColor : Colors.green,
-              behavior        : SnackBarBehavior.fixed,
-              elevation       : 0,
-            ),
-          );
-
-          // Actualizar listado de preguntas.
-          context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
-        }
-      },
-      child: Card(
-          elevation : 3,
-          shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
-          margin    : EdgeInsets.only(bottom: $styles.insets.lg),
-          child     : Column(
-            crossAxisAlignment  : CrossAxisAlignment.start,
-            children            : <Widget>[
-              // PREGUNTA:
-              ListTile(
-                leading : _isEditMode
-                    ? null
-                    : CircleAvatar(radius: 14, child: Text(widget.categoriaItem?.orden.toString() ?? '0', style: $styles.textStyles.h4)),
-                title   : _isEditMode
-                    ? LabeledTextFormField(controller: _nameController, label: 'Pregunta:')
-                    : Text(widget.categoriaItem?.name ?? ''),
-                onTap   : () => _editCategoriaItem(widget.categoriaItem!),
-              ),
-
-              // TIPOS DE FORMULARIOS:
-              ListTile(
-                title   : _isEditMode
-                    ? _buildFormularioTipoSelect()
-                    : _buildFormularioValuesContent(widget.categoriaItem!),
-                onTap   : () => _editCategoriaItem(widget.categoriaItem!),
-              ),
-
-              const Divider(),
-
-              // ACTIONS:
-              Padding(
-                padding : EdgeInsets.symmetric(horizontal: $styles.insets.xs),
-                child   : Row(
-                  mainAxisAlignment : MainAxisAlignment.end,
-                  children          : <Widget>[
-                    if (_isEditMode)
-                      ...[
-                        TextButton(
-                          onPressed : (){},
-                          child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
-                        ),
-                        TextButton.icon(
-                          onPressed : (){},
-                          icon      : const Icon(Icons.check_circle),
-                          label     : Text($strings.saveButtonText, style: $styles.textStyles.button),
-                        ),
-                      ]
-                    else
-                      ...[
-                        IconButton(
-                          onPressed : _handleStoreDuplicateCategoriaItem,
-                          icon      : const Icon(Icons.content_copy),
-                          tooltip   : 'Duplicar elemento',
-                        ),
-                        IconButton(
-                          onPressed : (){},
-                          color     : Theme.of(context).colorScheme.error,
-                          icon      : Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
-                          tooltip   : 'Eliminar',
-                        ),
-                      ],
-                  ],
-                ),
-              ),
-            ],
+    return Card(
+      elevation : 3,
+      shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
+      margin    : EdgeInsets.only(bottom: $styles.insets.lg),
+      child     : Column(
+        crossAxisAlignment  : CrossAxisAlignment.start,
+        children            : <Widget>[
+          // PREGUNTA:
+          ListTile(
+            leading : _isEditMode
+                ? null
+                : CircleAvatar(radius: 14, child: Text(widget.categoriaItem?.orden.toString() ?? '0', style: $styles.textStyles.h4)),
+            title   : _isEditMode
+                ? LabeledTextFormField(controller: _nameController, label: 'Pregunta:')
+                : Text(widget.categoriaItem?.name ?? ''),
+            onTap   : () => _editCategoriaItem(widget.categoriaItem!),
           ),
-        ),
+
+          // TIPOS DE FORMULARIOS:
+          ListTile(
+            title   : _isEditMode
+                ? _buildFormularioTipoSelect()
+                : _buildFormularioValuesContent(widget.categoriaItem!),
+            onTap   : () => _editCategoriaItem(widget.categoriaItem!),
+          ),
+
+          const Divider(),
+
+          // ACTIONS:
+          Padding(
+            padding : EdgeInsets.symmetric(horizontal: $styles.insets.xs),
+            child   : Row(
+              mainAxisAlignment : MainAxisAlignment.end,
+              children          : <Widget>[
+                if (_isEditMode)
+                  ...[
+                    TextButton(
+                      onPressed : _cancelEdit,
+                      child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
+                    ),
+                    TextButton.icon(
+                      onPressed : (){},
+                      icon      : const Icon(Icons.check_circle),
+                      label     : Text($strings.saveButtonText, style: $styles.textStyles.button),
+                    ),
+                  ]
+                else
+                  ...[
+                    IconButton(
+                      onPressed : _onDuplicateCategoriaItem,
+                      icon      : const Icon(Icons.content_copy),
+                      tooltip   : 'Duplicar elemento',
+                    ),
+                    IconButton(
+                      onPressed : (){},
+                      color     : Theme.of(context).colorScheme.error,
+                      icon      : Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
+                      tooltip   : 'Eliminar',
+                    ),
+                  ],
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -267,6 +261,9 @@ class _ListCardState extends State<_ListCard> {
   }
 
   Widget _buildFormularioTipoSelect() {
+    final bool isMultipleOption   = _selectedFormularioTipo?.idFormularioTipo == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb32';
+    final bool isDropdownList     = _selectedFormularioTipo?.idFormularioTipo == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -277,12 +274,50 @@ class _ListCardState extends State<_ListCard> {
           itemBuilder : (item) => Text(item.name ?? ''),
           onChanged   : (selectedType) {
             setState(() {
+              _selectedFormularioTipo     = selectedType;
               _selectedFormularioTipoId   = selectedType?.idFormularioTipo  ?? '';
               _selectedFormularioTipoName = selectedType?.name              ?? '';
             });
+
+            if (selectedType?.idFormularioTipo == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb31' ||
+                selectedType?.idFormularioTipo == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb34' ||
+                selectedType?.idFormularioTipo == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb35' ||
+                selectedType?.idFormularioTipo == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb36' ||
+                selectedType?.idFormularioTipo == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb37') {
+              _formularioValorController.clear();
+            } else {
+              if (_formularioValorController.text.isEmpty) {
+                _formularioValorController.text = 'Sí,No';
+              }
+            }
           },
           value: _selectedFormularioTipo,
         ),
+
+        Gap($styles.insets.xs),
+
+        if (isMultipleOption || isDropdownList)
+          Column(
+            crossAxisAlignment  : CrossAxisAlignment.start,
+            children            : <Widget>[
+              RichText(
+                text  : TextSpan(
+                  style     : $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                  children  : <InlineSpan>[
+                    TextSpan(
+                      text  : 'Sugerencia',
+                      style : $styles.textStyles.bodySmall.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                    const TextSpan(text: ': Para agregar opciones intenta seguir el formato separando las opciones por comas y sin espacios.'),
+                  ],
+                ),
+              ),
+              Gap($styles.insets.xs),
+              LabeledTextFormField(controller: _formularioValorController, hintText: 'ej. Opción 1,Opción 2,...', label: 'Valor del formulario:'),
+            ],
+          )
+        else
+          Text('Tipo de formulario: ${_selectedFormularioTipo?.name ?? ''}'),
       ],
     );
   }

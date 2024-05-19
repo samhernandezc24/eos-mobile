@@ -37,11 +37,11 @@ class RemoteCategoriaItemBloc extends Bloc<RemoteCategoriaItemEvent, RemoteCateg
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteCategoriaItemServerFailedMessage(objDataState.errorMessage));
+      emit(RemoteCategoriaItemServerFailedMessageList(objDataState.errorMessage));
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteCategoriaItemServerFailure(objDataState.serverException));
+      emit(RemoteCategoriaItemServerFailureList(objDataState.serverException));
     }
   }
 
@@ -55,11 +55,11 @@ class RemoteCategoriaItemBloc extends Bloc<RemoteCategoriaItemEvent, RemoteCateg
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteCategoriaItemServerFailedMessage(objDataState.errorMessage));
+      emit(RemoteCategoriaItemServerFailedMessageStore(objDataState.errorMessage));
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteCategoriaItemServerFailure(objDataState.serverException));
+      emit(RemoteCategoriaItemServerFailureStore(objDataState.serverException));
     }
   }
 
@@ -73,11 +73,11 @@ class RemoteCategoriaItemBloc extends Bloc<RemoteCategoriaItemEvent, RemoteCateg
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteCategoriaItemServerFailedMessage(objDataState.errorMessage));
+      emit(RemoteCategoriaItemServerFailedMessageDuplicate(objDataState.errorMessage));
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteCategoriaItemServerFailure(objDataState.serverException));
+      emit(RemoteCategoriaItemServerFailureDuplicate(objDataState.serverException));
     }
   }
 }

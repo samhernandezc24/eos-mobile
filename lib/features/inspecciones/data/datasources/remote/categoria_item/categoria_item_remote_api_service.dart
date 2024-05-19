@@ -30,7 +30,7 @@ abstract class CategoriaItemRemoteApiService {
   );
 
   /// GUARDAR DUPLICADO DE CATEGORIA ITEM
-  @POST('/Store')
+  @POST('/StoreDuplicate')
   Future<HttpResponse<ServerResponse>> storeDuplicate(
     @Header(HttpHeaders.contentTypeHeader) String contentType,
     @Header(HttpHeaders.authorizationHeader) String token,

@@ -120,7 +120,7 @@ class _CategoriaItemRemoteApiService implements CategoriaItemRemoteApiService {
     )
             .compose(
               _dio.options,
-              '/Store',
+              '/StoreDuplicate',
               queryParameters: queryParameters,
               data: _data,
             )

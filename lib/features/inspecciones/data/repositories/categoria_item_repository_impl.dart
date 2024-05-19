@@ -6,6 +6,7 @@ import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/cate
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_store_duplicate_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_store_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_store_duplicate_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/categoria_item_repository.dart';
@@ -144,5 +145,17 @@ class CategoriaItemRepositoryImpl implements CategoriaItemRepository {
     } on DioException catch (ex) {
       return DataFailed(ServerException.fromDioException(ex));
     }
+  }
+
+  @override
+  Future<DataState<ServerResponse>> delete(CategoriaItemEntity objData) {
+    // TODO: implement delete
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DataState<ServerResponse>> update(CategoriaItemEntity objData) {
+    // TODO: implement update
+    throw UnimplementedError();
   }
 }
