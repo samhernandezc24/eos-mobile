@@ -36,9 +36,11 @@ import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/delet
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/list_categoria_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/store_categoria_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria/update_categoria_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/delete_categoria_item_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/list_categoria_item_usecase.dart';
-import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/sotre_duplicate_categoria_item_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/store_categoria_item_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/store_duplicate_categoria_item_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/update_categoria_item_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/create_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/data_source_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/index_inspeccion_usecase.dart';
@@ -111,6 +113,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<DataSourceUnidadUseCase>(DataSourceUnidadUseCase(sl()));
 
   sl.registerSingleton<DeleteCategoriaUseCase>(DeleteCategoriaUseCase(sl()));
+  sl.registerSingleton<DeleteCategoriaItemUseCase>(DeleteCategoriaItemUseCase(sl()));
   sl.registerSingleton<DeleteInspeccionTipoUseCase>(DeleteInspeccionTipoUseCase(sl()));
   sl.registerSingleton<DeleteUnidadUseCase>(DeleteUnidadUseCase(sl()));
 
@@ -146,6 +149,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<StoreUnidadUseCase>(StoreUnidadUseCase(sl()));
 
   sl.registerSingleton<UpdateCategoriaUseCase>(UpdateCategoriaUseCase(sl()));
+  sl.registerSingleton<UpdateCategoriaItemUseCase>(UpdateCategoriaItemUseCase(sl()));
   sl.registerSingleton<UpdateInspeccionTipoUseCase>(UpdateInspeccionTipoUseCase(sl()));
   sl.registerSingleton<UpdateUnidadUseCase>(UpdateUnidadUseCase(sl()));
 
@@ -155,7 +159,7 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<RemoteAuthBloc>(() => RemoteAuthBloc(sl()));
 
   sl.registerFactory<RemoteCategoriaBloc>(() => RemoteCategoriaBloc(sl(), sl(), sl(), sl()));
-  sl.registerFactory<RemoteCategoriaItemBloc>(() => RemoteCategoriaItemBloc(sl(), sl(), sl()));
+  sl.registerFactory<RemoteCategoriaItemBloc>(() => RemoteCategoriaItemBloc(sl(), sl(), sl(), sl(), sl()));
 
   sl.registerFactory<RemoteInspeccionBloc>(() => RemoteInspeccionBloc(sl(), sl(), sl(), sl()));
   sl.registerFactory<RemoteInspeccionTipoBloc>(() => RemoteInspeccionTipoBloc(sl(), sl(), sl(), sl()));

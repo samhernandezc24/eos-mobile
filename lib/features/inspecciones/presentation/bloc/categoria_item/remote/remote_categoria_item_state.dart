@@ -44,29 +44,29 @@ class RemoteCategoriaItemStoredDuplicate extends RemoteCategoriaItemState {
   List<Object?> get props => [ objResponse ];
 }
 
-// /// UPDATE
-// class RemoteCategoriaItemUpdating extends RemoteCategoriaItemState {}
+/// UPDATE
+class RemoteCategoriaItemUpdating extends RemoteCategoriaItemState {}
 
-// class RemoteCategoriaItemUpdated extends RemoteCategoriaItemState {
-//   const RemoteCategoriaItemUpdated(this.objResponse);
+class RemoteCategoriaItemUpdated extends RemoteCategoriaItemState {
+  const RemoteCategoriaItemUpdated(this.objResponse);
 
-//   final ServerResponse? objResponse;
+  final ServerResponse? objResponse;
 
-//   @override
-//   List<Object?> get props => [ objResponse ];
-// }
+  @override
+  List<Object?> get props => [ objResponse ];
+}
 
-// /// DELETE
-// class RemoteCategoriaItemDeleting extends RemoteCategoriaItemState {}
+/// DELETE
+class RemoteCategoriaItemDeleting extends RemoteCategoriaItemState {}
 
-// class RemoteCategoriaItemDeleted extends RemoteCategoriaItemState {
-//   const RemoteCategoriaItemDeleted(this.objResponse);
+class RemoteCategoriaItemDeleted extends RemoteCategoriaItemState {
+  const RemoteCategoriaItemDeleted(this.objResponse);
 
-//   final ServerResponse? objResponse;
+  final ServerResponse? objResponse;
 
-//   @override
-//   List<Object?> get props => [ objResponse ];
-// }
+  @override
+  List<Object?> get props => [ objResponse ];
+}
 
 /// SERVER FAILED MESSAGE
 class RemoteCategoriaItemServerFailedMessageList extends RemoteCategoriaItemState {

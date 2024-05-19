@@ -13,8 +13,8 @@ class CategoriaItemModel extends CategoriaItemEntity {
     required String idFormularioTipo,
     required String formularioTipoName,
     required String formularioValor,
-    required bool isEdit,
     int? orden,
+    bool? isEdit,
   }) : super(
           idCategoriaItem     : idCategoriaItem,
           name                : name,
@@ -39,7 +39,7 @@ class CategoriaItemModel extends CategoriaItemEntity {
       formularioTipoName  : jsonMap['formularioTipoName'] as String,
       orden               : jsonMap['orden'] as int? ?? 0,
       formularioValor     : jsonMap['formularioValor'] as String,
-      isEdit              : jsonMap['isEdit'] as bool,
+      isEdit              : jsonMap['isEdit'] as bool? ?? false,
     );
   }
 

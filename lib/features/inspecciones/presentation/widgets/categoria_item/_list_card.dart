@@ -33,9 +33,6 @@ class _ListCardState extends State<_ListCard> {
   // SELECTED FORMULARIO TIPO
   FormularioTipo? _selectedFormularioTipo;
 
-  String? _selectedFormularioTipoId;
-  String? _selectedFormularioTipoName;
-
   // Valores guardados temporalmente
   String? _originalName;
   String? _originalFormularioValor;
@@ -86,17 +83,43 @@ class _ListCardState extends State<_ListCard> {
     });
   }
 
-  void _onDuplicateCategoriaItem() {
-    final CategoriaItemStoreDuplicateReqEntity objData = CategoriaItemStoreDuplicateReqEntity(
-      name                  : widget.categoriaItem?.name                ?? '',
-      idCategoria           : widget.categoriaItem?.idCategoria         ?? '',
-      categoriaName         : widget.categoriaItem?.categoriaName       ?? '',
-      idFormularioTipo      : widget.categoriaItem?.idFormularioTipo    ?? '',
-      formularioTipoName    : widget.categoriaItem?.formularioTipoName  ?? '',
-      formularioValor       : widget.categoriaItem?.formularioValor     ?? '',
-    );
+  void _saveEdit() {
+    if (widget.onUpdatePressed != null) {
+      final CategoriaItemEntity objData = CategoriaItemEntity(
+        idCategoriaItem     : widget.categoriaItem?.idCategoriaItem     ?? '',
+        name                : _nameController.text,
+        idCategoria         : widget.categoria?.idCategoria             ?? '',
+        categoriaName       : widget.categoria?.name                    ?? '',
+        idFormularioTipo    : _selectedFormularioTipo?.idFormularioTipo ?? '',
+        formularioTipoName  : _selectedFormularioTipo?.name             ?? '',
+        formularioValor     : _formularioValorController.text,
+      );
 
-    if (widget.onDuplicatePressed != null) return widget.onDuplicatePressed!(objData);
+      return widget.onUpdatePressed!(objData);
+    }
+
+    setState(() {
+      _isEditMode = false;
+    });
+  }
+
+  void _onDuplicateCategoriaItem() {
+    if (widget.onDuplicatePressed != null) {
+      final CategoriaItemStoreDuplicateReqEntity objData = CategoriaItemStoreDuplicateReqEntity(
+        name                  : widget.categoriaItem?.name                ?? '',
+        idCategoria           : widget.categoriaItem?.idCategoria         ?? '',
+        categoriaName         : widget.categoriaItem?.categoriaName       ?? '',
+        idFormularioTipo      : widget.categoriaItem?.idFormularioTipo    ?? '',
+        formularioTipoName    : widget.categoriaItem?.formularioTipoName  ?? '',
+        formularioValor       : widget.categoriaItem?.formularioValor     ?? '',
+      );
+
+      return widget.onDuplicatePressed!(objData);
+    }
+  }
+
+  void _onDeleteCategoriaItem(CategoriaItemEntity? categoriaItem) {
+    if (widget.onDeletePressed != null) { return widget.onDeletePressed!(categoriaItem!); }
   }
 
   @override
@@ -142,7 +165,7 @@ class _ListCardState extends State<_ListCard> {
                       child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
                     ),
                     TextButton.icon(
-                      onPressed : (){},
+                      onPressed : _saveEdit,
                       icon      : const Icon(Icons.check_circle),
                       label     : Text($strings.saveButtonText, style: $styles.textStyles.button),
                     ),
@@ -155,7 +178,7 @@ class _ListCardState extends State<_ListCard> {
                       tooltip   : 'Duplicar elemento',
                     ),
                     IconButton(
-                      onPressed : (){},
+                      onPressed : () => _onDeleteCategoriaItem(widget.categoriaItem),
                       color     : Theme.of(context).colorScheme.error,
                       icon      : Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
                       tooltip   : 'Eliminar',
@@ -274,9 +297,7 @@ class _ListCardState extends State<_ListCard> {
           itemBuilder : (item) => Text(item.name ?? ''),
           onChanged   : (selectedType) {
             setState(() {
-              _selectedFormularioTipo     = selectedType;
-              _selectedFormularioTipoId   = selectedType?.idFormularioTipo  ?? '';
-              _selectedFormularioTipoName = selectedType?.name              ?? '';
+              _selectedFormularioTipo = selectedType;
             });
 
             if (selectedType?.idFormularioTipo == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb31' ||

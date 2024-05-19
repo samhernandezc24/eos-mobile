@@ -13,8 +13,8 @@ class CategoriaItemEntity extends Equatable {
     required this.idFormularioTipo,
     required this.formularioTipoName,
     required this.formularioValor,
-    required this.isEdit,
     this.orden,
+    this.isEdit,
   });
 
   final String idCategoriaItem;
@@ -25,7 +25,7 @@ class CategoriaItemEntity extends Equatable {
   final String formularioTipoName;
   final int? orden;
   final String formularioValor;
-  final bool isEdit;
+  final bool? isEdit;
 
   @override
   List<Object?> get props => [

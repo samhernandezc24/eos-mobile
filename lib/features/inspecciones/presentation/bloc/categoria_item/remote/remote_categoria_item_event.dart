@@ -37,22 +37,22 @@ class StoreDuplicateCategoriaItem extends RemoteCategoriaItemEvent {
   List<Object?> get props => [ objData ];
 }
 
-// /// [UpdateCategoriaItemUseCase]
-// class UpdateCategoriaItem extends RemoteCategoriaItemEvent {
-//   const UpdateCategoriaItem(this.objData);
+/// [UpdateCategoriaItemUseCase]
+class UpdateCategoriaItem extends RemoteCategoriaItemEvent {
+  const UpdateCategoriaItem(this.objData);
 
-//   final CategoriaItemEntity objData;
+  final CategoriaItemEntity objData;
 
-//   @override
-//   List<Object?> get props => [ objData ];
-// }
+  @override
+  List<Object?> get props => [ objData ];
+}
 
-// /// [DeleteCategoriaItemUseCase]
-// class DeleteCategoriaItem extends RemoteCategoriaItemEvent {
-//   const DeleteCategoriaItem(this.objData);
+/// [DeleteCategoriaItemUseCase]
+class DeleteCategoriaItem extends RemoteCategoriaItemEvent {
+  const DeleteCategoriaItem(this.objData);
 
-//   final CategoriaItemEntity objData;
+  final CategoriaItemEntity objData;
 
-//   @override
-//   List<Object?> get props => [ objData ];
-// }
+  @override
+  List<Object?> get props => [ objData ];
+}

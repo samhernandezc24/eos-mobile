@@ -44,16 +44,46 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
     BlocProvider.of<RemoteCategoriaItemBloc>(context).add(StoreCategoriaItem(objData));
   }
 
-  void _onCategoriaItemDeletePressed() {
-
-  }
-
-  void _onCategoriaItemUpdatePressed() {
-
-  }
-
   void _onCategoriaItemStoreDuplicatePressed(CategoriaItemStoreDuplicateReqEntity objData) {
     BlocProvider.of<RemoteCategoriaItemBloc>(context).add(StoreDuplicateCategoriaItem(objData));
+  }
+
+  void _onCategoriaItemUpdatePressed(CategoriaItemEntity categoriaItem) {
+    BlocProvider.of<RemoteCategoriaItemBloc>(context).add(UpdateCategoriaItem(categoriaItem));
+  }
+
+  void _onCategoriaItemDeletePressed(CategoriaItemEntity categoriaItem) {
+    showDialog<void>(
+      context : context,
+      builder : (BuildContext context) {
+        return AlertDialog(
+          title   : Text('¿Eliminar pregunta?', style: $styles.textStyles.h3.copyWith(fontSize: 18)),
+          content : RichText(
+            text: TextSpan(
+              style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
+              children  : <InlineSpan>[
+                const TextSpan(text: 'Se eliminará la pregunta '),
+                TextSpan(
+                  text: '"${categoriaItem.name}." ',
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                const TextSpan(text: '¿Estás seguro de querer realizar esa acción?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed : () => Navigator.of(context).pop(),
+              child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
+            ),
+            TextButton(
+              onPressed : () => context.read<RemoteCategoriaItemBloc>().add(DeleteCategoriaItem(categoriaItem)),
+              child     : Text($strings.deleteButtonText, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _showProgressDialog(BuildContext context) {
@@ -83,10 +113,6 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
         );
       },
     );
-  }
-
-  void _hideProgressDialog() {
-    Navigator.of(context).pop();
   }
 
   Future<void> _showServerFailedMessage(BuildContext context, String? errorMessage) async {
@@ -166,9 +192,17 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                     _showProgressDialog(context);
                   }
 
+                  if (state is RemoteCategoriaItemUpdating) {
+                    _showProgressDialog(context);
+                  }
+
+                  if (state is RemoteCategoriaItemDeleting) {
+                    _showProgressDialog(context);
+                  }
+
                   // ERRORS:
                   if (state is RemoteCategoriaItemServerFailedMessageDuplicate) {
-                    _hideProgressDialog();
+                    Navigator.of(context).pop();
 
                     _showServerFailedMessage(context, state.errorMessage);
 
@@ -181,7 +215,59 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                   }
 
                   if (state is RemoteCategoriaItemServerFailureDuplicate) {
-                    _hideProgressDialog();
+                    Navigator.of(context).pop();
+
+                    _showServerFailure(context, state.failure?.errorMessage);
+
+                    // Actualizar listado de preguntas.
+                    context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
+
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  }
+
+                  if (state is RemoteCategoriaItemServerFailedMessageUpdate) {
+                    Navigator.of(context).pop();
+
+                    _showServerFailedMessage(context, state.errorMessage);
+
+                    // Actualizar listado de preguntas.
+                    context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
+
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  }
+
+                  if (state is RemoteCategoriaItemServerFailureUpdate) {
+                    Navigator.of(context).pop();
+
+                    _showServerFailure(context, state.failure?.errorMessage);
+
+                    // Actualizar listado de preguntas.
+                    context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
+
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  }
+
+                  if (state is RemoteCategoriaItemServerFailedMessageDelete) {
+                    Navigator.of(context).pop();
+
+                    _showServerFailedMessage(context, state.errorMessage);
+
+                    // Actualizar listado de preguntas.
+                    context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
+
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  }
+
+                  if (state is RemoteCategoriaItemServerFailureDelete) {
+                    Navigator.of(context).pop();
 
                     _showServerFailure(context, state.failure?.errorMessage);
 
@@ -203,7 +289,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                   }
 
                   if (state is RemoteCategoriaItemStoredDuplicate) {
-                    _hideProgressDialog();
+                    Navigator.of(context).pop();
 
                     ScaffoldMessenger.of(context)
                     ..hideCurrentSnackBar()
@@ -216,6 +302,51 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                       ),
                     );
 
+                    context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
+
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  }
+
+                  if (state is RemoteCategoriaItemUpdated) {
+                    Navigator.of(context).pop();
+
+                    ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        content         : Text(state.objResponse?.message ?? 'Pregunta actualizada', softWrap: true),
+                        backgroundColor : Colors.green,
+                        behavior        : SnackBarBehavior.fixed,
+                        elevation       : 0,
+                      ),
+                    );
+
+                    // Actualizar listado de preguntas.
+                    context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
+
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  }
+
+                  if (state is RemoteCategoriaItemDeleted) {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+
+                    ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        content         : Text(state.objResponse?.message ?? 'Pregunta eliminada', softWrap: true),
+                        backgroundColor : Colors.green,
+                        behavior        : SnackBarBehavior.fixed,
+                        elevation       : 0,
+                      ),
+                    );
+
+                    // Actualizar listado de preguntas.
                     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
 
                     setState(() {
@@ -253,7 +384,9 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                             categoriaItem       : categoriaItem,
                             categoria           : widget.categoria,
                             formulariosTipos    : lstFormulariosTipos,
-                            onDuplicatePressed  : _onCategoriaItemStoreDuplicatePressed,
+                            onDuplicatePressed  : (CategoriaItemStoreDuplicateReqEntity objData) => _onCategoriaItemStoreDuplicatePressed(objData),
+                            onUpdatePressed     : (CategoriaItemEntity categoriaItem) => _onCategoriaItemUpdatePressed(categoriaItem),
+                            onDeletePressed     : (CategoriaItemEntity categoriaItem) => _onCategoriaItemDeletePressed(categoriaItem),
                           );
                         },
                       );

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria_model.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_store_duplicate_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_store_req_model.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
@@ -35,5 +36,21 @@ abstract class CategoriaItemRemoteApiService {
     @Header(HttpHeaders.contentTypeHeader) String contentType,
     @Header(HttpHeaders.authorizationHeader) String token,
     @Body() CategoriaItemStoreDuplicateReqModel objData,
+  );
+
+  /// ACTUALIZAR CATEGORIA ITEM
+  @POST('/Update')
+  Future<HttpResponse<ServerResponse>> update(
+    @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Header(HttpHeaders.authorizationHeader) String token,
+    @Body() CategoriaItemModel objData,
+  );
+
+  /// ELIMINAR CATEGORIA ITEM
+  @POST('/Delete')
+  Future<HttpResponse<ServerResponse>> delete(
+    @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Header(HttpHeaders.authorizationHeader) String token,
+    @Body() CategoriaItemModel objData,
   );
 }
