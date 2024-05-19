@@ -5,6 +5,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria/rem
 import 'package:eos_mobile/features/inspecciones/presentation/pages/configuracion/categorias_items/categorias_items_page.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/error_server_failure.dart';
 import 'package:eos_mobile/ui/common/request_data_unavailable.dart';
 
 part '../../../widgets/categoria/_create_form.dart';
@@ -111,11 +112,17 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
                   }
 
                   if (state is RemoteCategoriaServerFailedMessage) {
-                    return _buildServerFailedMessageCategoria(context, state);
+                    return ErrorInfoContainer(
+                      onPressed     : () => context.read<RemoteCategoriaBloc>().add(ListCategorias(widget.inspeccionTipo!)),
+                      errorMessage  : state.errorMessage,
+                    );
                   }
 
                   if (state is RemoteCategoriaServerFailure) {
-                    return _buildServerFailureCategoria(context, state);
+                    return ErrorInfoContainer(
+                      onPressed     : () => context.read<RemoteCategoriaBloc>().add(ListCategorias(widget.inspeccionTipo!)),
+                      errorMessage  : state.failure?.errorMessage,
+                    );
                   }
 
                   if (state is RemoteCategoriaSuccess) {
@@ -142,82 +149,6 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
                 },
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildServerFailedMessageCategoria(BuildContext context, RemoteCategoriaServerFailedMessage state) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 64),
-
-          Gap($styles.insets.sm),
-
-          Padding(
-            padding : EdgeInsets.symmetric(horizontal: $styles.insets.lg * 1.5),
-            child   : Text(
-              $strings.error500Title,
-              style     : $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600),
-              textAlign : TextAlign.center,
-            ),
-          ),
-
-          Padding(
-            padding : EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
-            child   : Text(
-              state.errorMessage ?? 'Se produjo un error inesperado. Intenta actualizar de nuevo la lista.',
-              overflow: TextOverflow.ellipsis,
-              maxLines: 10,
-              textAlign: TextAlign.center,
-            ),
-          ),
-
-          FilledButton.icon(
-            onPressed : () => context.read<RemoteCategoriaBloc>().add(ListCategorias(widget.inspeccionTipo!)),
-            icon      : const Icon(Icons.refresh),
-            label     : Text($strings.retryButtonText, style: $styles.textStyles.button),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildServerFailureCategoria(BuildContext context, RemoteCategoriaServerFailure state) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 64),
-
-          Gap($styles.insets.sm),
-
-          Padding(
-            padding : EdgeInsets.symmetric(horizontal: $styles.insets.lg * 1.5),
-            child   : Text(
-              $strings.error500Title,
-              style     : $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600),
-              textAlign : TextAlign.center,
-            ),
-          ),
-
-          Padding(
-            padding : EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
-            child   : Text(
-              state.failure?.errorMessage ?? 'Se produjo un error inesperado. Intenta actualizar de nuevo la lista.',
-              overflow: TextOverflow.ellipsis,
-              maxLines: 10,
-              textAlign: TextAlign.center,
-            ),
-          ),
-
-          FilledButton.icon(
-            onPressed : () => context.read<RemoteCategoriaBloc>().add(ListCategorias(widget.inspeccionTipo!)),
-            icon      : const Icon(Icons.refresh),
-            label     : Text($strings.retryButtonText, style: $styles.textStyles.button),
           ),
         ],
       ),

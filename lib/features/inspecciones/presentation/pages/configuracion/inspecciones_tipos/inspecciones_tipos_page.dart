@@ -6,6 +6,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_ti
 import 'package:eos_mobile/features/inspecciones/presentation/pages/configuracion/categorias/categorias_page.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/error_server_failure.dart';
 import 'package:eos_mobile/ui/common/request_data_unavailable.dart';
 
 part '../../../widgets/inspeccion_tipo/_list_tile.dart';
@@ -94,11 +95,17 @@ class _InspeccionConfiguracionInspeccionesTiposPageState extends State<Inspeccio
                   }
 
                   if (state is RemoteInspeccionTipoServerFailedMessage) {
-                    return _buildServerFailedMessageInspeccionTipo(context, state);
+                    return ErrorInfoContainer(
+                      onPressed     : () => context.read<RemoteInspeccionTipoBloc>().add(ListInspeccionesTipos()),
+                      errorMessage  : state.errorMessage,
+                    );
                   }
 
                   if (state is RemoteInspeccionTipoServerFailure) {
-                    return _buildServerFailureInspeccionTipo(context, state);
+                    return ErrorInfoContainer(
+                      onPressed     : () => context.read<RemoteInspeccionTipoBloc>().add(ListInspeccionesTipos()),
+                      errorMessage  : state.failure?.errorMessage,
+                    );
                   }
 
                   if (state is RemoteInspeccionTipoSuccess) {
@@ -124,82 +131,6 @@ class _InspeccionConfiguracionInspeccionesTiposPageState extends State<Inspeccio
                 },
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildServerFailedMessageInspeccionTipo(BuildContext context, RemoteInspeccionTipoServerFailedMessage state) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 64),
-
-          Gap($styles.insets.sm),
-
-          Padding(
-            padding : EdgeInsets.symmetric(horizontal: $styles.insets.lg * 1.5),
-            child   : Text(
-              $strings.error500Title,
-              style     : $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600),
-              textAlign : TextAlign.center,
-            ),
-          ),
-
-          Padding(
-            padding : EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
-            child   : Text(
-              state.errorMessage ?? 'Se produjo un error inesperado. Intenta actualizar de nuevo la lista.',
-              overflow: TextOverflow.ellipsis,
-              maxLines: 10,
-              textAlign: TextAlign.center,
-            ),
-          ),
-
-          FilledButton.icon(
-            onPressed : () => context.read<RemoteInspeccionTipoBloc>().add(ListInspeccionesTipos()),
-            icon      : const Icon(Icons.refresh),
-            label     : Text($strings.retryButtonText, style: $styles.textStyles.button),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildServerFailureInspeccionTipo(BuildContext context, RemoteInspeccionTipoServerFailure state) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 64),
-
-          Gap($styles.insets.sm),
-
-          Padding(
-            padding : EdgeInsets.symmetric(horizontal: $styles.insets.lg * 1.5),
-            child   : Text(
-              $strings.error500Title,
-              style     : $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600),
-              textAlign : TextAlign.center,
-            ),
-          ),
-
-          Padding(
-            padding : EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
-            child   : Text(
-              state.failure?.errorMessage ?? 'Se produjo un error inesperado. Intenta actualizar de nuevo la lista.',
-              overflow: TextOverflow.ellipsis,
-              maxLines: 10,
-              textAlign: TextAlign.center,
-            ),
-          ),
-
-          FilledButton.icon(
-            onPressed : () => context.read<RemoteInspeccionTipoBloc>().add(ListInspeccionesTipos()),
-            icon      : const Icon(Icons.refresh),
-            label     : Text($strings.retryButtonText, style: $styles.textStyles.button),
           ),
         ],
       ),
