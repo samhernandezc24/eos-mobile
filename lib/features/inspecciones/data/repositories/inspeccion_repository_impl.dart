@@ -15,7 +15,7 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
 
   final InspeccionRemoteApiService _inspeccionRemoteApiService;
 
-  /// CARGA DE INFORMACION DE INSPECCION
+  /// CARGA DE INFORMACION DE INSPECCION (FILTRADOS DINÁMICOS)
   @override
   Future<DataState<InspeccionIndexModel>> index() async {
     try {
@@ -30,9 +30,10 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
 
         if (objResponse.session!) {
           if (objResponse.action!) {
-            final inspeccionIndex = InspeccionIndexModel.fromJson(objResponse.result as Map<String, dynamic>);
+            final result = objResponse.result as Map<String, dynamic>;
+            final InspeccionIndexModel objInspeccionIndex = InspeccionIndexModel.fromJson(result);
 
-            return DataSuccess(inspeccionIndex);
+            return DataSuccess(objInspeccionIndex);
           } else {
             return DataFailedMessage(objResponse.message ?? 'Error inesperado');
           }
@@ -71,9 +72,10 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
 
         if (objResponse.session!) {
           if (objResponse.action!) {
-            final inspeccionDataSource = InspeccionDataSourceResModel.fromJson(objResponse.result as Map<String, dynamic>);
+            final result = objResponse.result as Map<String, dynamic>;
+            final InspeccionDataSourceResModel objInspeccionDataSource = InspeccionDataSourceResModel.fromJson(result);
 
-            return DataSuccess(inspeccionDataSource);
+            return DataSuccess(objInspeccionDataSource);
           } else {
             return DataFailedMessage(objResponse.message ?? 'Error inesperado');
           }

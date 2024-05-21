@@ -1,3 +1,4 @@
+import 'package:eos_mobile/core/data/data_source_persistence.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class DataSourceUtils {
@@ -15,6 +16,24 @@ class DataSourceUtils {
     final arrFilters = Globals.isValidValue(objFilterMultiple) ? objFilterMultiple!['value'] as List<dynamic> : <dynamic>[];
 
     return arrFilters.where((a) => lstValues.any((b) => b[key] == a)).toList();
+  }
+
+  static String renderDateSelected(DataSourcePersistence? dataSourcePersistence, { String dateDefault = 'CreatedFecha' }) {
+    final String dateSelected = dataSourcePersistence != null && Globals.isValidValue(dataSourcePersistence.dateOption)
+        ? dataSourcePersistence.dateOption!
+        : dateDefault;
+
+    return dateSelected;
+  }
+
+  static DateTime? renderDate(DataSourcePersistence? dataSourcePersistence, String key) {
+    final valueDate = dataSourcePersistence == null ? null : dataSourcePersistence.toJson()[key];
+
+    if (valueDate is String && valueDate.isNotEmpty) {
+      return DateTime.parse(valueDate);
+    }
+
+    return null;
   }
 
   static List<Map<String, dynamic>> searchFilters(List<dynamic> arrSearchFilters) {

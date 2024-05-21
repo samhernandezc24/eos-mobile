@@ -2,18 +2,26 @@ import 'package:eos_mobile/core/data/catalogos/inspeccion_estatus.dart';
 import 'package:eos_mobile/core/data/catalogos/unidad_tipo.dart';
 import 'package:eos_mobile/core/data/catalogos/usuario.dart';
 import 'package:eos_mobile/core/data/data_source_persistence.dart';
+import 'package:eos_mobile/core/data/filter.dart';
 import 'package:eos_mobile/core/data/filters_multiple.dart';
-import 'package:eos_mobile/core/utils/data_source_utils.dart';
-import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
+
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/create/create_inspeccion_page.dart';
+
 import 'package:eos_mobile/shared/shared_libraries.dart';
-import 'package:eos_mobile/ui/common/static_text_scale.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:eos_mobile/ui/common/controls/labeled_date_text_form_field.dart';
+import 'package:eos_mobile/ui/common/error_server_failure.dart';
 
-part '../../widgets/inspeccion/list/_results_list.dart';
+import 'package:intl/intl.dart';
+
+part '../../widgets/inspeccion/filter/_filter_inspeccion.dart';
 part '../../widgets/inspeccion/list/_search_input.dart';
+part '../../widgets/inspeccion/list/_results_list.dart';
 
+/// El usuario puede utilizar esta página para buscar en el servidor EOS una inspección
+/// por folio, número económico o locación.
+///
+/// Los resultados aparecerán como cards, sobre las que el usuario puede hacer clic para obtener más información
+/// o realizar operaciones como evaluación de inspección.
 class InspeccionListPage extends StatefulWidget with GetItStatefulWidgetMixin {
   InspeccionListPage({Key? key}) : super(key: key);
 
@@ -21,91 +29,124 @@ class InspeccionListPage extends StatefulWidget with GetItStatefulWidgetMixin {
   State<InspeccionListPage> createState() => _InspeccionListPageState();
 }
 
-class _InspeccionListPageState extends State<InspeccionListPage> {
-  // PROPERTIES
-  bool _isLoading = false;
-
-  // SEARCH
-  late final TextEditingController _txtSearchController;
-
-  // DATES FILTER
-  late final TextEditingController _rdDateOptionsController;
+class _InspeccionListPageState extends State<InspeccionListPage> with GetItStateMixin {
+  // CONTROLLERS
   late final TextEditingController _txtDateDesdeController;
   late final TextEditingController _txtDateHastaController;
 
+  // SEARCH
+  String? _selectedSortOption;
+
+  // DATES FILTER
+
   // FILTERS
-  List<UnidadTipo> lstUnidadesTipos                 = [];
-  List<InspeccionEstatus> lstInspeccionesEstatus    = [];
-  List<InspeccionTipoEntity> lstInspeccionesTipos   = [];
+  List<UnidadTipo> lstUnidadesTipos               = <UnidadTipo>[];
+  List<InspeccionEstatus> lstInspeccionesEstatus  = <InspeccionEstatus>[];
+  List<Usuario> lstUsuarios                       = <Usuario>[];
 
-  List<Map<String, dynamic>> lstHasRequerimiento    = [{'value': true, 'name': 'Con requerimiento'}, {'value': false, 'name': 'Sin requerimiento'}];
-
-  List<Usuario> lstUsuarios = [];
-
-  // COLUMNS
+  List<Map<String, dynamic>> lstHasRequerimiento  = [{'value': true, 'name': 'Con requerimiento'}, {'value': false, 'name': 'Sin requerimiento'}];
 
   // SEARCH FILTERS
-  List<dynamic> searchFilters = [];
 
   // DATE OPTIONS
-  List<Map<String, String>> dateOptions = [
+  List<Map<String, dynamic>> dateOptions = <Map<String, dynamic>>[
     {'label': 'Fecha programada', 'field': 'FechaProgramada'},
-    {'label': 'Fecha inspección inicial', 'field': 'FechaInspeccionInicial'},
-    {'label': 'Fecha inspección final', 'field': 'FechaInspeccionFinal'},
-    {'label': 'Fecha evaluación', 'field': 'FechaEvaluacion'},
+    {'label': 'Fecha de evaluación', 'field': 'FechaEvaluacion'},
     {'label': 'Fecha de creación', 'field': 'CreatedFecha'},
     {'label': 'Fecha de actualización', 'field': 'UpdatedFecha'},
   ];
-
-  late final BehaviorSubject<void> _unsubscribeAll = BehaviorSubject<void>();
-  late List<dynamic> lstRows = [];
 
   @override
   void initState() {
     super.initState();
 
-    initialization();
+    _txtDateDesdeController = TextEditingController();
+    _txtDateHastaController = TextEditingController();
 
-    _txtSearchController      = TextEditingController();
-    _rdDateOptionsController  = TextEditingController();
-    _txtDateDesdeController   = TextEditingController();
-    _txtDateHastaController   = TextEditingController();
+    context.read<RemoteInspeccionBloc>().add(FetchInspeccionIndex());
+
+    _renderBuild();
   }
 
   @override
   void dispose() {
-    _txtSearchController.dispose();
-    _rdDateOptionsController.dispose();
     _txtDateDesdeController.dispose();
     _txtDateHastaController.dispose();
-
-    _unsubscribeAll.close();
-
     super.dispose();
   }
 
   // METHODS
-  void initialization() {
-    context.read<RemoteInspeccionBloc>().add(FetchInspeccionInit());
-  }
-
   void _handleSearchSubmitted(String query) {}
 
-  void _handleCreateInspeccionPressed(BuildContext context) {
+  void _handleSortPressed(BuildContext context) {
+    showModalBottomSheet<void>(
+      context : context,
+      builder : (BuildContext context) {
+        // Manejamos el estado local del modal.
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Column(
+              mainAxisSize  : MainAxisSize.min,
+              children      : <Widget>[
+                Padding(
+                  padding : EdgeInsets.all($styles.insets.sm),
+                  child   : Center(
+                    child : Text('Ordenar por', style: $styles.textStyles.h3.copyWith(fontSize: 18)),
+                  ),
+                ),
+                RadioListTile<String>(
+                  value       : 'folio',
+                  groupValue  : _selectedSortOption,
+                  onChanged   : (String? value) => setState(() => _selectedSortOption = value),
+                  title       : const Text('Folio'),
+                ),
+                RadioListTile<String>(
+                  value       : 'inspeccionEstatusName',
+                  groupValue  : _selectedSortOption,
+                  onChanged   : (String? value) => setState(() => _selectedSortOption = value),
+                  title       : const Text('Estatus'),
+                ),
+                RadioListTile<String>(
+                  value       : 'fechaProgramada',
+                  groupValue  : _selectedSortOption,
+                  onChanged   : (String? value) => setState(() => _selectedSortOption = value),
+                  title       : const Text('Fecha programada'),
+                ),
+                RadioListTile<String>(
+                  value       : 'createdFechaNatural',
+                  groupValue  : _selectedSortOption,
+                  onChanged   : (String? value) => setState(() => _selectedSortOption = value),
+                  title       : const Text('Fecha de creación'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _handleFiltersPressed(BuildContext context) {
     Navigator.push<void>(
       context,
       PageRouteBuilder<void>(
-        transitionDuration : $styles.times.pageTransition,
+        transitionDuration: $styles.times.pageTransition,
         pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-          const Offset begin  = Offset(0, 1);
-          const Offset end    = Offset.zero;
-          const Cubic curve   = Curves.ease;
+          const Offset begin    = Offset(0, 1);
+          const Offset end      = Offset.zero;
+          const Cubic curve     = Curves.ease;
 
           final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
 
           return SlideTransition(
-            position: animation.drive<Offset>(tween),
-            child: const CreateInspeccionPage(),
+            position  : animation.drive<Offset>(tween),
+            child     : _FilterInspeccion(
+              dateOptions         : dateOptions,
+              unidadesTipos       : lstUnidadesTipos,
+              inspeccionesEstatus : lstInspeccionesEstatus,
+              usuarios            : lstUsuarios,
+              hasRequerimiento    : lstHasRequerimiento,
+            ),
           );
         },
         fullscreenDialog: true,
@@ -113,120 +154,143 @@ class _InspeccionListPageState extends State<InspeccionListPage> {
     );
   }
 
-  // DATASOURCE:
-  void renderFilters(DataSourcePersistence? dataSourcePersistence) {
-    // RECUPERACION DE COMBOBOX CON MULTIFILTROS
+  void _renderFilters(DataSourcePersistence? dataSourcePersistence) {
+    // RECUPERACION DE DROPDOWN CON MULTIFILTROS
     final List<FiltersMultiple> arrFiltersMultiple = dataSourcePersistence == null ? [] : dataSourcePersistence.filtersMultiple ?? [];
-    print(arrFiltersMultiple);
 
-    DataSourceUtils.renderFilterMultiple(arrFiltersMultiple, lstInspeccionesEstatus, '', '');
+    // RECUPERACION DE DROPDOWN SIN MULTIFILTROS
+    final List<Filter> arrFilters = dataSourcePersistence == null ? [] : dataSourcePersistence.filters ?? [];
 
-    // RECUPERACION DE COMBOBOX SIN MULTIFILTROS
+    // RECUPERACION DE FECHAS
+    final DateTime? dateFrom  = DataSourceUtils.renderDate(dataSourcePersistence, 'dateFrom');
+    final DateTime? dateTo    = DataSourceUtils.renderDate(dataSourcePersistence, 'dateTo');
+
+    DataSourceUtils.renderDateSelected(dataSourcePersistence);
+    _txtDateDesdeController.text = dateFrom != null   ? DateFormat('dd/MM/yyyy').format(dateFrom)   : '';
+    _txtDateHastaController.text = dateTo   != null   ? DateFormat('dd/MM/yyyy').format(dateTo)     : '';
   }
 
-  void buildDataSource() {
+  void _renderBuild() {
     final Map<String, dynamic> varArgs = {
-      'search'              : Globals.isValidValue(_txtSearchController.text) ? _txtSearchController.text : '',
-      'searchFilters'       : DataSourceUtils.searchFilters(searchFilters),
+      'search'              : Globals.isValidValue(''),
+      // 'searchFilters'       : DataSourceUtils.searchFilters(searchFilters),
+      // 'filters'             : DataSourceUtils.filters(),
+      // 'filtersMultiple'     : DataSourceUtils.filtersMultiple(),
+      'searchFilters'       : <dynamic>[],
       'filters'             : <dynamic>[],
       'filtersMultiple'     : <dynamic>[],
       'dateFrom'            : _txtDateDesdeController.text.isEmpty ? '' : _txtDateDesdeController.text,
       'dateTo'              : _txtDateHastaController.text.isEmpty ? '' : _txtDateHastaController.text,
-      'dateOptions'         : [{'field': _rdDateOptionsController.text}],
-      'length'              : !Globals.isValidValue(_txtSearchController.value) ? 25 : '',
+      'dateOptions'         : [{'field' : '', 'label' : ''}],
+      'columns'             : <dynamic>[],
+      'persistenceColumns'  : <dynamic>[],
+      'length'              : !Globals.isValidValue(0) ? 25 : 0,
       'page'                : 1,
       'sort'                : {'column': '', 'direction': ''},
     };
 
-    _isLoading = true;
-
     context.read<RemoteInspeccionBloc>().add(FetchInspeccionDataSource(varArgs));
-  }
-
-  List<Map<String, dynamic>> getSearchFilters() {
-    final List<Map<String, dynamic>> arrSearchFilters = [
-      { 'field': 'Folio',                 'isChecked': true,    'title': 'Folio'                        },
-      { 'field': 'RequerimientoFolio',    'isChecked': false,   'title': 'Requerimiento / folio'        },
-      { 'field': 'UnidadNumeroEconomico', 'isChecked': true,    'title': 'Número económico'             },
-      { 'field': 'Locacion',              'isChecked': true,    'title': 'Locación'                     },
-    ];
-
-    return arrSearchFilters;
   }
 
   @override
   Widget build(BuildContext context) {
     final Widget content = GestureDetector(
-      onTap: FocusManager.instance.primaryFocus?.unfocus,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
+      onTap : FocusManager.instance.primaryFocus?.unfocus,
+      child : Column(
+        crossAxisAlignment  : CrossAxisAlignment.stretch,
+        children            : <Widget>[
           Container(
-            padding: EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, 0),
-            child: _SearchInput(onSubmit: _handleSearchSubmitted),
+            padding : EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, 0),
+            child   : _SearchInput(onSubmit: _handleSearchSubmitted),
           ),
-
           Container(
-            padding: EdgeInsets.symmetric(horizontal: $styles.insets.xs * 1.5),
-            child: _buildStatusBar(context),
-          ),
-
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async {},
-              child: const _ResultsList(),
-            ),
+            padding : EdgeInsets.all($styles.insets.xs * 1.5),
+            child   : _buildStatusBar(context),
           ),
         ],
       ),
     );
 
     return Scaffold(
-      appBar: AppBar(title: Text('Lista de inspecciones', style: $styles.textStyles.h3)),
-      body: Stack(
-        children: <Widget>[
-          Positioned.fill(child: ColoredBox(color: Theme.of(context).colorScheme.background, child: content)),
-        ],
+      appBar  : AppBar(title: Text('Lista de inspecciones', style: $styles.textStyles.h3)),
+      body    : BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
+        listener: (BuildContext context, RemoteInspeccionState state) {
+          if (state is RemoteInspeccionIndexLoaded) {
+            // FRAGMENTO MODIFICABLE - LISTAS
+            lstUnidadesTipos        = state.objResponse?.unidadesTipos        ?? [];
+            lstInspeccionesEstatus  = state.objResponse?.inspeccionesEstatus  ?? [];
+            lstUsuarios             = state.objResponse?.usuarios             ?? [];
+
+            // FRAGMENTO NO MODIFICABLE - SORT
+
+            // FRAGMENTO NO MODIFICABLE - FILTROS
+            _renderFilters(state.objResponse?.dataSourcePersistence);
+          }
+        },
+        builder: (BuildContext context, RemoteInspeccionState state) {
+          if (state is RemoteInspeccionLoading) {
+            return const Center(child: AppLoadingIndicator());
+          }
+
+          if (state is RemoteInspeccionServerFailedMessage) {
+            return ErrorInfoContainer(
+              onPressed     : () => context.read<RemoteInspeccionBloc>().add(FetchInspeccionIndex()),
+              errorMessage  : state.errorMessage,
+            );
+          }
+
+          if (state is RemoteInspeccionServerFailure) {
+            return ErrorInfoContainer(
+              onPressed     : () => context.read<RemoteInspeccionBloc>().add(FetchInspeccionIndex()),
+              errorMessage  : state.failure?.errorMessage,
+            );
+          }
+
+          if (state is RemoteInspeccionIndexLoaded || state is RemoteInspeccionDataSourceLoaded) {
+            return Stack(
+              children : <Widget>[
+                Positioned.fill(child: ColoredBox(color: Theme.of(context).colorScheme.background, child: content)),
+              ],
+            );
+          }
+          return const SizedBox.shrink();
+        },
       ),
-      // AGREGAR NUEVA INSPECCION:
-      floatingActionButton: _buildFloatingActionButton(context),
     );
   }
 
   Widget _buildStatusBar(BuildContext context) {
     return MergeSemantics(
-      child: StaticTextScale(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
+      child : StaticTextScale(
+        child : Row(
+          mainAxisAlignment : MainAxisAlignment.spaceBetween,
+          children          : <Widget>[
             Row(
               children: <Widget>[
                 Gap($styles.insets.sm),
 
-                Text('10 resultados', style: $styles.textStyles.body),
+                Text('10 resultados', textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false), style: $styles.textStyles.body),
               ],
             ),
 
             Row(
               children: <Widget>[
-                // IconButton(onPressed: (){}, icon: const Icon(Icons.manage_search), tooltip: 'Filtros de búsqueda'),
-                IconButton(onPressed: (){}, icon: const Icon(Icons.filter_list), tooltip: 'Filtros'),
-                IconButton(onPressed: (){}, icon: const Icon(Icons.format_line_spacing), tooltip: 'Ordenar'),
-
+                IconButton(
+                  onPressed : () => _handleFiltersPressed(context),
+                  icon      : const Icon(Icons.filter_list),
+                  tooltip   : 'Filtros',
+                ),
+                IconButton(
+                  onPressed : () => _handleSortPressed(context),
+                  icon      : const Icon(Icons.format_line_spacing),
+                  tooltip   : 'Ordenar',
+                ),
                 Gap($styles.insets.xs),
               ],
             ),
           ],
         ),
       ),
-    );
-  }
-
-   Widget _buildFloatingActionButton(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () => _handleCreateInspeccionPressed(context),
-      tooltip: 'Nueva inspección',
-      child: const Icon(Icons.add),
     );
   }
 }

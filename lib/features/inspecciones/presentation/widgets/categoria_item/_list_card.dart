@@ -33,7 +33,7 @@ class _ListCardState extends State<_ListCard> {
   // SELECTED FORMULARIO TIPO
   FormularioTipo? _selectedFormularioTipo;
 
-  // Valores guardados temporalmente
+  // TEMPORAL VALUES
   String? _originalName;
   String? _originalFormularioValor;
   FormularioTipo? _originalFormularioTipo;

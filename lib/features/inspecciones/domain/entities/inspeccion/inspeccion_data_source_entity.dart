@@ -2,6 +2,7 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class InspeccionDataSourceEntity extends Equatable {
   const InspeccionDataSourceEntity({
+    required this.index,
     required this.idInspeccion,
     required this.hasRequerimiento,
     required this.folio,
@@ -46,6 +47,7 @@ class InspeccionDataSourceEntity extends Equatable {
     this.firmaVerificador,
   });
 
+  final int index;
   final String idInspeccion;
   final String? requerimientoFolio;
   final bool hasRequerimiento;
@@ -91,6 +93,7 @@ class InspeccionDataSourceEntity extends Equatable {
 
   @override
   List<Object?> get props => [
+        index,
         idInspeccion,
         requerimientoFolio,
         hasRequerimiento,

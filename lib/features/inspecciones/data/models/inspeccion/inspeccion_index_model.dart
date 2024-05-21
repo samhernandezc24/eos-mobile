@@ -5,6 +5,9 @@ import 'package:eos_mobile/core/data/catalogos/usuario.dart';
 import 'package:eos_mobile/core/data/data_source_persistence.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_index_entity.dart';
 
+/// [InspeccionIndexModel]
+///
+/// Representa el modelo de los datos obtenidos del servidor para representar los filtrados dinámicos.
 class InspeccionIndexModel extends InspeccionIndexEntity {
   const InspeccionIndexModel({
     DataSourcePersistence? dataSourcePersistence,
@@ -13,18 +16,18 @@ class InspeccionIndexModel extends InspeccionIndexEntity {
     List<UnidadCapacidadMedida>? unidadesCapacidadesMedidas,
     List<Usuario>? usuarios,
   }) : super(
-        dataSourcePersistence       : dataSourcePersistence,
-        unidadesTipos               : unidadesTipos,
-        inspeccionesEstatus         : inspeccionesEstatus,
-        unidadesCapacidadesMedidas  : unidadesCapacidadesMedidas,
-        usuarios                    : usuarios,
-      );
+          dataSourcePersistence       : dataSourcePersistence,
+          unidadesTipos               : unidadesTipos,
+          inspeccionesEstatus         : inspeccionesEstatus,
+          unidadesCapacidadesMedidas  : unidadesCapacidadesMedidas,
+          usuarios                    : usuarios,
+        );
 
   /// Constructor factory para crear la instancia de [InspeccionIndexModel]
   /// durante el mapeo del JSON.
   factory InspeccionIndexModel.fromJson(Map<String, dynamic> jsonMap) {
     return InspeccionIndexModel(
-      dataSourcePersistence       : jsonMap['dataSourcePersistence'] != null && jsonMap['dataSourcePersistence'] != '' ? DataSourcePersistence.fromJson(jsonMap['dataSourcePersistence'] as Map<String, dynamic>) : null,
+      dataSourcePersistence       : jsonMap['dataSourcePersistence'] == '' || jsonMap['dataSourcePersistence'] == null ? null : DataSourcePersistence.fromJson(jsonMap['dataSourcePersistence'] as Map<String, dynamic>),
       unidadesTipos               : (jsonMap['unidadesTipos'] as List<dynamic>?)?.map((item) => UnidadTipo.fromJson(item as Map<String, dynamic>)).toList(),
       inspeccionesEstatus         : (jsonMap['inspeccionesEstatus'] as List<dynamic>?)?.map((item) => InspeccionEstatus.fromJson(item as Map<String, dynamic>)).toList(),
       unidadesCapacidadesMedidas  : (jsonMap['unidadesCapacidadesMedidas'] as List<dynamic>?)?.map((item) => UnidadCapacidadMedida.fromJson(item as Map<String, dynamic>)).toList(),

@@ -11,24 +11,32 @@ export 'package:eos_mobile/config/logic/app_logic.dart';
 export 'package:eos_mobile/config/logic/settings_logic.dart';
 export 'package:eos_mobile/config/router/app_router.dart';
 
-// CORE
+// CORE: CONSTANTS
 export 'package:eos_mobile/core/constants/app_strings.dart';
 export 'package:eos_mobile/core/constants/assets.dart';
 export 'package:eos_mobile/core/constants/globals.dart';
 
+// CORE: ENUMS
 export 'package:eos_mobile/core/enums/app_icons.dart';
 export 'package:eos_mobile/core/enums/unidad_inspeccion.dart';
 
+// CORE: EXTENSIONS
 export 'package:eos_mobile/core/extensions/alignments_extension.dart';
 export 'package:eos_mobile/core/extensions/sized_context_extension.dart';
 export 'package:eos_mobile/core/extensions/string_extension.dart';
 
+// CORE: NETWORK
 export 'package:eos_mobile/core/network/data/server_response.dart';
 export 'package:eos_mobile/core/network/data_state.dart';
 export 'package:eos_mobile/core/network/errors/exceptions.dart';
 
+// CORE: USECASES
 export 'package:eos_mobile/core/usecases/usecase.dart';
 
+// CORE: UTILS
+export 'package:eos_mobile/core/utils/data_source_utils.dart';
+
+// CORE: VALIDATORS
 export 'package:eos_mobile/core/validators/form_validators.dart';
 
 // LAYOUTS
@@ -53,6 +61,7 @@ export 'package:eos_mobile/ui/common/controls/labeled_textarea_form_field.dart';
 export 'package:eos_mobile/ui/common/controls/scroll_decorator.dart';
 export 'package:eos_mobile/ui/common/error_box_container.dart';
 export 'package:eos_mobile/ui/common/modals/form_modal.dart';
+export 'package:eos_mobile/ui/common/static_text_scale.dart';
 
 // EQUATABLE
 export 'package:equatable/equatable.dart';

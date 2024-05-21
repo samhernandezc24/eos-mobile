@@ -11,7 +11,7 @@ class Globals {
 
   static bool isValidValue(dynamic argObject) {
     bool objReturn = false;
-    if (argObject != null) {
+    if (argObject != null && argObject is String && argObject.isNotEmpty) {
       objReturn = true;
     }
     return objReturn;

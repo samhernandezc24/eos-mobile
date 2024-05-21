@@ -42,5 +42,16 @@ class DataSourcePersistence extends Equatable {
   Map<String, dynamic> toJson() => _$DataSourcePersistenceToJson(this);
 
   @override
-  List<Object?> get props => [ table, searchFilters, columns, sort, displayedColumns, filters, filtersMultiple, dateOption, dateFrom, dateTo ];
+  List<Object?> get props => [
+        table,
+        searchFilters,
+        columns,
+        sort,
+        displayedColumns,
+        filters,
+        filtersMultiple,
+        dateOption,
+        dateFrom,
+        dateTo,
+      ];
 }

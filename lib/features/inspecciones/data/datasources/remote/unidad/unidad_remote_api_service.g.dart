@@ -13,7 +13,7 @@ class _UnidadRemoteApiService implements UnidadRemoteApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= ListAPI.unidades;
+    baseUrl ??= 'http://10.0.2.2:7000/api/Inspecciones/Unidades';
   }
 
   final Dio _dio;

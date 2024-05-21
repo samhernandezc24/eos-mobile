@@ -148,7 +148,7 @@ class _SearchInput extends StatelessWidget {
                 hintStyle       : TextStyle(color: Theme.of(context).hintColor),
                 prefixStyle     : TextStyle(color: Theme.of(context).colorScheme.onSurface),
                 focusedBorder   : const OutlineInputBorder(borderSide: BorderSide.none),
-                enabledBorder   : const UnderlineInputBorder(borderSide: BorderSide.none),
+                enabledBorder   : const OutlineInputBorder(borderSide: BorderSide.none),
                 hintText        : $strings.searchInputHintText,
               ),
             ),
