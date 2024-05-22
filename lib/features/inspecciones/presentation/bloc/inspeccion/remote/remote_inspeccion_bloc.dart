@@ -22,6 +22,8 @@ class RemoteInspeccionBloc extends Bloc<RemoteInspeccionEvent, RemoteInspeccionS
   final DataSourceInspeccionUseCase _dataSourceInspeccionUseCase;
 
   Future<void> onFetchInspeccionIndex(FetchInspeccionIndex event, Emitter<RemoteInspeccionState> emit) async {
+    emit(RemoteInspeccionIndexLoading());
+
     final objDataState = await _indexInspeccionUseCase(params: NoParams());
 
     if (objDataState is DataSuccess) {
@@ -29,15 +31,17 @@ class RemoteInspeccionBloc extends Bloc<RemoteInspeccionEvent, RemoteInspeccionS
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionServerFailedMessage(objDataState.errorMessage));
+      emit(RemoteInspeccionServerFailedMessageIndex(objDataState.errorMessage));
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionServerFailure(objDataState.serverException));
+      emit(RemoteInspeccionServerFailureIndex(objDataState.serverException));
     }
   }
 
   Future<void> onFetchInspeccionDataSource(FetchInspeccionDataSource event, Emitter<RemoteInspeccionState> emit) async {
+    emit(RemoteInspeccionLoading());
+
     final objDataState = await _dataSourceInspeccionUseCase(params: event.objData);
 
     if (objDataState is DataSuccess) {
@@ -45,11 +49,11 @@ class RemoteInspeccionBloc extends Bloc<RemoteInspeccionEvent, RemoteInspeccionS
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionServerFailedMessage(objDataState.errorMessage));
+      emit(RemoteInspeccionServerFailedMessageDataSource(objDataState.errorMessage));
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionServerFailure(objDataState.serverException));
+      emit(RemoteInspeccionServerFailureDataSource(objDataState.serverException));
     }
   }
 }

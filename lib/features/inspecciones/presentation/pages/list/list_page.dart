@@ -4,18 +4,23 @@ import 'package:eos_mobile/core/data/catalogos/usuario.dart';
 import 'package:eos_mobile/core/data/data_source_persistence.dart';
 import 'package:eos_mobile/core/data/filter.dart';
 import 'package:eos_mobile/core/data/filters_multiple.dart';
+import 'package:eos_mobile/core/enums/inspeccion_menu.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_entity.dart';
 
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/controls/labeled_date_text_form_field.dart';
 import 'package:eos_mobile/ui/common/error_server_failure.dart';
+import 'package:eos_mobile/ui/common/request_data_unavailable.dart';
+import 'package:eos_mobile/ui/common/themed_text.dart';
 
 import 'package:intl/intl.dart';
 
 part '../../widgets/inspeccion/filter/_filter_inspeccion.dart';
+part '../../widgets/inspeccion/list/_list_card.dart';
+part '../../widgets/inspeccion/list/_result_card.dart';
 part '../../widgets/inspeccion/list/_search_input.dart';
-part '../../widgets/inspeccion/list/_results_list.dart';
 
 /// El usuario puede utilizar esta página para buscar en el servidor EOS una inspección
 /// por folio, número económico o locación.
@@ -34,6 +39,8 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   late final TextEditingController _txtDateDesdeController;
   late final TextEditingController _txtDateHastaController;
 
+  int _searchResults = 0;
+
   // SEARCH
   String? _selectedSortOption;
 
@@ -45,6 +52,8 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   List<Usuario> lstUsuarios                       = <Usuario>[];
 
   List<Map<String, dynamic>> lstHasRequerimiento  = [{'value': true, 'name': 'Con requerimiento'}, {'value': false, 'name': 'Sin requerimiento'}];
+
+  List<InspeccionDataSourceEntity> lstRows        = <InspeccionDataSourceEntity>[];
 
   // SEARCH FILTERS
 
@@ -63,9 +72,9 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     _txtDateDesdeController = TextEditingController();
     _txtDateHastaController = TextEditingController();
 
-    context.read<RemoteInspeccionBloc>().add(FetchInspeccionIndex());
+    // context.read<RemoteInspeccionBloc>().add(FetchInspeccionIndex());
 
-    _renderBuild();
+    _buildDataSource();
   }
 
   @override
@@ -170,7 +179,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     _txtDateHastaController.text = dateTo   != null   ? DateFormat('dd/MM/yyyy').format(dateTo)     : '';
   }
 
-  void _renderBuild() {
+  Future<void> _buildDataSource() async {
     final Map<String, dynamic> varArgs = {
       'search'              : Globals.isValidValue(''),
       // 'searchFilters'       : DataSourceUtils.searchFilters(searchFilters),
@@ -196,35 +205,12 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   Widget build(BuildContext context) {
     final Widget content = GestureDetector(
       onTap : FocusManager.instance.primaryFocus?.unfocus,
-      child : Column(
-        crossAxisAlignment  : CrossAxisAlignment.stretch,
-        children            : <Widget>[
-          Container(
-            padding : EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, 0),
-            child   : _SearchInput(onSubmit: _handleSearchSubmitted),
-          ),
-          Container(
-            padding : EdgeInsets.all($styles.insets.xs * 1.5),
-            child   : _buildStatusBar(context),
-          ),
-        ],
-      ),
-    );
-
-    return Scaffold(
-      appBar  : AppBar(title: Text('Lista de inspecciones', style: $styles.textStyles.h3)),
-      body    : BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
+      child : BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
         listener: (BuildContext context, RemoteInspeccionState state) {
-          if (state is RemoteInspeccionIndexLoaded) {
-            // FRAGMENTO MODIFICABLE - LISTAS
-            lstUnidadesTipos        = state.objResponse?.unidadesTipos        ?? [];
-            lstInspeccionesEstatus  = state.objResponse?.inspeccionesEstatus  ?? [];
-            lstUsuarios             = state.objResponse?.usuarios             ?? [];
-
-            // FRAGMENTO NO MODIFICABLE - SORT
-
-            // FRAGMENTO NO MODIFICABLE - FILTROS
-            _renderFilters(state.objResponse?.dataSourcePersistence);
+          if (state is RemoteInspeccionDataSourceLoaded) {
+            // DATASOURCE
+            lstRows         = state.objResponse?.rows ?? [];
+            _searchResults  = state.objResponse?.count ?? 0;
           }
         },
         builder: (BuildContext context, RemoteInspeccionState state) {
@@ -232,34 +218,65 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
             return const Center(child: AppLoadingIndicator());
           }
 
-          if (state is RemoteInspeccionServerFailedMessage) {
+          if (state is RemoteInspeccionServerFailedMessageDataSource) {
             return ErrorInfoContainer(
-              onPressed     : () => context.read<RemoteInspeccionBloc>().add(FetchInspeccionIndex()),
+              onPressed     : () => _buildDataSource(),
               errorMessage  : state.errorMessage,
             );
           }
 
-          if (state is RemoteInspeccionServerFailure) {
+          if (state is RemoteInspeccionServerFailureDataSource) {
             return ErrorInfoContainer(
-              onPressed     : () => context.read<RemoteInspeccionBloc>().add(FetchInspeccionIndex()),
+              onPressed     : () => _buildDataSource(),
               errorMessage  : state.failure?.errorMessage,
             );
           }
 
-          if (state is RemoteInspeccionIndexLoaded || state is RemoteInspeccionDataSourceLoaded) {
-            return Stack(
-              children : <Widget>[
-                Positioned.fill(child: ColoredBox(color: Theme.of(context).colorScheme.background, child: content)),
-              ],
-            );
+          if (state is RemoteInspeccionDataSourceLoaded) {
+            if (lstRows.isNotEmpty) {
+              return Column(
+                crossAxisAlignment  : CrossAxisAlignment.stretch,
+                children            : <Widget>[
+                  Container(
+                    padding : EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, 0),
+                    child   : _SearchInput(onSubmit: _handleSearchSubmitted),
+                  ),
+                  Container(
+                    padding : EdgeInsets.all($styles.insets.xxs * 1.5),
+                    child   : _buildStatusBar(context, _searchResults),
+                  ),
+                  Expanded(
+                    child: RefreshIndicator(
+                      onRefresh: _buildDataSource,
+                      child: _ListCard(inspecciones: lstRows),
+                    ),
+                  ),
+                ],
+              );
+            } else {
+              return RequestDataUnavailable(
+                title     : $strings.inspectionEmptyTitle,
+                message   : $strings.emptyListMessage,
+                onRefresh : () => _buildDataSource(),
+              );
+            }
           }
           return const SizedBox.shrink();
         },
       ),
     );
+
+    return Scaffold(
+      appBar  : AppBar(title: Text('Lista de inspecciones', style: $styles.textStyles.h3)),
+      body    : Stack(
+        children : <Widget>[
+          Positioned.fill(child: ColoredBox(color: Theme.of(context).colorScheme.background, child: content)),
+        ],
+      ),
+    );
   }
 
-  Widget _buildStatusBar(BuildContext context) {
+  Widget _buildStatusBar(BuildContext context, int searchResults) {
     return MergeSemantics(
       child : StaticTextScale(
         child : Row(
@@ -269,7 +286,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
               children: <Widget>[
                 Gap($styles.insets.sm),
 
-                Text('10 resultados', textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false), style: $styles.textStyles.body),
+                Text('$searchResults resultados', textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false), style: $styles.textStyles.body),
               ],
             ),
 

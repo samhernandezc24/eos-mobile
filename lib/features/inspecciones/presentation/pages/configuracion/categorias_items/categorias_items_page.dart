@@ -21,6 +21,9 @@ class InspeccionConfiguracionCategoriasItemsPage extends StatefulWidget {
 }
 
 class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionConfiguracionCategoriasItemsPage> {
+  // CONTROLLERS
+  late final ScrollController _scrollController;
+
   // LIST
   List<CategoriaItemEntity> lstCategoriasItems   = <CategoriaItemEntity>[];
   List<FormularioTipo> lstFormulariosTipos       = <FormularioTipo>[];
@@ -32,6 +35,14 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
   void initState() {
     super.initState();
     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
+
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   // METHODS
@@ -113,6 +124,14 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
         );
       },
     );
+  }
+
+  void _scrollToEnd() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(_scrollController.position.maxScrollExtent, duration: $styles.times.slow, curve: Curves.easeOut);
+      }
+    });
   }
 
   Future<void> _showServerFailedMessage(BuildContext context, String? errorMessage) async {
@@ -286,6 +305,8 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                     setState(() {
                       _isLoading = false;
                     });
+
+                    _scrollToEnd();
                   }
 
                   if (state is RemoteCategoriaItemStoredDuplicate) {
@@ -307,6 +328,8 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                     setState(() {
                       _isLoading = false;
                     });
+
+                    _scrollToEnd();
                   }
 
                   if (state is RemoteCategoriaItemUpdated) {
@@ -329,6 +352,8 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                     setState(() {
                       _isLoading = false;
                     });
+
+                    _scrollToEnd();
                   }
 
                   if (state is RemoteCategoriaItemDeleted) {
@@ -352,6 +377,8 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                     setState(() {
                       _isLoading = false;
                     });
+
+                    _scrollToEnd();
                   }
                 },
                 builder: (BuildContext context, RemoteCategoriaItemState state) {
@@ -376,6 +403,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                   if (state is RemoteCategoriaItemSuccess) {
                     if (lstCategoriasItems.isNotEmpty) {
                       return ListView.builder(
+                        controller  : _scrollController,
                         itemCount   : lstCategoriasItems.length,
                         itemBuilder : (BuildContext context, int index) {
                           final CategoriaItemEntity categoriaItem = lstCategoriasItems[index];

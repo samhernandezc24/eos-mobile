@@ -137,7 +137,7 @@ class _ListCardState extends State<_ListCard> {
                 ? null
                 : CircleAvatar(radius: 14, child: Text(widget.categoriaItem?.orden.toString() ?? '0', style: $styles.textStyles.h4)),
             title   : _isEditMode
-                ? LabeledTextFormField(controller: _nameController, label: 'Pregunta:')
+                ? LabeledTextFormField(controller: _nameController, label: 'Pregunta:', textInputAction: TextInputAction.done)
                 : Text(widget.categoriaItem?.name ?? ''),
             onTap   : () => _editCategoriaItem(widget.categoriaItem!),
           ),

@@ -11,6 +11,8 @@ class RemoteInspeccionState extends Equatable {
 class RemoteInspeccionLoading extends RemoteInspeccionState {}
 
 /// INDEX
+class RemoteInspeccionIndexLoading extends RemoteInspeccionState {}
+
 class RemoteInspeccionIndexLoaded extends RemoteInspeccionState {
   const RemoteInspeccionIndexLoaded(this.objResponse);
 
@@ -31,8 +33,17 @@ class RemoteInspeccionDataSourceLoaded extends RemoteInspeccionState {
 }
 
 /// SERVER FAILED MESSAGE
-class RemoteInspeccionServerFailedMessage extends RemoteInspeccionState {
-  const RemoteInspeccionServerFailedMessage(this.errorMessage);
+class RemoteInspeccionServerFailedMessageIndex extends RemoteInspeccionState {
+  const RemoteInspeccionServerFailedMessageIndex(this.errorMessage);
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [ errorMessage ];
+}
+
+class RemoteInspeccionServerFailedMessageDataSource extends RemoteInspeccionState {
+  const RemoteInspeccionServerFailedMessageDataSource(this.errorMessage);
 
   final String? errorMessage;
 
@@ -41,8 +52,17 @@ class RemoteInspeccionServerFailedMessage extends RemoteInspeccionState {
 }
 
 /// SERVER FAILURE
-class RemoteInspeccionServerFailure extends RemoteInspeccionState {
-  const RemoteInspeccionServerFailure(this.failure);
+class RemoteInspeccionServerFailureIndex extends RemoteInspeccionState {
+  const RemoteInspeccionServerFailureIndex(this.failure);
+
+  final ServerException? failure;
+
+  @override
+  List<Object?> get props => [ failure ];
+}
+
+class RemoteInspeccionServerFailureDataSource extends RemoteInspeccionState {
+  const RemoteInspeccionServerFailureDataSource(this.failure);
 
   final ServerException? failure;
 

@@ -1,1 +1,1 @@
-enum InspeccionMenu { details, edit, cancel }
+enum InspeccionMenu { details, cancel }
