@@ -108,6 +108,66 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
     );
   }
 
+  void _handleStoreUnidadPressed() {
+    final double? capacidad   = double.tryParse(_capacidadController.text);
+    final int? odometro       = int.tryParse(_odometroController.text);
+    final int? horometro      = int.tryParse(_horometroController.text);
+
+    final UnidadStoreReqEntity objData = UnidadStoreReqEntity(
+      numeroEconomico             : _numeroEconomicoController.text,
+      idBase                      : _selectedBase?.idBase                                   ?? '',
+      baseName                    : _selectedBase?.name                                     ?? '',
+      idUnidadTipo                : _selectedUnidadTipo?.idUnidadTipo                       ?? '',
+      unidadTipoName              : _selectedUnidadTipo?.name                               ?? '',
+      idUnidadMarca               : _selectedUnidadMarca?.idUnidadMarca                     ?? '',
+      unidadMarcaName             : _selectedUnidadMarca?.name                              ?? '',
+      idUnidadPlacaTipo           : _selectedUnidadPlacaTipo?.idUnidadPlacaTipo             ?? '',
+      unidadPlacaTipoName         : _selectedUnidadPlacaTipo?.name                          ?? '',
+      placa                       : _placaController.text,
+      numeroSerie                 : _numeroSerieController.text,
+      modelo                      : _modeloController.text,
+      anioEquipo                  : _anioEquipoController.text,
+      descripcion                 : _descripcionController.text,
+      capacidad                   : capacidad ?? 0.000,
+      idUnidadCapacidadMedida     : _selectedUnidadCapacidadMedida?.idUnidadCapacidadMedida ?? '',
+      unidadCapacidadMedidaName   : _selectedUnidadCapacidadMedida?.name                    ?? '',
+      odometro                    : odometro,
+      horometro                   : horometro,
+    );
+
+    final bool isValidForm = _formKey.currentState!.validate();
+
+    // Verificar la validacion en el formulario.
+    if (isValidForm) {
+      _formKey.currentState!.save();
+      BlocProvider.of<RemoteUnidadBloc>(context).add(StoreUnidad(objData));
+    }
+  }
+
+  Future<void> _showServerErrorDialog(BuildContext context, String? errorMessage) {
+    return showDialog<void>(
+      context   : context,
+      builder   : (_) => AlertDialog(
+        title   : const SizedBox.shrink(),
+        content : Row(
+          children: <Widget>[
+            Icon(Icons.error, color: Theme.of(context).colorScheme.error),
+            Gap($styles.insets.sm),
+            Flexible(
+              child: Text(
+                errorMessage ?? 'Se produjo un error inesperado. Intenta crear la unidad de nuevo.',
+                style: $styles.textStyles.title2.copyWith(height: 1.5),
+              ),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(onPressed: () => context.pop(), child: Text($strings.acceptButtonText, style: $styles.textStyles.button)),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -267,11 +327,7 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
                   Gap($styles.insets.sm),
 
                   // AÑO DEL EQUIPO:
-                  LabeledTextFormField(
-                    controller  : _anioEquipoController,
-                    label       : 'Año del equipo:',
-                    validator   : FormValidators.textValidator,
-                  ),
+                  LabeledTextFormField(controller: _anioEquipoController, label: 'Año del equipo:'),
 
                   Gap($styles.insets.sm),
 
@@ -414,10 +470,47 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
 
                   Gap($styles.insets.lg),
 
-                  FilledButton(
-                    onPressed : (){},
-                    style     : ButtonStyle(minimumSize: MaterialStateProperty.all<Size?>(const Size(double.infinity, 48))),
-                    child     : Text($strings.saveButtonText, style: $styles.textStyles.button),
+                  BlocConsumer<RemoteUnidadBloc, RemoteUnidadState>(
+                    listener: (BuildContext context, RemoteUnidadState state) {
+                      if (state is RemoteUnidadServerFailedMessageStore) {
+                        _showServerErrorDialog(context, state.errorMessage);
+                      }
+
+                      if (state is RemoteUnidadServerFailureStore) {
+                        _showServerErrorDialog(context, state.failure?.errorMessage);
+                      }
+
+                      if (state is RemoteUnidadStored) {
+                        // Cerrar el diálogo antes de mostrar el SnackBar.
+                        Navigator.of(context).pop();
+
+                        // Mostramos el SnackBar.
+                        ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          SnackBar(
+                            content         : Text(state.objResponse?.message ?? 'Nueva unidad', softWrap: true),
+                            backgroundColor : Colors.green,
+                            behavior        : SnackBarBehavior.fixed,
+                            elevation       : 0,
+                          ),
+                        );
+                      }
+                    },
+                    builder: (BuildContext context, RemoteUnidadState state) {
+                      if (state is RemoteUnidadStoring) {
+                        return FilledButton(
+                          onPressed : null,
+                          style     : ButtonStyle(minimumSize: MaterialStateProperty.all<Size?>(const Size(double.infinity, 48))),
+                          child     : const AppLoadingIndicator(width: 20, height: 20),
+                        );
+                      }
+                      return FilledButton(
+                        onPressed : _handleStoreUnidadPressed,
+                        style     : ButtonStyle(minimumSize: MaterialStateProperty.all<Size?>(const Size(double.infinity, 48))),
+                        child     : Text($strings.saveButtonText, style: $styles.textStyles.button),
+                      );
+                    },
                   ),
                 ],
               ),

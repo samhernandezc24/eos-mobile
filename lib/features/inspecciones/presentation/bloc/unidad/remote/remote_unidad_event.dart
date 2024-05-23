@@ -23,9 +23,6 @@ class FetchUnidadDataSource extends RemoteUnidadEvent {
 /// [CreateUnidadUseCase]
 class FetchUnidadCreate extends RemoteUnidadEvent {}
 
-/// [ListUnidadUseCase]
-class ListUnidades extends RemoteUnidadEvent {}
-
 /// [StoreUnidadUseCase]
 class StoreUnidad extends RemoteUnidadEvent {
   const StoreUnidad(this.objData);
@@ -35,6 +32,9 @@ class StoreUnidad extends RemoteUnidadEvent {
   @override
   List<Object?> get props => [ objData ];
 }
+
+/// [ListUnidadUseCase]
+class ListUnidades extends RemoteUnidadEvent {}
 
 /// [EditUnidadUseCase]
 class EditUnidad extends RemoteUnidadEvent {

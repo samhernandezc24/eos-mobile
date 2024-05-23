@@ -42,18 +42,6 @@ class RemoteUnidadCreateLoaded extends RemoteUnidadState {
   List<Object?> get props => [ objResponse ];
 }
 
-/// LIST
-class RemoteUnidadSearchLoading extends RemoteUnidadState {}
-
-class RemoteUnidadSearchLoaded extends RemoteUnidadState {
-  const RemoteUnidadSearchLoaded(this.unidades);
-
-  final List<UnidadSearchEntity>? unidades;
-
-  @override
-  List<Object?> get props => [ unidades ];
-}
-
 /// STORE
 class RemoteUnidadStoring extends RemoteUnidadState {}
 
@@ -64,6 +52,18 @@ class RemoteUnidadStored extends RemoteUnidadState {
 
   @override
   List<Object?> get props => [ objResponse ];
+}
+
+/// LIST
+class RemoteUnidadSearchLoading extends RemoteUnidadState {}
+
+class RemoteUnidadSearchLoaded extends RemoteUnidadState {
+  const RemoteUnidadSearchLoaded(this.unidades);
+
+  final List<UnidadSearchEntity>? unidades;
+
+  @override
+  List<Object?> get props => [ unidades ];
 }
 
 /// EDIT
@@ -121,6 +121,15 @@ class RemoteUnidadServerFailedMessageCreate extends RemoteUnidadState {
   List<Object?> get props => [ errorMessage ];
 }
 
+class RemoteUnidadServerFailedMessageStore extends RemoteUnidadState {
+  const RemoteUnidadServerFailedMessageStore(this.errorMessage);
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [ errorMessage ];
+}
+
 /// SERVER FAILURE
 class RemoteUnidadServerFailure extends RemoteUnidadState {
   const RemoteUnidadServerFailure(this.failure);
@@ -133,6 +142,15 @@ class RemoteUnidadServerFailure extends RemoteUnidadState {
 
 class RemoteUnidadServerFailureCreate extends RemoteUnidadState {
   const RemoteUnidadServerFailureCreate(this.failure);
+
+  final ServerException? failure;
+
+  @override
+  List<Object?> get props => [ failure ];
+}
+
+class RemoteUnidadServerFailureStore extends RemoteUnidadState {
+  const RemoteUnidadServerFailureStore(this.failure);
 
   final ServerException? failure;
 
