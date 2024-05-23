@@ -5,11 +5,11 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 abstract class CategoriaRepository {
-  /// API METHODS
+  // API METHODS
   Future<DataState<List<CategoriaEntity>>> list(InspeccionTipoEntity objData);
   Future<DataState<ServerResponse>> store(CategoriaStoreReqEntity objData);
   Future<DataState<ServerResponse>> update(CategoriaEntity objData);
   Future<DataState<ServerResponse>> delete(CategoriaEntity objData);
 
-  /// LOCAL METHODS
+  // LOCAL METHODS
 }

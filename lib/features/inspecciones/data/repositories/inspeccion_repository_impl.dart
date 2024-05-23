@@ -114,9 +114,10 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
 
         if (objResponse.session!) {
           if (objResponse.action!) {
-            final inspeccionCreate = InspeccionCreateModel.fromJson(objResponse.result as Map<String, dynamic>);
+            final result = objResponse.result as Map<String, dynamic>;
+            final InspeccionCreateModel objInspeccionCreate = InspeccionCreateModel.fromJson(result);
 
-            return DataSuccess(inspeccionCreate);
+            return DataSuccess(objInspeccionCreate);
           } else {
             return DataFailedMessage(objResponse.message ?? 'Error inesperado');
           }

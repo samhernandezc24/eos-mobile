@@ -13,9 +13,18 @@ class _ListCardState extends State<_ListCard> {
   // CONTROLLERS
   late ScrollController _scrollController;
 
+  // PROPERTIES
+  double _prevVelocity = -1;
+
   // METHODS
   void _handleResultsScrolled() {
-
+    // Ocultar el teclado si la lista se desplaza manualmente por el puntero,ignorando los cambios de desplazamiento basados en la velocidad, como la desaceleración o el rebote por sobredesplazamiento.
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+    final velocity = _scrollController.position.activity?.velocity;
+    if (velocity == 0 && _prevVelocity == 0) {
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
+    _prevVelocity = velocity ?? _prevVelocity;
   }
 
   @override

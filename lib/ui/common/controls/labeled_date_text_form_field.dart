@@ -4,7 +4,6 @@ class LabeledDateTextFormField extends StatelessWidget {
   const LabeledDateTextFormField({
     required this.controller,
     required this.label,
-    required this.onSubmit,
     Key? key,
     this.hintText,
     this.textInputAction  = TextInputAction.next,
@@ -18,7 +17,6 @@ class LabeledDateTextFormField extends StatelessWidget {
   final String? hintText;
   final bool autoFocus;
   final TextInputAction textInputAction;
-  final void Function(String?) onSubmit;
   final VoidCallback? onPickDatePressed;
   final FocusNode? focusNode;
 
@@ -93,8 +91,8 @@ class LabeledDateTextFormField extends StatelessWidget {
                     hintText        : hintText ?? '',
                   ),
                   focusNode         : focusNode,
+                  readOnly          : true,
                   keyboardType      : TextInputType.text,
-                  onFieldSubmitted  : onSubmit,
                   textAlignVertical : TextAlignVertical.top,
                   textInputAction   : textInputAction,
                 ),

@@ -19,3 +19,6 @@ class FetchInspeccionDataSource extends RemoteInspeccionEvent {
   @override
   List<Object?> get props => [ objData ];
 }
+
+/// [CreateInspeccionUseCase]
+class FetchInspeccionCreate extends RemoteInspeccionEvent {}

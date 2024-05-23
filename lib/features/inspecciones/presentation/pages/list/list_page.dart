@@ -4,19 +4,29 @@ import 'package:eos_mobile/core/data/catalogos/usuario.dart';
 import 'package:eos_mobile/core/data/data_source_persistence.dart';
 import 'package:eos_mobile/core/data/filter.dart';
 import 'package:eos_mobile/core/data/filters_multiple.dart';
+import 'package:eos_mobile/core/data/inspeccion/categoria.dart';
+import 'package:eos_mobile/core/data/inspeccion/categoria_item.dart';
+import 'package:eos_mobile/core/data/inspeccion/inspeccion.dart';
 import 'package:eos_mobile/core/enums/inspeccion_menu.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_categoria/remote/remote_inspeccion_categoria_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/widgets/unidad/create_unidad_page.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/controls/labeled_date_text_form_field.dart';
+import 'package:eos_mobile/ui/common/controls/labeled_textarea_form_field.dart';
 import 'package:eos_mobile/ui/common/error_server_failure.dart';
 import 'package:eos_mobile/ui/common/request_data_unavailable.dart';
 import 'package:eos_mobile/ui/common/themed_text.dart';
 
 import 'package:intl/intl.dart';
 
+part '../../widgets/inspeccion/checklist/_checklist_inspeccion.dart';
+part '../../widgets/inspeccion/create/_create_form.dart';
 part '../../widgets/inspeccion/filter/_filter_inspeccion.dart';
 part '../../widgets/inspeccion/list/_list_card.dart';
 part '../../widgets/inspeccion/list/_result_card.dart';
@@ -39,8 +49,6 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   late final TextEditingController _txtDateDesdeController;
   late final TextEditingController _txtDateHastaController;
 
-  int _searchResults = 0;
-
   // SEARCH
   String? _selectedSortOption;
 
@@ -52,8 +60,6 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   List<Usuario> lstUsuarios                       = <Usuario>[];
 
   List<Map<String, dynamic>> lstHasRequerimiento  = [{'value': true, 'name': 'Con requerimiento'}, {'value': false, 'name': 'Sin requerimiento'}];
-
-  List<InspeccionDataSourceEntity> lstRows        = <InspeccionDataSourceEntity>[];
 
   // SEARCH FILTERS
 
@@ -135,6 +141,28 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     );
   }
 
+  void _handleCreateInspeccionPressed(BuildContext context) {
+    Navigator.push<void>(
+      context,
+      PageRouteBuilder<void>(
+        transitionDuration: $styles.times.pageTransition,
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+          const Offset begin    = Offset(0, 1);
+          const Offset end      = Offset.zero;
+          const Cubic curve     = Curves.ease;
+
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position  : animation.drive<Offset>(tween),
+            child     : _CreateForm(buildDataSourceCallback: _buildDataSource),
+          );
+        },
+        fullscreenDialog: true,
+      ),
+    );
+  }
+
   void _handleFiltersPressed(BuildContext context) {
     Navigator.push<void>(
       context,
@@ -206,13 +234,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     final Widget content = GestureDetector(
       onTap : FocusManager.instance.primaryFocus?.unfocus,
       child : BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
-        listener: (BuildContext context, RemoteInspeccionState state) {
-          if (state is RemoteInspeccionDataSourceLoaded) {
-            // DATASOURCE
-            lstRows         = state.objResponse?.rows ?? [];
-            _searchResults  = state.objResponse?.count ?? 0;
-          }
-        },
+        listener: (BuildContext context, RemoteInspeccionState state) {},
         builder: (BuildContext context, RemoteInspeccionState state) {
           if (state is RemoteInspeccionLoading) {
             return const Center(child: AppLoadingIndicator());
@@ -233,6 +255,10 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
           }
 
           if (state is RemoteInspeccionDataSourceLoaded) {
+            // DATASOURCE
+            final List<InspeccionDataSourceEntity> lstRows = state.objResponse?.rows ?? [];
+            final int searchResults  = state.objResponse?.count ?? 0;
+
             if (lstRows.isNotEmpty) {
               return Column(
                 crossAxisAlignment  : CrossAxisAlignment.stretch,
@@ -243,7 +269,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                   ),
                   Container(
                     padding : EdgeInsets.all($styles.insets.xxs * 1.5),
-                    child   : _buildStatusBar(context, _searchResults),
+                    child   : _buildStatusBar(context, searchResults),
                   ),
                   Expanded(
                     child: RefreshIndicator(
@@ -267,11 +293,16 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     );
 
     return Scaffold(
-      appBar  : AppBar(title: Text('Lista de inspecciones', style: $styles.textStyles.h3)),
-      body    : Stack(
-        children : <Widget>[
+      appBar: AppBar(title: Text('Lista de inspecciones', style: $styles.textStyles.h3)),
+      body: Stack(
+        children: <Widget>[
           Positioned.fill(child: ColoredBox(color: Theme.of(context).colorScheme.background, child: content)),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed : () => _handleCreateInspeccionPressed(context),
+        tooltip   : 'Nueva inspección',
+        child     : const Icon(Icons.add),
       ),
     );
   }

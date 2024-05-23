@@ -291,7 +291,6 @@ class _ListCardState extends State<_ListCard> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         LabeledDropdownFormField<FormularioTipo>(
-          hintText    : 'Seleccionar',
           label       : 'Tipo de formulario:',
           items       : widget.formulariosTipos ?? [],
           itemBuilder : (item) => Text(item.name ?? ''),

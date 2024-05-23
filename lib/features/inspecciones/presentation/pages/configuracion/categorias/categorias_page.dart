@@ -60,8 +60,8 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
     return Scaffold(
       appBar  : AppBar(title: Text($strings.categoryAppBarTitle, style: $styles.textStyles.h3)),
       body    : Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
+        crossAxisAlignment  : CrossAxisAlignment.start,
+        children            : <Widget>[
           Container(
             width   : double.infinity,
             padding : EdgeInsets.all($styles.insets.sm),

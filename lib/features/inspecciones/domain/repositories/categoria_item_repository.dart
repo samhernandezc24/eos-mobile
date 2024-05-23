@@ -7,12 +7,12 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 abstract class CategoriaItemRepository {
-  /// API METHODS
+  // API METHODS
   Future<DataState<CategoriaItemDataEntity>> list(CategoriaEntity objData);
   Future<DataState<ServerResponse>> store(CategoriaItemStoreReqEntity objData);
   Future<DataState<ServerResponse>> storeDuplicate(CategoriaItemStoreDuplicateReqEntity objData);
   Future<DataState<ServerResponse>> update(CategoriaItemEntity objData);
   Future<DataState<ServerResponse>> delete(CategoriaItemEntity objData);
 
-  /// LOCAL METHODS
+  // LOCAL METHODS
 }

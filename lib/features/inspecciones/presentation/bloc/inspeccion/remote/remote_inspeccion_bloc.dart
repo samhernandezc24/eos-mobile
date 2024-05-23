@@ -1,5 +1,7 @@
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_create_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_res_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_index_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/create_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/data_source_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/index_inspeccion_usecase.dart';
 
@@ -12,14 +14,17 @@ class RemoteInspeccionBloc extends Bloc<RemoteInspeccionEvent, RemoteInspeccionS
   RemoteInspeccionBloc(
     this._indexInspeccionUseCase,
     this._dataSourceInspeccionUseCase,
+    this._createInspeccionUseCase,
   ) : super(RemoteInspeccionLoading()) {
     on<FetchInspeccionIndex>(onFetchInspeccionIndex);
     on<FetchInspeccionDataSource>(onFetchInspeccionDataSource);
+    on<FetchInspeccionCreate>(onFetchInspeccionCreate);
   }
 
   // Casos de uso
   final IndexInspeccionUseCase _indexInspeccionUseCase;
   final DataSourceInspeccionUseCase _dataSourceInspeccionUseCase;
+  final CreateInspeccionUseCase _createInspeccionUseCase;
 
   Future<void> onFetchInspeccionIndex(FetchInspeccionIndex event, Emitter<RemoteInspeccionState> emit) async {
     emit(RemoteInspeccionIndexLoading());
@@ -54,6 +59,24 @@ class RemoteInspeccionBloc extends Bloc<RemoteInspeccionEvent, RemoteInspeccionS
 
     if (objDataState is DataFailed) {
       emit(RemoteInspeccionServerFailureDataSource(objDataState.serverException));
+    }
+  }
+
+  Future<void> onFetchInspeccionCreate(FetchInspeccionCreate event, Emitter<RemoteInspeccionState> emit) async {
+    emit(RemoteInspeccionCreateLoading());
+
+    final objDataState = await _createInspeccionUseCase(params: NoParams());
+
+    if (objDataState is DataSuccess) {
+      emit(RemoteInspeccionCreateLoaded(objDataState.data));
+    }
+
+    if (objDataState is DataFailedMessage) {
+      emit(RemoteInspeccionServerFailedMessageCreate(objDataState.errorMessage));
+    }
+
+    if (objDataState is DataFailed) {
+      emit(RemoteInspeccionServerFailureCreate(objDataState.serverException));
     }
   }
 }

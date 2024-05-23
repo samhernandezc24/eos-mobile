@@ -155,7 +155,6 @@ class _FilterInspeccionState extends State<_FilterInspeccion> {
                   controller  : _txtDateDesdeController,
                   hintText    : 'Ingresar fecha',
                   label       : 'Desde:',
-                  onSubmit    : (_){},
                 ),
 
                 Gap($styles.insets.sm),
@@ -165,7 +164,6 @@ class _FilterInspeccionState extends State<_FilterInspeccion> {
                   controller  : _txtDateDesdeController,
                   hintText    : 'Ingresar fecha',
                   label       : 'Hasta:',
-                  onSubmit    : (_){},
                 ),
 
                 // Expanded(

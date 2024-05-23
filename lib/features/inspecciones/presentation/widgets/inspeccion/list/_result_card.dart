@@ -5,6 +5,29 @@ class _ResultCard extends StatelessWidget {
 
   final InspeccionDataSourceEntity inspeccion;
 
+  // METHODS
+  void _handleChecklistInspeccionPressed(BuildContext context, InspeccionIdReqEntity idInspeccion) {
+    Navigator.push<void>(
+      context,
+      PageRouteBuilder<void>(
+        transitionDuration: $styles.times.pageTransition,
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+          const Offset begin    = Offset(0, 1);
+          const Offset end      = Offset.zero;
+          const Cubic curve     = Curves.ease;
+
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position  : animation.drive<Offset>(tween),
+            child     : _ChecklistInspeccion(idInspeccion: idInspeccion),
+          );
+        },
+        fullscreenDialog: true,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -31,28 +54,16 @@ class _ResultCard extends StatelessWidget {
                         children: <Widget>[
                           Text('Folio inspección:', style: $styles.textStyles.bodySmall),
                           Text(inspeccion.folio, style: $styles.textStyles.bodyBold),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
+
                           Text('Requerimiento:', style: $styles.textStyles.bodySmall),
                           Text(
                             inspeccion.hasRequerimiento == false ? 'SIN REQUERIMIENTO' : inspeccion.requerimientoFolio ?? '',
                             style: $styles.textStyles.bodySmallBold,
                           ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
+
                           Text('Número económico:', style: $styles.textStyles.bodySmall),
                           Text(inspeccion.unidadNumeroEconomico, style: $styles.textStyles.bodySmallBold, overflow: TextOverflow.ellipsis),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
+
                           Text('Tipo de unidad:', style: $styles.textStyles.bodySmall),
                           Text(inspeccion.unidadTipoName ?? '', style: $styles.textStyles.bodySmallBold, overflow: TextOverflow.ellipsis),
                         ],
@@ -94,7 +105,11 @@ class _ResultCard extends StatelessWidget {
             Positioned(
               bottom  : 0,
               right   : $styles.insets.xs,
-              child   : TextButton.icon(onPressed: (){}, icon: const Icon(Icons.assignment_turned_in), label: const Text('Evaluar')),
+              child   : TextButton.icon(
+                onPressed : () => _handleChecklistInspeccionPressed(context, InspeccionIdReqEntity(idInspeccion: inspeccion.idInspeccion)),
+                icon: const Icon(Icons.assignment_turned_in),
+                label: const Text('Evaluar'),
+              ),
             ),
         ],
       ),

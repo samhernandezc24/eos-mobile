@@ -32,6 +32,18 @@ class RemoteInspeccionDataSourceLoaded extends RemoteInspeccionState {
   List<Object?> get props => [ objResponse ];
 }
 
+/// CREATE
+class RemoteInspeccionCreateLoading extends RemoteInspeccionState {}
+
+class RemoteInspeccionCreateLoaded extends RemoteInspeccionState {
+  const RemoteInspeccionCreateLoaded(this.objResponse);
+
+  final InspeccionCreateEntity? objResponse;
+
+  @override
+  List<Object?> get props => [ objResponse ];
+}
+
 /// SERVER FAILED MESSAGE
 class RemoteInspeccionServerFailedMessageIndex extends RemoteInspeccionState {
   const RemoteInspeccionServerFailedMessageIndex(this.errorMessage);
@@ -51,6 +63,15 @@ class RemoteInspeccionServerFailedMessageDataSource extends RemoteInspeccionStat
   List<Object?> get props => [ errorMessage ];
 }
 
+class RemoteInspeccionServerFailedMessageCreate extends RemoteInspeccionState {
+  const RemoteInspeccionServerFailedMessageCreate(this.errorMessage);
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [ errorMessage ];
+}
+
 /// SERVER FAILURE
 class RemoteInspeccionServerFailureIndex extends RemoteInspeccionState {
   const RemoteInspeccionServerFailureIndex(this.failure);
@@ -63,6 +84,15 @@ class RemoteInspeccionServerFailureIndex extends RemoteInspeccionState {
 
 class RemoteInspeccionServerFailureDataSource extends RemoteInspeccionState {
   const RemoteInspeccionServerFailureDataSource(this.failure);
+
+  final ServerException? failure;
+
+  @override
+  List<Object?> get props => [ failure ];
+}
+
+class RemoteInspeccionServerFailureCreate extends RemoteInspeccionState {
+  const RemoteInspeccionServerFailureCreate(this.failure);
 
   final ServerException? failure;
 

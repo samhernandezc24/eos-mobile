@@ -40,6 +40,10 @@ class AppStrings {
   String circleButtonsSemanticBack    = 'Volver';
   String circleButtonsSemanticClose   = 'Cerrar';
 
+  String checklistAppBarTitle         = 'Evaluar unidad';
+  String checklistEmptyTitle          = 'Aún no hay preguntas';
+  String checklistListMessage         = 'Intenta configurar las categorías y preguntas para la evaluación de la unidad.';
+
   String editButtonText               = 'Editar';
 
   String emptyListMessage             = 'Intenta actualizar el listado para sincronizar los últimos cambios del servidor.';
@@ -56,6 +60,7 @@ class AppStrings {
   String forgotPasswordSemanticImage  = 'Se te ha olvidado la contraseña';
 
   String inspectionEmptyTitle         = 'Aún no hay inspecciones';
+  String inspectionSuggestionCreate   = 'Es necesario que realice la búsqueda de la unidad a inspeccionar antes de continuar.';
 
   String inspectionTypeAppBarTitle    = 'Configuración de inspecciones';
   String inspectionTypeDescription    = 'Crea un tipo de inspección para agrupar los formularios de las inspecciones.';

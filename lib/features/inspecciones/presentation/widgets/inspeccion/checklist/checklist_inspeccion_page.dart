@@ -172,63 +172,7 @@
 //             controller: _scrollController,
 //             padding: EdgeInsets.only(top: $styles.insets.sm),
 //             children: <Widget>[
-//               Container(
-//                 padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm),
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: <Widget>[
-//                     Text('Número económico:', style: $styles.textStyles.label),
-//                     Text(
-//                       widget.inspeccionDataSource?.unidadNumeroEconomico ?? '',
-//                       style: $styles.textStyles.title1.copyWith(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600, height: 1.3),
-//                     ),
-
-//                     Gap($styles.insets.xxs),
-
-//                     RichText(
-//                       text: TextSpan(
-//                         style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
-//                         children: <InlineSpan>[
-//                           TextSpan(text: 'Folio inspección', style: $styles.textStyles.label),
-//                           TextSpan(text: ': ${widget.inspeccionDataSource?.folio ?? ''}'),
-//                         ],
-//                       ),
-//                     ),
-//                     RichText(
-//                       text: TextSpan(
-//                         style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
-//                         children: <InlineSpan>[
-//                           TextSpan(text: 'Tipo de inspección', style: $styles.textStyles.label),
-//                           TextSpan(text: ': ${widget.inspeccionDataSource?.inspeccionTipoName ?? ''}'),
-//                         ],
-//                       ),
-//                     ),
-//                     RichText(
-//                       text: TextSpan(
-//                         style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
-//                         children: <InlineSpan>[
-//                           TextSpan(text: 'Tipo de unidad', style: $styles.textStyles.label),
-//                           TextSpan(text: ': ${widget.inspeccionDataSource?.unidadTipoName ?? ''}'),
-//                         ],
-//                       ),
-//                     ),
-//                     RichText(
-//                       text: TextSpan(
-//                         style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
-//                         children: <InlineSpan>[
-//                           TextSpan(text: 'Fecha programada', style: $styles.textStyles.label),
-//                           TextSpan(text: ': ${widget.inspeccionDataSource?.fechaNatural ?? ''}'),
-//                         ],
-//                       ),
-//                     ),
-
-//                     Gap($styles.insets.xs),
-
-//                     Divider(color: Theme.of(context).dividerColor, thickness: 1.5),
-//                   ],
-//                 ),
-//               ),
-
+//
 //               Gap($styles.insets.xs),
 
 //               Padding(

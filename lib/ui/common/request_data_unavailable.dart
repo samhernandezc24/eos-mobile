@@ -1,11 +1,12 @@
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class RequestDataUnavailable extends StatelessWidget {
-  const RequestDataUnavailable({required this.onRefresh, Key? key, this.title, this.message}) : super(key: key);
+  const RequestDataUnavailable({Key? key, this.onRefresh, this.title, this.message, this.isRefreshData = true}) : super(key: key);
 
   final String? title;
   final String? message;
-  final void Function() onRefresh;
+  final void Function()? onRefresh;
+  final bool? isRefreshData;
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +35,12 @@ class RequestDataUnavailable extends StatelessWidget {
             ),
           ),
 
-          FilledButton.icon(
-            onPressed : onRefresh,
-            icon      : const Icon(Icons.refresh),
-            label     : Text($strings.refreshButtonText, style: $styles.textStyles.button),
-          ),
+          if (isRefreshData ?? false)
+            FilledButton.icon(
+              onPressed : onRefresh,
+              icon      : const Icon(Icons.refresh),
+              label     : Text($strings.refreshButtonText, style: $styles.textStyles.button),
+            ),
         ],
       ),
     );
