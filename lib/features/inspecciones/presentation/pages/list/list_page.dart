@@ -1,4 +1,8 @@
+import 'package:eos_mobile/core/data/catalogos/base.dart';
 import 'package:eos_mobile/core/data/catalogos/inspeccion_estatus.dart';
+import 'package:eos_mobile/core/data/catalogos/unidad_capacidad_medida.dart';
+import 'package:eos_mobile/core/data/catalogos/unidad_marca.dart';
+import 'package:eos_mobile/core/data/catalogos/unidad_placa_tipo.dart';
 import 'package:eos_mobile/core/data/catalogos/unidad_tipo.dart';
 import 'package:eos_mobile/core/data/catalogos/usuario.dart';
 import 'package:eos_mobile/core/data/data_source_persistence.dart';
@@ -14,11 +18,10 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo
 
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_categoria/remote/remote_inspeccion_categoria_bloc.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/widgets/unidad/create_unidad_page.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/controls/labeled_date_text_form_field.dart';
-import 'package:eos_mobile/ui/common/controls/labeled_textarea_form_field.dart';
 import 'package:eos_mobile/ui/common/error_server_failure.dart';
 import 'package:eos_mobile/ui/common/request_data_unavailable.dart';
 import 'package:eos_mobile/ui/common/themed_text.dart';
@@ -31,6 +34,8 @@ part '../../widgets/inspeccion/filter/_filter_inspeccion.dart';
 part '../../widgets/inspeccion/list/_list_card.dart';
 part '../../widgets/inspeccion/list/_result_card.dart';
 part '../../widgets/inspeccion/list/_search_input.dart';
+
+part '../../widgets/unidad/create/_create_form.dart';
 
 /// El usuario puede utilizar esta página para buscar en el servidor EOS una inspección
 /// por folio, número económico o locación.

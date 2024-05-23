@@ -20,11 +20,11 @@ class FetchUnidadDataSource extends RemoteUnidadEvent {
   List<Object?> get props => [ objData ];
 }
 
+/// [CreateUnidadUseCase]
+class FetchUnidadCreate extends RemoteUnidadEvent {}
+
 /// [ListUnidadUseCase]
 class ListUnidades extends RemoteUnidadEvent {}
-
-/// [CreateUnidadUseCase]
-class CreateUnidad extends RemoteUnidadEvent {}
 
 /// [StoreUnidadUseCase]
 class StoreUnidad extends RemoteUnidadEvent {

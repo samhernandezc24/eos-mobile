@@ -126,7 +126,7 @@ class _CreateFormState extends State<_CreateForm> {
 
           final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-          return SlideTransition(position: animation.drive<Offset>(tween), child: const CreateUnidadPage());
+          return SlideTransition(position: animation.drive<Offset>(tween), child: const _CreateUnidadForm());
         },
         fullscreenDialog: true,
       ),
@@ -144,7 +144,7 @@ class _CreateFormState extends State<_CreateForm> {
       child: Scaffold(
         appBar  : AppBar(title: Text('Nueva inspección', style: $styles.textStyles.h3)),
         body    : SafeArea(
-          child: SingleChildScrollView(
+          child : SingleChildScrollView(
             padding : EdgeInsets.all($styles.insets.sm).copyWith(bottom: $styles.insets.lg),
             child   : Form(
               key   : _formKey,
@@ -224,8 +224,8 @@ class _CreateFormState extends State<_CreateForm> {
                           items       : lstInspeccionesTipos,
                           itemBuilder : (item) => Text(item.name),
                           onChanged   : (value) => setState(() => _selectedInspeccionTipo = value),
-                          value       : _selectedInspeccionTipo,
                           validator   : FormValidators.dropdownValidator,
+                          value       : _selectedInspeccionTipo,
                         );
                       }
                       return const SizedBox.shrink();

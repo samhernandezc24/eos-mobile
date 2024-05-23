@@ -24,8 +24,8 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
   RemoteUnidadBloc(
     this._indexUnidadUseCase,
     this._dataSourceUnidadUseCase,
-    this._listUnidadUseCase,
     this._createUnidadUseCase,
+    this._listUnidadUseCase,
     this._storeUnidadUseCase,
     this._editUnidadUseCase,
     this._updateUnidadUseCase,
@@ -33,8 +33,8 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
   ) : super(RemoteUnidadLoading()) {
     on<FetchUnidadInit>(onFetchUnidadInit);
     on<FetchUnidadDataSource>(onFetchUnidadDataSource);
+    on<FetchUnidadCreate>(onFetchUnidadCreate);
     on<ListUnidades>(onListUnidades);
-    on<CreateUnidad>(onCreateUnidad);
     on<StoreUnidad>(onStoreUnidad);
     on<EditUnidad>(onEditUnidad);
     on<UpdateUnidad>(onUpdateUnidad);
@@ -43,8 +43,8 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
   // Casos de uso
   final IndexUnidadUseCase _indexUnidadUseCase;
   final DataSourceUnidadUseCase _dataSourceUnidadUseCase;
-  final ListUnidadUseCase _listUnidadUseCase;
   final CreateUnidadUseCase _createUnidadUseCase;
+  final ListUnidadUseCase _listUnidadUseCase;
   final StoreUnidadUseCase _storeUnidadUseCase;
   final EditUnidadUseCase _editUnidadUseCase;
   final UpdateUnidadUseCase _updateUnidadUseCase;
@@ -86,6 +86,24 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
     }
   }
 
+  Future<void> onFetchUnidadCreate(FetchUnidadCreate event, Emitter<RemoteUnidadState> emit) async {
+    emit(RemoteUnidadCreateLoading());
+
+    final objDataState = await _createUnidadUseCase(params: NoParams());
+
+    if (objDataState is DataSuccess) {
+      emit(RemoteUnidadCreateLoaded(objDataState.data));
+    }
+
+    if (objDataState is DataFailedMessage) {
+      emit(RemoteUnidadServerFailedMessageCreate(objDataState.errorMessage));
+    }
+
+    if (objDataState is DataFailed) {
+      emit(RemoteUnidadServerFailureCreate(objDataState.serverException));
+    }
+  }
+
   Future<void> onListUnidades(ListUnidades event, Emitter<RemoteUnidadState> emit) async {
     emit(RemoteUnidadSearchLoading());
 
@@ -93,24 +111,6 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
 
     if (objDataState is DataSuccess) {
       emit(RemoteUnidadSearchLoaded(objDataState.data));
-    }
-
-    if (objDataState is DataFailedMessage) {
-      emit(RemoteUnidadServerFailedMessage(objDataState.errorMessage));
-    }
-
-    if (objDataState is DataFailed) {
-      emit(RemoteUnidadServerFailure(objDataState.serverException));
-    }
-  }
-
-  Future<void> onCreateUnidad(CreateUnidad event, Emitter<RemoteUnidadState> emit) async {
-    emit(RemoteUnidadCreating());
-
-    final objDataState = await _createUnidadUseCase(params: NoParams());
-
-    if (objDataState is DataSuccess) {
-      emit(RemoteUnidadCreateLoaded(objDataState.data));
     }
 
     if (objDataState is DataFailedMessage) {
