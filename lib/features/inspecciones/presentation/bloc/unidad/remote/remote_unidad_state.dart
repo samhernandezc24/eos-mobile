@@ -55,48 +55,12 @@ class RemoteUnidadStored extends RemoteUnidadState {
 }
 
 /// LIST
-class RemoteUnidadSearchLoading extends RemoteUnidadState {}
+class RemoteUnidadListLoading extends RemoteUnidadState {}
 
-class RemoteUnidadSearchLoaded extends RemoteUnidadState {
-  const RemoteUnidadSearchLoaded(this.unidades);
+class RemoteUnidadListLoaded extends RemoteUnidadState {
+  const RemoteUnidadListLoaded(this.objResponse);
 
-  final List<UnidadSearchEntity>? unidades;
-
-  @override
-  List<Object?> get props => [ unidades ];
-}
-
-/// EDIT
-class RemoteUnidadEditing extends RemoteUnidadState {}
-
-class RemoteUnidadEditLoaded extends RemoteUnidadState {
-  const RemoteUnidadEditLoaded(this.objResponse);
-
-  final UnidadEditEntity? objResponse;
-
-  @override
-  List<Object?> get props => [ objResponse ];
-}
-
-/// UPDATE
-class RemoteUnidadUpdating extends RemoteUnidadState {}
-
-class RemoteUnidadUpdated extends RemoteUnidadState {
-  const RemoteUnidadUpdated(this.objResponse);
-
-  final ServerResponse? objResponse;
-
-  @override
-  List<Object?> get props => [ objResponse ];
-}
-
-/// DELETE
-class RemoteUnidadDeleting extends RemoteUnidadState {}
-
-class RemoteUnidadDeleted extends RemoteUnidadState {
-  const RemoteUnidadDeleted(this.objResponse);
-
-  final ServerResponse? objResponse;
+  final List<UnidadEntity>? objResponse;
 
   @override
   List<Object?> get props => [ objResponse ];
@@ -130,6 +94,15 @@ class RemoteUnidadServerFailedMessageStore extends RemoteUnidadState {
   List<Object?> get props => [ errorMessage ];
 }
 
+class RemoteUnidadServerFailedMessageList extends RemoteUnidadState {
+  const RemoteUnidadServerFailedMessageList(this.errorMessage);
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [ errorMessage ];
+}
+
 /// SERVER FAILURE
 class RemoteUnidadServerFailure extends RemoteUnidadState {
   const RemoteUnidadServerFailure(this.failure);
@@ -151,6 +124,15 @@ class RemoteUnidadServerFailureCreate extends RemoteUnidadState {
 
 class RemoteUnidadServerFailureStore extends RemoteUnidadState {
   const RemoteUnidadServerFailureStore(this.failure);
+
+  final ServerException? failure;
+
+  @override
+  List<Object?> get props => [ failure ];
+}
+
+class RemoteUnidadServerFailureList extends RemoteUnidadState {
+  const RemoteUnidadServerFailureList(this.failure);
 
   final ServerException? failure;
 

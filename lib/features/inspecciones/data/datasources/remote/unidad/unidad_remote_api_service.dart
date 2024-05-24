@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:eos_mobile/core/constants/list_api.dart';
-import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_store_req_model.dart';
-import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_update_req_model.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -48,29 +46,5 @@ abstract class UnidadRemoteApiService {
     @Header(HttpHeaders.contentTypeHeader) String contentType,
     @Header(HttpHeaders.authorizationHeader) String token,
     @Body() UnidadStoreReqModel objData,
-  );
-
-  /// CARGAR INFORMACIÓN PARA ACTUALIZAR UNA UNIDAD
-  @POST('/Edit')
-  Future<HttpResponse<ServerResponse>> edit(
-    @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Header(HttpHeaders.authorizationHeader) String token,
-    @Body() UnidadModel objData,
-  );
-
-  /// ACTUALIZAR UNIDAD
-  @POST('/Update')
-  Future<HttpResponse<ServerResponse>> update(
-    @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Header(HttpHeaders.authorizationHeader) String token,
-    @Body() UnidadUpdateReqModel objData,
-  );
-
-  /// ELIMINAR UNIDAD
-  @POST('/Delete')
-  Future<HttpResponse<ServerResponse>> delete(
-    @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Header(HttpHeaders.authorizationHeader) String token,
-    @Body() UnidadModel objData,
   );
 }

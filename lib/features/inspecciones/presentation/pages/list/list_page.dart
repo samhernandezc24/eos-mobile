@@ -15,7 +15,9 @@ import 'package:eos_mobile/core/enums/inspeccion_menu.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_store_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/list_unidad_usecase.dart';
 
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_categoria/remote/remote_inspeccion_categoria_bloc.dart';
@@ -31,6 +33,7 @@ import 'package:intl/intl.dart';
 
 part '../../widgets/inspeccion/checklist/_checklist_inspeccion.dart';
 part '../../widgets/inspeccion/create/_create_form.dart';
+part '../../widgets/inspeccion/create/_search_input.dart';
 part '../../widgets/inspeccion/filter/_filter_inspeccion.dart';
 part '../../widgets/inspeccion/list/_list_card.dart';
 part '../../widgets/inspeccion/list/_result_card.dart';

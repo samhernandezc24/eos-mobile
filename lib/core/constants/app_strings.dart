@@ -108,6 +108,8 @@ class AppStrings {
   String searchInputSemanticClear     = 'Limpiar Búsqueda';
   String searchInputSuggestionsTitle  = 'Sugerencias';
 
+  String unidadSearchInputHintText    = 'Buscar por no. económico';
+
   String settingsThemeAppTitle        = 'Tema';
   String settingsThemeAppSubtitle     = 'Cambiar tema de la aplicación.';
   String settingsUpdateAppTitle       = 'Actualizar automáticamente';

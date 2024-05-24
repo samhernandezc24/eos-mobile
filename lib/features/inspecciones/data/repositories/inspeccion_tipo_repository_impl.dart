@@ -31,8 +31,7 @@ class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
           if (objResponse.action!) {
             final result = objResponse.result;
             // ignore: avoid_dynamic_calls
-            final List<dynamic> lstInspeccionesTipos = result['inspeccionesTipos'] as List<dynamic>;
-
+            final List<dynamic> lstInspeccionesTipos          = result['inspeccionesTipos'] as List<dynamic>;
             final List<InspeccionTipoModel> objInspeccionTipo = lstInspeccionesTipos
                 .map<InspeccionTipoModel>((dynamic i) => InspeccionTipoModel.fromJson(i as Map<String, dynamic>))
                 .toList();

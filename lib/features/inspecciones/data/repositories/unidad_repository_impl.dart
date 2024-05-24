@@ -1,19 +1,12 @@
-// ignore_for_file: avoid_dynamic_calls
-
 import 'dart:io';
 
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/unidad/unidad_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_create_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_data_source_res_model.dart';
-import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_edit_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_index_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_model.dart';
-import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_search_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_store_req_model.dart';
-import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_update_req_model.dart';
-import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_store_req_entity.dart';
-import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_update_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/unidad_repository.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
@@ -107,7 +100,7 @@ class UnidadRepositoryImpl implements UnidadRepository {
 
   /// LISTADO DE UNIDADES
   @override
-  Future<DataState<List<UnidadSearchModel>>> list() async {
+  Future<DataState<List<UnidadModel>>> list() async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
@@ -121,13 +114,13 @@ class UnidadRepositoryImpl implements UnidadRepository {
         if (objResponse.session!) {
           if (objResponse.action!) {
             final result = objResponse.result;
-
-            final List<dynamic> lstUnidades = result['unidades'] as List<dynamic>;
-            final List<UnidadSearchModel> unidadJsonMap = lstUnidades
-                .map<UnidadSearchModel>((dynamic i) =>  UnidadSearchModel.fromJson(i as Map<String, dynamic>))
+            // ignore: avoid_dynamic_calls
+            final List<dynamic> lstUnidades       = result['unidades'] as List<dynamic>;
+            final List<UnidadModel> objUnidad     = lstUnidades
+                .map<UnidadModel>((dynamic i) =>  UnidadModel.fromJson(i as Map<String, dynamic>))
                 .toList();
 
-            return DataSuccess(unidadJsonMap);
+            return DataSuccess(objUnidad);
           } else {
             return DataFailedMessage(objResponse.message ?? 'Error inesperado');
           }
@@ -201,125 +194,6 @@ class UnidadRepositoryImpl implements UnidadRepository {
 
       // Realizar la solicitud usando el token actualizado o el actual.
       final httpResponse = await _unidadRemoteApiService.store('application/json', 'Bearer $token', UnidadStoreReqModel.fromEntity(objData));
-
-      if (httpResponse.response.statusCode == HttpStatus.ok) {
-        final ServerResponse objResponse = httpResponse.data;
-
-        if (objResponse.session!) {
-          if (objResponse.action!) {
-            return DataSuccess(objResponse);
-          } else {
-            return DataFailedMessage(objResponse.message ?? 'Error inesperado');
-          }
-        } else {
-          return DataFailedMessage(objResponse.message ?? 'Error inesperado');
-        }
-      } else {
-        return DataFailed(
-          ServerException.fromDioException(
-            DioException(
-              error           : httpResponse.response.statusMessage,
-              response        : httpResponse.response,
-              type            : DioExceptionType.badResponse,
-              requestOptions  : httpResponse.response.requestOptions,
-            ),
-          ),
-        );
-      }
-    } on DioException catch (ex) {
-      return DataFailed(ServerException.fromDioException(ex));
-    }
-  }
-
-  /// OBTENCION DE INFORMACION PARA ACTUALIZAR UNIDAD
-  @override
-  Future<DataState<UnidadEditModel>> edit(UnidadEntity objData) async {
-    try {
-      // Obtener el token localmente.
-      final String? token = await authTokenHelper.retrieveRefreshToken();
-
-      // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _unidadRemoteApiService.edit('application/json', 'Bearer $token', UnidadModel.fromEntity(objData));
-
-      if (httpResponse.response.statusCode == HttpStatus.ok) {
-        final ServerResponse objResponse = httpResponse.data;
-
-        if (objResponse.session!) {
-          if (objResponse.action!) {
-            final unidadEdit = UnidadEditModel.fromJson(objResponse.result as Map<String, dynamic>);
-
-            return DataSuccess(unidadEdit);
-          } else {
-            return DataFailedMessage(objResponse.message ?? 'Error inesperado');
-          }
-        } else {
-          return DataFailedMessage(objResponse.message ?? 'Error inesperado');
-        }
-      } else {
-        return DataFailed(
-          ServerException.fromDioException(
-            DioException(
-              error           : httpResponse.response.statusMessage,
-              response        : httpResponse.response,
-              type            : DioExceptionType.badResponse,
-              requestOptions  : httpResponse.response.requestOptions,
-            ),
-          ),
-        );
-      }
-    } on DioException catch (ex) {
-      return DataFailed(ServerException.fromDioException(ex));
-    }
-  }
-
-  /// ACTUALIZADO DE UNIDAD
-  @override
-  Future<DataState<ServerResponse>> update(UnidadUpdateReqEntity objData) async {
-    try {
-      // Obtener el token localmente.
-      final String? token = await authTokenHelper.retrieveRefreshToken();
-
-      // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _unidadRemoteApiService.update('application/json', 'Bearer $token', UnidadUpdateReqModel.fromEntity(objData));
-
-      if (httpResponse.response.statusCode == HttpStatus.ok) {
-        final ServerResponse objResponse = httpResponse.data;
-
-        if (objResponse.session!) {
-          if (objResponse.action!) {
-            return DataSuccess(objResponse);
-          } else {
-            return DataFailedMessage(objResponse.message ?? 'Error inesperado');
-          }
-        } else {
-          return DataFailedMessage(objResponse.message ?? 'Error inesperado');
-        }
-      } else {
-        return DataFailed(
-          ServerException.fromDioException(
-            DioException(
-              error           : httpResponse.response.statusMessage,
-              response        : httpResponse.response,
-              type            : DioExceptionType.badResponse,
-              requestOptions  : httpResponse.response.requestOptions,
-            ),
-          ),
-        );
-      }
-    } on DioException catch (ex) {
-      return DataFailed(ServerException.fromDioException(ex));
-    }
-  }
-
-  /// ELIMINADO DE UNIDAD
-  @override
-  Future<DataState<ServerResponse>> delete(UnidadEntity objData) async {
-    try {
-      // Obtener el token localmente.
-      final String? token = await authTokenHelper.retrieveRefreshToken();
-
-      // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _unidadRemoteApiService.delete('application/json', 'Bearer $token', UnidadModel.fromEntity(objData));
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         final ServerResponse objResponse = httpResponse.data;

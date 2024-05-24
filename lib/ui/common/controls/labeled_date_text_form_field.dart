@@ -52,9 +52,9 @@ class LabeledDateTextFormField extends StatelessWidget {
         Container(
           height: 50,
           decoration: BoxDecoration(
-            color: Theme.of(context).inputDecorationTheme.fillColor,
-            borderRadius: BorderRadius.circular($styles.insets.xxs),
-            border: Border.all(color: Theme.of(context).colorScheme.primary, width: 1.6),
+            color         : Theme.of(context).inputDecorationTheme.fillColor,
+            borderRadius  : BorderRadius.circular($styles.insets.xxs),
+            border        : Border.all(color: Theme.of(context).colorScheme.primary, width: 1.6),
           ),
           child: Row(
             children: <Widget>[

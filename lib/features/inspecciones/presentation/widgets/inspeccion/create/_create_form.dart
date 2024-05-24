@@ -33,17 +33,20 @@ class _CreateFormState extends State<_CreateForm> {
 
   // LIST
   List<InspeccionTipoEntity> lstInspeccionesTipos = <InspeccionTipoEntity>[];
+  List<UnidadEntity> lstUnidades                  = <UnidadEntity>[];
 
   // SELECTED INSPECCION TIPO
   InspeccionTipoEntity? _selectedInspeccionTipo;
 
   // SELECTED UNIDAD (TEMPORAL / INVENTARIO)
   UnidadInspeccion? _selectedUnidadInspeccion;
+  UnidadEntity? _selectedUnidad;
 
   @override
   void initState() {
     super.initState();
     context.read<RemoteInspeccionBloc>().add(FetchInspeccionCreate());
+    context.read<RemoteUnidadBloc>().add(ListUnidades());
 
     _selectedUnidadInspeccion = UnidadInspeccion.inventario;
 
@@ -133,6 +136,54 @@ class _CreateFormState extends State<_CreateForm> {
     );
   }
 
+  void _handleSearchUnidadSubmitted(UnidadEntity? value) {
+    setState(() {
+      // UNIDAD SELECCIONADA:
+      _selectedUnidad = value;
+
+      if (_selectedUnidadInspeccion != UnidadInspeccion.temporal) {
+        // Limpiar los controladores si la unidad no es temporal.
+        _clearTextFields();
+      } else {
+        // Rellenar la información de los controles.
+        _fillTextFields(value);
+      }
+    });
+  }
+
+  void _fillTextFields(UnidadEntity? value) {
+    // RELLENAR LA INFORMACION DE LOS CONTROLES:
+    _unidadNumeroEconomicoController.text       = value?.numeroEconomico            ?? '';
+    _unidadTipoNameController.text              = value?.unidadTipoName             ?? '';
+    _unidadMarcaNameController.text             = value?.unidadMarcaName            ?? '';
+    _modeloController.text                      = value?.modelo                     ?? '';
+    _unidadPlacaTipoNameController.text         = value?.unidadPlacaTipoName        ?? '';
+    _placaController.text                       = value?.placa                      ?? '';
+    _numeroSerieController.text                 = value?.numeroSerie                ?? '';
+    _anioEquipoController.text                  = value?.anioEquipo                 ?? '';
+    _baseNameController.text                    = value?.baseName                   ?? '';
+    _capacidadController.text                   = value?.capacidad                  ?? '';
+    _unidadCapacidadMedidaNameController.text   = value?.unidadCapacidadMedidaName  ?? '';
+    _odometroController.text                    = value?.odometro                   ?? '';
+    _horometroController.text                   = value?.horometro                  ?? '';
+  }
+
+  void _clearTextFields() {
+    _unidadNumeroEconomicoController.clear();
+    _unidadTipoNameController.clear();
+    _unidadMarcaNameController.clear();
+    _modeloController.clear();
+    _unidadPlacaTipoNameController.clear();
+    _placaController.clear();
+    _numeroSerieController.clear();
+    _anioEquipoController.clear();
+    _baseNameController.clear();
+    _capacidadController.clear();
+    _unidadCapacidadMedidaNameController.clear();
+    _odometroController.clear();
+    _horometroController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -168,6 +219,39 @@ class _CreateFormState extends State<_CreateForm> {
                   Gap($styles.insets.xs),
 
                   // BUSCAR Y SELECCIONAR UNIDAD:
+                  if (_selectedUnidadInspeccion == UnidadInspeccion.temporal)
+                    BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
+                      builder: (BuildContext context, RemoteUnidadState state) {
+                        if (state is RemoteUnidadListLoading) {
+                          return const Center(child: AppLoadingIndicator(width: 20, height: 20));
+                        }
+
+                        if (state is RemoteUnidadServerFailedMessageList) {
+                          return ErrorBoxContainer(
+                            errorMessage  : state.errorMessage ?? 'Se produjo un error al cargar el listado de unidades.',
+                            onPressed     : () => context.read<RemoteUnidadBloc>().add(ListUnidades()),
+                          );
+                        }
+
+                        if (state is RemoteUnidadServerFailureList) {
+                          return ErrorBoxContainer(
+                            errorMessage  : state.failure?.errorMessage ?? 'Se produjo un error al cargar el listado de unidades.',
+                            onPressed     : () => context.read<RemoteUnidadBloc>().add(ListUnidades()),
+                          );
+                        }
+
+                        if (state is RemoteUnidadListLoaded) {
+                          lstUnidades = state.objResponse ?? [];
+                          return Column(
+                            crossAxisAlignment  : CrossAxisAlignment.start,
+                            children            : <Widget>[
+                              _SearchInputUnidad(onSelected: _handleSearchUnidadSubmitted, unidades: lstUnidades),
+                            ],
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    ),
 
                   // NUEVA UNIDAD TEMPORAL:
                   AnimatedSwitcher(
