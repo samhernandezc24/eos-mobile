@@ -48,6 +48,15 @@ class FormValidators {
     return null;
   }
 
+  static String? dateTimeTextValidator(String? value) {
+    if (value == null || value.isEmpty) return null;
+    final RegExp dateRegex = RegExp(r'^(0[1-9]|[12]\d|3[01])[\/\-\.](0[1-9]|1[0-2])[\/\-\.](19|20)\d{2}\s([01]\d|2[0-3]):([0-5]\d)$');
+    if (!dateRegex.hasMatch(value)) {
+      return 'Por favor, ingresa una fecha en formato dd/mm/yyyy hh:mm.';
+    }
+    return null;
+  }
+
   /// Validación de campos de números decimales.
   static String? decimalValidatorNull(String? value) {
     if (value == null || value.isEmpty) return null;

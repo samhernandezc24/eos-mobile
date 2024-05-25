@@ -1,4 +1,4 @@
-import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/draw_signature.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/signature/draw_signature.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class InspeccionUnidadSinRequerimientoFinishPage extends StatefulWidget {

@@ -1,9 +1,11 @@
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_create_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_res_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_index_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/create_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/data_source_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/index_inspeccion_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/store_inspeccion_usecase.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
@@ -15,16 +17,19 @@ class RemoteInspeccionBloc extends Bloc<RemoteInspeccionEvent, RemoteInspeccionS
     this._indexInspeccionUseCase,
     this._dataSourceInspeccionUseCase,
     this._createInspeccionUseCase,
+    this._storeInspeccionUseCase,
   ) : super(RemoteInspeccionLoading()) {
     on<FetchInspeccionIndex>(onFetchInspeccionIndex);
     on<FetchInspeccionDataSource>(onFetchInspeccionDataSource);
     on<FetchInspeccionCreate>(onFetchInspeccionCreate);
+    on<StoreInspeccion>(onStoreInspeccion);
   }
 
   // Casos de uso
   final IndexInspeccionUseCase _indexInspeccionUseCase;
   final DataSourceInspeccionUseCase _dataSourceInspeccionUseCase;
   final CreateInspeccionUseCase _createInspeccionUseCase;
+  final StoreInspeccionUseCase _storeInspeccionUseCase;
 
   Future<void> onFetchInspeccionIndex(FetchInspeccionIndex event, Emitter<RemoteInspeccionState> emit) async {
     emit(RemoteInspeccionIndexLoading());
@@ -77,6 +82,26 @@ class RemoteInspeccionBloc extends Bloc<RemoteInspeccionEvent, RemoteInspeccionS
 
     if (objDataState is DataFailed) {
       emit(RemoteInspeccionServerFailureCreate(objDataState.serverException));
+    }
+  }
+
+  Future<void> onStoreInspeccion(StoreInspeccion event, Emitter<RemoteInspeccionState> emit) async {
+    emit(RemoteInspeccionStoring());
+
+    final objDataState = await _storeInspeccionUseCase(params: event.objData);
+
+    if (objDataState is DataSuccess) {
+      emit(RemoteInspeccionStored(objDataState.data));
+    }
+
+    if (objDataState is DataFailedMessage) {
+      emit(RemoteInspeccionServerFailedMessageStore(objDataState.errorMessage));
+      await onFetchInspeccionCreate(FetchInspeccionCreate(), emit);
+    }
+
+    if (objDataState is DataFailed) {
+      emit(RemoteInspeccionServerFailureStore(objDataState.serverException));
+      await onFetchInspeccionCreate(FetchInspeccionCreate(), emit);
     }
   }
 }

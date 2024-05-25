@@ -14,10 +14,10 @@ import 'package:eos_mobile/core/data/inspeccion/inspeccion.dart';
 import 'package:eos_mobile/core/enums/inspeccion_menu.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_store_req_entity.dart';
-import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/list_unidad_usecase.dart';
 
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_categoria/remote/remote_inspeccion_categoria_bloc.dart';
@@ -25,6 +25,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/controls/labeled_date_text_form_field.dart';
+import 'package:eos_mobile/ui/common/controls/labeled_datetime_text_form_field.dart';
 import 'package:eos_mobile/ui/common/error_server_failure.dart';
 import 'package:eos_mobile/ui/common/request_data_unavailable.dart';
 import 'package:eos_mobile/ui/common/themed_text.dart';
@@ -283,7 +284,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                   Expanded(
                     child: RefreshIndicator(
                       onRefresh: _buildDataSource,
-                      child: _ListCard(inspecciones: lstRows),
+                      child: _ListCard(inspecciones: lstRows, buildDataSourceCallback: _buildDataSource),
                     ),
                   ),
                 ],

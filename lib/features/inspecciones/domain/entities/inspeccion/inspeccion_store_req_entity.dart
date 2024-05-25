@@ -6,25 +6,25 @@ class InspeccionStoreReqEntity extends Equatable {
     required this.idInspeccionTipo,
     required this.inspeccionTipoCodigo,
     required this.inspeccionTipoName,
+    required this.idBase,
+    required this.baseName,
     required this.idUnidad,
     required this.unidadNumeroEconomico,
     required this.isUnidadTemporal,
+    required this.idUnidadTipo,
+    required this.unidadTipoName,
+    required this.idUnidadMarca,
+    required this.unidadMarcaName,
+    required this.capacidad,
+    required this.idUnidadCapacidadMedida,
+    required this.unidadCapacidadMedidaName,
     required this.locacion,
-    this.idBase,
-    this.baseName,
-    this.idUnidadTipo,
-    this.unidadTipoName,
-    this.idUnidadMarca,
-    this.unidadMarcaName,
     this.idUnidadPlacaTipo,
     this.unidadPlacaTipoName,
     this.placa,
     this.numeroSerie,
     this.modelo,
     this.anioEquipo,
-    this.capacidad,
-    this.idUnidadCapacidadMedida,
-    this.unidadCapacidadMedidaName,
     this.tipoPlataforma,
     this.odometro,
     this.horometro,
@@ -34,24 +34,24 @@ class InspeccionStoreReqEntity extends Equatable {
   final String idInspeccionTipo;
   final String inspeccionTipoCodigo;
   final String inspeccionTipoName;
-  final String? idBase;
-  final String? baseName;
+  final String idBase;
+  final String baseName;
   final String idUnidad;
   final String unidadNumeroEconomico;
   final bool isUnidadTemporal;
-  final String? idUnidadTipo;
-  final String? unidadTipoName;
-  final String? idUnidadMarca;
-  final String? unidadMarcaName;
+  final String idUnidadTipo;
+  final String unidadTipoName;
+  final String idUnidadMarca;
+  final String unidadMarcaName;
   final String? idUnidadPlacaTipo;
   final String? unidadPlacaTipoName;
   final String? placa;
   final String? numeroSerie;
   final String? modelo;
   final String? anioEquipo;
-  final double? capacidad;
-  final String? idUnidadCapacidadMedida;
-  final String? unidadCapacidadMedidaName;
+  final double capacidad;
+  final String idUnidadCapacidadMedida;
+  final String unidadCapacidadMedidaName;
   final String locacion;
   final String? tipoPlataforma;
   final int? odometro;

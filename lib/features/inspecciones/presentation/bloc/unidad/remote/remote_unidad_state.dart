@@ -7,10 +7,12 @@ class RemoteUnidadState extends Equatable {
   List<Object?> get props => [];
 }
 
-/// LOADING
-class RemoteUnidadLoading extends RemoteUnidadState {}
+/// INITIAL STATE
+class RemoteUnidadInitialState extends RemoteUnidadState {}
 
 /// INITIALIZATION
+class RemoteUnidadLoading extends RemoteUnidadState {}
+
 class RemoteUnidadInitialization extends RemoteUnidadState {
   const RemoteUnidadInitialization(this.objResponse);
 

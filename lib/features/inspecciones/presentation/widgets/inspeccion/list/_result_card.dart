@@ -1,9 +1,10 @@
 part of '../../../pages/list/list_page.dart';
 
 class _ResultCard extends StatelessWidget {
-  const _ResultCard({required this.inspeccion, Key? key}) : super(key: key);
+  const _ResultCard({required this.inspeccion, required this.buildDataSourceCallback, Key? key}) : super(key: key);
 
   final InspeccionDataSourceEntity inspeccion;
+  final VoidCallback buildDataSourceCallback;
 
   // METHODS
   void _handleChecklistInspeccionPressed(BuildContext context, InspeccionIdReqEntity idInspeccion) {
@@ -20,7 +21,7 @@ class _ResultCard extends StatelessWidget {
 
           return SlideTransition(
             position  : animation.drive<Offset>(tween),
-            child     : _ChecklistInspeccion(idInspeccion: idInspeccion),
+            child     : _ChecklistInspeccion(idInspeccion: idInspeccion, buildDataSourceCallback: buildDataSourceCallback),
           );
         },
         fullscreenDialog: true,

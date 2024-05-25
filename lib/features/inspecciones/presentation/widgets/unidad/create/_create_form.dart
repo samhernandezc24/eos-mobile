@@ -1,7 +1,9 @@
 part of '../../../pages/list/list_page.dart';
 
 class _CreateUnidadForm extends StatefulWidget {
-  const _CreateUnidadForm({Key? key}) : super(key: key);
+  const _CreateUnidadForm({required this.buildListUnidadesCallback, Key? key}) : super(key: key);
+
+  final VoidCallback buildListUnidadesCallback;
 
   @override
   State<_CreateUnidadForm> createState() => _CreateUnidadFormState();
@@ -94,12 +96,11 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
           TextButton(
             onPressed : () {
               Navigator.of(context).pop(); // Cerrar dialog
-              Navigator.of(context).pop(); // Cerrar página
               // Ejecutar el callback una vez finalizada la acción pop.
-              // WidgetsBinding.instance.addPostFrameCallback((_) {
-              //   Navigator.of(context).pop();      // Cerrar página
-              //   widget.buildDataSourceCallback(); // Ejecutar callback
-              // });
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.of(context).pop();        // Cerrar página
+                widget.buildListUnidadesCallback(); // Ejecutar callback
+              });
             },
             child : Text($strings.acceptButtonText, style: $styles.textStyles.button),
           ),
@@ -109,37 +110,38 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
   }
 
   void _handleStoreUnidadPressed() {
-    final double? capacidad   = double.tryParse(_capacidadController.text);
-    final int? odometro       = int.tryParse(_odometroController.text);
-    final int? horometro      = int.tryParse(_horometroController.text);
-
-    final UnidadStoreReqEntity objData = UnidadStoreReqEntity(
-      numeroEconomico             : _numeroEconomicoController.text,
-      idBase                      : _selectedBase?.idBase                                   ?? '',
-      baseName                    : _selectedBase?.name                                     ?? '',
-      idUnidadTipo                : _selectedUnidadTipo?.idUnidadTipo                       ?? '',
-      unidadTipoName              : _selectedUnidadTipo?.name                               ?? '',
-      idUnidadMarca               : _selectedUnidadMarca?.idUnidadMarca                     ?? '',
-      unidadMarcaName             : _selectedUnidadMarca?.name                              ?? '',
-      idUnidadPlacaTipo           : _selectedUnidadPlacaTipo?.idUnidadPlacaTipo             ?? '',
-      unidadPlacaTipoName         : _selectedUnidadPlacaTipo?.name                          ?? '',
-      placa                       : _placaController.text,
-      numeroSerie                 : _numeroSerieController.text,
-      modelo                      : _modeloController.text,
-      anioEquipo                  : _anioEquipoController.text,
-      descripcion                 : _descripcionController.text,
-      capacidad                   : capacidad ?? 0.000,
-      idUnidadCapacidadMedida     : _selectedUnidadCapacidadMedida?.idUnidadCapacidadMedida ?? '',
-      unidadCapacidadMedidaName   : _selectedUnidadCapacidadMedida?.name                    ?? '',
-      odometro                    : odometro,
-      horometro                   : horometro,
-    );
-
-    final bool isValidForm = _formKey.currentState!.validate();
-
     // Verificar la validacion en el formulario.
-    if (isValidForm) {
+    if (_formKey.currentState!.validate()) {
+      final double? capacidad   = double.tryParse(_capacidadController.text);
+      final int? odometro       = int.tryParse(_odometroController.text);
+      final int? horometro      = int.tryParse(_horometroController.text);
+
+      final UnidadStoreReqEntity objData = UnidadStoreReqEntity(
+        numeroEconomico             : _numeroEconomicoController.text,
+        idBase                      : _selectedBase?.idBase                                   ?? '',
+        baseName                    : _selectedBase?.name                                     ?? '',
+        idUnidadTipo                : _selectedUnidadTipo?.idUnidadTipo                       ?? '',
+        unidadTipoName              : _selectedUnidadTipo?.name                               ?? '',
+        idUnidadMarca               : _selectedUnidadMarca?.idUnidadMarca                     ?? '',
+        unidadMarcaName             : _selectedUnidadMarca?.name                              ?? '',
+        idUnidadPlacaTipo           : _selectedUnidadPlacaTipo?.idUnidadPlacaTipo             ?? '',
+        unidadPlacaTipoName         : _selectedUnidadPlacaTipo?.name                          ?? '',
+        placa                       : _placaController.text,
+        numeroSerie                 : _numeroSerieController.text,
+        modelo                      : _modeloController.text,
+        anioEquipo                  : _anioEquipoController.text,
+        descripcion                 : _descripcionController.text,
+        capacidad                   : capacidad ?? 0.000,
+        idUnidadCapacidadMedida     : _selectedUnidadCapacidadMedida?.idUnidadCapacidadMedida ?? '',
+        unidadCapacidadMedidaName   : _selectedUnidadCapacidadMedida?.name                    ?? '',
+        odometro                    : odometro,
+        horometro                   : horometro,
+      );
+
+      // Guardar el estado actual del formulario.
       _formKey.currentState!.save();
+
+      // Evento StoreUnidad del Bloc.
       BlocProvider.of<RemoteUnidadBloc>(context).add(StoreUnidad(objData));
     }
   }
@@ -179,7 +181,7 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
       child: Scaffold(
         appBar  : AppBar(title: Text('Nueva unidad', style: $styles.textStyles.h3)),
         body    : SafeArea(
-          child : SingleChildScrollView(
+          child: SingleChildScrollView(
             padding : EdgeInsets.all($styles.insets.sm).copyWith(bottom: $styles.insets.lg),
             child   : Form(
               key   : _formKey,
@@ -218,12 +220,7 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
                   Gap($styles.insets.sm),
 
                   // SELECCIONAR MARCA:
-                  BlocConsumer<RemoteUnidadBloc, RemoteUnidadState>(
-                    listener: (BuildContext context, RemoteUnidadState state) {
-                      if (state is RemoteUnidadCreateLoaded) {
-                        lstUnidadesMarcas = state.objResponse?.unidadesMarcas ?? [];
-                      }
-                    },
+                  BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
                     builder: (BuildContext context, RemoteUnidadState state) {
                       if (state is RemoteUnidadCreateLoading) {
                         return const Center(child: AppLoadingIndicator(width: 20, height: 20));
@@ -244,6 +241,7 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
                       }
 
                       if (state is RemoteUnidadCreateLoaded) {
+                        lstUnidadesMarcas = state.objResponse?.unidadesMarcas ?? [];
                         return LabeledDropdownFormField<UnidadMarca>(
                           label       : '* Marca:',
                           items       : lstUnidadesMarcas,
@@ -260,13 +258,8 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
                   Gap($styles.insets.sm),
 
                   // SELECCIONAR UNIDAD TIPO:
-                  BlocConsumer<RemoteUnidadBloc, RemoteUnidadState>(
-                    listener: (BuildContext context, RemoteUnidadState state) {
-                      if (state is RemoteUnidadCreateLoaded) {
-                        lstUnidadesTipos = state.objResponse?.unidadesTipos ?? [];
-                      }
-                    },
-                    builder: (BuildContext context, RemoteUnidadState state) {
+                  BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
+                    builder: (context, state) {
                       if (state is RemoteUnidadCreateLoading) {
                         return const Center(child: AppLoadingIndicator(width: 20, height: 20));
                       }
@@ -286,6 +279,7 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
                       }
 
                       if (state is RemoteUnidadCreateLoaded) {
+                        lstUnidadesTipos = state.objResponse?.unidadesTipos ?? [];
                         return LabeledDropdownFormField<UnidadTipo>(
                           label       : '* Tipo de unidad:',
                           items       : lstUnidadesTipos,
@@ -332,12 +326,7 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
                   Gap($styles.insets.sm),
 
                   // SELECCIONAR BASE:
-                  BlocConsumer<RemoteUnidadBloc, RemoteUnidadState>(
-                    listener: (BuildContext context, RemoteUnidadState state) {
-                      if (state is RemoteUnidadCreateLoaded) {
-                        lstBases = state.objResponse?.bases ?? [];
-                      }
-                    },
+                  BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
                     builder: (BuildContext context, RemoteUnidadState state) {
                       if (state is RemoteUnidadCreateLoading) {
                         return const Center(child: AppLoadingIndicator(width: 20, height: 20));
@@ -358,6 +347,7 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
                       }
 
                       if (state is RemoteUnidadCreateLoaded) {
+                        lstBases = state.objResponse?.bases ?? [];
                         return LabeledDropdownFormField<Base>(
                           label       : '* Base:',
                           items       : lstBases,
@@ -398,12 +388,7 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
                       ),
                       Gap($styles.insets.sm),
                       Expanded(
-                        child: BlocConsumer<RemoteUnidadBloc, RemoteUnidadState>(
-                          listener: (BuildContext context, RemoteUnidadState state) {
-                            if (state is RemoteUnidadCreateLoaded) {
-                              lstUnidadCapacidadesMedidas = state.objResponse?.unidadesCapacidadesMedidas ?? [];
-                            }
-                          },
+                        child: BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
                           builder: (BuildContext context, RemoteUnidadState state) {
                             if (state is RemoteUnidadCreateLoading) {
                               return const Center(child: AppLoadingIndicator(width: 20, height: 20));
@@ -411,19 +396,20 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
 
                             if (state is RemoteUnidadServerFailedMessageCreate) {
                               return ErrorBoxContainer(
-                                errorMessage  : state.errorMessage ?? 'Se produjo un error al cargar el listado de unidades capacidades medidas.',
+                                errorMessage  : state.errorMessage ?? 'Se produjo un error al cargar el listado de tipos de unidades capacidades medidas.',
                                 onPressed     : () => context.read<RemoteUnidadBloc>().add(FetchUnidadCreate()),
                               );
                             }
 
                             if (state is RemoteUnidadServerFailureCreate) {
                               return ErrorBoxContainer(
-                                errorMessage  : state.failure?.errorMessage ?? 'Se produjo un error al cargar el listado de unidades capacidades medidas.',
+                                errorMessage  : state.failure?.errorMessage ?? 'Se produjo un error al cargar el listado de tipos de unidades capacidades medidas.',
                                 onPressed     : () => context.read<RemoteUnidadBloc>().add(FetchUnidadCreate()),
                               );
                             }
 
                             if (state is RemoteUnidadCreateLoaded) {
+                              lstUnidadCapacidadesMedidas = state.objResponse?.unidadesCapacidadesMedidas ?? [];
                               return LabeledDropdownFormField<UnidadCapacidadMedida>(
                                 label       : '* Tipo de capacidad:',
                                 items       : lstUnidadCapacidadesMedidas,
@@ -474,10 +460,12 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
                     listener: (BuildContext context, RemoteUnidadState state) {
                       if (state is RemoteUnidadServerFailedMessageStore) {
                         _showServerErrorDialog(context, state.errorMessage);
+                        context.read<RemoteUnidadBloc>().add(FetchUnidadCreate());
                       }
 
                       if (state is RemoteUnidadServerFailureStore) {
                         _showServerErrorDialog(context, state.failure?.errorMessage);
+                        context.read<RemoteUnidadBloc>().add(FetchUnidadCreate());
                       }
 
                       if (state is RemoteUnidadStored) {
@@ -495,6 +483,9 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
                             elevation       : 0,
                           ),
                         );
+
+                        // Actualizar el listado de unidades.
+                        context.read<RemoteUnidadBloc>().add(ListUnidades());
                       }
                     },
                     builder: (BuildContext context, RemoteUnidadState state) {

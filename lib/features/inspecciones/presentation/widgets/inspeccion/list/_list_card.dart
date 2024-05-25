@@ -1,9 +1,10 @@
 part of '../../../pages/list/list_page.dart';
 
 class _ListCard extends StatefulWidget {
-  const _ListCard({required this.inspecciones, Key? key}) : super(key: key);
+  const _ListCard({required this.inspecciones, required this.buildDataSourceCallback, Key? key}) : super(key: key);
 
   final List<InspeccionDataSourceEntity> inspecciones;
+  final VoidCallback buildDataSourceCallback;
 
   @override
   State<_ListCard> createState() => _ListCardState();
@@ -43,7 +44,7 @@ class _ListCardState extends State<_ListCard> {
                 delegate  : SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     final InspeccionDataSourceEntity inspeccion = widget.inspecciones[index];
-                    return _ResultCard(inspeccion: inspeccion);
+                    return _ResultCard(inspeccion: inspeccion, buildDataSourceCallback: widget.buildDataSourceCallback);
                   },
                   childCount: widget.inspecciones.length,
                 ),

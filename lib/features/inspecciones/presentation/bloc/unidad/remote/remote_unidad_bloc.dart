@@ -21,7 +21,7 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
     this._createUnidadUseCase,
     this._storeUnidadUseCase,
     this._listUnidadUseCase,
-  ) : super(RemoteUnidadLoading()) {
+  ) : super(RemoteUnidadInitialState()) {
     on<FetchUnidadInit>(onFetchUnidadInit);
     on<FetchUnidadDataSource>(onFetchUnidadDataSource);
     on<FetchUnidadCreate>(onFetchUnidadCreate);
@@ -101,14 +101,10 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
 
     if (objDataState is DataFailedMessage) {
       emit(RemoteUnidadServerFailedMessageStore(objDataState.errorMessage));
-      await onFetchUnidadCreate(FetchUnidadCreate(), emit);
-      await onListUnidades(ListUnidades(), emit);
     }
 
-    if (objDataState is DataFailed) {
+    if (objDataState is RemoteUnidadServerFailureStore) {
       emit(RemoteUnidadServerFailureStore(objDataState.serverException));
-      await onFetchUnidadCreate(FetchUnidadCreate(), emit);
-      await onListUnidades(ListUnidades(), emit);
     }
   }
 

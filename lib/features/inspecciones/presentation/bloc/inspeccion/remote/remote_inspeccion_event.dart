@@ -22,3 +22,13 @@ class FetchInspeccionDataSource extends RemoteInspeccionEvent {
 
 /// [CreateInspeccionUseCase]
 class FetchInspeccionCreate extends RemoteInspeccionEvent {}
+
+/// [StoreInspeccionUseCase]
+class StoreInspeccion extends RemoteInspeccionEvent {
+  const StoreInspeccion(this.objData);
+
+  final InspeccionStoreReqEntity objData;
+
+  @override
+  List<Object?> get props => [ objData ];
+}

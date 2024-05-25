@@ -129,7 +129,7 @@ class _CreateFormState extends State<_CreateForm> {
 
           final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-          return SlideTransition(position: animation.drive<Offset>(tween), child: const _CreateUnidadForm());
+          return SlideTransition(position: animation.drive<Offset>(tween), child: _CreateUnidadForm(buildListUnidadesCallback: () => context.read<RemoteUnidadBloc>().add(ListUnidades())));
         },
         fullscreenDialog: true,
       ),
@@ -141,14 +141,66 @@ class _CreateFormState extends State<_CreateForm> {
       // UNIDAD SELECCIONADA:
       _selectedUnidad = value;
 
-      if (_selectedUnidadInspeccion != UnidadInspeccion.temporal) {
-        // Limpiar los controladores si la unidad no es temporal.
-        _clearTextFields();
-      } else {
-        // Rellenar la información de los controles.
-        _fillTextFields(value);
-      }
+      // Rellenar la información de los controles.
+      _fillTextFields(value);
     });
+  }
+
+  void _handleStoreInspeccionPressed() {
+    if (_fechaProgramadaController.text.isEmpty) {
+      // Mostrar un mensaje de error o realizar alguna acción adecuada, como mostrar un snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content         : const Text('Por favor selecciona la fecha programada'),
+          backgroundColor : Theme.of(context).colorScheme.error,
+          behavior        : SnackBarBehavior.fixed,
+          elevation       : 0,
+        ),
+      );
+      return;
+    }
+
+    final DateTime fechaProgramada  = DateFormat('dd/MM/yyyy HH:mm').parse(_fechaProgramadaController.text);
+    final double? capacidad         = double.tryParse(_capacidadController.text);
+    final int? odometro             = int.tryParse(_odometroController.text);
+    final int? horometro            = int.tryParse(_horometroController.text);
+
+    final InspeccionStoreReqEntity objData = InspeccionStoreReqEntity(
+      fechaProgramada             : fechaProgramada,
+      idInspeccionTipo            : _selectedInspeccionTipo?.idInspeccionTipo ?? '',
+      inspeccionTipoCodigo        : _selectedInspeccionTipo?.codigo           ?? '',
+      inspeccionTipoName          : _selectedInspeccionTipo?.name             ?? '',
+      idBase                      : _selectedUnidad?.idBase                   ?? '',
+      baseName                    : _baseNameController.text,
+      idUnidad                    : _selectedUnidad?.idUnidad                 ?? '',
+      unidadNumeroEconomico       : _unidadNumeroEconomicoController.text,
+      isUnidadTemporal            : _selectedUnidadInspeccion == UnidadInspeccion.temporal,
+      idUnidadTipo                : _selectedUnidad?.idUnidadTipo             ?? '',
+      unidadTipoName              : _unidadTipoNameController.text,
+      idUnidadMarca               : _selectedUnidad?.idUnidadMarca            ?? '',
+      unidadMarcaName             : _unidadMarcaNameController.text,
+      idUnidadPlacaTipo           : _selectedUnidad?.idUnidadPlacaTipo        ?? '',
+      unidadPlacaTipoName         : _unidadPlacaTipoNameController.text,
+      placa                       : _placaController.text,
+      numeroSerie                 : _numeroSerieController.text,
+      modelo                      : _modeloController.text,
+      anioEquipo                  : _anioEquipoController.text,
+      capacidad                   : capacidad ?? 0.000,
+      idUnidadCapacidadMedida     : _selectedUnidad?.idUnidadCapacidadMedida  ?? '',
+      unidadCapacidadMedidaName   : _unidadCapacidadMedidaNameController.text,
+      locacion                    : _locacionController.text,
+      tipoPlataforma              : _tipoPlataformaController.text,
+      odometro                    : odometro,
+      horometro                   : horometro,
+    );
+
+    final bool isValidForm = _formKey.currentState!.validate();
+
+    // Verificar la validacion en el formulario.
+    if (isValidForm) {
+      _formKey.currentState!.save();
+      BlocProvider.of<RemoteInspeccionBloc>(context).add(StoreInspeccion(objData));
+    }
   }
 
   void _fillTextFields(UnidadEntity? value) {
@@ -182,6 +234,30 @@ class _CreateFormState extends State<_CreateForm> {
     _unidadCapacidadMedidaNameController.clear();
     _odometroController.clear();
     _horometroController.clear();
+  }
+
+  Future<void> _showServerErrorDialog(BuildContext context, String? errorMessage) {
+    return showDialog<void>(
+      context   : context,
+      builder   : (_) => AlertDialog(
+        title   : const SizedBox.shrink(),
+        content : Row(
+          children: <Widget>[
+            Icon(Icons.error, color: Theme.of(context).colorScheme.error),
+            Gap($styles.insets.sm),
+            Flexible(
+              child: Text(
+                errorMessage ?? 'Se produjo un error inesperado. Intenta crear la unidad de nuevo.',
+                style: $styles.textStyles.title2.copyWith(height: 1.5),
+              ),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(onPressed: () => context.pop(), child: Text($strings.acceptButtonText, style: $styles.textStyles.button)),
+        ],
+      ),
+    );
   }
 
   @override
@@ -277,12 +353,7 @@ class _CreateFormState extends State<_CreateForm> {
                   ),
 
                   // SELECCIONAR TIPO DE INSPECCIÓN:
-                  BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
-                    listener: (BuildContext context, RemoteInspeccionState state) {
-                      if (state is RemoteInspeccionCreateLoaded) {
-                        lstInspeccionesTipos = state.objResponse?.inspeccionesTipos ?? [];
-                      }
-                    },
+                  BlocBuilder<RemoteInspeccionBloc, RemoteInspeccionState>(
                     builder: (BuildContext context, RemoteInspeccionState state) {
                       if (state is RemoteInspeccionCreateLoading) {
                         return const Center(child: AppLoadingIndicator(width: 20, height: 20));
@@ -303,6 +374,7 @@ class _CreateFormState extends State<_CreateForm> {
                       }
 
                       if (state is RemoteInspeccionCreateLoaded) {
+                        lstInspeccionesTipos = state.objResponse?.inspeccionesTipos ?? [];
                         return LabeledDropdownFormField<InspeccionTipoEntity>(
                           label       : '* Tipo de inspección:',
                           items       : lstInspeccionesTipos,
@@ -319,9 +391,9 @@ class _CreateFormState extends State<_CreateForm> {
                   Gap($styles.insets.sm),
 
                   // FECHA PROGRAMADA:
-                  LabeledDateTextFormField(
+                  LabeledDateTimeTextFormField(
                     controller  : _fechaProgramadaController,
-                    hintText    : 'dd/mm/aaaa',
+                    hintText    : 'dd/mm/aaaa hh:mm',
                     label       : '* Fecha programada de inspección:',
                   ),
 
@@ -497,10 +569,49 @@ class _CreateFormState extends State<_CreateForm> {
 
                   Gap($styles.insets.lg),
 
-                  FilledButton(
-                    onPressed : (){},
-                    style     : ButtonStyle(minimumSize: MaterialStateProperty.all<Size?>(const Size(double.infinity, 48))),
-                    child     : Text($strings.saveButtonText, style: $styles.textStyles.button),
+                  BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
+                    listener: (BuildContext context, RemoteInspeccionState state) {
+                      if (state is RemoteInspeccionServerFailedMessageStore) {
+                        _showServerErrorDialog(context, state.errorMessage);
+                      }
+
+                      if (state is RemoteInspeccionServerFailureStore) {
+                        _showServerErrorDialog(context, state.failure?.errorMessage);
+                      }
+
+                      if (state is RemoteInspeccionStored) {
+                        // Cerrar el diálogo antes de mostrar el SnackBar.
+                        Navigator.of(context).pop();
+
+                        // Mostramos el SnackBar.
+                        ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          SnackBar(
+                            content         : Text(state.objResponse?.message ?? 'Nueva inspección', softWrap: true),
+                            backgroundColor : Colors.green,
+                            behavior        : SnackBarBehavior.fixed,
+                            elevation       : 0,
+                          ),
+                        );
+
+                        widget.buildDataSourceCallback(); // Ejecutar callback
+                      }
+                    },
+                    builder: (BuildContext context, RemoteInspeccionState state) {
+                      if (state is RemoteInspeccionStoring) {
+                        return FilledButton(
+                          onPressed : null,
+                          style     : ButtonStyle(minimumSize: MaterialStateProperty.all<Size?>(const Size(double.infinity, 48))),
+                          child     : const AppLoadingIndicator(width: 20, height: 20),
+                        );
+                      }
+                      return FilledButton(
+                        onPressed : _handleStoreInspeccionPressed,
+                        style     : ButtonStyle(minimumSize: MaterialStateProperty.all<Size?>(const Size(double.infinity, 48))),
+                        child     : Text($strings.saveButtonText, style: $styles.textStyles.button),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -519,6 +630,14 @@ class _CreateFormState extends State<_CreateForm> {
     void onCheckboxChanged(bool? value) {
       setState(() {
         _selectedUnidadInspeccion = value ?? false ? unidadInspeccion : null;
+
+        // Reiniciar el campo de búsqueda y actualizar los valores de los campos de solo lectura.
+        if (_selectedUnidadInspeccion == UnidadInspeccion.temporal) {
+          _selectedUnidad = null;
+          _clearTextFields(); // Limpia los campos.
+        } else {
+          _clearTextFields(); // Limpia los campos.
+        }
       });
     }
 
