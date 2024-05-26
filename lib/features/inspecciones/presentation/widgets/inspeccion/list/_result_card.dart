@@ -29,6 +29,173 @@ class _ResultCard extends StatelessWidget {
     );
   }
 
+  void _handleInspeccionMenuDetailsPressed(BuildContext context, InspeccionDataSourceEntity inspeccion) {
+    showDialog<void>(
+      context : context,
+      builder : (BuildContext context) {
+        return AlertDialog(
+          title: Column(
+            crossAxisAlignment  : CrossAxisAlignment.start,
+            children            : <Widget>[
+              Text('Folio inspección:', style: $styles.textStyles.bodySmall),
+              Text(inspeccion.folio, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600, height: 1.3)),
+              Text('Requerimiento:', style: $styles.textStyles.bodySmall),
+              Text(inspeccion.hasRequerimiento == false ? 'SIN REQUERIMIENTO' : inspeccion.requerimientoFolio ?? '', style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600, height: 1.3)),
+              Divider(color: Theme.of(context).dividerColor, thickness: 1.5),
+            ],
+          ),
+          titlePadding: EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, 0),
+          content: SizedBox(
+            height  : 200,
+            width   : 400,
+            child   : SingleChildScrollView(
+              child : Column(
+                crossAxisAlignment  : CrossAxisAlignment.start,
+                mainAxisSize        : MainAxisSize.min,
+                children            : <Widget>[
+                  RichText(
+                    text: TextSpan(
+                      style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                      children  : <InlineSpan>[
+                        const TextSpan(text: 'Número económico'),
+                        TextSpan(text: ': ${inspeccion.unidadNumeroEconomico}'),
+                      ],
+                    ),
+                  ),
+                  Gap($styles.insets.xxs),
+                  RichText(
+                    text: TextSpan(
+                      style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                      children  : <InlineSpan>[
+                        const TextSpan(text: 'Tipo de unidad'),
+                        TextSpan(text: ': ${inspeccion.unidadTipoName}'),
+                      ],
+                    ),
+                  ),
+                  Gap($styles.insets.xxs),
+                  RichText(
+                    text: TextSpan(
+                      style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                      children  : <InlineSpan>[
+                        const TextSpan(text: 'Tipo de inspección'),
+                        TextSpan(text: ': ${inspeccion.inspeccionTipoName}'),
+                      ],
+                    ),
+                  ),
+                  Gap($styles.insets.xxs),
+                  RichText(
+                    text: TextSpan(
+                      style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                      children  : <InlineSpan>[
+                        const TextSpan(text: 'Marca'),
+                        TextSpan(text: ': ${inspeccion.unidadMarcaName}'),
+                      ],
+                    ),
+                  ),
+                  Gap($styles.insets.xxs),
+                  RichText(
+                    text: TextSpan(
+                      style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                      children  : <InlineSpan>[
+                        const TextSpan(text: 'Modelo'),
+                        TextSpan(text: ': ${inspeccion.modelo}'),
+                      ],
+                    ),
+                  ),
+                  Gap($styles.insets.xxs),
+                  RichText(
+                    text: TextSpan(
+                      style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                      children  : <InlineSpan>[
+                        const TextSpan(text: 'Número de serie'),
+                        TextSpan(text: ': ${inspeccion.numeroSerie}'),
+                      ],
+                    ),
+                  ),
+                  Gap($styles.insets.xxs),
+                  RichText(
+                    text: TextSpan(
+                      style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                      children  : <InlineSpan>[
+                        const TextSpan(text: 'Fecha programada'),
+                        TextSpan(text: ': ${inspeccion.fechaProgramadaNatural}'),
+                      ],
+                    ),
+                  ),
+                  Gap($styles.insets.xxs),
+                  RichText(
+                    text: TextSpan(
+                      style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                      children  : <InlineSpan>[
+                        const TextSpan(text: 'Estatus'),
+                        TextSpan(text: ': ${inspeccion.inspeccionEstatusName}'),
+                      ],
+                    ),
+                  ),
+                  Gap($styles.insets.xxs),
+                  RichText(
+                    text: TextSpan(
+                      style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                      children  : <InlineSpan>[
+                        const TextSpan(text: 'Base'),
+                        TextSpan(text: ': ${inspeccion.baseName}'),
+                      ],
+                    ),
+                  ),
+                  Gap($styles.insets.xxs),
+                  RichText(
+                    text: TextSpan(
+                      style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                      children  : <InlineSpan>[
+                        const TextSpan(text: 'Locación'),
+                        TextSpan(text: ': ${inspeccion.locacion}'),
+                      ],
+                    ),
+                  ),
+                  Gap($styles.insets.xxs),
+                  RichText(
+                    text: TextSpan(
+                      style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                      children  : <InlineSpan>[
+                        const TextSpan(text: 'Capacidad'),
+                        TextSpan(text: ': ${inspeccion.capacidad} ${inspeccion.unidadCapacidadMedidaName}'),
+                      ],
+                    ),
+                  ),
+                  Gap($styles.insets.xxs),
+                  RichText(
+                    text: TextSpan(
+                      style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                      children  : <InlineSpan>[
+                        const TextSpan(text: 'Fecha de creación'),
+                        TextSpan(text: ': ${inspeccion.createdFechaNatural}'),
+                      ],
+                    ),
+                  ),
+                  Gap($styles.insets.xxs),
+                  RichText(
+                    text: TextSpan(
+                      style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                      children  : <InlineSpan>[
+                        const TextSpan(text: 'Creado por'),
+                        TextSpan(text: ': ${inspeccion.createdUserName}'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          contentPadding: EdgeInsets.fromLTRB($styles.insets.sm, 0, $styles.insets.sm, 0),
+          actions: <Widget>[
+            TextButton(onPressed: () => context.pop(), child: Text('Cerrar', style: $styles.textStyles.button)),
+          ],
+          actionsPadding: EdgeInsets.fromLTRB(0, 0, $styles.insets.sm, $styles.insets.xs),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -84,18 +251,29 @@ class _ResultCard extends StatelessWidget {
               onSelected  : (InspeccionMenu item) {
                 switch (item) {
                   case InspeccionMenu.details:
+                    _handleInspeccionMenuDetailsPressed(context, inspeccion);
                   case InspeccionMenu.cancel:
                 }
               },
               itemBuilder : (BuildContext context) {
                 return <PopupMenuEntry<InspeccionMenu>>[
-                  const PopupMenuItem<InspeccionMenu>(
+                  PopupMenuItem<InspeccionMenu>(
                     value : InspeccionMenu.details,
-                    child : ListTile(leading: Icon(Icons.info), title: Text('Detalles')),
+                    child : ListTile(
+                      leading   : const Icon(Icons.info),
+                      iconColor : Theme.of(context).colorScheme.primary,
+                      textColor : Theme.of(context).colorScheme.primary,
+                      title     : const Text('Detalles'),
+                    ),
                   ),
-                  const PopupMenuItem<InspeccionMenu>(
+                  PopupMenuItem<InspeccionMenu>(
                     value : InspeccionMenu.cancel,
-                    child : ListTile(leading: Icon(Icons.delete_forever), title: Text('Cancelar')),
+                    child : ListTile(
+                      leading   : const Icon(Icons.delete_forever),
+                      iconColor : Theme.of(context).colorScheme.error,
+                      textColor : Theme.of(context).colorScheme.error,
+                      title     : const Text('Cancelar'),
+                    ),
                   ),
                 ];
               },

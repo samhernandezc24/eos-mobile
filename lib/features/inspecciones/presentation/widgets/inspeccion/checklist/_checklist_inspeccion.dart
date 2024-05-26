@@ -77,30 +77,6 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
         );
       },
     );
-    // showModalBottomSheet<void>(
-    //   context : context,
-    //   builder : (BuildContext context) => AlertDialog(
-    //     title   : const SizedBox.shrink(),
-    //     content : Text('¿Estás seguro que deseas salir?', style: $styles.textStyles.bodySmall.copyWith(fontSize: 16)),
-    //     actions : <Widget>[
-    //       TextButton(
-    //         onPressed : () { Navigator.of(context).pop(); },
-    //         child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
-    //       ),
-    //       TextButton(
-    //         onPressed : () {
-    //           Navigator.of(context).pop(); // Cerrar dialog
-    //           // Ejecutar el callback una vez finalizada la acción pop.
-    //           WidgetsBinding.instance.addPostFrameCallback((_) {
-    //             Navigator.of(context).pop();      // Cerrar página
-    //             widget.buildDataSourceCallback(); // Ejecutar callback
-    //           });
-    //         },
-    //         child : Text($strings.acceptButtonText, style: $styles.textStyles.button),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 
   @override
