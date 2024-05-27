@@ -49,36 +49,28 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
     _store();
   }
 
-  void _onCategoriaItemStoreDuplicatePressed(CategoriaItemStoreDuplicateReqEntity objData) {
-    BlocProvider.of<RemoteCategoriaItemBloc>(context).add(StoreDuplicateCategoriaItem(objData));
-  }
-
-  void _onCategoriaItemUpdatePressed(CategoriaItemEntity categoriaItem) {
-    BlocProvider.of<RemoteCategoriaItemBloc>(context).add(UpdateCategoriaItem(categoriaItem));
-  }
-
-  void _onCategoriaItemDeletePressed(CategoriaItemEntity categoriaItem) {
-    showDialog<void>(
-      context : context,
-      builder : (BuildContext context) {
+  Future<void> _handleDeletePressed(BuildContext context, CategoriaItemEntity categoriaItem) async {
+    await showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
         return AlertDialog(
-          title   : Text('¿Eliminar pregunta?', style: $styles.textStyles.h3.copyWith(fontSize: 18)),
+          title   : Text($strings.categoriaItemDeleteAlertTitle, style: $styles.textStyles.h3.copyWith(fontSize: 18)),
           content : RichText(
             text: TextSpan(
-              style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
+              style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, height: 1.5),
               children  : <InlineSpan>[
-                const TextSpan(text: 'Se eliminará la pregunta '),
+                TextSpan(text: $strings.categoriaItemDeleteAlertContent1),
                 TextSpan(
-                  text: '"${categoriaItem.name}." ',
+                  text: '"${categoriaItem.name}."\n',
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
-                const TextSpan(text: '¿Estás seguro de querer realizar esa acción?'),
+                TextSpan(text: $strings.categoriaItemDeleteAlertContent2),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              onPressed : () => Navigator.of(context).pop(),
+              onPressed : () => Navigator.pop(context, $strings.cancelButtonText),
               child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
             ),
             TextButton(
@@ -89,6 +81,14 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
         );
       },
     );
+  }
+
+  void _handleStoreDuplicatePressed(CategoriaItemStoreDuplicateReqEntity objData) {
+    BlocProvider.of<RemoteCategoriaItemBloc>(context).add(StoreDuplicateCategoriaItem(objData));
+  }
+
+  void _handleUpdatePressed(CategoriaItemEntity categoriaItem) {
+    BlocProvider.of<RemoteCategoriaItemBloc>(context).add(UpdateCategoriaItem(categoriaItem));
   }
 
   void _scrollToEnd() {
@@ -106,16 +106,6 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
         errorMessage: errorMessage ?? 'Se produjo un error inesperado.',
       ),
     );
-  }
-
-  // METHODS
-  void _store() {
-    final CategoriaItemStoreReqEntity objData = CategoriaItemStoreReqEntity(
-      idCategoria   : widget.categoria?.idCategoria ?? '',
-      categoriaName : widget.categoria?.name        ?? '',
-    );
-
-    BlocProvider.of<RemoteCategoriaItemBloc>(context).add(StoreCategoriaItem(objData));
   }
 
   void _showProgressDialog(BuildContext context) {
@@ -147,15 +137,76 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
     );
   }
 
+  String _generateNombrePregunta() {
+    String pregunta = 'Pregunta';
+    int contador = 1;
+    while (lstCategoriasItems.any((item) => item.name == pregunta)) {
+      pregunta = 'Pregunta ($contador)';
+      contador++;
+    }
+    return pregunta;
+  }
+
+  // METHODS
+  void _store() {
+    final String pregunta = _generateNombrePregunta();
+
+    final CategoriaItemStoreReqEntity objPost = CategoriaItemStoreReqEntity(
+      name          : pregunta,
+      idCategoria   : widget.categoria?.idCategoria ?? '',
+      categoriaName : widget.categoria?.name        ?? '',
+    );
+
+    BlocProvider.of<RemoteCategoriaItemBloc>(context).add(StoreCategoriaItem(objPost));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar  : AppBar(title: Text($strings.categoryItemAppBarTitle, style: $styles.textStyles.h3)),
+      appBar  : AppBar(title: Text($strings.categoriaItemAppBarTitle, style: $styles.textStyles.h3)),
       body    : Column(
-        children: <Widget>[
-          _buildHeaderContent(),
+        crossAxisAlignment  : CrossAxisAlignment.start,
+        children            : <Widget>[
+          Container(
+            width   : double.infinity,
+            padding : EdgeInsets.all($styles.insets.sm),
+            color   : Theme.of(context).colorScheme.background,
+            child   : Column(
+              crossAxisAlignment  : CrossAxisAlignment.start,
+              children            : <Widget>[
+                Text($strings.categoriaItemBoxTitle, style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600)),
+                Gap($styles.insets.xxs),
+                RichText(
+                  text: TextSpan(
+                    style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                    children: <TextSpan>[
+                      const TextSpan(text: 'Tipo de inspección', style: TextStyle(fontWeight: FontWeight.w600)),
+                      TextSpan(text: ': ${widget.categoria?.inspeccionTipoName ?? ''}'),
+                    ],
+                  ),
+                ),
+                RichText(
+                  text: TextSpan(
+                    style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                    children: <TextSpan>[
+                      const TextSpan(text: 'Categoría', style: TextStyle(fontWeight: FontWeight.w600)),
+                      TextSpan(text: ': ${widget.categoria?.name ?? ''}'),
+                    ],
+                  ),
+                ),
+                RichText(
+                  text: TextSpan(
+                    style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                    children: <TextSpan>[
+                      TextSpan(text: $strings.settingsSuggestionsText, style: const TextStyle(fontWeight: FontWeight.w600)),
+                      TextSpan(text: ': ${$strings.categoriaItemBoxDescription}'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
 
-          // LISTADO DE CATEGORIAS ITEMS:
           Expanded(
             child: RefreshIndicator(
               onRefresh : () async => context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!)),
@@ -186,7 +237,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
 
                     _showServerFailedDialog(context, state.errorMessage);
 
-                    // Actualizar listado de preguntas.
+                    // Actualizando el listado de preguntas.
                     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
 
                     setState(() {
@@ -199,7 +250,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
 
                     _showServerFailedDialog(context, state.failure?.errorMessage);
 
-                    // Actualizar listado de preguntas.
+                    // Actualizando el listado de preguntas.
                     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
 
                     setState(() {
@@ -212,7 +263,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
 
                     _showServerFailedDialog(context, state.errorMessage);
 
-                    // Actualizar listado de preguntas.
+                    // Actualizando el listado de preguntas.
                     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
 
                     setState(() {
@@ -225,7 +276,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
 
                     _showServerFailedDialog(context, state.failure?.errorMessage);
 
-                    // Actualizar listado de preguntas.
+                    // Actualizando el listado de preguntas.
                     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
 
                     setState(() {
@@ -238,7 +289,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
 
                     _showServerFailedDialog(context, state.errorMessage);
 
-                    // Actualizar listado de preguntas.
+                    // Actualizando el listado de preguntas.
                     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
 
                     setState(() {
@@ -251,7 +302,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
 
                     _showServerFailedDialog(context, state.failure?.errorMessage);
 
-                    // Actualizar listado de preguntas.
+                    // Actualizando el listado de preguntas.
                     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
 
                     setState(() {
@@ -261,8 +312,6 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
 
                   // SUCCESS:
                   if (state is RemoteCategoriaItemSuccess) {
-                    lstCategoriasItems  = state.objResponse?.categoriasItems  ?? [];
-                    lstFormulariosTipos = state.objResponse?.formulariosTipos ?? [];
                     setState(() {
                       _isLoading = false;
                     });
@@ -279,11 +328,12 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                       SnackBar(
                         content         : Text(state.objResponse?.message ?? 'Pregunta duplicada', softWrap: true),
                         backgroundColor : Colors.green,
-                        elevation       : 0,
                         behavior        : SnackBarBehavior.fixed,
+                        elevation       : 0,
                       ),
                     );
 
+                    // Actualizando el listado de preguntas.
                     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
 
                     setState(() {
@@ -302,12 +352,12 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                       SnackBar(
                         content         : Text(state.objResponse?.message ?? 'Pregunta actualizada', softWrap: true),
                         backgroundColor : Colors.green,
-                        elevation       : 0,
                         behavior        : SnackBarBehavior.fixed,
+                        elevation       : 0,
                       ),
                     );
 
-                    // Actualizar listado de preguntas.
+                    // Actualizando el listado de preguntas.
                     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
 
                     setState(() {
@@ -327,12 +377,12 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                       SnackBar(
                         content         : Text(state.objResponse?.message ?? 'Pregunta eliminada', softWrap: true),
                         backgroundColor : Colors.green,
-                        elevation       : 0,
                         behavior        : SnackBarBehavior.fixed,
+                        elevation       : 0,
                       ),
                     );
 
-                    // Actualizar listado de preguntas.
+                    // Actualizando el listado de preguntas.
                     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
 
                     setState(() {
@@ -362,26 +412,28 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                   }
 
                   if (state is RemoteCategoriaItemSuccess) {
+                    lstCategoriasItems  = state.objResponse?.categoriasItems  ?? [];
+                    lstFormulariosTipos = state.objResponse?.formulariosTipos ?? [];
+
                     if (lstCategoriasItems.isNotEmpty) {
                       return ListView.builder(
                         controller  : _scrollController,
                         itemCount   : lstCategoriasItems.length,
                         itemBuilder : (BuildContext context, int index) {
                           final CategoriaItemEntity categoriaItem = lstCategoriasItems[index];
-
                           return _ListCard(
                             categoriaItem       : categoriaItem,
                             categoria           : widget.categoria,
                             formulariosTipos    : lstFormulariosTipos,
-                            onDuplicatePressed  : (CategoriaItemStoreDuplicateReqEntity objData) => _onCategoriaItemStoreDuplicatePressed(objData),
-                            onUpdatePressed     : (CategoriaItemEntity categoriaItem) => _onCategoriaItemUpdatePressed(categoriaItem),
-                            onDeletePressed     : (CategoriaItemEntity categoriaItem) => _onCategoriaItemDeletePressed(categoriaItem),
+                            onDuplicatePressed  : (CategoriaItemStoreDuplicateReqEntity objData) => _handleStoreDuplicatePressed(objData),
+                            onUpdatePressed     : (CategoriaItemEntity categoriaItem) => _handleUpdatePressed(categoriaItem),
+                            onDeletePressed     : (CategoriaItemEntity categoriaItem) => _handleDeletePressed(context, categoriaItem),
                           );
                         },
                       );
                     } else {
                       return RequestDataUnavailable(
-                        title     : $strings.categoryItemEmptyTitle,
+                        title     : $strings.categoriaItemEmptyListTitle,
                         message   : $strings.emptyListMessage,
                         onRefresh : () => context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!)),
                       );
@@ -399,48 +451,6 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
     );
   }
 
-  Widget _buildHeaderContent() {
-    return Container(
-      width   : double.infinity,
-      padding : EdgeInsets.all($styles.insets.sm),
-      color   : Theme.of(context).colorScheme.background,
-      child   : Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text($strings.categoryItemTitle, style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600)),
-          Gap($styles.insets.xxs),
-          RichText(
-            text: TextSpan(
-              style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
-              children: <TextSpan>[
-                const TextSpan(text: 'Tipo de inspección', style: TextStyle(fontWeight: FontWeight.w600)),
-                TextSpan(text: ': ${widget.categoria?.inspeccionTipoName ?? ''}'),
-              ],
-            ),
-          ),
-          RichText(
-            text: TextSpan(
-              style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
-              children: <TextSpan>[
-                const TextSpan(text: 'Categoría', style: TextStyle(fontWeight: FontWeight.w600)),
-                TextSpan(text: ': ${widget.categoria?.name ?? ''}'),
-              ],
-            ),
-          ),
-          RichText(
-            text: TextSpan(
-              style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
-              children: <TextSpan>[
-                TextSpan(text: $strings.settingsSuggestionsText, style: const TextStyle(fontWeight: FontWeight.w600)),
-                TextSpan(text: ': ${$strings.categoryItemDescription}'),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildFloatingActionButton(BuildContext context) {
     return BlocConsumer<RemoteCategoriaItemBloc, RemoteCategoriaItemState>(
       listener: (BuildContext context, RemoteCategoriaItemState state) {
@@ -448,7 +458,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
         if (state is RemoteCategoriaItemServerFailedMessageStore) {
           _showServerFailedDialog(context, state.errorMessage);
 
-          // Actualizar listado de preguntas.
+          // Actualizando el listado de preguntas.
           context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
 
           setState(() {
@@ -459,7 +469,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
         if (state is RemoteCategoriaItemServerFailureStore) {
           _showServerFailedDialog(context, state.failure?.errorMessage);
 
-          // Actualizar listado de preguntas.
+          // Actualizando el listado de preguntas.
           context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
 
           setState(() {
@@ -475,12 +485,12 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
             SnackBar(
               content         : Text(state.objResponse?.message ?? 'Nueva pregunta', softWrap: true),
               backgroundColor : Colors.green,
-              behavior        : SnackBarBehavior.fixed,
               elevation       : 0,
+              behavior        : SnackBarBehavior.fixed,
             ),
           );
 
-          // Actualizar listado de preguntas.
+          // Actualizando el listado de preguntas.
           context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
         }
       },

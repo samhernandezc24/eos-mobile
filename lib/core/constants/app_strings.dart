@@ -13,24 +13,27 @@ class AppStrings {
   String appProcessingData            = 'Procesando...';
 
   // C
-  String cancelButtonText             = 'Cancelar';
+  String cancelButtonText                 = 'Cancelar';
 
-  String categoriaAppBarTitle         = 'Configuración de categorías';
-  String categoriaBoxDescription      = 'Crea las categorías para agrupar las preguntas de las inspecciones.';
-  String categoriaBoxTitle            = 'Categorías';
-  String categoriaCreateAppBarTitle   = 'Nueva categoría';
-  String categoriaCreateButtonText    = 'Nueva categoría';
-  String categoriaCreatePreguntasText = 'Crear preguntas';
-  String categoriaDeleteAlertContent1 = 'Se eliminará la categoría ';
-  String categoriaDeleteAlertContent2 = '¿Estás seguro de querer realizar esa acción?';
-  String categoriaDeleteAlertTitle    = '¿Eliminar categoría?';
-  String categoriaEditAppBarTitle     = 'Editar categoría';
-  String categoriaEmptyListTitle      = 'Aún no hay categorías';
+  String categoriaAppBarTitle               = 'Configuración de categorías';
+  String categoriaBoxDescription            = 'Crea las categorías para agrupar las preguntas de las inspecciones.';
+  String categoriaBoxTitle                  = 'Categorías';
+  String categoriaCreateAppBarTitle         = 'Nueva categoría';
+  String categoriaCreateButtonText          = 'Nueva categoría';
+  String categoriaCreatePreguntasText       = 'Crear preguntas';
+  String categoriaDeleteAlertContent1       = 'Se eliminará la categoría ';
+  String categoriaDeleteAlertContent2       = '¿Estás seguro de querer realizar esa acción?';
+  String categoriaDeleteAlertTitle          = '¿Eliminar categoría?';
+  String categoriaEditAppBarTitle           = 'Editar categoría';
+  String categoriaEmptyListTitle            = 'Aún no hay categorías';
 
-  String categoryItemAppBarTitle      = 'Configuración de preguntas';
-  String categoryItemDescription      = 'Configura y organiza las preguntas según tus necesidades.';
-  String categoryItemEmptyTitle       = 'Aún no hay preguntas.';
-  String categoryItemTitle            = 'Preguntas dinámicas';
+  String categoriaItemAppBarTitle           = 'Configuración de preguntas';
+  String categoriaItemBoxDescription        = 'Crea las preguntas necesarias para la evaluación e inspección de una unidad.';
+  String categoriaItemBoxTitle              = 'Preguntas';
+  String categoriaItemDeleteAlertContent1   = 'Se eliminará la pregunta ';
+  String categoriaItemDeleteAlertContent2   = '¿Estás seguro de querer realizar esa acción?';
+  String categoriaItemDeleteAlertTitle      = '¿Eliminar pregunta?';
+  String categoriaItemEmptyListTitle        = 'Aún no hay preguntas';
 
   String circleButtonsSemanticBack    = 'Volver';
   String circleButtonsSemanticClose   = 'Cerrar';

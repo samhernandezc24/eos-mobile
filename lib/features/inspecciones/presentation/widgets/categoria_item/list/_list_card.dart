@@ -38,6 +38,7 @@ class _ListCardState extends State<_ListCard> {
   String? _originalFormularioValor;
   FormularioTipo? _originalFormularioTipo;
 
+  // STATE
   @override
   void initState() {
     super.initState();
@@ -60,8 +61,8 @@ class _ListCardState extends State<_ListCard> {
     super.dispose();
   }
 
-  // METHODS
-  void _editCategoriaItem(CategoriaItemEntity categoriaItem) {
+  // EVENTS
+  void _handleEditTap(CategoriaItemEntity categoriaItem) {
     setState(() {
       _isEditMode = !_isEditMode;
 
@@ -73,7 +74,17 @@ class _ListCardState extends State<_ListCard> {
     });
   }
 
-  void _cancelEdit() {
+  void _handleUpdatePressed() {
+    if (widget.onUpdatePressed != null) {
+      _update();
+    }
+
+    setState(() {
+      _isEditMode = false;
+    });
+  }
+
+  void _handleCancelPressed() {
     setState(() {
       _isEditMode = false;
 
@@ -83,43 +94,42 @@ class _ListCardState extends State<_ListCard> {
     });
   }
 
-  void _saveEdit() {
-    if (widget.onUpdatePressed != null) {
-      final CategoriaItemEntity objData = CategoriaItemEntity(
-        idCategoriaItem     : widget.categoriaItem?.idCategoriaItem     ?? '',
-        name                : _nameController.text,
-        idCategoria         : widget.categoria?.idCategoria             ?? '',
-        categoriaName       : widget.categoria?.name                    ?? '',
-        idFormularioTipo    : _selectedFormularioTipo?.idFormularioTipo ?? '',
-        formularioTipoName  : _selectedFormularioTipo?.name             ?? '',
-        formularioValor     : _formularioValorController.text,
-      );
-
-      return widget.onUpdatePressed!(objData);
-    }
-
-    setState(() {
-      _isEditMode = false;
-    });
-  }
-
-  void _onDuplicateCategoriaItem() {
+  void _handleStoreDuplicatePressed() {
     if (widget.onDuplicatePressed != null) {
-      final CategoriaItemStoreDuplicateReqEntity objData = CategoriaItemStoreDuplicateReqEntity(
-        name                  : widget.categoriaItem?.name                ?? '',
-        idCategoria           : widget.categoriaItem?.idCategoria         ?? '',
-        categoriaName         : widget.categoriaItem?.categoriaName       ?? '',
-        idFormularioTipo      : widget.categoriaItem?.idFormularioTipo    ?? '',
-        formularioTipoName    : widget.categoriaItem?.formularioTipoName  ?? '',
-        formularioValor       : widget.categoriaItem?.formularioValor     ?? '',
-      );
-
-      return widget.onDuplicatePressed!(objData);
+      _storeDuplicate();
     }
   }
 
-  void _onDeleteCategoriaItem(CategoriaItemEntity? categoriaItem) {
+  void _handleDeletePressed(CategoriaItemEntity? categoriaItem) {
     if (widget.onDeletePressed != null) { return widget.onDeletePressed!(categoriaItem!); }
+  }
+
+  // METHODS
+  void _update() {
+    final CategoriaItemEntity objPost = CategoriaItemEntity(
+      idCategoriaItem     : widget.categoriaItem?.idCategoriaItem     ?? '',
+      name                : _nameController.text,
+      idCategoria         : widget.categoria?.idCategoria             ?? '',
+      categoriaName       : widget.categoria?.name                    ?? '',
+      idFormularioTipo    : _selectedFormularioTipo?.idFormularioTipo ?? '',
+      formularioTipoName  : _selectedFormularioTipo?.name             ?? '',
+      formularioValor     : _formularioValorController.text,
+    );
+
+    return widget.onUpdatePressed!(objPost);
+  }
+
+  void _storeDuplicate() {
+    final CategoriaItemStoreDuplicateReqEntity objPost = CategoriaItemStoreDuplicateReqEntity(
+      name                  : widget.categoriaItem?.name                ?? '',
+      idCategoria           : widget.categoriaItem?.idCategoria         ?? '',
+      categoriaName         : widget.categoriaItem?.categoriaName       ?? '',
+      idFormularioTipo      : widget.categoriaItem?.idFormularioTipo    ?? '',
+      formularioTipoName    : widget.categoriaItem?.formularioTipoName  ?? '',
+      formularioValor       : widget.categoriaItem?.formularioValor     ?? '',
+    );
+
+    return widget.onDuplicatePressed!(objPost);
   }
 
   @override
@@ -139,7 +149,7 @@ class _ListCardState extends State<_ListCard> {
             title   : _isEditMode
                 ? LabeledTextFormField(controller: _nameController, label: 'Pregunta:', textInputAction: TextInputAction.done)
                 : Text(widget.categoriaItem?.name ?? ''),
-            onTap   : () => _editCategoriaItem(widget.categoriaItem!),
+            onTap   : () => _handleEditTap(widget.categoriaItem!),
           ),
 
           // TIPOS DE FORMULARIOS:
@@ -147,7 +157,7 @@ class _ListCardState extends State<_ListCard> {
             title   : _isEditMode
                 ? _buildFormularioTipoSelect()
                 : _buildFormularioValuesContent(widget.categoriaItem!),
-            onTap   : () => _editCategoriaItem(widget.categoriaItem!),
+            onTap   : () => _handleEditTap(widget.categoriaItem!),
           ),
 
           const Divider(),
@@ -161,11 +171,11 @@ class _ListCardState extends State<_ListCard> {
                 if (_isEditMode)
                   ...[
                     TextButton(
-                      onPressed : _cancelEdit,
+                      onPressed : _handleCancelPressed,
                       child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
                     ),
                     TextButton.icon(
-                      onPressed : _saveEdit,
+                      onPressed : _handleUpdatePressed,
                       icon      : const Icon(Icons.check_circle),
                       label     : Text($strings.saveButtonText, style: $styles.textStyles.button),
                     ),
@@ -173,12 +183,12 @@ class _ListCardState extends State<_ListCard> {
                 else
                   ...[
                     IconButton(
-                      onPressed : _onDuplicateCategoriaItem,
+                      onPressed : _handleStoreDuplicatePressed,
                       icon      : const Icon(Icons.content_copy),
                       tooltip   : 'Duplicar elemento',
                     ),
                     IconButton(
-                      onPressed : () => _onDeleteCategoriaItem(widget.categoriaItem),
+                      onPressed : () => _handleDeletePressed(widget.categoriaItem),
                       color     : Theme.of(context).colorScheme.error,
                       icon      : Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
                       tooltip   : 'Eliminar',

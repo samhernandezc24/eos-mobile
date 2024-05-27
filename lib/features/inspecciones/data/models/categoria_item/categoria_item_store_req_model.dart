@@ -5,9 +5,11 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/
 /// Representa el modelo de datos que se enviará al servidor de la pregunta.
 class CategoriaItemStoreReqModel extends CategoriaItemStoreReqEntity {
   const CategoriaItemStoreReqModel({
+    required String name,
     required String idCategoria,
     required String categoriaName,
   }) : super(
+          name          : name,
           idCategoria   : idCategoria,
           categoriaName : categoriaName,
         );
@@ -16,6 +18,7 @@ class CategoriaItemStoreReqModel extends CategoriaItemStoreReqEntity {
   /// durante el mapeo del JSON.
   factory CategoriaItemStoreReqModel.fromJson(Map<String, dynamic> jsonMap) {
     return CategoriaItemStoreReqModel(
+      name          : jsonMap['name'] as String,
       idCategoria   : jsonMap['idCategoria'] as String,
       categoriaName : jsonMap['categoriaName'] as String,
     );
@@ -25,6 +28,7 @@ class CategoriaItemStoreReqModel extends CategoriaItemStoreReqEntity {
   /// en una instancia de [CategoriaItemStoreReqModel].
   factory CategoriaItemStoreReqModel.fromEntity(CategoriaItemStoreReqEntity entity) {
     return CategoriaItemStoreReqModel(
+      name          : entity.name,
       idCategoria   : entity.idCategoria,
       categoriaName : entity.categoriaName,
     );
@@ -33,6 +37,7 @@ class CategoriaItemStoreReqModel extends CategoriaItemStoreReqEntity {
   /// Serialización de la estructura del modelo a formato JSON.
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
+      'name'          : name,
       'idCategoria'   : idCategoria,
       'categoriaName' : categoriaName,
     };

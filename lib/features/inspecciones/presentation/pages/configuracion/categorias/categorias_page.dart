@@ -71,8 +71,8 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
             padding : EdgeInsets.all($styles.insets.sm),
             color   : Theme.of(context).colorScheme.background,
             child   : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
+              crossAxisAlignment  : CrossAxisAlignment.start,
+              children            : <Widget>[
                 Text($strings.categoriaBoxTitle, style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600)),
                 Gap($styles.insets.xxs),
                 RichText(
