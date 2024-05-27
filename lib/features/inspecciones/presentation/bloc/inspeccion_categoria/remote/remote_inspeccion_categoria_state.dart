@@ -7,10 +7,12 @@ class RemoteInspeccionCategoriaState extends Equatable {
   List<Object?> get props => [];
 }
 
-/// LOADING
-class RemoteInspeccionCategoriaLoading extends RemoteInspeccionCategoriaState {}
+/// INITIAL STATE
+class RemoteInspeccionCategoriaInitial extends RemoteInspeccionCategoriaState {}
 
 /// GET PREGUNTAS
+class RemoteInspeccionCategoriaGetPreguntasLoading extends RemoteInspeccionCategoriaState {}
+
 class RemoteInspeccionCategoriaGetPreguntasSuccess extends RemoteInspeccionCategoriaState {
   const RemoteInspeccionCategoriaGetPreguntasSuccess(this.objResponse);
 
@@ -20,9 +22,30 @@ class RemoteInspeccionCategoriaGetPreguntasSuccess extends RemoteInspeccionCateg
   List<Object?> get props => [ objResponse ];
 }
 
+/// STORE
+class RemoteInspeccionCategoriaStoring extends RemoteInspeccionCategoriaState {}
+
+class RemoteInspeccionCategoriaStored extends RemoteInspeccionCategoriaState {
+  const RemoteInspeccionCategoriaStored(this.objResponse);
+
+  final ServerResponse? objResponse;
+
+  @override
+  List<Object?> get props => [ objResponse ];
+}
+
 /// SERVER FAILED MESSAGE
-class RemoteInspeccionCategoriaServerFailedMessage extends RemoteInspeccionCategoriaState {
-  const RemoteInspeccionCategoriaServerFailedMessage(this.errorMessage);
+class RemoteInspeccionCategoriaServerFailedMessageGetPreguntas extends RemoteInspeccionCategoriaState {
+  const RemoteInspeccionCategoriaServerFailedMessageGetPreguntas(this.errorMessage);
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [ errorMessage ];
+}
+
+class RemoteInspeccionCategoriaServerFailedStore extends RemoteInspeccionCategoriaState {
+  const RemoteInspeccionCategoriaServerFailedStore(this.errorMessage);
 
   final String? errorMessage;
 
@@ -31,8 +54,17 @@ class RemoteInspeccionCategoriaServerFailedMessage extends RemoteInspeccionCateg
 }
 
 /// SERVER FAILURE
-class RemoteInspeccionCategoriaServerFailure extends RemoteInspeccionCategoriaState {
-  const RemoteInspeccionCategoriaServerFailure(this.failure);
+class RemoteInspeccionCategoriaServerFailureGetPreguntas extends RemoteInspeccionCategoriaState {
+  const RemoteInspeccionCategoriaServerFailureGetPreguntas(this.failure);
+
+  final ServerException? failure;
+
+  @override
+  List<Object?> get props => [ failure ];
+}
+
+class RemoteInspeccionCategoriaServerFailureStore extends RemoteInspeccionCategoriaState {
+  const RemoteInspeccionCategoriaServerFailureStore(this.failure);
 
   final ServerException? failure;
 

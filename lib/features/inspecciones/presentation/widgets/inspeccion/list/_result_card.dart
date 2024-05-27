@@ -7,7 +7,7 @@ class _ResultCard extends StatelessWidget {
   final VoidCallback buildDataSourceCallback;
 
   // METHODS
-  void _handleChecklistInspeccionPressed(BuildContext context, InspeccionIdReqEntity idInspeccion) {
+  void _handleChecklistInspeccionPressed(BuildContext context, InspeccionIdReqEntity objData) {
     Navigator.push<void>(
       context,
       PageRouteBuilder<void>(
@@ -21,7 +21,7 @@ class _ResultCard extends StatelessWidget {
 
           return SlideTransition(
             position  : animation.drive<Offset>(tween),
-            child     : _ChecklistInspeccion(idInspeccion: idInspeccion, buildDataSourceCallback: buildDataSourceCallback),
+            child     : _ChecklistInspeccion(objData: objData, buildDataSourceCallback: buildDataSourceCallback),
           );
         },
         fullscreenDialog: true,

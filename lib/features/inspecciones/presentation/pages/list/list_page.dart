@@ -15,6 +15,7 @@ import 'package:eos_mobile/core/enums/inspeccion_menu.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_categoria/inspeccion_categoria_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_store_req_entity.dart';
@@ -29,10 +30,12 @@ import 'package:eos_mobile/ui/common/controls/labeled_datetime_text_form_field.d
 import 'package:eos_mobile/ui/common/error_server_failure.dart';
 import 'package:eos_mobile/ui/common/request_data_unavailable.dart';
 import 'package:eos_mobile/ui/common/themed_text.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:intl/intl.dart';
 
 part '../../widgets/inspeccion/checklist/_checklist_inspeccion.dart';
+part '../../widgets/inspeccion/checklist/_checklist_tile.dart';
 part '../../widgets/inspeccion/create/_create_form.dart';
 part '../../widgets/inspeccion/create/_search_input.dart';
 part '../../widgets/inspeccion/filter/_filter_inspeccion.dart';

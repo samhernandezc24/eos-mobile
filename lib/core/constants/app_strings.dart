@@ -1,6 +1,7 @@
 class AppStrings {
   static final AppStrings instance = AppStrings();
 
+  // A
   String acceptButtonText             = 'Aceptar';
 
   String accountTitle                 = 'Cuenta';
@@ -11,26 +12,20 @@ class AppStrings {
   String appPageSemanticSwipe         = '{pageTitle} {count} de {total}.';
   String appProcessingData            = 'Procesando...';
 
-  String dashboardTitle               = 'Dashboard';
-
-  String defaultAppName               = 'EOS Mobile';
-  String defaultPageTitle             = 'Página';
-
-  String deleteButtonText             = 'Eliminar';
-
-  String disableButtonText            = 'Inhabilitar';
-
+  // C
   String cancelButtonText             = 'Cancelar';
-  String leaveButtonText              = 'Salir';
 
-  String createCategoryButtonText     = 'Crear categorías';
-
-  String createCategoryItemButtonText = 'Crear preguntas';
-
-  String categoryAppBarTitle          = 'Configuración de categorías';
-  String categoryDescription          = 'Crea categorías para agrupar los formularios de las inspecciones.';
-  String categoryEmptyTitle           = 'Aún no hay categorías';
-  String categoryTitle                = 'Listado de categorías';
+  String categoriaAppBarTitle         = 'Configuración de categorías';
+  String categoriaBoxDescription      = 'Crea las categorías para agrupar las preguntas de las inspecciones.';
+  String categoriaBoxTitle            = 'Categorías';
+  String categoriaCreateAppBarTitle   = 'Nueva categoría';
+  String categoriaCreateButtonText    = 'Nueva categoría';
+  String categoriaCreatePreguntasText = 'Crear preguntas';
+  String categoriaDeleteAlertContent1 = 'Se eliminará la categoría ';
+  String categoriaDeleteAlertContent2 = '¿Estás seguro de querer realizar esa acción?';
+  String categoriaDeleteAlertTitle    = '¿Eliminar categoría?';
+  String categoriaEditAppBarTitle     = 'Editar categoría';
+  String categoriaEmptyListTitle      = 'Aún no hay categorías';
 
   String categoryItemAppBarTitle      = 'Configuración de preguntas';
   String categoryItemDescription      = 'Configura y organiza las preguntas según tus necesidades.';
@@ -43,6 +38,17 @@ class AppStrings {
   String checklistAppBarTitle         = 'Evaluar unidad';
   String checklistEmptyTitle          = 'Aún no hay preguntas';
   String checklistListMessage         = 'Intenta configurar las categorías y preguntas para la evaluación de la unidad.';
+
+  String dashboardTitle               = 'Dashboard';
+
+  String defaultAppName               = 'EOS Mobile';
+  String defaultPageTitle             = 'Página';
+
+  String deleteButtonText             = 'Eliminar';
+
+  String disableButtonText            = 'Inhabilitar';
+
+  String leaveButtonText              = 'Salir';
 
   String editButtonText               = 'Editar';
 
@@ -59,13 +65,23 @@ class AppStrings {
   String forgotPasswordMessage        = 'Completa el formulario para restablecer su contraseña';
   String forgotPasswordSemanticImage  = 'Se te ha olvidado la contraseña';
 
-  String inspectionEmptyTitle         = 'Aún no hay inspecciones';
-  String inspectionSuggestionCreate   = 'Es necesario que realice la búsqueda de la unidad a inspeccionar antes de continuar.';
+  // I
+  String incompleteFormDataMessage          = 'Datos incompletos en el formulario';
 
-  String inspectionTypeAppBarTitle    = 'Configuración de inspecciones';
-  String inspectionTypeDescription    = 'Crea un tipo de inspección para agrupar los formularios de las inspecciones.';
-  String inspectionTypeEmptyTitle     = 'Aún no hay tipos de inspecciones';
-  String inspectionTypeTitle          = 'Listado de tipos de inspecciones';
+  String inspectionEmptyTitle               = 'Aún no hay inspecciones';
+  String inspectionSuggestionCreate         = 'Es necesario que realice la búsqueda de la unidad a inspeccionar antes de continuar.';
+
+  String inspeccionTipoAppBarTitle          = 'Configuración de inspecciones';
+  String inspeccionTipoBoxDescription       = 'Crea los tipos de inspección para organizar y gestionar tus inspecciones de manera más eficiente.';
+  String inspeccionTipoBoxTitle             = 'Tipos de inspecciones';
+  String inspeccionTipoCreateButtonText     = 'Nuevo tipo de inspección';
+  String inspeccionTipoCreateAppBarTitle    = 'Tipos de inspecciones';
+  String inspeccionTipoCreateCategoriasText = 'Crear categorías';
+  String inspeccionTipoDeleteAlertContent1  = 'Se eliminará el tipo de inspección ';
+  String inspeccionTipoDeleteAlertContent2  = 'con el código {inspeccionTipoCodigo}. \n¿Estás seguro de querer realizar esa acción?';
+  String inspeccionTipoDeleteAlertTitle     = '¿Eliminar tipo de inspección?';
+  String inspeccionTipoEditAppBarTitle      = 'Editar tipo de inspección';
+  String inspeccionTipoEmptyListTitle       = 'Aún no hay tipos de inspecciones';
 
   String inspectionIndexListTitle     = 'Lista de inspecciones';
   String inspectionIndexListSubtitle  = 'Muestra inspecciones en general.';

@@ -1,4 +1,4 @@
-part of '../../pages/configuracion/inspecciones_tipos/inspecciones_tipos_page.dart';
+part of '../../../pages/configuracion/inspecciones_tipos/inspecciones_tipos_page.dart';
 
 class _ListTile extends StatelessWidget {
   const _ListTile({Key? key, this.inspeccionTipo, this.onInspeccionTipoPressed}) : super(key: key);
@@ -6,11 +6,11 @@ class _ListTile extends StatelessWidget {
   final InspeccionTipoEntity? inspeccionTipo;
   final void Function(InspeccionTipoEntity inspeccionTipo)? onInspeccionTipoPressed;
 
-  // METHODS
-  void _handleActionsPressed(BuildContext context, InspeccionTipoEntity? inspeccionTipo) {
+  // EVENTS
+  void _handleMoreActionsPressed(BuildContext context, InspeccionTipoEntity? inspeccionTipo) {
     showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) {
+      context : context,
+      builder : (BuildContext context) {
         return Column(
           mainAxisSize  : MainAxisSize.min,
           children      : <Widget>[
@@ -24,32 +24,23 @@ class _ListTile extends StatelessWidget {
                 ),
               ),
             ),
-            // CREAR CATEGORIAS:
             ListTile(
-              onTap   : _onTap,
+              onTap   : _handleListTileTap,
               leading : const Icon(Icons.add),
-              title   : Text($strings.createCategoryButtonText),
+              title   : Text($strings.inspeccionTipoCreateCategoriasText),
             ),
-            // EDITAR INSPECCION TIPO:
             ListTile(
               onTap: () {
-                // Cerramos el modal bottom sheet.
-                Navigator.of(context).pop();
-
-                // Manejamos la eliminacion.
-                _handleEditPressed(context, inspeccionTipo);
+                Navigator.of(context).pop();                  // Cerrar modal bottom sheet
+                _handleEditPressed(context, inspeccionTipo);  // Editar tipo de inspeccion
               },
               leading : const Icon(Icons.edit),
               title   : Text($strings.editButtonText),
             ),
-            // ELIMINAR INSPECCION TIPO:
             ListTile(
               onTap: () {
-                // Cerramos el modal bottom sheet.
-                Navigator.of(context).pop();
-
-                // Manejamos la eliminacion.
-                _handleDeletePressed(context, inspeccionTipo);
+                Navigator.of(context).pop();                    // Cerrar modal bottom sheet
+                _handleDeletePressed(context, inspeccionTipo);  // Eliminar tipo de inspeccion
               },
               leading   : const Icon(Icons.delete),
               textColor : Theme.of(context).colorScheme.error,
@@ -62,18 +53,18 @@ class _ListTile extends StatelessWidget {
     );
   }
 
-  // DETAILS:
-  void _onTap() {
-    if (onInspeccionTipoPressed != null) return onInspeccionTipoPressed!(inspeccionTipo!);
+  void _handleListTileTap() {
+    if (onInspeccionTipoPressed != null) {
+      return onInspeccionTipoPressed!(inspeccionTipo!);
+    }
   }
 
-  // EDIT:
   void _handleEditPressed(BuildContext context, InspeccionTipoEntity? inspeccionTipo) {
     Navigator.push<void>(
       context,
       PageRouteBuilder<void>(
-        transitionDuration: $styles.times.pageTransition,
-        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+        transitionDuration  : $styles.times.pageTransition,
+        pageBuilder         : (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
           const Offset begin    = Offset(0, 1);
           const Offset end      = Offset.zero;
           const Cubic curve     = Curves.ease;
@@ -82,7 +73,10 @@ class _ListTile extends StatelessWidget {
 
           return SlideTransition(
             position  : animation.drive<Offset>(tween),
-            child     : FormModal(title: 'Editar tipo de inspección', child: _EditForm(inspeccionTipo: inspeccionTipo)),
+            child     : FormModal(
+              title : $strings.inspeccionTipoEditAppBarTitle,
+              child : _EditInspeccionTipoForm(inspeccionTipo: inspeccionTipo),
+            ),
           );
         },
         fullscreenDialog: true,
@@ -90,19 +84,18 @@ class _ListTile extends StatelessWidget {
     );
   }
 
-  // DELETE:
   Future<void> _handleDeletePressed(BuildContext context, InspeccionTipoEntity? inspeccionTipo) async {
-    return showDialog<void>(
+    await showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return BlocConsumer<RemoteInspeccionTipoBloc, RemoteInspeccionTipoState>(
-          listener: (BuildContext context, RemoteInspeccionTipoState state) {
+          listener: (BuildContext context, RemoteInspeccionTipoState state) async {
             if (state is RemoteInspeccionTipoServerFailedMessage) {
-              _showServerFailedMessageOnDelete(context, state);
+              await _showServerFailedDialog(context, state.errorMessage);
             }
 
             if (state is RemoteInspeccionTipoServerFailure) {
-              _showServerFailureOnDelete(context, state);
+              await _showServerFailedDialog(context, state.failure?.errorMessage);
             }
 
             if (state is RemoteInspeccionTipoDeleted) {
@@ -116,8 +109,8 @@ class _ListTile extends StatelessWidget {
                 SnackBar(
                   content         : Text(state.objResponse?.message ?? 'Eliminado', softWrap: true),
                   backgroundColor : Colors.green,
-                  behavior        : SnackBarBehavior.fixed,
                   elevation       : 0,
+                  behavior        : SnackBarBehavior.fixed,
                 ),
               );
             }
@@ -147,27 +140,27 @@ class _ListTile extends StatelessWidget {
             }
 
             return AlertDialog(
-              title   : Text('¿Eliminar tipo de inspección?', style: $styles.textStyles.h3.copyWith(fontSize: 18)),
+              title   : Text($strings.inspeccionTipoDeleteAlertTitle, style: $styles.textStyles.h3.copyWith(fontSize: 18)),
               content : RichText(
                 text: TextSpan(style: $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
                   children: <InlineSpan>[
-                    const TextSpan(text: 'Se eliminará el tipo de inspección '),
+                    TextSpan(text: $strings.inspeccionTipoDeleteAlertContent1),
                     TextSpan(
-                      text: '"${inspeccionTipo?.name.toProperCase()}" ',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      text  : '"${inspeccionTipo?.name}" ',
+                      style : const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    TextSpan(text: 'con el código ${inspeccionTipo?.codigo}. ¿Estás seguro de querer realizar esa acción?'),
+                    TextSpan(text: $strings.inspeccionTipoDeleteAlertContent2.replaceAll('{inspeccionTipoCodigo}', inspeccionTipo?.codigo ?? '')),
                   ],
                 ),
               ),
               actions: <Widget>[
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text($strings.cancelButtonText, style: $styles.textStyles.button),
+                  onPressed : () => Navigator.pop(context, $strings.cancelButtonText),
+                  child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
                 ),
                 TextButton(
-                  onPressed: () => context.read<RemoteInspeccionTipoBloc>().add(DeleteInspeccionTipo(inspeccionTipo!)),
-                  child: Text($strings.deleteButtonText, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
+                  onPressed : () => context.read<RemoteInspeccionTipoBloc>().add(DeleteInspeccionTipo(inspeccionTipo!)),
+                  child     : Text($strings.deleteButtonText, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
                 ),
               ],
             );
@@ -177,68 +170,25 @@ class _ListTile extends StatelessWidget {
     );
   }
 
-  Future<void> _showServerFailedMessageOnDelete(BuildContext context, RemoteInspeccionTipoServerFailedMessage state) async {
+  Future<void> _showServerFailedDialog(BuildContext context, String? errorMessage) async {
     return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment : MainAxisAlignment.center,
-            children          : <Widget>[
-              Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 48),
-            ],
-          ),
-          content: Text(
-            state.errorMessage ?? 'Se produjo un error inesperado. Intenta eliminar de nuevo el tipo de inspección.',
-            style: $styles.textStyles.title2.copyWith(height: 1.5),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed : () => Navigator.pop(context, 'Aceptar'),
-              child     : Text($strings.acceptButtonText, style: $styles.textStyles.button),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _showServerFailureOnDelete(BuildContext context, RemoteInspeccionTipoServerFailure state) async {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment : MainAxisAlignment.center,
-            children          : <Widget>[
-              Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 48),
-            ],
-          ),
-          content: Text(
-            state.failure?.errorMessage ?? 'Se produjo un error inesperado. Intenta eliminar de nuevo el tipo de inspección.',
-            style: $styles.textStyles.title2.copyWith(height: 1.5),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed : () => Navigator.pop(context, 'Aceptar'),
-              child     : Text($strings.acceptButtonText, style: $styles.textStyles.button),
-            ),
-          ],
-        );
-      },
+      context : context,
+      builder: (BuildContext context)  => ServerFailedDialog(
+        errorMessage: errorMessage ?? 'Se produjo un error inesperado. Intenta eliminar de nuevo el tipo de inspección.',
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap     : _onTap,
+      onTap     : _handleListTileTap,
       leading   : const CircleAvatar(child: Icon(Icons.local_shipping)),
-      title     : Text(inspeccionTipo?.name.toProperCase() ?? '', overflow: TextOverflow.ellipsis),
+      title     : Text(inspeccionTipo?.name ?? '', overflow: TextOverflow.ellipsis),
       subtitle  : Text('Código: ${inspeccionTipo?.codigo}'),
       trailing  : IconButton(
         icon      : const Icon(Icons.more_vert),
-        onPressed : () => _handleActionsPressed(context, inspeccionTipo),
+        onPressed : () => _handleMoreActionsPressed(context, inspeccionTipo),
       ),
     );
   }

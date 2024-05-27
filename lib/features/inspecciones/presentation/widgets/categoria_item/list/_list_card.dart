@@ -1,4 +1,4 @@
-part of '../../pages/configuracion/categorias_items/categorias_items_page.dart';
+part of '../../../pages/configuracion/categorias_items/categorias_items_page.dart';
 
 class _ListCard extends StatefulWidget {
   const _ListCard({

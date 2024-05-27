@@ -1,9 +1,9 @@
 part of '../../../pages/list/list_page.dart';
 
 class _ChecklistInspeccion extends StatefulWidget {
-  const _ChecklistInspeccion({required this.idInspeccion, required this.buildDataSourceCallback, Key? key}) : super(key: key);
+  const _ChecklistInspeccion({required this.objData, required this.buildDataSourceCallback, Key? key}) : super(key: key);
 
-  final InspeccionIdReqEntity idInspeccion;
+  final InspeccionIdReqEntity objData;
   final VoidCallback buildDataSourceCallback;
 
   @override
@@ -15,13 +15,13 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
   late final TextEditingController _fechaInspeccionInicialController;
 
   // PROPERTIES
-  String? _selectedValueOption;
   bool _hasServerError = false;
 
+  // STATE
   @override
   void initState() {
     super.initState();
-    context.read<RemoteInspeccionCategoriaBloc>().add(GetInspeccionCategoriaPreguntas(widget.idInspeccion));
+    context.read<RemoteInspeccionCategoriaBloc>().add(GetInspeccionCategoriaPreguntas(widget.objData));
 
     _fechaInspeccionInicialController = TextEditingController();
   }
@@ -32,7 +32,7 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
     super.dispose();
   }
 
-  // METHODS
+  // EVENTS
   void _handleDidPopPressed(BuildContext context) {
     showModalBottomSheet<void>(
       context : context,
@@ -54,7 +54,7 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
             ),
             ListTile(
               onTap: () {
-                Navigator.of(context).pop(); // Cerrar modal bottom
+                Navigator.of(context).pop();        // Cerrar modal bottom
                 // Ejecutar el callback una vez finalizada la acción pop.
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   Navigator.of(context).pop();      // Cerrar página
@@ -79,6 +79,55 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
     );
   }
 
+  void _handleStorePressed({bool isParcial = false}) {
+    // if (lstCategorias.isEmpty) {
+    //   // No se puede guardar parcialmente o finalizar una evaluación que no cuenta con categorías.
+    //   return;
+    // }
+
+    if (!isParcial) {
+      // Ingrese la fecha de inspección inicial
+      return;
+    } else {
+      _store(isParcial);
+    }
+  }
+
+  // METHODS
+  void _updateFechaInspeccionInicial(DateTime? fecha) {
+    if (fecha != null) {
+      final String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(fecha);
+      _fechaInspeccionInicialController.text = formattedDate;
+    }
+  }
+
+  void _store(bool isParcial) {
+    // Verificar que la fecha de inspeccion inicial no se mande vacia.
+    if (_fechaInspeccionInicialController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content         : const Text('Por favor selecciona la fecha de inspección inicial'),
+          backgroundColor : Theme.of(context).colorScheme.error,
+          behavior        : SnackBarBehavior.fixed,
+          elevation       : 0,
+        ),
+      );
+      return;
+    }
+
+    final DateTime fechaInspeccionInicial = DateFormat('dd/MM/yyyy HH:mm').parse(_fechaInspeccionInicialController.text);
+
+    final InspeccionCategoriaStoreReqEntity objPost = InspeccionCategoriaStoreReqEntity(
+      idInspeccion            : widget.objData.idInspeccion,
+      isParcial               : isParcial,
+      fechaInspeccionInicial  : fechaInspeccionInicial,
+      categorias              : [],
+    );
+
+    // Evento StoreInspeccionCategoria del BLoC.
+    BlocProvider.of<RemoteInspeccionCategoriaBloc>(context).add(StoreInspeccionCategoria(objPost));
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -91,13 +140,13 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
         appBar  : AppBar(title: Text($strings.checklistAppBarTitle, style: $styles.textStyles.h3)),
         body    : BlocConsumer<RemoteInspeccionCategoriaBloc, RemoteInspeccionCategoriaState>(
           listener: (BuildContext context, RemoteInspeccionCategoriaState state) {
-            if (state is RemoteInspeccionCategoriaServerFailedMessage) {
+            if (state is RemoteInspeccionCategoriaServerFailedMessageGetPreguntas) {
               setState(() {
                 _hasServerError = true;
               });
             }
 
-            if (state is RemoteInspeccionCategoriaServerFailure) {
+            if (state is RemoteInspeccionCategoriaServerFailureGetPreguntas) {
               setState(() {
                 _hasServerError = true;
               });
@@ -106,24 +155,25 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
             if (state is RemoteInspeccionCategoriaGetPreguntasSuccess) {
               setState(() {
                 _hasServerError = false;
+                _updateFechaInspeccionInicial(state.objResponse?.inspeccion?.fechaInspeccionInicial);
               });
             }
           },
           builder: (BuildContext context, RemoteInspeccionCategoriaState state) {
-            if (state is RemoteInspeccionCategoriaLoading) {
+            if (state is RemoteInspeccionCategoriaGetPreguntasLoading) {
               return const Center(child: AppLoadingIndicator());
             }
 
-            if (state is RemoteInspeccionCategoriaServerFailedMessage) {
+            if (state is RemoteInspeccionCategoriaServerFailedMessageGetPreguntas) {
               return ErrorInfoContainer(
-                onPressed     : () => context.read<RemoteInspeccionCategoriaBloc>().add(GetInspeccionCategoriaPreguntas(widget.idInspeccion)),
+                onPressed     : () => context.read<RemoteInspeccionCategoriaBloc>().add(GetInspeccionCategoriaPreguntas(widget.objData)),
                 errorMessage  : state.errorMessage,
               );
             }
 
-            if (state is RemoteInspeccionCategoriaServerFailure) {
+            if (state is RemoteInspeccionCategoriaServerFailureGetPreguntas) {
               return ErrorInfoContainer(
-                onPressed     : () => context.read<RemoteInspeccionCategoriaBloc>().add(GetInspeccionCategoriaPreguntas(widget.idInspeccion)),
+                onPressed     : () => context.read<RemoteInspeccionCategoriaBloc>().add(GetInspeccionCategoriaPreguntas(widget.objData)),
                 errorMessage  : state.failure?.errorMessage,
               );
             }
@@ -142,9 +192,9 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           // FECHA DE INSPECCIÓN INICIAL:
-                          LabeledDateTextFormField(
+                          LabeledDateTimeTextFormField(
                             controller  : _fechaInspeccionInicialController,
-                            hintText    : 'dd/mm/aaaa',
+                            hintText    : 'dd/mm/aaaa hh:mm',
                             label       : '* Fecha de inspección inicial:',
                           ),
                         ],
@@ -159,50 +209,11 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
                     child: lstCategorias.isNotEmpty
                         // FORMULARIO DE PREGUNTAS:
                         ? ListView.builder(
-                          padding: EdgeInsets.only(bottom: $styles.insets.lg),
+                            padding     : EdgeInsets.only(bottom: $styles.insets.lg),
                             itemCount   : lstCategorias.length,
                             itemBuilder : (BuildContext context, int index) {
                               final Categoria categoria = lstCategorias[index];
-                              return Card(
-                                elevation : 3,
-                                shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
-                                margin    : EdgeInsets.only(bottom: $styles.insets.sm),
-                                child     : ExpansionTile(
-                                  leading: Container(
-                                    padding: EdgeInsets.symmetric(vertical: $styles.insets.xxs, horizontal: $styles.insets.xs),
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).indicatorColor,
-                                      borderRadius: BorderRadius.circular($styles.corners.md),
-                                    ),
-                                    child: Text(
-                                      '1 / 10',
-                                      style: $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onPrimary),
-                                    ),
-                                  ),
-                                  title     : Text('${categoria.name}', style: $styles.textStyles.h4),
-                                  children  : categoria.categoriasItems?.map((item) {
-                                    final int itemIndex = categoria.categoriasItems!.indexOf(item) + 1;
-                                    return Column(
-                                      children  : <Widget>[
-                                        Padding(
-                                          padding : EdgeInsets.symmetric(horizontal: $styles.insets.sm),
-                                          child   : Row(
-                                            children  : <Widget>[
-                                              CircleAvatar(radius: 14, child: Text('$itemIndex', style: $styles.textStyles.h4)),
-                                              Gap($styles.insets.sm),
-                                              Expanded(child: Text('${item.name}', style: $styles.textStyles.body.copyWith(height: 1.3), softWrap: true)),
-                                            ],
-                                          ),
-                                        ),
-                                        ListTile(
-                                          contentPadding: EdgeInsets.symmetric(horizontal: $styles.insets.xs),
-                                          title: _buildFormularioValuesContent(item),
-                                        ),
-                                      ],
-                                    );
-                                  }).toList() ?? [],
-                                ),
-                              );
+                              return _ChecklistTile(categoria: categoria);
                             },
                           )
                         : RequestDataUnavailable(title: $strings.checklistEmptyTitle, message: $strings.checklistListMessage, isRefreshData: false),
@@ -220,7 +231,7 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
                     IconButton(onPressed: (){}, icon: const Icon(Icons.camera_alt), tooltip: 'Tomar fotografía'),
                     IconButton(onPressed: (){}, icon: const Icon(Icons.sync), tooltip: 'Sincronizar información'),
                     const Spacer(),
-                    FilledButton(onPressed: (){}, child: Text($strings.saveButtonText, style: $styles.textStyles.button)),
+                    FilledButton(onPressed: () => _handleStorePressed(isParcial: true), child: Text($strings.saveButtonText, style: $styles.textStyles.button)),
                   ],
                 ),
               )
@@ -313,44 +324,5 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
         ],
       ),
     );
-  }
-
-  Widget _buildFormularioValuesContent(CategoriaItem categoriaItem) {
-    switch (categoriaItem.idFormularioTipo) {
-      // OPCION MULTIPLE:
-      case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb32':
-        final List<String> lstOptions = categoriaItem.formularioValor!.split(',');
-        return Row(
-          children  : <Widget>[
-            Container(
-              constraints : BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-              child       : Wrap(
-                spacing     : 8,
-                runSpacing  : 4,
-                children    : lstOptions.map((opt) {
-                  return Row(
-                    mainAxisSize  : MainAxisSize.min,
-                    children      : <Widget>[
-                      Radio<String>(
-                        value       : opt,
-                        groupValue  : _selectedValueOption,
-                        onChanged   : (value) {
-                          setState(() {
-                            _selectedValueOption = value;
-                          });
-                        },
-                      ),
-                      Text(opt, style: $styles.textStyles.body),
-                    ],
-                  );
-                }).toList(),
-              ),
-            ),
-          ],
-        );
-      // DESCONOCIDO:
-      default:
-        return Text('Tipo de formulario desconocido', style: $styles.textStyles.body.copyWith(color: Theme.of(context).hintColor));
-    }
   }
 }

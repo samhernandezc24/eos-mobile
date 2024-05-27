@@ -5,12 +5,10 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria/rem
 import 'package:eos_mobile/features/inspecciones/presentation/pages/configuracion/categorias_items/categorias_items_page.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
-import 'package:eos_mobile/ui/common/error_server_failure.dart';
-import 'package:eos_mobile/ui/common/request_data_unavailable.dart';
 
-part '../../../widgets/categoria/_create_form.dart';
-part '../../../widgets/categoria/_edit_form.dart';
-part '../../../widgets/categoria/_list_tile.dart';
+part '../../../widgets/categoria/create/_create_form.dart';
+part '../../../widgets/categoria/edit/_edit_form.dart';
+part '../../../widgets/categoria/list/_list_tile.dart';
 
 class InspeccionConfiguracionCategoriasPage extends StatefulWidget {
   const InspeccionConfiguracionCategoriasPage({Key? key, this.inspeccionTipo}) : super(key: key);
@@ -22,14 +20,14 @@ class InspeccionConfiguracionCategoriasPage extends StatefulWidget {
 }
 
 class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfiguracionCategoriasPage> {
+  // STATE
   @override
   void initState() {
     super.initState();
-
     context.read<RemoteCategoriaBloc>().add(ListCategorias(widget.inspeccionTipo!));
   }
 
-  // METHODS
+  // EVENTS
   void _handleCreatePressed(BuildContext context) {
     Navigator.push<void>(
       context,
@@ -42,7 +40,13 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
 
           final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-          return SlideTransition(position: animation.drive<Offset>(tween), child: FormModal(title: 'Nueva categoría', child: _CreateForm(inspeccionTipo: widget.inspeccionTipo)));
+          return SlideTransition(
+            position  : animation.drive<Offset>(tween),
+            child     : FormModal(
+              title : $strings.categoriaCreateAppBarTitle,
+              child : _CreateCategoriaForm(inspeccionTipo: widget.inspeccionTipo),
+            ),
+          );
         },
         fullscreenDialog: true,
       ),
@@ -58,7 +62,7 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar  : AppBar(title: Text($strings.categoryAppBarTitle, style: $styles.textStyles.h3)),
+      appBar  : AppBar(title: Text($strings.categoriaAppBarTitle, style: $styles.textStyles.h3)),
       body    : Column(
         crossAxisAlignment  : CrossAxisAlignment.start,
         children            : <Widget>[
@@ -69,7 +73,7 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
             child   : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text($strings.categoryTitle, style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600)),
+                Text($strings.categoriaBoxTitle, style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600)),
                 Gap($styles.insets.xxs),
                 RichText(
                   text: TextSpan(
@@ -85,7 +89,7 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
                     style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
                     children: <TextSpan>[
                       TextSpan(text: $strings.settingsSuggestionsText, style: const TextStyle(fontWeight: FontWeight.w600)),
-                      TextSpan(text: ': ${$strings.categoryDescription}'),
+                      TextSpan(text: ': ${$strings.categoriaBoxDescription}'),
                     ],
                   ),
                 ),
@@ -95,7 +99,7 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
                   child     : FilledButton.icon(
                     onPressed : () => _handleCreatePressed(context),
                     icon      : const Icon(Icons.add),
-                    label     : Text('Nueva categoría', style: $styles.textStyles.button),
+                    label     : Text($strings.categoriaCreateButtonText, style: $styles.textStyles.button),
                   ),
                 ),
               ],
@@ -131,21 +135,21 @@ class _InspeccionConfiguracionCategoriasPageState extends State<InspeccionConfig
                         itemCount   : state.objResponse!.length,
                         itemBuilder : (BuildContext context, int index) {
                           return _ListTile(
-                            categoria          : state.objResponse![index],
-                            inspeccionTipo     : widget.inspeccionTipo,
+                            categoria           : state.objResponse![index],
+                            inspeccionTipo      : widget.inspeccionTipo,
                             onCategoriaPressed  : (categoria) => _onCategoriaPressed(context, categoria),
                           );
                         },
                       );
                     } else {
                       return RequestDataUnavailable(
-                        title     : $strings.categoryEmptyTitle,
+                        title     : $strings.categoriaEmptyListTitle,
                         message   : $strings.emptyListMessage,
                         onRefresh : () => context.read<RemoteCategoriaBloc>().add(ListCategorias(widget.inspeccionTipo!)),
                       );
                     }
                   }
-                  return const SizedBox.shrink(); // No devolver nada, si el state no se completó
+                  return const SizedBox.shrink();
                 },
               ),
             ),

@@ -1,4 +1,5 @@
 import 'package:eos_mobile/core/data/catalogos/formulario_tipo.dart';
+
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_store_duplicate_req_entity.dart';
@@ -6,10 +7,8 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria_item/remote/remote_categoria_item_bloc.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
-import 'package:eos_mobile/ui/common/error_server_failure.dart';
-import 'package:eos_mobile/ui/common/request_data_unavailable.dart';
 
-part '../../../widgets/categoria_item/_list_card.dart';
+part '../../../widgets/categoria_item/list/_list_card.dart';
 
 class InspeccionConfiguracionCategoriasItemsPage extends StatefulWidget {
   const InspeccionConfiguracionCategoriasItemsPage({Key? key, this.categoria}) : super(key: key);
@@ -31,11 +30,11 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
   // PROPERTIES
   bool _isLoading = true;
 
+  // STATE
   @override
   void initState() {
     super.initState();
     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
-
     _scrollController = ScrollController();
   }
 
@@ -45,14 +44,9 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
     super.dispose();
   }
 
-  // METHODS
+  // EVENTS
   void _handleStoreCategoriaItem() {
-    final CategoriaItemStoreReqEntity objData = CategoriaItemStoreReqEntity(
-      idCategoria   : widget.categoria?.idCategoria ?? '',
-      categoriaName : widget.categoria?.name        ?? '',
-    );
-
-    BlocProvider.of<RemoteCategoriaItemBloc>(context).add(StoreCategoriaItem(objData));
+    _store();
   }
 
   void _onCategoriaItemStoreDuplicatePressed(CategoriaItemStoreDuplicateReqEntity objData) {
@@ -97,6 +91,33 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
     );
   }
 
+  void _scrollToEnd() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(_scrollController.position.maxScrollExtent, duration: $styles.times.slow, curve: Curves.easeOut);
+      }
+    });
+  }
+
+  Future<void> _showServerFailedDialog(BuildContext context, String? errorMessage) async {
+    return showDialog<void>(
+      context : context,
+      builder: (BuildContext context)  => ServerFailedDialog(
+        errorMessage: errorMessage ?? 'Se produjo un error inesperado.',
+      ),
+    );
+  }
+
+  // METHODS
+  void _store() {
+    final CategoriaItemStoreReqEntity objData = CategoriaItemStoreReqEntity(
+      idCategoria   : widget.categoria?.idCategoria ?? '',
+      categoriaName : widget.categoria?.name        ?? '',
+    );
+
+    BlocProvider.of<RemoteCategoriaItemBloc>(context).add(StoreCategoriaItem(objData));
+  }
+
   void _showProgressDialog(BuildContext context) {
     showDialog<void>(
       context             : context,
@@ -121,66 +142,6 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
               ],
             ),
           ),
-        );
-      },
-    );
-  }
-
-  void _scrollToEnd() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(_scrollController.position.maxScrollExtent, duration: $styles.times.slow, curve: Curves.easeOut);
-      }
-    });
-  }
-
-  Future<void> _showServerFailedMessage(BuildContext context, String? errorMessage) async {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment : MainAxisAlignment.center,
-            children          : <Widget>[
-              Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 48),
-            ],
-          ),
-          content: Text(
-            errorMessage ?? 'Se produjo un error inesperado.',
-            style: $styles.textStyles.title2.copyWith(height: 1.5),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed : () => Navigator.pop(context, 'Aceptar'),
-              child     : Text($strings.acceptButtonText, style: $styles.textStyles.button),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _showServerFailure(BuildContext context, String? errorMessage) async {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment : MainAxisAlignment.center,
-            children          : <Widget>[
-              Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 48),
-            ],
-          ),
-          content: Text(
-            errorMessage ?? 'Se produjo un error inesperado.',
-            style: $styles.textStyles.title2.copyWith(height: 1.5),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed : () => Navigator.pop(context, 'Aceptar'),
-              child     : Text($strings.acceptButtonText, style: $styles.textStyles.button),
-            ),
-          ],
         );
       },
     );
@@ -223,7 +184,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                   if (state is RemoteCategoriaItemServerFailedMessageDuplicate) {
                     Navigator.of(context).pop();
 
-                    _showServerFailedMessage(context, state.errorMessage);
+                    _showServerFailedDialog(context, state.errorMessage);
 
                     // Actualizar listado de preguntas.
                     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
@@ -236,7 +197,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                   if (state is RemoteCategoriaItemServerFailureDuplicate) {
                     Navigator.of(context).pop();
 
-                    _showServerFailure(context, state.failure?.errorMessage);
+                    _showServerFailedDialog(context, state.failure?.errorMessage);
 
                     // Actualizar listado de preguntas.
                     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
@@ -249,7 +210,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                   if (state is RemoteCategoriaItemServerFailedMessageUpdate) {
                     Navigator.of(context).pop();
 
-                    _showServerFailedMessage(context, state.errorMessage);
+                    _showServerFailedDialog(context, state.errorMessage);
 
                     // Actualizar listado de preguntas.
                     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
@@ -262,7 +223,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                   if (state is RemoteCategoriaItemServerFailureUpdate) {
                     Navigator.of(context).pop();
 
-                    _showServerFailure(context, state.failure?.errorMessage);
+                    _showServerFailedDialog(context, state.failure?.errorMessage);
 
                     // Actualizar listado de preguntas.
                     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
@@ -275,7 +236,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                   if (state is RemoteCategoriaItemServerFailedMessageDelete) {
                     Navigator.of(context).pop();
 
-                    _showServerFailedMessage(context, state.errorMessage);
+                    _showServerFailedDialog(context, state.errorMessage);
 
                     // Actualizar listado de preguntas.
                     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
@@ -288,7 +249,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                   if (state is RemoteCategoriaItemServerFailureDelete) {
                     Navigator.of(context).pop();
 
-                    _showServerFailure(context, state.failure?.errorMessage);
+                    _showServerFailedDialog(context, state.failure?.errorMessage);
 
                     // Actualizar listado de preguntas.
                     context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
@@ -318,8 +279,8 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                       SnackBar(
                         content         : Text(state.objResponse?.message ?? 'Pregunta duplicada', softWrap: true),
                         backgroundColor : Colors.green,
-                        behavior        : SnackBarBehavior.fixed,
                         elevation       : 0,
+                        behavior        : SnackBarBehavior.fixed,
                       ),
                     );
 
@@ -341,8 +302,8 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                       SnackBar(
                         content         : Text(state.objResponse?.message ?? 'Pregunta actualizada', softWrap: true),
                         backgroundColor : Colors.green,
-                        behavior        : SnackBarBehavior.fixed,
                         elevation       : 0,
+                        behavior        : SnackBarBehavior.fixed,
                       ),
                     );
 
@@ -366,8 +327,8 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
                       SnackBar(
                         content         : Text(state.objResponse?.message ?? 'Pregunta eliminada', softWrap: true),
                         backgroundColor : Colors.green,
-                        behavior        : SnackBarBehavior.fixed,
                         elevation       : 0,
+                        behavior        : SnackBarBehavior.fixed,
                       ),
                     );
 
@@ -485,7 +446,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
       listener: (BuildContext context, RemoteCategoriaItemState state) {
         // ERRORS:
         if (state is RemoteCategoriaItemServerFailedMessageStore) {
-          _showServerFailedMessage(context, state.errorMessage);
+          _showServerFailedDialog(context, state.errorMessage);
 
           // Actualizar listado de preguntas.
           context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));
@@ -496,7 +457,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
         }
 
         if (state is RemoteCategoriaItemServerFailureStore) {
-          _showServerFailure(context, state.failure?.errorMessage);
+          _showServerFailedDialog(context, state.failure?.errorMessage);
 
           // Actualizar listado de preguntas.
           context.read<RemoteCategoriaItemBloc>().add(ListCategoriasItems(widget.categoria!));

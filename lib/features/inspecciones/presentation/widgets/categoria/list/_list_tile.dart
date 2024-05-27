@@ -1,4 +1,4 @@
-part of '../../pages/configuracion/categorias/categorias_page.dart';
+part of '../../../pages/configuracion/categorias/categorias_page.dart';
 
 class _ListTile extends StatelessWidget {
   const _ListTile({Key? key, this.categoria, this.inspeccionTipo, this.onCategoriaPressed}) : super(key: key);
@@ -7,11 +7,11 @@ class _ListTile extends StatelessWidget {
   final InspeccionTipoEntity? inspeccionTipo;
   final void Function(CategoriaEntity categoria)? onCategoriaPressed;
 
-  // METHODS
-  void _handleActionsPressed(BuildContext context, CategoriaEntity? categoria, InspeccionTipoEntity? inspeccionTipo) {
+  // EVENTS
+  void _handleMoreActionsPressed(BuildContext context, CategoriaEntity? categoria, InspeccionTipoEntity? inspeccionTipo) {
     showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) {
+      context : context,
+      builder : (BuildContext context) {
         return Column(
           mainAxisSize  : MainAxisSize.min,
           children      : <Widget>[
@@ -25,32 +25,23 @@ class _ListTile extends StatelessWidget {
                 ),
               ),
             ),
-            // CREAR PREGUNTAS:
             ListTile(
-              onTap   : _onTap,
+              onTap   : _handleListTileTap,
               leading : const Icon(Icons.add),
-              title   : Text($strings.createCategoryButtonText),
+              title   : Text($strings.categoriaCreatePreguntasText),
             ),
-            // EDITAR INSPECCION TIPO:
             ListTile(
               onTap: () {
-                // Cerramos el modal bottom sheet.
-                Navigator.of(context).pop();
-
-                // Manejamos la eliminacion.
-                _handleEditPressed(context, categoria, inspeccionTipo);
+                Navigator.of(context).pop();                              // Cerrar modal bottom sheet
+                _handleEditPressed(context, categoria, inspeccionTipo);   // Editar tipo de inspeccion
               },
               leading : const Icon(Icons.edit),
               title   : Text($strings.editButtonText),
             ),
-            // ELIMINAR INSPECCION TIPO:
             ListTile(
               onTap: () {
-                // Cerramos el modal bottom sheet.
-                Navigator.of(context).pop();
-
-                // Manejamos la eliminacion.
-                _handleDeletePressed(context, categoria);
+                Navigator.of(context).pop();                // Cerrar modal bottom sheet
+                _handleDeletePressed(context, categoria);  // Eliminar tipo de inspeccion
               },
               leading   : const Icon(Icons.delete),
               textColor : Theme.of(context).colorScheme.error,
@@ -63,18 +54,18 @@ class _ListTile extends StatelessWidget {
     );
   }
 
-  // DETAILS:
-  void _onTap() {
-    if (onCategoriaPressed != null) return onCategoriaPressed!(categoria!);
+  void _handleListTileTap() {
+    if (onCategoriaPressed != null) {
+      return onCategoriaPressed!(categoria!);
+    }
   }
 
-  // EDIT:
   void _handleEditPressed(BuildContext context, CategoriaEntity? categoria, InspeccionTipoEntity? inspeccionTipo) {
     Navigator.push<void>(
       context,
       PageRouteBuilder<void>(
-        transitionDuration: $styles.times.pageTransition,
-        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+        transitionDuration  : $styles.times.pageTransition,
+        pageBuilder         : (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
           const Offset begin    = Offset(0, 1);
           const Offset end      = Offset.zero;
           const Cubic curve     = Curves.ease;
@@ -83,7 +74,10 @@ class _ListTile extends StatelessWidget {
 
           return SlideTransition(
             position  : animation.drive<Offset>(tween),
-            child     : FormModal(title: 'Editar categoría', child: _EditForm(categoria: categoria, inspeccionTipo: inspeccionTipo)),
+            child     : FormModal(
+              title : $strings.categoriaEditAppBarTitle,
+             child  : _EditCategoriaForm(categoria: categoria, inspeccionTipo: inspeccionTipo),
+            ),
           );
         },
         fullscreenDialog: true,
@@ -91,24 +85,19 @@ class _ListTile extends StatelessWidget {
     );
   }
 
-  // DELETE:
   Future<void> _handleDeletePressed(BuildContext context, CategoriaEntity? categoria) async {
-    return showDialog<void>(
+    await showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return BlocConsumer<RemoteCategoriaBloc, RemoteCategoriaState>(
-          listener: (BuildContext context, RemoteCategoriaState state) {
+          listener: (BuildContext context, RemoteCategoriaState state) async {
             if (state is RemoteCategoriaServerFailedMessage) {
-              _showServerFailedMessageOnDelete(context, state);
-
-              // Actualizar listado de categorías.
+              await _showServerFailedDialog(context, state.errorMessage);
               context.read<RemoteCategoriaBloc>().add(ListCategorias(inspeccionTipo!));
             }
 
             if (state is RemoteCategoriaServerFailure) {
-              _showServerFailureOnDelete(context, state);
-
-              // Actualizar listado de categorías.
+              await _showServerFailedDialog(context, state.failure?.errorMessage);
               context.read<RemoteCategoriaBloc>().add(ListCategorias(inspeccionTipo!));
             }
 
@@ -123,12 +112,12 @@ class _ListTile extends StatelessWidget {
                 SnackBar(
                   content         : Text(state.objResponse?.message ?? 'Eliminado', softWrap: true),
                   backgroundColor : Colors.green,
-                  behavior        : SnackBarBehavior.fixed,
                   elevation       : 0,
+                  behavior        : SnackBarBehavior.fixed,
                 ),
               );
 
-              // Actualizar listado de categorías.
+              // Actualizamos el listado de categorías.
               context.read<RemoteCategoriaBloc>().add(ListCategorias(inspeccionTipo!));
             }
           },
@@ -157,27 +146,27 @@ class _ListTile extends StatelessWidget {
             }
 
             return AlertDialog(
-              title   : Text('¿Eliminar categoría?', style: $styles.textStyles.h3.copyWith(fontSize: 18)),
+              title   : Text($strings.categoriaDeleteAlertTitle, style: $styles.textStyles.h3.copyWith(fontSize: 18)),
               content : RichText(
-                text: TextSpan(style: $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
+                text: TextSpan(style: $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, height: 1.5),
                   children: <InlineSpan>[
-                    const TextSpan(text: 'Se eliminará la categoría '),
+                    TextSpan(text: $strings.categoriaDeleteAlertContent1),
                     TextSpan(
-                      text: '"${categoria?.name.toProperCase()}". ',
+                      text: '"${categoria?.name}".\n',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    const TextSpan(text: '¿Estás seguro de querer realizar esa acción?'),
+                    TextSpan(text: $strings.categoriaDeleteAlertContent2),
                   ],
                 ),
               ),
               actions: <Widget>[
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text($strings.cancelButtonText, style: $styles.textStyles.button),
+                  onPressed : () => Navigator.pop(context, $strings.cancelButtonText),
+                  child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
                 ),
                 TextButton(
-                  onPressed: () => context.read<RemoteCategoriaBloc>().add(DeleteCategoria(categoria!)),
-                  child: Text($strings.deleteButtonText, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
+                  onPressed : () => context.read<RemoteCategoriaBloc>().add(DeleteCategoria(categoria!)),
+                  child     : Text($strings.deleteButtonText, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
                 ),
               ],
             );
@@ -187,67 +176,24 @@ class _ListTile extends StatelessWidget {
     );
   }
 
-  Future<void> _showServerFailedMessageOnDelete(BuildContext context, RemoteCategoriaServerFailedMessage state) async {
+  Future<void> _showServerFailedDialog(BuildContext context, String? errorMessage) async {
     return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment : MainAxisAlignment.center,
-            children          : <Widget>[
-              Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 48),
-            ],
-          ),
-          content: Text(
-            state.errorMessage ?? 'Se produjo un error inesperado. Intenta eliminar de nuevo la categoría.',
-            style: $styles.textStyles.title2.copyWith(height: 1.5),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed : () => Navigator.pop(context, 'Aceptar'),
-              child     : Text($strings.acceptButtonText, style: $styles.textStyles.button),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _showServerFailureOnDelete(BuildContext context, RemoteCategoriaServerFailure state) async {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment : MainAxisAlignment.center,
-            children          : <Widget>[
-              Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 48),
-            ],
-          ),
-          content: Text(
-            state.failure?.errorMessage ?? 'Se produjo un error inesperado. Intenta eliminar de nuevo la categoría.',
-            style: $styles.textStyles.title2.copyWith(height: 1.5),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed : () => Navigator.pop(context, 'Aceptar'),
-              child     : Text($strings.acceptButtonText, style: $styles.textStyles.button),
-            ),
-          ],
-        );
-      },
+      context : context,
+      builder: (BuildContext context)  => ServerFailedDialog(
+        errorMessage: errorMessage ?? 'Se produjo un error inesperado. Intenta eliminar de nuevo la categoría.',
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap     : _onTap,
+      onTap     : _handleListTileTap,
       leading   : CircleAvatar(child: Text(categoria?.orden.toString() ?? '0', style: $styles.textStyles.h4)),
-      title     : Text(categoria?.name.toProperCase() ?? '', overflow: TextOverflow.ellipsis),
+      title     : Text(categoria?.name ?? '', overflow: TextOverflow.ellipsis),
       trailing  : IconButton(
         icon      : const Icon(Icons.more_vert),
-        onPressed : () => _handleActionsPressed(context, categoria, inspeccionTipo),
+        onPressed : () => _handleMoreActionsPressed(context, categoria, inspeccionTipo),
       ),
     );
   }

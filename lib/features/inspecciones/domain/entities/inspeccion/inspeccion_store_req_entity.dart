@@ -1,5 +1,8 @@
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
+/// [InspeccionStoreReqEntity]
+///
+/// Representa la estructura de datos que se enviará al servidor de la inspección.
 class InspeccionStoreReqEntity extends Equatable {
   const InspeccionStoreReqEntity({
     required this.fechaProgramada,

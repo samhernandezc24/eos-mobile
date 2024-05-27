@@ -1,13 +1,13 @@
-part of '../../pages/configuracion/inspecciones_tipos/inspecciones_tipos_page.dart';
+part of '../../../pages/configuracion/inspecciones_tipos/inspecciones_tipos_page.dart';
 
-class _CreateForm extends StatefulWidget {
-  const _CreateForm({Key? key}) : super(key: key);
+class _CreateInspeccionTipoForm extends StatefulWidget {
+  const _CreateInspeccionTipoForm({Key? key}) : super(key: key);
 
   @override
-  State<_CreateForm> createState() => _CreateFormState();
+  State<_CreateInspeccionTipoForm> createState() => _CreateInspeccionTipoFormState();
 }
 
-class _CreateFormState extends State<_CreateForm> {
+class _CreateInspeccionTipoFormState extends State<_CreateInspeccionTipoForm> {
   // GLOBAL KEY
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -15,10 +15,10 @@ class _CreateFormState extends State<_CreateForm> {
   late final TextEditingController _codigoController;
   late final TextEditingController _nameController;
 
+  // STATE
   @override
   void initState() {
     super.initState();
-
     _codigoController = TextEditingController(text: StringUtils.generateRandomNumericCode());
     _nameController   = TextEditingController();
   }
@@ -30,77 +30,40 @@ class _CreateFormState extends State<_CreateForm> {
     super.dispose();
   }
 
-  // METHODS
-  void _handleStoreInspeccionTipo() {
-    final InspeccionTipoStoreReqEntity objData = InspeccionTipoStoreReqEntity(codigo: _codigoController.text, name: _nameController.text);
-    final bool isValidForm = _formKey.currentState!.validate();
-
-    // Verificar la validacion en el formulario.
-    if (isValidForm) {
+  // EVENTS
+  void _handleStorePressed() {
+    if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(StoreInspeccionTipo(objData));
+      _store();
     }
   }
 
-  Future<void> _showServerFailedMessageOnStore(BuildContext context, RemoteInspeccionTipoServerFailedMessage state) async {
+  Future<void> _showServerFailedDialog(BuildContext context, String? errorMessage) async {
     return showDialog<void>(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment : MainAxisAlignment.center,
-            children          : <Widget>[
-              Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 48),
-            ],
-          ),
-          content: Text(
-            state.errorMessage ?? 'Se produjo un error inesperado. Intenta crear de nuevo el tipo de inspección.',
-            style: $styles.textStyles.title2.copyWith(height: 1.5),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed : () => Navigator.pop(context, 'Aceptar'),
-              child     : Text($strings.acceptButtonText, style: $styles.textStyles.button),
-            ),
-          ],
-        );
-      },
+      builder: (BuildContext context)  => ServerFailedDialog(
+        errorMessage: errorMessage ?? 'Se produjo un error inesperado. Intenta crear de nuevo el tipo de inspección.',
+      ),
     );
   }
 
-  Future<void> _showServerFailureOnStore(BuildContext context, RemoteInspeccionTipoServerFailure state) async {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment : MainAxisAlignment.center,
-            children          : <Widget>[
-              Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 48),
-            ],
-          ),
-          content: Text(
-            state.failure?.errorMessage ?? 'Se produjo un error inesperado. Intenta crear de nuevo el tipo de inspección.',
-            style: $styles.textStyles.title2.copyWith(height: 1.5),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed : () => Navigator.pop(context, 'Aceptar'),
-              child     : Text($strings.acceptButtonText, style: $styles.textStyles.button),
-            ),
-          ],
-        );
-      },
+  // METHODS
+  void _store() {
+    final InspeccionTipoStoreReqEntity objPost = InspeccionTipoStoreReqEntity(
+      codigo  : _codigoController.text,
+      name    : _nameController.text,
     );
+
+    BlocProvider.of<RemoteInspeccionTipoBloc>(context).add(StoreInspeccionTipo(objPost));
   }
 
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
+      key   : _formKey,
+      child : Column(
+        crossAxisAlignment  : CrossAxisAlignment.stretch,
+        children            : <Widget>[
           // CÓDIGO:
           LabeledTextFormField(
             controller  : _codigoController,
@@ -125,11 +88,11 @@ class _CreateFormState extends State<_CreateForm> {
           BlocConsumer<RemoteInspeccionTipoBloc, RemoteInspeccionTipoState>(
             listener: (BuildContext context, RemoteInspeccionTipoState state) {
               if (state is RemoteInspeccionTipoServerFailedMessage) {
-                _showServerFailedMessageOnStore(context, state);
+                _showServerFailedDialog(context, state.errorMessage);
               }
 
               if (state is RemoteInspeccionTipoServerFailure) {
-                _showServerFailureOnStore(context, state);
+                _showServerFailedDialog(context, state.failure?.errorMessage);
               }
 
               if (state is RemoteInspeccionTipoStored) {
@@ -143,8 +106,8 @@ class _CreateFormState extends State<_CreateForm> {
                   SnackBar(
                     content         : Text(state.objResponse?.message ?? 'Nuevo tipo de inspección', softWrap: true),
                     backgroundColor : Colors.green,
-                    behavior        : SnackBarBehavior.fixed,
                     elevation       : 0,
+                    behavior        : SnackBarBehavior.fixed,
                   ),
                 );
               }
@@ -159,7 +122,7 @@ class _CreateFormState extends State<_CreateForm> {
               }
 
               return FilledButton(
-                onPressed : _handleStoreInspeccionTipo,
+                onPressed : _handleStorePressed,
                 style     : ButtonStyle(minimumSize: MaterialStateProperty.all<Size?>(const Size(double.infinity, 48))),
                 child     : Text($strings.saveButtonText, style: $styles.textStyles.button),
               );

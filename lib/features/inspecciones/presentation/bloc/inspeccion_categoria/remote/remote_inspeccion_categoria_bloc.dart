@@ -1,6 +1,8 @@
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_categoria/inspeccion_categoria_checklist_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_categoria/inspeccion_categoria_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_categoria/get_preguntas_inspeccion_categoria_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_categoria/store_inspeccion_categoria_usecase.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
@@ -10,15 +12,18 @@ part 'remote_inspeccion_categoria_state.dart';
 class RemoteInspeccionCategoriaBloc extends Bloc<RemoteInspeccionCategoriaEvent, RemoteInspeccionCategoriaState> {
   RemoteInspeccionCategoriaBloc(
     this._getPreguntasInspeccionCategoriaUseCase,
-  ) : super(RemoteInspeccionCategoriaLoading()) {
+    this._storeInspeccionCategoriaUseCase,
+  ) : super(RemoteInspeccionCategoriaInitial()) {
     on<GetInspeccionCategoriaPreguntas>(onGetInspeccionCategoriaPreguntas);
+    on<StoreInspeccionCategoria>(onStoreInspeccionCategoria);
   }
 
   // Casos de uso
   final GetPreguntasInspeccionCategoriaUseCase _getPreguntasInspeccionCategoriaUseCase;
+  final StoreInspeccionCategoriaUseCase _storeInspeccionCategoriaUseCase;
 
   Future<void> onGetInspeccionCategoriaPreguntas(GetInspeccionCategoriaPreguntas event, Emitter<RemoteInspeccionCategoriaState> emit) async {
-    emit(RemoteInspeccionCategoriaLoading());
+    emit(RemoteInspeccionCategoriaGetPreguntasLoading());
 
     final objDataState = await _getPreguntasInspeccionCategoriaUseCase(params: event.objData);
 
@@ -27,11 +32,29 @@ class RemoteInspeccionCategoriaBloc extends Bloc<RemoteInspeccionCategoriaEvent,
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionCategoriaServerFailedMessage(objDataState.errorMessage));
+      emit(RemoteInspeccionCategoriaServerFailedMessageGetPreguntas(objDataState.errorMessage));
     }
 
     if (objDataState is DataFailed) {
-      emit(RemoteInspeccionCategoriaServerFailure(objDataState.serverException));
+      emit(RemoteInspeccionCategoriaServerFailureGetPreguntas(objDataState.serverException));
+    }
+  }
+
+  Future<void> onStoreInspeccionCategoria(StoreInspeccionCategoria event, Emitter<RemoteInspeccionCategoriaState> emit) async {
+    emit(RemoteInspeccionCategoriaStoring());
+
+    final objDataState = await _storeInspeccionCategoriaUseCase(params: event.objData);
+
+    if (objDataState is DataSuccess) {
+      emit(RemoteInspeccionCategoriaStored(objDataState.data));
+    }
+
+    if (objDataState is DataFailedMessage) {
+      emit(RemoteInspeccionCategoriaServerFailedStore(objDataState.errorMessage));
+    }
+
+    if (objDataState is DataFailed) {
+      emit(RemoteInspeccionCategoriaServerFailureStore(objDataState.serverException));
     }
   }
 }

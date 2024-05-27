@@ -6,12 +6,10 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_ti
 import 'package:eos_mobile/features/inspecciones/presentation/pages/configuracion/categorias/categorias_page.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
-import 'package:eos_mobile/ui/common/error_server_failure.dart';
-import 'package:eos_mobile/ui/common/request_data_unavailable.dart';
 
-part '../../../widgets/inspeccion_tipo/_list_tile.dart';
-part '../../../widgets/inspeccion_tipo/_create_form.dart';
-part '../../../widgets/inspeccion_tipo/_edit_form.dart';
+part '../../../widgets/inspeccion_tipo/create/_create_form.dart';
+part '../../../widgets/inspeccion_tipo/edit/_edit_form.dart';
+part '../../../widgets/inspeccion_tipo/list/_list_tile.dart';
 
 class InspeccionConfiguracionInspeccionesTiposPage extends StatefulWidget {
   const InspeccionConfiguracionInspeccionesTiposPage({Key? key}) : super(key: key);
@@ -21,7 +19,7 @@ class InspeccionConfiguracionInspeccionesTiposPage extends StatefulWidget {
 }
 
 class _InspeccionConfiguracionInspeccionesTiposPageState extends State<InspeccionConfiguracionInspeccionesTiposPage> {
-  // METHODS
+  // EVENTS
   void _handleCreatePressed(BuildContext context) {
     Navigator.push<void>(
       context,
@@ -34,7 +32,13 @@ class _InspeccionConfiguracionInspeccionesTiposPageState extends State<Inspeccio
 
           final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-          return SlideTransition(position: animation.drive<Offset>(tween), child: const FormModal(title: 'Nuevo tipo de inspección', child: _CreateForm()));
+          return SlideTransition(
+            position  : animation.drive<Offset>(tween),
+            child     : FormModal(
+              title : $strings.inspeccionTipoCreateAppBarTitle,
+              child : const _CreateInspeccionTipoForm(),
+            ),
+          );
         },
         fullscreenDialog: true,
       ),
@@ -50,10 +54,10 @@ class _InspeccionConfiguracionInspeccionesTiposPageState extends State<Inspeccio
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar  : AppBar(title: Text($strings.inspectionTypeAppBarTitle, style: $styles.textStyles.h3)),
+      appBar  : AppBar(title: Text($strings.inspeccionTipoAppBarTitle, style: $styles.textStyles.h3)),
       body    : Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
+        crossAxisAlignment  : CrossAxisAlignment.start,
+        children            : <Widget>[
           Container(
             width   : double.infinity,
             padding : EdgeInsets.all($styles.insets.sm),
@@ -61,14 +65,14 @@ class _InspeccionConfiguracionInspeccionesTiposPageState extends State<Inspeccio
             child   : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text($strings.inspectionTypeTitle, style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600)),
+                Text($strings.inspeccionTipoBoxTitle, style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600)),
                 Gap($styles.insets.xxs),
                 RichText(
                   text: TextSpan(
                     style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
                     children: <TextSpan>[
                       TextSpan(text: $strings.settingsSuggestionsText, style: const TextStyle(fontWeight: FontWeight.w600)),
-                      TextSpan(text: ': ${$strings.inspectionTypeDescription}'),
+                      TextSpan(text: ': ${$strings.inspeccionTipoBoxDescription}'),
                     ],
                   ),
                 ),
@@ -78,7 +82,7 @@ class _InspeccionConfiguracionInspeccionesTiposPageState extends State<Inspeccio
                   child     : FilledButton.icon(
                     onPressed : () => _handleCreatePressed(context),
                     icon      : const Icon(Icons.add),
-                    label     : Text('Nuevo tipo de inspección', style: $styles.textStyles.button),
+                    label     : Text($strings.inspeccionTipoCreateButtonText, style: $styles.textStyles.button),
                   ),
                 ),
               ],
@@ -121,13 +125,13 @@ class _InspeccionConfiguracionInspeccionesTiposPageState extends State<Inspeccio
                       );
                     } else {
                       return RequestDataUnavailable(
-                        title     : $strings.inspectionTypeEmptyTitle,
+                        title     : $strings.inspeccionTipoEmptyListTitle,
                         message   : $strings.emptyListMessage,
                         onRefresh : () => context.read<RemoteInspeccionTipoBloc>().add(ListInspeccionesTipos()),
                       );
                     }
                   }
-                  return const SizedBox.shrink(); // No devolver nada, si el state no se completó
+                  return const SizedBox.shrink();
                 },
               ),
             ),

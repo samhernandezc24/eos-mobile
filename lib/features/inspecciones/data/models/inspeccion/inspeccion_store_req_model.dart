@@ -1,5 +1,9 @@
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
 
+/// [InspeccionStoreReqModel]
+///
+/// Representa el modelo de datos que se enviará al servidor para guardar la
+/// la inspección.
 class InspeccionStoreReqModel extends InspeccionStoreReqEntity {
   const InspeccionStoreReqModel({
     required DateTime fechaProgramada,

@@ -148,7 +148,6 @@ class _CreateFormState extends State<_CreateForm> {
 
   void _handleStoreInspeccionPressed() {
     if (_fechaProgramadaController.text.isEmpty) {
-      // Mostrar un mensaje de error o realizar alguna acción adecuada, como mostrar un snackbar
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content         : const Text('Por favor selecciona la fecha programada'),
@@ -247,14 +246,14 @@ class _CreateFormState extends State<_CreateForm> {
             Gap($styles.insets.sm),
             Flexible(
               child: Text(
-                errorMessage ?? 'Se produjo un error inesperado. Intenta crear la unidad de nuevo.',
+                errorMessage ?? 'Se produjo un error inesperado. Intenta de nuevo crear la unidad.',
                 style: $styles.textStyles.title2.copyWith(height: 1.5),
               ),
             ),
           ],
         ),
         actions: <Widget>[
-          TextButton(onPressed: () => context.pop(), child: Text($strings.acceptButtonText, style: $styles.textStyles.button)),
+          TextButton(onPressed: () => Navigator.pop(context, $strings.acceptButtonText), child: Text($strings.acceptButtonText, style: $styles.textStyles.button)),
         ],
       ),
     );

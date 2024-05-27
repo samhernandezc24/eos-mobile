@@ -59,8 +59,11 @@ export 'package:eos_mobile/ui/common/controls/labeled_password_form_field.dart';
 export 'package:eos_mobile/ui/common/controls/labeled_text_form_field.dart';
 export 'package:eos_mobile/ui/common/controls/labeled_textarea_form_field.dart';
 export 'package:eos_mobile/ui/common/controls/scroll_decorator.dart';
+export 'package:eos_mobile/ui/common/controls/server_failed_dialog.dart';
 export 'package:eos_mobile/ui/common/error_box_container.dart';
+export 'package:eos_mobile/ui/common/error_server_failure.dart';
 export 'package:eos_mobile/ui/common/modals/form_modal.dart';
+export 'package:eos_mobile/ui/common/request_data_unavailable.dart';
 export 'package:eos_mobile/ui/common/static_text_scale.dart';
 
 // EQUATABLE
