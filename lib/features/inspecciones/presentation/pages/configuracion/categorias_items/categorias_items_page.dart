@@ -497,7 +497,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
       builder: (BuildContext context, RemoteCategoriaItemState state) {
         return FloatingActionButton(
           onPressed : state is RemoteCategoriaItemStoring ? null : _handleStoreCategoriaItem,
-          tooltip   : 'Agregar pregunta',
+          tooltip   : 'Nueva pregunta',
           child     : state is RemoteCategoriaItemStoring
                         ? const AppLoadingIndicator(width: 20, height: 20)
                         : const Icon(Icons.add),

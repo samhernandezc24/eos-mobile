@@ -74,6 +74,10 @@ class AppStrings {
   String inspectionEmptyTitle               = 'Aún no hay inspecciones';
   String inspectionSuggestionCreate         = 'Es necesario que realice la búsqueda de la unidad a inspeccionar antes de continuar.';
 
+  String inspeccionIndexListTileTitle       = 'Lista de inspecciones';
+  String inspeccionIndexListTileSubtitle    = 'Muestra inspecciones en general.';
+  String inspeccionListAppBarTitle          = 'Lista de inspecciones';
+
   String inspeccionTipoAppBarTitle          = 'Configuración de inspecciones';
   String inspeccionTipoBoxDescription       = 'Crea los tipos de inspección para organizar y gestionar tus inspecciones de manera más eficiente.';
   String inspeccionTipoBoxTitle             = 'Tipos de inspecciones';
@@ -86,10 +90,6 @@ class AppStrings {
   String inspeccionTipoEditAppBarTitle      = 'Editar tipo de inspección';
   String inspeccionTipoEmptyListTitle       = 'Aún no hay tipos de inspecciones';
 
-  String inspectionIndexListTitle     = 'Lista de inspecciones';
-  String inspectionIndexListSubtitle  = 'Muestra inspecciones en general.';
-  String inspectionIndexWithReqTitle  = 'Nueva inspección de unidad con requerimiento';
-  String inspectionIndexNoReqTitle    = 'Nueva inspección de unidad sin requerimiento';
   String inspectionIndexSearchTitle   = 'Buscar unidad';
   String inspectionIndexSearchSubtitle = 'Encuentra rápidamente una unidad.';
 

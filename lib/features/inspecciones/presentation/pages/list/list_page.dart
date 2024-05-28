@@ -27,10 +27,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/controls/labeled_date_text_form_field.dart';
 import 'package:eos_mobile/ui/common/controls/labeled_datetime_text_form_field.dart';
-import 'package:eos_mobile/ui/common/error_server_failure.dart';
-import 'package:eos_mobile/ui/common/request_data_unavailable.dart';
 import 'package:eos_mobile/ui/common/themed_text.dart';
-import 'package:flutter/foundation.dart';
 
 import 'package:intl/intl.dart';
 
@@ -59,8 +56,12 @@ class InspeccionListPage extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _InspeccionListPageState extends State<InspeccionListPage> with GetItStateMixin {
   // CONTROLLERS
+  late final TextEditingController _txtSearchController;
   late final TextEditingController _txtDateDesdeController;
   late final TextEditingController _txtDateHastaController;
+
+  // PROPERTIES
+  bool _isLoading = false;
 
   // SEARCH
   String? _selectedSortOption;
@@ -84,6 +85,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     {'label': 'Fecha de actualización', 'field': 'UpdatedFecha'},
   ];
 
+  // STATE
   @override
   void initState() {
     super.initState();
@@ -103,8 +105,78 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     super.dispose();
   }
 
-  // METHODS
-  void _handleSearchSubmitted(String query) {}
+  // EVENTS
+  void _handleCreatePressed(BuildContext context) {
+    Navigator.push<void>(
+      context,
+      PageRouteBuilder<void>(
+        transitionDuration: $styles.times.pageTransition,
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+          const Offset begin    = Offset(0, 1);
+          const Offset end      = Offset.zero;
+          const Cubic curve     = Curves.ease;
+
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position  : animation.drive<Offset>(tween),
+            child     : _CreateInspeccionForm(buildDataSourceCallback: _buildDataSource),
+          );
+        },
+        fullscreenDialog: true,
+      ),
+    );
+  }
+
+  void _handleSearchFiltersPressed(BuildContext context) {
+    showModalBottomSheet<void>(
+      context : context,
+      builder : (BuildContext context) {
+        return Column(
+          mainAxisSize  : MainAxisSize.min,
+          children      : <Widget>[
+            Padding(
+              padding : EdgeInsets.all($styles.insets.sm),
+              child   : Center(
+                child : Text(
+                  'Buscar resultados en:',
+                  style: $styles.textStyles.h3.copyWith(fontSize: 18),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _handleFiltersPressed(BuildContext context) {
+    Navigator.push<void>(
+      context,
+      PageRouteBuilder<void>(
+        transitionDuration: $styles.times.pageTransition,
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+          const Offset begin    = Offset(0, 1);
+          const Offset end      = Offset.zero;
+          const Cubic curve     = Curves.ease;
+
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position  : animation.drive<Offset>(tween),
+            child     : _FilterInspeccion(
+              dateOptions         : dateOptions,
+              unidadesTipos       : lstUnidadesTipos,
+              inspeccionesEstatus : lstInspeccionesEstatus,
+              usuarios            : lstUsuarios,
+              hasRequerimiento    : lstHasRequerimiento,
+            ),
+          );
+        },
+        fullscreenDialog: true,
+      ),
+    );
+  }
 
   void _handleSortPressed(BuildContext context) {
     showModalBottomSheet<void>(
@@ -154,58 +226,11 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     );
   }
 
-  void _handleCreateInspeccionPressed(BuildContext context) {
-    Navigator.push<void>(
-      context,
-      PageRouteBuilder<void>(
-        transitionDuration: $styles.times.pageTransition,
-        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-          const Offset begin    = Offset(0, 1);
-          const Offset end      = Offset.zero;
-          const Cubic curve     = Curves.ease;
-
-          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position  : animation.drive<Offset>(tween),
-            child     : _CreateForm(buildDataSourceCallback: _buildDataSource),
-          );
-        },
-        fullscreenDialog: true,
-      ),
-    );
-  }
-
-  void _handleFiltersPressed(BuildContext context) {
-    Navigator.push<void>(
-      context,
-      PageRouteBuilder<void>(
-        transitionDuration: $styles.times.pageTransition,
-        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-          const Offset begin    = Offset(0, 1);
-          const Offset end      = Offset.zero;
-          const Cubic curve     = Curves.ease;
-
-          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position  : animation.drive<Offset>(tween),
-            child     : _FilterInspeccion(
-              dateOptions         : dateOptions,
-              unidadesTipos       : lstUnidadesTipos,
-              inspeccionesEstatus : lstInspeccionesEstatus,
-              usuarios            : lstUsuarios,
-              hasRequerimiento    : lstHasRequerimiento,
-            ),
-          );
-        },
-        fullscreenDialog: true,
-      ),
-    );
-  }
+  // METHODS
+  Future<void> initialization() async { }
 
   void _renderFilters(DataSourcePersistence? dataSourcePersistence) {
-    // RECUPERACION DE DROPDOWN CON MULTIFILTROS
+    // RECUPERACION DE COMBOBOX CON MULTIFILTROS
     final List<FiltersMultiple> arrFiltersMultiple = dataSourcePersistence == null ? [] : dataSourcePersistence.filtersMultiple ?? [];
 
     // RECUPERACION DE DROPDOWN SIN MULTIFILTROS
@@ -241,6 +266,19 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
 
     context.read<RemoteInspeccionBloc>().add(FetchInspeccionDataSource(varArgs));
   }
+
+  void cleanFilters() {}
+
+  List<Map<String, dynamic>> _getSearchFilters() {
+    final List<Map<String, dynamic>> arrSearchFilters = [
+      { 'field': 'Folio',               'isChecked': true,    'title': 'Folio' },
+      { 'field': 'RequerimientoFolio',  'isChecked': false,   'title': 'Requerimiento / folio' },
+    ];
+
+    return arrSearchFilters;
+  }
+
+  void _handleSearchSubmitted(String query) {}
 
   @override
   Widget build(BuildContext context) {
@@ -306,14 +344,14 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     );
 
     return Scaffold(
-      appBar: AppBar(title: Text('Lista de inspecciones', style: $styles.textStyles.h3)),
+      appBar: AppBar(title: Text($strings.inspeccionListAppBarTitle, style: $styles.textStyles.h3)),
       body: Stack(
         children: <Widget>[
           Positioned.fill(child: ColoredBox(color: Theme.of(context).colorScheme.background, child: content)),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed : () => _handleCreateInspeccionPressed(context),
+        onPressed : () => _handleCreatePressed(context),
         tooltip   : 'Nueva inspección',
         child     : const Icon(Icons.add),
       ),
@@ -336,6 +374,11 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
 
             Row(
               children: <Widget>[
+                IconButton(
+                  onPressed : () => _handleSearchFiltersPressed(context),
+                  icon      : const Icon(Icons.manage_search),
+                  tooltip   : 'Buscar resultados en...',
+                ),
                 IconButton(
                   onPressed : () => _handleFiltersPressed(context),
                   icon      : const Icon(Icons.filter_list),

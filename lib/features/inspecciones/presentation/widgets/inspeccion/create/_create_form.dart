@@ -1,15 +1,15 @@
 part of '../../../pages/list/list_page.dart';
 
-class _CreateForm extends StatefulWidget {
-  const _CreateForm({required this.buildDataSourceCallback, Key? key}) : super(key: key);
+class _CreateInspeccionForm extends StatefulWidget {
+  const _CreateInspeccionForm({required this.buildDataSourceCallback, Key? key}) : super(key: key);
 
   final VoidCallback buildDataSourceCallback;
 
   @override
-  State<_CreateForm> createState() => _CreateFormState();
+  State<_CreateInspeccionForm> createState() => _CreateInspeccionFormState();
 }
 
-class _CreateFormState extends State<_CreateForm> {
+class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
   // GLOBAL KEY
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -42,6 +42,7 @@ class _CreateFormState extends State<_CreateForm> {
   UnidadInspeccion? _selectedUnidadInspeccion;
   UnidadEntity? _selectedUnidad;
 
+  // STATE
   @override
   void initState() {
     super.initState();
@@ -89,7 +90,7 @@ class _CreateFormState extends State<_CreateForm> {
     super.dispose();
   }
 
-  // METHODS
+  // EVENTS
   void _handleDidPopPressed(BuildContext context) {
     showDialog<void>(
       context : context,
@@ -98,7 +99,7 @@ class _CreateFormState extends State<_CreateForm> {
         content : Text('¿Estás seguro que deseas salir?', style: $styles.textStyles.bodySmall.copyWith(fontSize: 16)),
         actions : <Widget>[
           TextButton(
-            onPressed : () { Navigator.of(context).pop(); },
+            onPressed : () => Navigator.pop(context, $strings.cancelButtonText),
             child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
           ),
           TextButton(
@@ -116,6 +117,9 @@ class _CreateFormState extends State<_CreateForm> {
       ),
     );
   }
+
+  // METHODS
+
 
   void _handleCreateUnidadPressed(BuildContext context) {
     Navigator.push<void>(
