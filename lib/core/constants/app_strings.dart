@@ -71,7 +71,7 @@ class AppStrings {
   // I
   String incompleteFormDataMessage          = 'Datos incompletos en el formulario';
 
-  String inspectionEmptyTitle               = 'Aún no hay inspecciones';
+  String inspectionEmptyTitle               = 'No se encontraron resultados';
   String inspectionSuggestionCreate         = 'Es necesario que realice la búsqueda de la unidad a inspeccionar antes de continuar.';
 
   String inspeccionIndexListTileTitle       = 'Lista de inspecciones';
@@ -123,7 +123,7 @@ class AppStrings {
 
   String saveButtonText               = 'Guardar';
 
-  String searchInputHintText          = 'Buscar por no. económico o folio';
+  String searchInputHintText          = 'Buscar...';
   String searchInputSemanticClear     = 'Limpiar Búsqueda';
   String searchInputSuggestionsTitle  = 'Sugerencias';
 

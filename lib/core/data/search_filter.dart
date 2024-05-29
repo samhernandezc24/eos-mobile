@@ -15,6 +15,18 @@ class SearchFilter extends Equatable {
   final bool? isChecked;
   final String? title;
 
+  SearchFilter copyWith({
+    String? field,
+    bool? isChecked,
+    String? title,
+  }) {
+    return SearchFilter(
+      field     : field ?? this.field,
+      isChecked : isChecked ?? this.isChecked,
+      title     : title ?? this.title,
+    );
+  }
+
   /// Serialización de la estructura del modelo a formato JSON.
   Map<String, dynamic> toJson() => _$SearchFilterToJson(this);
 

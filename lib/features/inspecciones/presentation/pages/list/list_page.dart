@@ -5,12 +5,15 @@ import 'package:eos_mobile/core/data/catalogos/unidad_marca.dart';
 import 'package:eos_mobile/core/data/catalogos/unidad_placa_tipo.dart';
 import 'package:eos_mobile/core/data/catalogos/unidad_tipo.dart';
 import 'package:eos_mobile/core/data/catalogos/usuario.dart';
+import 'package:eos_mobile/core/data/data_source.dart';
 import 'package:eos_mobile/core/data/data_source_persistence.dart';
+import 'package:eos_mobile/core/data/date_option.dart';
 import 'package:eos_mobile/core/data/filter.dart';
-import 'package:eos_mobile/core/data/filters_multiple.dart';
 import 'package:eos_mobile/core/data/inspeccion/categoria.dart';
 import 'package:eos_mobile/core/data/inspeccion/categoria_item.dart';
 import 'package:eos_mobile/core/data/inspeccion/inspeccion.dart';
+import 'package:eos_mobile/core/data/search_filter.dart';
+import 'package:eos_mobile/core/data/sort.dart';
 import 'package:eos_mobile/core/enums/inspeccion_menu.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_req_entity.dart';
@@ -27,6 +30,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/controls/labeled_date_text_form_field.dart';
 import 'package:eos_mobile/ui/common/controls/labeled_datetime_text_form_field.dart';
+import 'package:eos_mobile/ui/common/modals/search_filters.dart';
 import 'package:eos_mobile/ui/common/themed_text.dart';
 
 import 'package:intl/intl.dart';
@@ -60,8 +64,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   late final TextEditingController _txtDateDesdeController;
   late final TextEditingController _txtDateHastaController;
 
-  // PROPERTIES
-  bool _isLoading = false;
+  int searchResults = 0;
 
   // SEARCH
   String? _selectedSortOption;
@@ -76,30 +79,33 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   List<Map<String, dynamic>> lstHasRequerimiento  = [{'value': true, 'name': 'Con requerimiento'}, {'value': false, 'name': 'Sin requerimiento'}];
 
   // SEARCH FILTERS
+  List<SearchFilter> searchFilters = <SearchFilter>[];
 
   // DATE OPTIONS
-  List<Map<String, dynamic>> dateOptions = <Map<String, dynamic>>[
-    {'label': 'Fecha programada', 'field': 'FechaProgramada'},
-    {'label': 'Fecha de evaluación', 'field': 'FechaEvaluacion'},
-    {'label': 'Fecha de creación', 'field': 'CreatedFecha'},
-    {'label': 'Fecha de actualización', 'field': 'UpdatedFecha'},
+  List<DateOption> dateOptions = <DateOption>[
+    const DateOption(label: 'Fecha programada', field: 'FechaProgramada'),
+    const DateOption(label: 'Fecha de evaluación', field: 'FechaEvaluacion'),
+    const DateOption(label: 'Fecha de creación', field: 'CreatedFecha'),
+    const DateOption(label: 'Fecha de actualización', field: 'UpdatedFecha'),
   ];
+
+  List<InspeccionDataSourceEntity> lstRows = <InspeccionDataSourceEntity>[];
 
   // STATE
   @override
   void initState() {
     super.initState();
 
+    _txtSearchController    = TextEditingController();
     _txtDateDesdeController = TextEditingController();
     _txtDateHastaController = TextEditingController();
-
-    // context.read<RemoteInspeccionBloc>().add(FetchInspeccionIndex());
 
     _buildDataSource();
   }
 
   @override
   void dispose() {
+    _txtSearchController.dispose();
     _txtDateDesdeController.dispose();
     _txtDateHastaController.dispose();
     super.dispose();
@@ -132,19 +138,18 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     showModalBottomSheet<void>(
       context : context,
       builder : (BuildContext context) {
-        return Column(
-          mainAxisSize  : MainAxisSize.min,
-          children      : <Widget>[
-            Padding(
-              padding : EdgeInsets.all($styles.insets.sm),
-              child   : Center(
-                child : Text(
-                  'Buscar resultados en:',
-                  style: $styles.textStyles.h3.copyWith(fontSize: 18),
-                ),
-              ),
-            ),
-          ],
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return SearchFilters(
+              searchFilters : searchFilters,
+              onChange      : (updatedFilters) {
+                setState(() {
+                  searchFilters = updatedFilters;
+                });
+                _buildDataSource();
+              },
+            );
+          },
         );
       },
     );
@@ -227,14 +232,14 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   }
 
   // METHODS
-  Future<void> initialization() async { }
-
   void _renderFilters(DataSourcePersistence? dataSourcePersistence) {
-    // RECUPERACION DE COMBOBOX CON MULTIFILTROS
-    final List<FiltersMultiple> arrFiltersMultiple = dataSourcePersistence == null ? [] : dataSourcePersistence.filtersMultiple ?? [];
-
     // RECUPERACION DE DROPDOWN SIN MULTIFILTROS
     final List<Filter> arrFilters = dataSourcePersistence == null ? [] : dataSourcePersistence.filters ?? [];
+
+    // DataSourceUtils.renderFilter(arrFilters, lstUnidadesTipos, 'IdUnidadTipo', 'IdUnidadTipo');
+    // DataSourceUtils.renderFilter(arrFilters, lstInspeccionesEstatus, 'IdInspeccionEstatus', 'IdInspeccionEstatus');
+    // DataSourceUtils.renderFilter(arrFilters, lstUsuarios, 'IdCreatedUser', 'IdCreatedUser');
+    // DataSourceUtils.renderFilter(arrFilters, lstUsuarios, 'IdUpdatedUser', 'IdUpdatedUser');
 
     // RECUPERACION DE FECHAS
     final DateTime? dateFrom  = DataSourceUtils.renderDate(dataSourcePersistence, 'dateFrom');
@@ -246,100 +251,133 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   }
 
   Future<void> _buildDataSource() async {
-    final Map<String, dynamic> varArgs = {
-      'search'              : Globals.isValidValue(''),
-      // 'searchFilters'       : DataSourceUtils.searchFilters(searchFilters),
-      // 'filters'             : DataSourceUtils.filters(),
-      // 'filtersMultiple'     : DataSourceUtils.filtersMultiple(),
-      'searchFilters'       : <dynamic>[],
-      'filters'             : <dynamic>[],
-      'filtersMultiple'     : <dynamic>[],
-      'dateFrom'            : _txtDateDesdeController.text.isEmpty ? '' : _txtDateDesdeController.text,
-      'dateTo'              : _txtDateHastaController.text.isEmpty ? '' : _txtDateHastaController.text,
-      'dateOptions'         : [{'field' : '', 'label' : ''}],
-      'columns'             : <dynamic>[],
-      'persistenceColumns'  : <dynamic>[],
-      'length'              : !Globals.isValidValue(0) ? 25 : 0,
-      'page'                : 1,
-      'sort'                : {'column': '', 'direction': ''},
-    };
+    final DataSource varArgs = DataSource(
+      search          : Globals.isValidValue(_txtSearchController.text) ? _txtSearchController.text : '',
+      searchFilters   : DataSourceUtils.searchFilters(searchFilters),
+      filters         : const [],
+      filtersMultiple : const [],
+      dateFrom        : '',
+      dateTo          : '',
+      dateOptions     : const [],
+      length          : 25,
+      page            : 1,
+      sort            : const Sort(column: '', direction: ''),
+    );
 
-    context.read<RemoteInspeccionBloc>().add(FetchInspeccionDataSource(varArgs));
+    context.read<RemoteInspeccionBloc>().add(InitializeInspeccion(varArgs));
   }
 
   void cleanFilters() {}
 
-  List<Map<String, dynamic>> _getSearchFilters() {
-    final List<Map<String, dynamic>> arrSearchFilters = [
-      { 'field': 'Folio',               'isChecked': true,    'title': 'Folio' },
-      { 'field': 'RequerimientoFolio',  'isChecked': false,   'title': 'Requerimiento / folio' },
+  List<SearchFilter> _getSearchFilters() {
+    final List<SearchFilter> arrSearchFilters = [
+      const SearchFilter(field: 'Folio',                  isChecked: true,    title: 'Folio'                  ),
+      const SearchFilter(field: 'RequerimientoFolio',     isChecked: false,   title: 'Requerimiento / folio'  ),
+      const SearchFilter(field: 'UnidadNumeroEconomico',  isChecked: true,    title: 'No. económico'          ),
+      const SearchFilter(field: 'Locacion',               isChecked: false,   title: 'Lugar de inspección'    ),
     ];
 
     return arrSearchFilters;
   }
 
-  void _handleSearchSubmitted(String query) {}
+  void _handleSearchSubmitted(String query) {
+    _txtSearchController.text = query;
+    _buildDataSource();
+  }
 
   @override
   Widget build(BuildContext context) {
     final Widget content = GestureDetector(
       onTap : FocusManager.instance.primaryFocus?.unfocus,
-      child : BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
-        listener: (BuildContext context, RemoteInspeccionState state) {},
-        builder: (BuildContext context, RemoteInspeccionState state) {
-          if (state is RemoteInspeccionLoading) {
-            return const Center(child: AppLoadingIndicator());
-          }
+      child : Column(
+        crossAxisAlignment  : CrossAxisAlignment.stretch,
+        children            : <Widget>[
+          Container(
+            padding : EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, 0),
+            child   : _SearchInput(controller: _txtSearchController, onSubmit: _handleSearchSubmitted),
+          ),
+          Container(
+            padding : EdgeInsets.all($styles.insets.xxs * 1.5),
+            child   : _buildStatusBar(context, searchResults),
+          ),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: _buildDataSource,
+              child: BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
+                listener  : (BuildContext context, RemoteInspeccionState state) {
+                  if (state is RemoteInspeccionListLoaded) {
+                    setState(() {
+                      searchResults = state.objResponseDataSource?.count ?? 0;
+                    });
+                  }
+                },
+                builder   : (BuildContext context, RemoteInspeccionState state) {
+                  // LOADING
+                  if (state is RemoteInspeccionLoading) {
+                    return const Center(child: AppLoadingIndicator());
+                  }
 
-          if (state is RemoteInspeccionServerFailedMessageDataSource) {
-            return ErrorInfoContainer(
-              onPressed     : () => _buildDataSource(),
-              errorMessage  : state.errorMessage,
-            );
-          }
+                  // ERRORS
+                  if (state is RemoteInspeccionServerFailedMessageIndex) {
+                      return ErrorInfoContainer(
+                      onPressed     : () => _buildDataSource(),
+                      errorMessage  : state.errorMessage,
+                    );
+                  }
 
-          if (state is RemoteInspeccionServerFailureDataSource) {
-            return ErrorInfoContainer(
-              onPressed     : () => _buildDataSource(),
-              errorMessage  : state.failure?.errorMessage,
-            );
-          }
+                  if (state is RemoteInspeccionServerFailedMessageDataSource) {
+                    return ErrorInfoContainer(
+                      onPressed     : () => _buildDataSource(),
+                      errorMessage  : state.errorMessage,
+                    );
+                  }
 
-          if (state is RemoteInspeccionDataSourceLoaded) {
-            // DATASOURCE
-            final List<InspeccionDataSourceEntity> lstRows = state.objResponse?.rows ?? [];
-            final int searchResults  = state.objResponse?.count ?? 0;
+                  if (state is RemoteInspeccionServerFailureIndex) {
+                    return ErrorInfoContainer(
+                      onPressed     : () => _buildDataSource(),
+                      errorMessage  : state.failure?.errorMessage,
+                    );
+                  }
 
-            if (lstRows.isNotEmpty) {
-              return Column(
-                crossAxisAlignment  : CrossAxisAlignment.stretch,
-                children            : <Widget>[
-                  Container(
-                    padding : EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, 0),
-                    child   : _SearchInput(onSubmit: _handleSearchSubmitted),
-                  ),
-                  Container(
-                    padding : EdgeInsets.all($styles.insets.xxs * 1.5),
-                    child   : _buildStatusBar(context, searchResults),
-                  ),
-                  Expanded(
-                    child: RefreshIndicator(
-                      onRefresh: _buildDataSource,
-                      child: _ListCard(inspecciones: lstRows, buildDataSourceCallback: _buildDataSource),
-                    ),
-                  ),
-                ],
-              );
-            } else {
-              return RequestDataUnavailable(
-                title     : $strings.inspectionEmptyTitle,
-                message   : $strings.emptyListMessage,
-                onRefresh : () => _buildDataSource(),
-              );
-            }
-          }
-          return const SizedBox.shrink();
-        },
+                  if (state is RemoteInspeccionServerFailureDataSource) {
+                    return ErrorInfoContainer(
+                      onPressed     : () => _buildDataSource(),
+                      errorMessage  : state.failure?.errorMessage,
+                    );
+                  }
+
+                  // SUCCESS
+                  if (state is RemoteInspeccionListLoaded) {
+                    // FRAGMENTO MODIFICABLE - LISTAS
+                    lstInspeccionesEstatus  = state.objResponseIndex?.inspeccionesEstatus  ?? [];
+                    lstUnidadesTipos        = state.objResponseIndex?.unidadesTipos        ?? [];
+                    lstUsuarios             = state.objResponseIndex?.usuarios             ?? [];
+
+                    final DataSourcePersistence? dataSourcePersistence = state.objResponseIndex?.dataSourcePersistence;
+
+                    searchFilters = dataSourcePersistence == null ? _getSearchFilters() : dataSourcePersistence.searchFilters ?? [];
+
+                    // FRAGMENTO NO MODIFICABLE - FILTROS
+                    _renderFilters(dataSourcePersistence);
+
+                    // FRAGMENTO NO MODIFICABLE - RENDERIZACION
+                    lstRows       = state.objResponseDataSource?.rows ?? [];
+                    if (lstRows.isNotEmpty) {
+                      return _ListCard(inspecciones: lstRows, buildDataSourceCallback: _buildDataSource);
+                    } else {
+                      return RequestDataUnavailable(
+                        title     : $strings.inspectionEmptyTitle,
+                        message   : $strings.emptyListMessage,
+                        onRefresh : () => _buildDataSource(),
+                      );
+                    }
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
 
@@ -368,7 +406,11 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
               children: <Widget>[
                 Gap($styles.insets.sm),
 
-                Text('$searchResults resultados', textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false), style: $styles.textStyles.body),
+                Text(
+                  '$searchResults ${searchResults == 1 ? 'resultado' : 'resultados'}',
+                  textHeightBehavior  : const TextHeightBehavior(applyHeightToFirstAscent: false),
+                  style               : $styles.textStyles.body,
+                ),
               ],
             ),
 

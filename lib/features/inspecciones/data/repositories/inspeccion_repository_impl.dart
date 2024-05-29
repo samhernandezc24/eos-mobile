@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:eos_mobile/core/data/data_source.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion/inspeccion_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_create_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_data_source_res_model.dart';
@@ -59,13 +60,13 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
 
   /// DATASOURCE DE INSPECCION
   @override
-  Future<DataState<InspeccionDataSourceResModel>> dataSource(Map<String, dynamic> objData) async {
+  Future<DataState<InspeccionDataSourceResModel>> dataSource(DataSource objData) async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
 
       // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _inspeccionRemoteApiService.dataSource('application/json', 'Bearer $token', objData);
+      final httpResponse = await _inspeccionRemoteApiService.dataSource('application/json', 'Bearer $token', objData.toJson());
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         final ServerResponse objResponse = httpResponse.data;

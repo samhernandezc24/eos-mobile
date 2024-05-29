@@ -9,31 +9,27 @@ class Globals {
     vertical: 13.2,
   );
 
-  static bool isValidValue(dynamic argObject) {
-    bool objReturn = false;
-    if (argObject != null && argObject is String && argObject.isNotEmpty) {
-      objReturn = true;
-    }
-    return objReturn;
-  }
+  /// Verifica si [argObject] es non-nullable.
+  ///
+  /// Retorna true si [argObject] no es null, de lo contrario retorna false.
+  static bool isValidValue(dynamic argObject) => argObject != null;
 
-  static bool isValidStringValue(String? argObject) {
-    return argObject != null && Globals.isValidValue(argObject.trim());
-  }
+  /// Verifica si [argObject] es una cadena non-nullable y no vacía después de
+  /// eliminar espacios en blanco.
+  ///
+  /// Retorna true si [argObject] es una cadena non-nullable y no vacía, de lo contrario retorna false.
+  static bool isValidStringValue(String argObject) => Globals.isValidValue(argObject) && argObject.trim().isNotEmpty;
 
-  static bool isValidArrayValue(List<dynamic>? argObject) {
-    return argObject != null && Globals.isValidValue(argObject) && argObject.isNotEmpty;
-  }
+  /// Verifica si [argObject] es una lista non-nullable y no vacía.
+  ///
+  /// Retorna true si [argObject] es una lista non-nullable y no vacía, de lo contrario retorna false.
+  static bool isValidArrayValue(List<dynamic> argObject) => Globals.isValidValue(argObject) && argObject.isNotEmpty;
 
+  /// Verifica si [argObject] es un número válido.
+  ///
+  /// Retorna true si [argObject] no es nulo, es un número y coincide su representación
+  /// de cadena con su valor entero después de la conversión, de lo contrario retorna false.
   static bool isValidNumberValue(dynamic argObject) {
-    if (argObject != null || !Globals.isValidValue(argObject)) {
-      return false;
-    }
-    try {
-      double.parse(argObject.toString());
-      return true;
-    } catch (_) {
-      return false;
-    }
+    return Globals.isValidValue(argObject) && argObject is num && argObject.toString() == argObject.toInt().toString();
   }
 }

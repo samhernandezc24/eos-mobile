@@ -7,14 +7,11 @@ sealed class RemoteInspeccionEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// [IndexInspeccionUseCase]
-class FetchInspeccionIndex extends RemoteInspeccionEvent {}
+/// [IndexInspeccionUseCase], [DataSourceInspeccionUseCase]
+class InitializeInspeccion extends RemoteInspeccionEvent {
+  const InitializeInspeccion(this.objData);
 
-/// [DataSourceInspeccionUseCase]
-class FetchInspeccionDataSource extends RemoteInspeccionEvent {
-  const FetchInspeccionDataSource(this.objData);
-
-  final Map<String, dynamic> objData;
+  final DataSource objData;
 
   @override
   List<Object?> get props => [ objData ];

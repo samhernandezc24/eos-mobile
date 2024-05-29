@@ -1,13 +1,18 @@
 import 'package:eos_mobile/core/data/data_source_persistence.dart';
+import 'package:eos_mobile/core/data/filter.dart';
+import 'package:eos_mobile/core/data/search_filter.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class DataSourceUtils {
-  static dynamic renderFilter(List<dynamic> arrFilters, List<dynamic> lstValues, String field, String key) {
-    final Map<String, dynamic>? objFilter = arrFilters.firstWhere((x) => x['field'] == field, orElse: () => null) as Map<String, dynamic>?;
+  static String? renderFilter(List<Filter> arrFilters, List<dynamic> lstValues, String field, String key) {
+    final Filter objFilter = arrFilters.firstWhere(
+      (filter) => filter.field == field,
+      orElse: () => const Filter(field: ''),
+    );
 
-    final id = objFilter != null ? objFilter['value'] : null;
+    final String? id = Globals.isValidValue(objFilter) ? objFilter.value : null;
 
-    return lstValues.any((a) => a[key] == id) ? id : null;
+    return lstValues.any((value) => value[key] == id) ? id : null;
   }
 
   static List<dynamic> renderFilterMultiple(List<dynamic> arrFiltersMultiple, List<dynamic> lstValues, String field, String key) {
@@ -36,11 +41,17 @@ class DataSourceUtils {
     return null;
   }
 
-  static List<Map<String, dynamic>> searchFilters(List<dynamic> arrSearchFilters) {
-    List<Map<String, dynamic>> lstSearchFilters = <Map<String, dynamic>>[];
+  /// Filtra una lista de filtros de búsqueda para incluir solo aquellos cuya propiedad `isChecked` sea true.
+  ///
+  /// Retorna una nueva lista de [SearchFilter] que contienen solo el campo `field` de los elementos filtrados.
+  static List<SearchFilter> searchFilters(List<SearchFilter> arrSearchFilters) {
+    List<SearchFilter> lstSearchFilters = [];
 
     if (Globals.isValidValue(arrSearchFilters)) {
-      lstSearchFilters = arrSearchFilters.where((x) => x['isChecked'] as bool).map((x) => {'field': x['field']}).toList();
+      lstSearchFilters = arrSearchFilters
+          .where((x) => x.isChecked ?? false)
+          .map((x) => SearchFilter(field: x.field))
+          .toList();
     }
 
     return lstSearchFilters;

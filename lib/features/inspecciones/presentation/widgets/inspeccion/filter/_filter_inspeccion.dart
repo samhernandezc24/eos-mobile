@@ -10,7 +10,7 @@ class _FilterInspeccion extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  final List<Map<String, dynamic>> dateOptions;
+  final List<DateOption> dateOptions;
   final List<UnidadTipo> unidadesTipos;
   final List<InspeccionEstatus> inspeccionesEstatus;
   final List<Usuario> usuarios;
