@@ -1,10 +1,11 @@
 part of '../../../pages/list/list_page.dart';
 
 class _SearchInputUnidad extends StatelessWidget {
-  const _SearchInputUnidad({required this.onSelected, required this.unidades, Key? key}) : super(key: key);
+  const _SearchInputUnidad({required this.onSelected, required this.unidades, required this.cleanTextFields, Key? key}) : super(key: key);
 
   final void Function(UnidadEntity) onSelected;
   final List<UnidadEntity> unidades;
+  final VoidCallback cleanTextFields;
 
   @override
   Widget build(BuildContext context) {
@@ -165,8 +166,7 @@ class _SearchInputUnidad extends StatelessWidget {
                     semanticLabel   : $strings.searchInputSemanticClear,
                     size            : $styles.insets.md,
                     iconSize        : $styles.insets.sm,
-                    // onPressed       : () { controller.clear(); onSubmit(''); },
-                    onPressed       : () { controller.clear(); },
+                    onPressed       : () { controller.clear(); cleanTextFields(); },
                   ),
                 ),
               );

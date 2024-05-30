@@ -3,7 +3,7 @@ part of '../../../pages/list/list_page.dart';
 class _CreateInspeccionForm extends StatefulWidget {
   const _CreateInspeccionForm({required this.buildDataSourceCallback, Key? key}) : super(key: key);
 
-  final VoidCallback buildDataSourceCallback;
+  final Future<void> Function() buildDataSourceCallback;
 
   @override
   State<_CreateInspeccionForm> createState() => _CreateInspeccionFormState();
@@ -104,7 +104,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
           ),
           TextButton(
             onPressed : () {
-              Navigator.of(context).pop(); // Cerrar dialog
+              Navigator.of(context).pop();        // Cerrar dialog
               // Ejecutar el callback una vez finalizada la acción pop.
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 Navigator.of(context).pop();      // Cerrar página
@@ -118,8 +118,24 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
     );
   }
 
-  // METHODS
+  void _handleStorePressed() {
+    if (_fechaProgramadaController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content         : const Text('Por favor selecciona la fecha programada'),
+          backgroundColor : Theme.of(context).colorScheme.error,
+          elevation       : 0,
+          behavior        : SnackBarBehavior.fixed,
+        ),
+      );
+      return;
+    }
 
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      _store();
+    }
+  }
 
   void _handleCreateUnidadPressed(BuildContext context) {
     Navigator.push<void>(
@@ -142,7 +158,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
 
   void _handleSearchUnidadSubmitted(UnidadEntity? value) {
     setState(() {
-      // UNIDAD SELECCIONADA:
+      // Unidad seleccionada.
       _selectedUnidad = value;
 
       // Rellenar la información de los controles.
@@ -150,26 +166,19 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
     });
   }
 
-  void _handleStoreInspeccionPressed() {
-    if (_fechaProgramadaController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content         : const Text('Por favor selecciona la fecha programada'),
-          backgroundColor : Theme.of(context).colorScheme.error,
-          behavior        : SnackBarBehavior.fixed,
-          elevation       : 0,
-        ),
-      );
-      return;
-    }
+  Future<void> _showServerErrorDialog(BuildContext context, String? errorMessage) {
+    return showDialog<void>(
+      context   : context,
+      builder: (BuildContext context) => ServerFailedDialog(
+        errorMessage: errorMessage ?? 'Se produjo un error inesperado. Intenta crear de nuevo la inspección.',
+      ),
+    );
+  }
 
-    final DateTime fechaProgramada  = DateFormat('dd/MM/yyyy HH:mm').parse(_fechaProgramadaController.text);
-    final double? capacidad         = double.tryParse(_capacidadController.text);
-    final int? odometro             = int.tryParse(_odometroController.text);
-    final int? horometro            = int.tryParse(_horometroController.text);
-
-    final InspeccionStoreReqEntity objData = InspeccionStoreReqEntity(
-      fechaProgramada             : fechaProgramada,
+  // METHODS
+  void _store() {
+    final InspeccionStoreReqEntity objPost = InspeccionStoreReqEntity(
+      fechaProgramada             : DateFormat('dd/MM/yyyy HH:mm').parse(_fechaProgramadaController.text),
       idInspeccionTipo            : _selectedInspeccionTipo?.idInspeccionTipo ?? '',
       inspeccionTipoCodigo        : _selectedInspeccionTipo?.codigo           ?? '',
       inspeccionTipoName          : _selectedInspeccionTipo?.name             ?? '',
@@ -188,26 +197,19 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
       numeroSerie                 : _numeroSerieController.text,
       modelo                      : _modeloController.text,
       anioEquipo                  : _anioEquipoController.text,
-      capacidad                   : capacidad ?? 0.000,
+      capacidad                   : double.tryParse(_capacidadController.text) ?? 0.000,
       idUnidadCapacidadMedida     : _selectedUnidad?.idUnidadCapacidadMedida  ?? '',
       unidadCapacidadMedidaName   : _unidadCapacidadMedidaNameController.text,
       locacion                    : _locacionController.text,
       tipoPlataforma              : _tipoPlataformaController.text,
-      odometro                    : odometro,
-      horometro                   : horometro,
+      odometro                    : int.tryParse(_odometroController.text),
+      horometro                   : int.tryParse(_horometroController.text),
     );
 
-    final bool isValidForm = _formKey.currentState!.validate();
-
-    // Verificar la validacion en el formulario.
-    if (isValidForm) {
-      _formKey.currentState!.save();
-      BlocProvider.of<RemoteInspeccionBloc>(context).add(StoreInspeccion(objData));
-    }
+    BlocProvider.of<RemoteInspeccionBloc>(context).add(StoreInspeccion(objPost));
   }
 
   void _fillTextFields(UnidadEntity? value) {
-    // RELLENAR LA INFORMACION DE LOS CONTROLES:
     _unidadNumeroEconomicoController.text       = value?.numeroEconomico            ?? '';
     _unidadTipoNameController.text              = value?.unidadTipoName             ?? '';
     _unidadMarcaNameController.text             = value?.unidadMarcaName            ?? '';
@@ -239,30 +241,6 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
     _horometroController.clear();
   }
 
-  Future<void> _showServerErrorDialog(BuildContext context, String? errorMessage) {
-    return showDialog<void>(
-      context   : context,
-      builder   : (_) => AlertDialog(
-        title   : const SizedBox.shrink(),
-        content : Row(
-          children: <Widget>[
-            Icon(Icons.error, color: Theme.of(context).colorScheme.error),
-            Gap($styles.insets.sm),
-            Flexible(
-              child: Text(
-                errorMessage ?? 'Se produjo un error inesperado. Intenta de nuevo crear la unidad.',
-                style: $styles.textStyles.title2.copyWith(height: 1.5),
-              ),
-            ),
-          ],
-        ),
-        actions: <Widget>[
-          TextButton(onPressed: () => Navigator.pop(context, $strings.acceptButtonText), child: Text($strings.acceptButtonText, style: $styles.textStyles.button)),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -272,13 +250,13 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
         _handleDidPopPressed(context);
       },
       child: Scaffold(
-        appBar  : AppBar(title: Text('Nueva inspección', style: $styles.textStyles.h3)),
-        body    : SafeArea(
-          child : SingleChildScrollView(
-            padding : EdgeInsets.all($styles.insets.sm).copyWith(bottom: $styles.insets.lg),
-            child   : Form(
-              key   : _formKey,
-              child : Column(
+        appBar: AppBar(title: Text($strings.inspeccionCreateAppBarTitle, style: $styles.textStyles.h3)),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all($styles.insets.sm).copyWith(bottom: $styles.insets.lg),
+            child: Form(
+              key: _formKey,
+              child: Column(
                 crossAxisAlignment  : CrossAxisAlignment.stretch,
                 children            : <Widget>[
                   // ALTERNAR ENTRE UNIDAD INVENTARIO / UNIDAD TEMPORAL:
@@ -290,7 +268,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                       style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
                       children: <TextSpan>[
                         TextSpan(text: $strings.settingsSuggestionsText, style: const TextStyle(fontWeight: FontWeight.w600)),
-                        TextSpan(text: ': ${$strings.inspectionSuggestionCreate}'),
+                        TextSpan(text: ': ${$strings.inspeccionCreateSuggestion}'),
                       ],
                     ),
                   ),
@@ -324,7 +302,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                           return Column(
                             crossAxisAlignment  : CrossAxisAlignment.start,
                             children            : <Widget>[
-                              _SearchInputUnidad(onSelected: _handleSearchUnidadSubmitted, unidades: lstUnidades),
+                              _SearchInputUnidad(onSelected: _handleSearchUnidadSubmitted, unidades: lstUnidades, cleanTextFields: _clearTextFields),
                             ],
                           );
                         }
@@ -593,12 +571,13 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                           SnackBar(
                             content         : Text(state.objResponse?.message ?? 'Nueva inspección', softWrap: true),
                             backgroundColor : Colors.green,
-                            behavior        : SnackBarBehavior.fixed,
                             elevation       : 0,
+                            behavior        : SnackBarBehavior.fixed,
                           ),
                         );
 
-                        widget.buildDataSourceCallback(); // Ejecutar callback
+                        // Ejecutar callback.
+                        widget.buildDataSourceCallback();
                       }
                     },
                     builder: (BuildContext context, RemoteInspeccionState state) {
@@ -610,7 +589,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                         );
                       }
                       return FilledButton(
-                        onPressed : _handleStoreInspeccionPressed,
+                        onPressed : _handleStorePressed,
                         style     : ButtonStyle(minimumSize: MaterialStateProperty.all<Size?>(const Size(double.infinity, 48))),
                         child     : Text($strings.saveButtonText, style: $styles.textStyles.button),
                       );

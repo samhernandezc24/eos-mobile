@@ -15,14 +15,14 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
   late final TextEditingController _fechaInspeccionInicialController;
 
   // PROPERTIES
-  bool _hasServerError = false;
+  bool _hasServerError  = false;
+  bool _isLoading       = false;
 
   // STATE
   @override
   void initState() {
     super.initState();
     context.read<RemoteInspeccionCategoriaBloc>().add(GetInspeccionCategoriaPreguntas(widget.objData));
-
     _fechaInspeccionInicialController = TextEditingController();
   }
 
@@ -43,17 +43,21 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: $styles.insets.sm),
               child: Center(
-                child: Text('¿Quieres terminar la inspección más tarde?', style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600)),
+                child: Text('¿Quieres terminar la evaluación más tarde?', style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600)),
               ),
             ),
             ListTile(
-              onTap: (){},
-              leading: const Icon(Icons.bookmark),
-              title: const Text('Guardar como borrador'),
-              subtitle: const Text('Puedes retomar y responder esta inspección en otro momento.'),
+              leading   : const Icon(Icons.bookmark),
+              title     : const Text('Guardar como borrador'),
+              subtitle  : const Text('Puedes retomar y responder esta evaluación en otro momento.'),
+              onTap     : (){},
             ),
             ListTile(
-              onTap: () {
+              leading   : const Icon(Icons.keyboard_return),
+              textColor : Theme.of(context).colorScheme.error,
+              iconColor : Theme.of(context).colorScheme.error,
+              title     : const Text('Salir de la evaluación'),
+              onTap     : () {
                 Navigator.of(context).pop();        // Cerrar modal bottom
                 // Ejecutar el callback una vez finalizada la acción pop.
                 WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -61,17 +65,13 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
                   widget.buildDataSourceCallback(); // Ejecutar callback
                 });
               },
-              leading: const Icon(Icons.delete_forever),
-              textColor: Theme.of(context).colorScheme.error,
-              iconColor: Theme.of(context).colorScheme.error,
-              title: const Text('Descartar inspección'),
             ),
             ListTile(
-              onTap: () => context.pop(),
-              leading: const Icon(Icons.check),
-              textColor: Theme.of(context).colorScheme.primary,
-              iconColor: Theme.of(context).colorScheme.primary,
-              title: const Text('Continuar respondiendo'),
+              leading   : const Icon(Icons.check),
+              textColor : Theme.of(context).colorScheme.primary,
+              iconColor : Theme.of(context).colorScheme.primary,
+              title     : const Text('Continuar respondiendo'),
+              onTap     : () => context.pop(),
             ),
           ],
         );
@@ -80,6 +80,17 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
   }
 
   void _handleStorePressed({bool isParcial = false}) {
+    if (_fechaInspeccionInicialController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content         : const Text('Por favor selecciona la fecha de inspección inicial'),
+          backgroundColor : Theme.of(context).colorScheme.error,
+          elevation       : 0,
+          behavior        : SnackBarBehavior.fixed,
+        ),
+      );
+      return;
+    }
     // if (lstCategorias.isEmpty) {
     //   // No se puede guardar parcialmente o finalizar una evaluación que no cuenta con categorías.
     //   return;
@@ -93,39 +104,42 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
     }
   }
 
-  // METHODS
-  void _updateFechaInspeccionInicial(DateTime? fecha) {
-    if (fecha != null) {
-      final String formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(fecha);
-      _fechaInspeccionInicialController.text = formattedDate;
-    }
+  void _handleNextPressed() {
+    Navigator.push<void>(
+      context,
+      PageRouteBuilder<void>(
+        transitionDuration: $styles.times.pageTransition,
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) => const _ChecklistInspeccionFinal(),
+        transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+          const Offset begin    = Offset(1, 0);
+          const Offset end      = Offset.zero;
+          const Cubic curve     = Curves.ease;
+
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(position: animation.drive<Offset>(tween), child: child);
+        },
+        fullscreenDialog: true,
+      ),
+    );
   }
 
+  // METHODS
   void _store(bool isParcial) {
-    // Verificar que la fecha de inspeccion inicial no se mande vacia.
-    if (_fechaInspeccionInicialController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content         : const Text('Por favor selecciona la fecha de inspección inicial'),
-          backgroundColor : Theme.of(context).colorScheme.error,
-          behavior        : SnackBarBehavior.fixed,
-          elevation       : 0,
-        ),
-      );
-      return;
-    }
-
-    final DateTime fechaInspeccionInicial = DateFormat('dd/MM/yyyy HH:mm').parse(_fechaInspeccionInicialController.text);
-
     final InspeccionCategoriaStoreReqEntity objPost = InspeccionCategoriaStoreReqEntity(
       idInspeccion            : widget.objData.idInspeccion,
       isParcial               : isParcial,
-      fechaInspeccionInicial  : fechaInspeccionInicial,
+      fechaInspeccionInicial  : DateFormat('dd/MM/yyyy HH:mm').parse(_fechaInspeccionInicialController.text),
       categorias              : [],
     );
 
-    // Evento StoreInspeccionCategoria del BLoC.
     BlocProvider.of<RemoteInspeccionCategoriaBloc>(context).add(StoreInspeccionCategoria(objPost));
+  }
+
+  void _updateFechaInspeccionInicial(DateTime? fecha) {
+    if (fecha != null) {
+      _fechaInspeccionInicialController.text = DateFormat('dd/MM/yyyy HH:mm').format(fecha);
+    }
   }
 
   @override
@@ -140,22 +154,32 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
         appBar  : AppBar(title: Text($strings.checklistAppBarTitle, style: $styles.textStyles.h3)),
         body    : BlocConsumer<RemoteInspeccionCategoriaBloc, RemoteInspeccionCategoriaState>(
           listener: (BuildContext context, RemoteInspeccionCategoriaState state) {
+            if (state is RemoteInspeccionCategoriaGetPreguntasLoading) {
+              setState(() {
+                _isLoading = true;
+              });
+            }
+
             if (state is RemoteInspeccionCategoriaServerFailedMessageGetPreguntas) {
               setState(() {
                 _hasServerError = true;
+                _isLoading      = false;
               });
             }
 
             if (state is RemoteInspeccionCategoriaServerFailureGetPreguntas) {
               setState(() {
                 _hasServerError = true;
+                _isLoading      = false;
               });
             }
 
+            // SUCCESS:
             if (state is RemoteInspeccionCategoriaGetPreguntasSuccess) {
               setState(() {
                 _hasServerError = false;
                 _updateFechaInspeccionInicial(state.objResponse?.inspeccion?.fechaInspeccionInicial);
+                _isLoading = false;
               });
             }
           },
@@ -224,18 +248,7 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
             return const SizedBox.shrink();
           },
         ),
-        bottomNavigationBar: !_hasServerError
-            ? BottomAppBar(
-                child : Row(
-                  children  : <Widget>[
-                    IconButton(onPressed: (){}, icon: const Icon(Icons.camera_alt), tooltip: 'Tomar fotografía'),
-                    IconButton(onPressed: (){}, icon: const Icon(Icons.sync), tooltip: 'Sincronizar información'),
-                    const Spacer(),
-                    FilledButton(onPressed: () => _handleStorePressed(isParcial: true), child: Text($strings.saveButtonText, style: $styles.textStyles.button)),
-                  ],
-                ),
-              )
-            : null,
+        bottomNavigationBar: !_hasServerError && !_isLoading ? _buildBottomAppBar() : null,
       ),
     );
   }
@@ -321,6 +334,21 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomAppBar() {
+    return BottomAppBar(
+      child : Row(
+        children  : <Widget>[
+          IconButton(onPressed: (){}, icon: const Icon(Icons.camera_alt), tooltip: 'Tomar fotografía'),
+          // IconButton(onPressed: (){}, icon: const Icon(Icons.sync), tooltip: 'Sincronizar información'),
+          const Spacer(),
+          FilledButton(onPressed: () => _handleStorePressed(isParcial: true), child: Text($strings.saveButtonText, style: $styles.textStyles.button)),
+          Gap($styles.insets.sm),
+          FilledButton(onPressed: () => _handleNextPressed(), child: Text($strings.nextButtonText, style: $styles.textStyles.button)),
         ],
       ),
     );

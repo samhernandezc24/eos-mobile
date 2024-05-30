@@ -51,6 +51,7 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
   // SELECTED UNIDAD CAPACIDAD MEDIDA
   UnidadCapacidadMedida? _selectedUnidadCapacidadMedida;
 
+  // STATE
   @override
   void initState() {
     super.initState();
@@ -81,7 +82,7 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
     super.dispose();
   }
 
-  // METHODS
+  // EVENTS
   void _handleDidPopPressed(BuildContext context) {
     showDialog<void>(
       context : context,
@@ -95,7 +96,7 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
           ),
           TextButton(
             onPressed : () {
-              Navigator.of(context).pop(); // Cerrar dialog
+              Navigator.of(context).pop();          // Cerrar dialog
               // Ejecutar el callback una vez finalizada la acción pop.
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 Navigator.of(context).pop();        // Cerrar página
@@ -109,65 +110,47 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
     );
   }
 
-  void _handleStoreUnidadPressed() {
-    // Verificar la validacion en el formulario.
+  void _handleStorePressed() {
     if (_formKey.currentState!.validate()) {
-      final double? capacidad   = double.tryParse(_capacidadController.text);
-      final int? odometro       = int.tryParse(_odometroController.text);
-      final int? horometro      = int.tryParse(_horometroController.text);
-
-      final UnidadStoreReqEntity objData = UnidadStoreReqEntity(
-        numeroEconomico             : _numeroEconomicoController.text,
-        idBase                      : _selectedBase?.idBase                                   ?? '',
-        baseName                    : _selectedBase?.name                                     ?? '',
-        idUnidadTipo                : _selectedUnidadTipo?.idUnidadTipo                       ?? '',
-        unidadTipoName              : _selectedUnidadTipo?.name                               ?? '',
-        idUnidadMarca               : _selectedUnidadMarca?.idUnidadMarca                     ?? '',
-        unidadMarcaName             : _selectedUnidadMarca?.name                              ?? '',
-        idUnidadPlacaTipo           : _selectedUnidadPlacaTipo?.idUnidadPlacaTipo             ?? '',
-        unidadPlacaTipoName         : _selectedUnidadPlacaTipo?.name                          ?? '',
-        placa                       : _placaController.text,
-        numeroSerie                 : _numeroSerieController.text,
-        modelo                      : _modeloController.text,
-        anioEquipo                  : _anioEquipoController.text,
-        descripcion                 : _descripcionController.text,
-        capacidad                   : capacidad ?? 0.000,
-        idUnidadCapacidadMedida     : _selectedUnidadCapacidadMedida?.idUnidadCapacidadMedida ?? '',
-        unidadCapacidadMedidaName   : _selectedUnidadCapacidadMedida?.name                    ?? '',
-        odometro                    : odometro,
-        horometro                   : horometro,
-      );
-
-      // Guardar el estado actual del formulario.
       _formKey.currentState!.save();
-
-      // Evento StoreUnidad del Bloc.
-      BlocProvider.of<RemoteUnidadBloc>(context).add(StoreUnidad(objData));
+      _store();
     }
   }
 
   Future<void> _showServerErrorDialog(BuildContext context, String? errorMessage) {
     return showDialog<void>(
       context   : context,
-      builder   : (_) => AlertDialog(
-        title   : const SizedBox.shrink(),
-        content : Row(
-          children: <Widget>[
-            Icon(Icons.error, color: Theme.of(context).colorScheme.error),
-            Gap($styles.insets.sm),
-            Flexible(
-              child: Text(
-                errorMessage ?? 'Se produjo un error inesperado. Intenta crear la unidad de nuevo.',
-                style: $styles.textStyles.title2.copyWith(height: 1.5),
-              ),
-            ),
-          ],
-        ),
-        actions: <Widget>[
-          TextButton(onPressed: () => context.pop(), child: Text($strings.acceptButtonText, style: $styles.textStyles.button)),
-        ],
+      builder: (BuildContext context) => ServerFailedDialog(
+        errorMessage: errorMessage ?? 'Se produjo un error inesperado. Intenta crear de nuevo la unidad.',
       ),
     );
+  }
+
+  // METHODS
+  void _store() {
+    final UnidadStoreReqEntity objPost = UnidadStoreReqEntity(
+      numeroEconomico             : _numeroEconomicoController.text,
+      idBase                      : _selectedBase?.idBase                                   ?? '',
+      baseName                    : _selectedBase?.name                                     ?? '',
+      idUnidadTipo                : _selectedUnidadTipo?.idUnidadTipo                       ?? '',
+      unidadTipoName              : _selectedUnidadTipo?.name                               ?? '',
+      idUnidadMarca               : _selectedUnidadMarca?.idUnidadMarca                     ?? '',
+      unidadMarcaName             : _selectedUnidadMarca?.name                              ?? '',
+      idUnidadPlacaTipo           : _selectedUnidadPlacaTipo?.idUnidadPlacaTipo             ?? '',
+      unidadPlacaTipoName         : _selectedUnidadPlacaTipo?.name                          ?? '',
+      placa                       : _placaController.text,
+      numeroSerie                 : _numeroSerieController.text,
+      modelo                      : _modeloController.text,
+      anioEquipo                  : _anioEquipoController.text,
+      descripcion                 : _descripcionController.text,
+      capacidad                   : double.tryParse(_capacidadController.text)              ?? 0.000,
+      idUnidadCapacidadMedida     : _selectedUnidadCapacidadMedida?.idUnidadCapacidadMedida ?? '',
+      unidadCapacidadMedidaName   : _selectedUnidadCapacidadMedida?.name                    ?? '',
+      odometro                    : int.tryParse(_odometroController.text),
+      horometro                   : int.tryParse(_horometroController.text),
+    );
+
+    BlocProvider.of<RemoteUnidadBloc>(context).add(StoreUnidad(objPost));
   }
 
   @override
@@ -179,7 +162,7 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
         _handleDidPopPressed(context);
       },
       child: Scaffold(
-        appBar  : AppBar(title: Text('Nueva unidad', style: $styles.textStyles.h3)),
+        appBar  : AppBar(title: Text($strings.unidadCreateAppBarTitle, style: $styles.textStyles.h3)),
         body    : SafeArea(
           child: SingleChildScrollView(
             padding : EdgeInsets.all($styles.insets.sm).copyWith(bottom: $styles.insets.lg),
@@ -479,8 +462,8 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
                           SnackBar(
                             content         : Text(state.objResponse?.message ?? 'Nueva unidad', softWrap: true),
                             backgroundColor : Colors.green,
-                            behavior        : SnackBarBehavior.fixed,
                             elevation       : 0,
+                            behavior        : SnackBarBehavior.fixed,
                           ),
                         );
 
@@ -497,7 +480,7 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
                         );
                       }
                       return FilledButton(
-                        onPressed : _handleStoreUnidadPressed,
+                        onPressed : _handleStorePressed,
                         style     : ButtonStyle(minimumSize: MaterialStateProperty.all<Size?>(const Size(double.infinity, 48))),
                         child     : Text($strings.saveButtonText, style: $styles.textStyles.button),
                       );

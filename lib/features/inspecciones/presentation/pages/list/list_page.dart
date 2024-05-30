@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:eos_mobile/core/data/catalogos/base.dart';
 import 'package:eos_mobile/core/data/catalogos/inspeccion_estatus.dart';
 import 'package:eos_mobile/core/data/catalogos/unidad_capacidad_medida.dart';
@@ -34,8 +35,11 @@ import 'package:eos_mobile/ui/common/modals/search_filters.dart';
 import 'package:eos_mobile/ui/common/themed_text.dart';
 
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 part '../../widgets/inspeccion/checklist/_checklist_inspeccion.dart';
+part '../../widgets/inspeccion/checklist/_checklist_inspeccion_final.dart';
+part '../../widgets/inspeccion/checklist/_checklist_signature.dart';
 part '../../widgets/inspeccion/checklist/_checklist_tile.dart';
 part '../../widgets/inspeccion/create/_create_form.dart';
 part '../../widgets/inspeccion/create/_search_input.dart';
@@ -64,6 +68,8 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   late final TextEditingController _txtDateDesdeController;
   late final TextEditingController _txtDateHastaController;
 
+  // PROPERTIES
+  bool isLoading = false;
   int searchResults = 0;
 
   // SEARCH
@@ -285,6 +291,27 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     _buildDataSource();
   }
 
+  void _updateResults({bool showLoading = true}) {
+    if (showLoading) {
+      isLoading = true;
+    }
+
+    final DataSourcePersistence varArgs = DataSourcePersistence(
+      table             : 'Inspecciones',
+      searchFilters     : searchFilters,
+      columns           : const [],
+      sort              : const Sort(column: '', direction: ''),
+      displayedColumns  : const [],
+      filters           : const [],
+      filtersMultiple   : const [],
+      dateOption        : '',
+      dateFrom          : '',
+      dateTo            : '',
+    );
+
+    print(varArgs);
+  }
+
   @override
   Widget build(BuildContext context) {
     final Widget content = GestureDetector(
@@ -304,14 +331,14 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
             child: RefreshIndicator(
               onRefresh: _buildDataSource,
               child: BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
-                listener  : (BuildContext context, RemoteInspeccionState state) {
+                listener: (BuildContext context, RemoteInspeccionState state) {
                   if (state is RemoteInspeccionListLoaded) {
                     setState(() {
                       searchResults = state.objResponseDataSource?.count ?? 0;
                     });
                   }
                 },
-                builder   : (BuildContext context, RemoteInspeccionState state) {
+                builder: (BuildContext context, RemoteInspeccionState state) {
                   // LOADING
                   if (state is RemoteInspeccionLoading) {
                     return const Center(child: AppLoadingIndicator());
@@ -360,13 +387,15 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                     // FRAGMENTO NO MODIFICABLE - FILTROS
                     _renderFilters(dataSourcePersistence);
 
+                    // _updateResults();
+
                     // FRAGMENTO NO MODIFICABLE - RENDERIZACION
                     lstRows       = state.objResponseDataSource?.rows ?? [];
                     if (lstRows.isNotEmpty) {
                       return _ListCard(inspecciones: lstRows, buildDataSourceCallback: _buildDataSource);
                     } else {
                       return RequestDataUnavailable(
-                        title     : $strings.inspectionEmptyTitle,
+                        title     : $strings.inspeccionEmptyListTitle,
                         message   : $strings.emptyListMessage,
                         onRefresh : () => _buildDataSource(),
                       );

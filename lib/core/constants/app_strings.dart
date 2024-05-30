@@ -35,12 +35,16 @@ class AppStrings {
   String categoriaItemDeleteAlertTitle      = '¿Eliminar pregunta?';
   String categoriaItemEmptyListTitle        = 'Aún no hay preguntas';
 
-  String circleButtonsSemanticBack    = 'Volver';
-  String circleButtonsSemanticClose   = 'Cerrar';
+  String circleButtonsSemanticBack          = 'Volver';
+  String circleButtonsSemanticClose         = 'Cerrar';
 
-  String checklistAppBarTitle         = 'Evaluar unidad';
-  String checklistEmptyTitle          = 'Aún no hay preguntas';
-  String checklistListMessage         = 'Intenta configurar las categorías y preguntas para la evaluación de la unidad.';
+  String checklistAppBarTitle               = 'Evaluar unidad';
+  String checklistEmptyTitle                = 'Aún no hay preguntas';
+  String checklistFinishAppBarTitle         = 'Finalizar inspección';
+  String checklistFinishDrawSignAppBarTitle = 'Dibujar firma';
+  String checklistListMessage               = 'Intenta configurar las categorías y preguntas para la evaluación de la unidad.';
+
+  String clearButtonText              = 'Limpiar';
 
   String dashboardTitle               = 'Dashboard';
 
@@ -71,12 +75,16 @@ class AppStrings {
   // I
   String incompleteFormDataMessage          = 'Datos incompletos en el formulario';
 
-  String inspectionEmptyTitle               = 'No se encontraron resultados';
-  String inspectionSuggestionCreate         = 'Es necesario que realice la búsqueda de la unidad a inspeccionar antes de continuar.';
-
+  String inspeccionCreateAppBarTitle        = 'Nueva inspección';
+  String inspeccionCreateSuggestion         = 'Es necesario que realice la búsqueda de la unidad a inspeccionar antes de continuar.';
+  String inspeccionEmptyListTitle           = 'No se encontraron resultados';
   String inspeccionIndexListTileTitle       = 'Lista de inspecciones';
   String inspeccionIndexListTileSubtitle    = 'Muestra inspecciones en general.';
   String inspeccionListAppBarTitle          = 'Lista de inspecciones';
+
+  String inspeccionFinishImportantMessage     = 'Soy testigo de la inspección realizada al equipo que tengo a mi cargo y se me informo específicamente de cada punto a considerar para su atención correctiva.';
+  String inspeccionDrawSignButtonText       = 'Dibujar firma';
+  String inspeccionDrawSignBoxDescription   = 'Dibuja tu firma en el espacio rectangular con bordes punteados, de preferencia en el centro del espacio rectangular.';
 
   String inspeccionTipoAppBarTitle          = 'Configuración de inspecciones';
   String inspeccionTipoBoxDescription       = 'Crea los tipos de inspección para organizar y gestionar tus inspecciones de manera más eficiente.';
@@ -92,8 +100,6 @@ class AppStrings {
 
   String inspectionIndexSearchTitle   = 'Buscar unidad';
   String inspectionIndexSearchSubtitle = 'Encuentra rápidamente una unidad.';
-
-  String inspectionNoReqAppBarText    = 'Inspección de Unidad Sin Req.';
 
   String homePageModule1              = 'Inspecciones';
   String homePageModule2              = 'Compras';
@@ -118,15 +124,27 @@ class AppStrings {
 
   String bottomNavigationHome         = 'Inicio';
 
+  String finishButtonText             = 'Finalizar';
+
+  // P
+  String prevButtonText               = 'Anterior';
+
+  // N
+  String nextButtonText               = 'Siguiente';
+
+  // R
   String refreshButtonText            = 'Actualizar';
   String retryButtonText              = 'Volver a intentar';
 
+  // S
   String saveButtonText               = 'Guardar';
 
   String searchInputHintText          = 'Buscar...';
   String searchInputSemanticClear     = 'Limpiar Búsqueda';
   String searchInputSuggestionsTitle  = 'Sugerencias';
 
+  // U
+  String unidadCreateAppBarTitle      = 'Nueva unidad';
   String unidadSearchInputHintText    = 'Buscar por no. económico';
 
   String settingsThemeAppTitle        = 'Tema';
@@ -137,6 +155,7 @@ class AppStrings {
   String settingsRecentUpdateSubtitle = 'Recibe notificaciones cuando haya actualizaciones disponibles.';
   String settingsUpdateDialogContent  = 'Después de inhabilitar la actualización automática, deberá confirmar manualmente cuando actualice a una nueva versión para poder completar la actualización. ¿Seguro que quiere inhabilitar?';
   String settingsSuggestionsText      = 'Sugerencia';
+  String settingsAttentionText        = 'Atención';
 
   String signInTitleHeading           = 'Iniciar Sesión';
   String signInButtonText             = 'Ingresar';

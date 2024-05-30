@@ -10,9 +10,11 @@ class FormModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(title ?? 'Default Form Modal', style: $styles.textStyles.h3)),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all($styles.insets.sm),
-        child: child,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all($styles.insets.sm),
+          child: child,
+        ),
       ),
     );
   }

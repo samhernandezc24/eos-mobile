@@ -1,10 +1,14 @@
 part of '../../../pages/list/list_page.dart';
 
 class _ListCard extends StatefulWidget {
-  const _ListCard({required this.inspecciones, required this.buildDataSourceCallback, Key? key}) : super(key: key);
+  const _ListCard({
+    required this.inspecciones,
+    required this.buildDataSourceCallback,
+    Key? key,
+  }) : super(key: key);
 
   final List<InspeccionDataSourceEntity> inspecciones;
-  final VoidCallback buildDataSourceCallback;
+  final Future<void> Function() buildDataSourceCallback;
 
   @override
   State<_ListCard> createState() => _ListCardState();
@@ -17,9 +21,10 @@ class _ListCardState extends State<_ListCard> {
   // PROPERTIES
   double _prevVelocity = -1;
 
-  // METHODS
+  // EVENTS
   void _handleResultsScrolled() {
-    // Ocultar el teclado si la lista se desplaza manualmente por el puntero,ignorando los cambios de desplazamiento basados en la velocidad, como la desaceleración o el rebote por sobredesplazamiento.
+    // Ocultar el teclado si la lista se desplaza manualmente por el puntero,ignorando los cambios de desplazamiento basados en la velocidad,
+    // como la desaceleración o el rebote por sobredesplazamiento.
     // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     final velocity = _scrollController.position.activity?.velocity;
     if (velocity == 0 && _prevVelocity == 0) {

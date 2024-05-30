@@ -37,6 +37,7 @@ class _SearchInput extends StatelessWidget {
               controller        : controller,
               style             : TextStyle(color: Theme.of(context).colorScheme.onSurface),
               textAlignVertical : TextAlignVertical.top,
+              textInputAction   : TextInputAction.search,
               decoration        : InputDecoration(
                 isDense         : true,
                 contentPadding  : EdgeInsets.all($styles.insets.xs),
