@@ -18,6 +18,8 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
   bool _hasServerError  = false;
   bool _isLoading       = false;
 
+  Inspeccion? _inspeccion;
+
   // STATE
   @override
   void initState() {
@@ -109,7 +111,7 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
       context,
       PageRouteBuilder<void>(
         transitionDuration: $styles.times.pageTransition,
-        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) => const _ChecklistInspeccionFinal(),
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) => _ChecklistInspeccionPhoto(inspeccion: _inspeccion),
         transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
           const Offset begin    = Offset(1, 0);
           const Offset end      = Offset.zero;
@@ -179,6 +181,7 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
               setState(() {
                 _hasServerError = false;
                 _updateFechaInspeccionInicial(state.objResponse?.inspeccion?.fechaInspeccionInicial);
+                _inspeccion = state.objResponse?.inspeccion;
                 _isLoading = false;
               });
             }
@@ -341,11 +344,10 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
 
   Widget _buildBottomAppBar() {
     return BottomAppBar(
-      child : Row(
-        children  : <Widget>[
-          IconButton(onPressed: (){}, icon: const Icon(Icons.camera_alt), tooltip: 'Tomar fotografía'),
-          // IconButton(onPressed: (){}, icon: const Icon(Icons.sync), tooltip: 'Sincronizar información'),
-          const Spacer(),
+      height  : 70,
+      child   : Row(
+        mainAxisAlignment : MainAxisAlignment.end,
+        children          : <Widget>[
           FilledButton(onPressed: () => _handleStorePressed(isParcial: true), child: Text($strings.saveButtonText, style: $styles.textStyles.button)),
           Gap($styles.insets.sm),
           FilledButton(onPressed: () => _handleNextPressed(), child: Text($strings.nextButtonText, style: $styles.textStyles.button)),

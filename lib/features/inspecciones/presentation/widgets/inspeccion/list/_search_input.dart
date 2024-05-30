@@ -1,10 +1,18 @@
 part of '../../../pages/list/list_page.dart';
 
 class _SearchInput extends StatelessWidget {
-  const _SearchInput({required this.controller, required this.onSubmit, Key? key}) : super(key: key);
+  const _SearchInput({required this.controller, required this.onSubmit, this.onSearchFilterPressed, Key? key}) : super(key: key);
 
   final TextEditingController controller;
   final void Function(String) onSubmit;
+  final void Function(BuildContext context)? onSearchFilterPressed;
+
+  // EVENTS
+  void _handleIconSearchTap(BuildContext context) {
+    if (onSearchFilterPressed != null) {
+      return onSearchFilterPressed!(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +37,15 @@ class _SearchInput extends StatelessWidget {
         children: <Widget>[
           Gap($styles.insets.xs * 1.5),
 
-          const Icon(Icons.search),
+          // const Icon(Icons.search),
+          // IconButton(
+          //   onPressed : () => _handleIconSearchPressed(context),
+          //   icon      : const Icon(Icons.search),
+          // ),
+          GestureDetector(
+            onTap : () => _handleIconSearchTap(context),
+            child : const Icon(Icons.search),
+          ),
 
           Expanded(
             child: TextField(

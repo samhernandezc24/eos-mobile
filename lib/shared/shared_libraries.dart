@@ -19,6 +19,7 @@ export 'package:eos_mobile/core/constants/globals.dart';
 // CORE: ENUMS
 export 'package:eos_mobile/core/enums/app_icons.dart';
 export 'package:eos_mobile/core/enums/unidad_inspeccion.dart';
+export 'package:eos_mobile/core/enums/universal_platform_type.dart';
 
 // CORE: EXTENSIONS
 export 'package:eos_mobile/core/extensions/alignments_extension.dart';
@@ -53,6 +54,8 @@ export 'package:eos_mobile/styles/app_styles.dart';
 export 'package:eos_mobile/ui/common/controls/app_loading_indicator.dart';
 export 'package:eos_mobile/ui/common/controls/buttons.dart';
 export 'package:eos_mobile/ui/common/controls/circle_buttons.dart';
+export 'package:eos_mobile/ui/common/controls/labeled_date_text_form_field.dart';
+export 'package:eos_mobile/ui/common/controls/labeled_datetime_text_form_field.dart';
 export 'package:eos_mobile/ui/common/controls/labeled_dropdown_form_field.dart';
 export 'package:eos_mobile/ui/common/controls/labeled_dropdown_form_search_field.dart';
 export 'package:eos_mobile/ui/common/controls/labeled_password_form_field.dart';
@@ -63,8 +66,10 @@ export 'package:eos_mobile/ui/common/controls/server_failed_dialog.dart';
 export 'package:eos_mobile/ui/common/error_box_container.dart';
 export 'package:eos_mobile/ui/common/error_server_failure.dart';
 export 'package:eos_mobile/ui/common/modals/form_modal.dart';
+export 'package:eos_mobile/ui/common/modals/search_filters.dart';
 export 'package:eos_mobile/ui/common/request_data_unavailable.dart';
 export 'package:eos_mobile/ui/common/static_text_scale.dart';
+export 'package:eos_mobile/ui/common/themed_text.dart';
 
 // EQUATABLE
 export 'package:equatable/equatable.dart';

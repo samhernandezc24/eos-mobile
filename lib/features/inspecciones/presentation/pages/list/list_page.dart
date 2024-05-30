@@ -1,4 +1,5 @@
 import 'package:dotted_border/dotted_border.dart';
+
 import 'package:eos_mobile/core/data/catalogos/base.dart';
 import 'package:eos_mobile/core/data/catalogos/inspeccion_estatus.dart';
 import 'package:eos_mobile/core/data/catalogos/unidad_capacidad_medida.dart';
@@ -15,7 +16,9 @@ import 'package:eos_mobile/core/data/inspeccion/categoria_item.dart';
 import 'package:eos_mobile/core/data/inspeccion/inspeccion.dart';
 import 'package:eos_mobile/core/data/search_filter.dart';
 import 'package:eos_mobile/core/data/sort.dart';
+
 import 'package:eos_mobile/core/enums/inspeccion_menu.dart';
+
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
@@ -29,17 +32,16 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_ca
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
-import 'package:eos_mobile/ui/common/controls/labeled_date_text_form_field.dart';
-import 'package:eos_mobile/ui/common/controls/labeled_datetime_text_form_field.dart';
-import 'package:eos_mobile/ui/common/modals/search_filters.dart';
-import 'package:eos_mobile/ui/common/themed_text.dart';
+import 'package:eos_mobile/ui/common/controls/app_image.dart';
 
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 part '../../widgets/inspeccion/checklist/_checklist_inspeccion.dart';
 part '../../widgets/inspeccion/checklist/_checklist_inspeccion_final.dart';
-part '../../widgets/inspeccion/checklist/_checklist_signature.dart';
+part '../../widgets/inspeccion/checklist/_checklist_inspeccion_photo.dart';
+part '../../widgets/inspeccion/checklist/_checklist_inspeccion_signature.dart';
 part '../../widgets/inspeccion/checklist/_checklist_tile.dart';
 part '../../widgets/inspeccion/create/_create_form.dart';
 part '../../widgets/inspeccion/create/_search_input.dart';
@@ -47,7 +49,8 @@ part '../../widgets/inspeccion/filter/_filter_inspeccion.dart';
 part '../../widgets/inspeccion/list/_list_card.dart';
 part '../../widgets/inspeccion/list/_result_card.dart';
 part '../../widgets/inspeccion/list/_search_input.dart';
-
+part '../../widgets/inspeccion/photo/_photos_grid.dart';
+part '../../widgets/inspeccion/photo/_photo_tile.dart';
 part '../../widgets/unidad/create/_create_form.dart';
 
 /// El usuario puede utilizar esta página para buscar en el servidor EOS una inspección
@@ -321,7 +324,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
         children            : <Widget>[
           Container(
             padding : EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, 0),
-            child   : _SearchInput(controller: _txtSearchController, onSubmit: _handleSearchSubmitted),
+            child   : _SearchInput(controller: _txtSearchController, onSubmit: _handleSearchSubmitted, onSearchFilterPressed: _handleSearchFiltersPressed),
           ),
           Container(
             padding : EdgeInsets.all($styles.insets.xxs * 1.5),
@@ -394,10 +397,32 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                     if (lstRows.isNotEmpty) {
                       return _ListCard(inspecciones: lstRows, buildDataSourceCallback: _buildDataSource);
                     } else {
-                      return RequestDataUnavailable(
-                        title     : $strings.inspeccionEmptyListTitle,
-                        message   : $strings.emptyListMessage,
-                        onRefresh : () => _buildDataSource(),
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(Icons.info, color: Theme.of(context).colorScheme.secondary, size: 64),
+
+                            Gap($styles.insets.sm),
+
+                            Padding(
+                              padding : EdgeInsets.symmetric(horizontal: $styles.insets.lg * 1.5),
+                              child   : Text(
+                                $strings.inspeccionEmptyListTitle,
+                                style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+
+                            Padding(
+                              padding : EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
+                              child   : const Text(
+                                'Lo sentimos, pero no hemos encontrado ningún resultado que coincida con tu búsqueda.',
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
                       );
                     }
                   }
@@ -446,9 +471,9 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
             Row(
               children: <Widget>[
                 IconButton(
-                  onPressed : () => _handleSearchFiltersPressed(context),
-                  icon      : const Icon(Icons.manage_search),
-                  tooltip   : 'Buscar resultados en...',
+                  onPressed : _buildDataSource,
+                  icon      : const Icon(Icons.refresh),
+                  tooltip   : 'Actualizar lista',
                 ),
                 IconButton(
                   onPressed : () => _handleFiltersPressed(context),

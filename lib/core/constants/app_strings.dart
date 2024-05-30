@@ -2,18 +2,16 @@ class AppStrings {
   static final AppStrings instance = AppStrings();
 
   // A
-  String acceptButtonText             = 'Aceptar';
+  String acceptButtonText                   = 'Aceptar';
+  String accountTitle                       = 'Cuenta';
+  String activityTitle                      = 'Actividad';
 
-  String accountTitle                 = 'Cuenta';
-
-  String activityTitle                = 'Actividad';
-
-  String appPageDefaultTitlePage      = 'página';
-  String appPageSemanticSwipe         = '{pageTitle} {count} de {total}.';
-  String appProcessingData            = 'Procesando...';
+  String appPageDefaultTitlePage            = 'página';
+  String appPageSemanticSwipe               = '{pageTitle} {count} de {total}.';
+  String appProcessingData                  = 'Procesando...';
 
   // C
-  String cancelButtonText                 = 'Cancelar';
+  String cancelButtonText                   = 'Cancelar';
 
   String categoriaAppBarTitle               = 'Configuración de categorías';
   String categoriaBoxDescription            = 'Crea las categorías para agrupar las preguntas de las inspecciones.';
@@ -39,9 +37,14 @@ class AppStrings {
   String circleButtonsSemanticClose         = 'Cerrar';
 
   String checklistAppBarTitle               = 'Evaluar unidad';
+  String checklistDrawSignatureAppBarTitle  = 'Dibujar firma';
+  String checklistDrawSignatureBoxSuggest   = 'Dibuja tu firma en el espacio rectangular con bordes punteados, de preferencia en el centro del espacio rectangular.';
+  String checklistPhotoEvidenceAppBarTitle  = 'Fotos de evidencia';
+  String checklistPhotoEvidenceBoxSuggest   = 'Captura fotografías de todas las áreas importantes de la unidad.';
   String checklistEmptyTitle                = 'Aún no hay preguntas';
   String checklistFinishAppBarTitle         = 'Finalizar inspección';
-  String checklistFinishDrawSignAppBarTitle = 'Dibujar firma';
+  String checklistFinishSignatureButtonText = 'Dibujar firma';
+  String checklistFinishImportantMessage    = 'Soy testigo de la inspección realizada al equipo que tengo a mi cargo y se me informo específicamente de cada punto a considerar para su atención correctiva.';
   String checklistListMessage               = 'Intenta configurar las categorías y preguntas para la evaluación de la unidad.';
 
   String clearButtonText              = 'Limpiar';
@@ -81,10 +84,6 @@ class AppStrings {
   String inspeccionIndexListTileTitle       = 'Lista de inspecciones';
   String inspeccionIndexListTileSubtitle    = 'Muestra inspecciones en general.';
   String inspeccionListAppBarTitle          = 'Lista de inspecciones';
-
-  String inspeccionFinishImportantMessage     = 'Soy testigo de la inspección realizada al equipo que tengo a mi cargo y se me informo específicamente de cada punto a considerar para su atención correctiva.';
-  String inspeccionDrawSignButtonText       = 'Dibujar firma';
-  String inspeccionDrawSignBoxDescription   = 'Dibuja tu firma en el espacio rectangular con bordes punteados, de preferencia en el centro del espacio rectangular.';
 
   String inspeccionTipoAppBarTitle          = 'Configuración de inspecciones';
   String inspeccionTipoBoxDescription       = 'Crea los tipos de inspección para organizar y gestionar tus inspecciones de manera más eficiente.';

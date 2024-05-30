@@ -45,7 +45,7 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
 
           return SlideTransition(
             position  : animation.drive<Offset>(tween),
-            child     : const _ChecklistSignature(),
+            child     : const _ChecklistInspeccionSignature(),
           );
         },
         fullscreenDialog: true,
@@ -90,7 +90,7 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
                     child   : Center(
                       child: FilledButton(
                         onPressed : () => _handleDrawSignaturePressed(context),
-                        child     : Text($strings.inspeccionDrawSignButtonText, style: $styles.textStyles.button),
+                        child     : Text($strings.checklistFinishSignatureButtonText, style: $styles.textStyles.button),
                       ),
                     ),
                   ),
@@ -115,7 +115,7 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
                     child   : Center(
                       child: FilledButton(
                         onPressed : () => _handleDrawSignaturePressed(context),
-                        child     : Text($strings.inspeccionDrawSignButtonText, style: $styles.textStyles.button),
+                        child     : Text($strings.checklistFinishSignatureButtonText, style: $styles.textStyles.button),
                       ),
                     ),
                   ),

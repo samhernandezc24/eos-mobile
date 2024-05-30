@@ -1,13 +1,13 @@
 part of '../../../pages/list/list_page.dart';
 
-class _ChecklistSignature extends StatefulWidget {
-  const _ChecklistSignature({Key? key}) : super(key: key);
+class _ChecklistInspeccionSignature extends StatefulWidget {
+  const _ChecklistInspeccionSignature({Key? key}) : super(key: key);
 
   @override
-  State<_ChecklistSignature> createState() => _ChecklistSignatureState();
+  State<_ChecklistInspeccionSignature> createState() => _ChecklistInspeccionSignatureState();
 }
 
-class _ChecklistSignatureState extends State<_ChecklistSignature> {
+class _ChecklistInspeccionSignatureState extends State<_ChecklistInspeccionSignature> {
   // GLOBAL KEY
   final GlobalKey<SfSignaturePadState> _signaturePadKey = GlobalKey<SfSignaturePadState>();
 
@@ -19,7 +19,7 @@ class _ChecklistSignatureState extends State<_ChecklistSignature> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text($strings.checklistFinishDrawSignAppBarTitle, style: $styles.textStyles.h3)),
+      appBar: AppBar(title: Text($strings.checklistDrawSignatureAppBarTitle, style: $styles.textStyles.h3)),
       body: Column(
         children: <Widget>[
           Container(
@@ -33,7 +33,7 @@ class _ChecklistSignatureState extends State<_ChecklistSignature> {
                     style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
                     children: <TextSpan>[
                       TextSpan(text: $strings.settingsSuggestionsText, style: const TextStyle(fontWeight: FontWeight.w600)),
-                      TextSpan(text: ': ${$strings.inspeccionDrawSignBoxDescription}'),
+                      TextSpan(text: ': ${$strings.checklistDrawSignatureBoxSuggest}'),
                     ],
                   ),
                 ),
