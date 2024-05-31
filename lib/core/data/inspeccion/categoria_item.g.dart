@@ -13,6 +13,7 @@ CategoriaItem _$CategoriaItemFromJson(Map<String, dynamic> json) =>
       idFormularioTipo: json['idFormularioTipo'] as String?,
       formularioTipoName: json['formularioTipoName'] as String?,
       formularioValor: json['formularioValor'] as String?,
+      value: json['value'] as String?,
     );
 
 Map<String, dynamic> _$CategoriaItemToJson(CategoriaItem instance) =>
@@ -22,4 +23,5 @@ Map<String, dynamic> _$CategoriaItemToJson(CategoriaItem instance) =>
       'idFormularioTipo': instance.idFormularioTipo,
       'formularioTipoName': instance.formularioTipoName,
       'formularioValor': instance.formularioValor,
+      'value': instance.value,
     };

@@ -41,7 +41,7 @@ class AppStrings {
   String checklistDrawSignatureBoxSuggest   = 'Dibuja tu firma en el espacio rectangular con bordes punteados, de preferencia en el centro del espacio rectangular.';
   String checklistPhotoEvidenceAppBarTitle  = 'Fotos de evidencia';
   String checklistPhotoEvidenceBoxSuggest   = 'Captura fotografías de todas las áreas importantes de la unidad.';
-  String checklistEmptyTitle                = 'Aún no hay preguntas';
+  String checklistEmptyTitle                = 'Aún no hay categorías';
   String checklistFinishAppBarTitle         = 'Finalizar inspección';
   String checklistFinishSignatureButtonText = 'Dibujar firma';
   String checklistFinishImportantMessage    = 'Soy testigo de la inspección realizada al equipo que tengo a mi cargo y se me informo específicamente de cada punto a considerar para su atención correctiva.';

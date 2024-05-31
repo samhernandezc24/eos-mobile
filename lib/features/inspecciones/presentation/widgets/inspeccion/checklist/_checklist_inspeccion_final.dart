@@ -1,7 +1,9 @@
 part of '../../../pages/list/list_page.dart';
 
 class _ChecklistInspeccionFinal extends StatefulWidget {
-  const _ChecklistInspeccionFinal({Key? key}) : super(key: key);
+  const _ChecklistInspeccionFinal({Key? key, this.inspeccion}) : super(key: key);
+
+  final Inspeccion? inspeccion;
 
   @override
   State<_ChecklistInspeccionFinal> createState() => _ChecklistInspeccionFinalState();
@@ -77,12 +79,7 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  LabeledTextFormField(
-                    controller  : _nombreOperadorController,
-                    hintText    : 'Ingrese nombre del operador',
-                    label       : 'Nombre y firma del operador*:',
-                    validator   : FormValidators.textValidator,
-                  ),
+                  Text('Firma del operador *:', style: $styles.textStyles.label),
                   Gap($styles.insets.sm),
                   Container(
                     padding : EdgeInsets.all($styles.insets.sm),
@@ -102,12 +99,7 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  LabeledTextFormField(
-                    controller  : _nombreVerificadorController,
-                    hintText    : 'Ingrese nombre de quién realizó la inspección',
-                    label       : 'Nombre y firma del verificador*:',
-                    validator   : FormValidators.textValidator,
-                  ),
+                  Text('Firma del verificador *:', style: $styles.textStyles.label),
                   Gap($styles.insets.sm),
                   Container(
                     padding : EdgeInsets.all($styles.insets.sm),

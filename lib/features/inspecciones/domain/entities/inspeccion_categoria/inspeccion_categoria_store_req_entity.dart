@@ -1,4 +1,4 @@
-import 'package:eos_mobile/core/data/inspeccion/categoria_value.dart';
+import 'package:eos_mobile/core/data/inspeccion/categoria.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 /// [InspeccionCategoriaStoreReqEntity]
@@ -18,7 +18,7 @@ class InspeccionCategoriaStoreReqEntity extends Equatable {
   final bool isParcial;
   final DateTime fechaInspeccionInicial;
   final DateTime? fechaInspeccionFinal;
-  final List<CategoriaValue> categorias;
+  final List<Categoria> categorias;
 
   @override
   List<Object?> get props => [

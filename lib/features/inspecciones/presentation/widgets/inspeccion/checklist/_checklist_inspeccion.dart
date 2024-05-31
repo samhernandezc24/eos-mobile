@@ -18,6 +18,7 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
   bool _hasServerError  = false;
   bool _isLoading       = false;
 
+  List<Categoria> lstCategorias = <Categoria>[];
   Inspeccion? _inspeccion;
 
   // STATE
@@ -82,27 +83,34 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
   }
 
   void _handleStorePressed({bool isParcial = false}) {
-    if (_fechaInspeccionInicialController.text.isEmpty) {
+    if (lstCategorias.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content         : const Text('Por favor selecciona la fecha de inspección inicial'),
+          content         : const Text('No se puede guardar parcialmente una evaluación que no cuenta con categorías', softWrap: true),
           backgroundColor : Theme.of(context).colorScheme.error,
           elevation       : 0,
           behavior        : SnackBarBehavior.fixed,
+          duration        : const Duration(seconds: 2),
         ),
       );
       return;
     }
-    // if (lstCategorias.isEmpty) {
-    //   // No se puede guardar parcialmente o finalizar una evaluación que no cuenta con categorías.
-    //   return;
-    // }
 
-    if (!isParcial) {
-      // Ingrese la fecha de inspección inicial
-      return;
-    } else {
-      _store(isParcial);
+    if (isParcial) {
+      if (_fechaInspeccionInicialController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content         : const Text('Ingrese la fecha de inspección inicial'),
+            backgroundColor : Theme.of(context).colorScheme.error,
+            elevation       : 0,
+            behavior        : SnackBarBehavior.fixed,
+            duration        : const Duration(seconds: 2),
+          ),
+        );
+        return;
+      } else {
+        _store(isParcial);
+      }
     }
   }
 
@@ -116,7 +124,6 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
           const Offset begin    = Offset(1, 0);
           const Offset end      = Offset.zero;
           const Cubic curve     = Curves.ease;
-
           final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
 
           return SlideTransition(position: animation.drive<Offset>(tween), child: child);
@@ -126,13 +133,22 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
     );
   }
 
+  void _handleRadioChanged(String? selectedValue, List<CategoriaItem> categoriasItems) {
+    // final CategoriaItem? selectedItem = categoriasItems.firstWhere((item) => item.idCategoriaItem == selectedValue);
+    // if (selectedItem != null) {
+    //   setState(() {
+    //     selectedItem.value = selectedValue;
+    //   });
+    // }
+  }
+
   // METHODS
   void _store(bool isParcial) {
     final InspeccionCategoriaStoreReqEntity objPost = InspeccionCategoriaStoreReqEntity(
       idInspeccion            : widget.objData.idInspeccion,
       isParcial               : isParcial,
       fechaInspeccionInicial  : DateFormat('dd/MM/yyyy HH:mm').parse(_fechaInspeccionInicialController.text),
-      categorias              : [],
+      categorias              : lstCategorias,
     );
 
     BlocProvider.of<RemoteInspeccionCategoriaBloc>(context).add(StoreInspeccionCategoria(objPost));
@@ -206,8 +222,10 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
             }
 
             if (state is RemoteInspeccionCategoriaGetPreguntasSuccess) {
-              final Inspeccion? inspeccion = state.objResponse?.inspeccion;
-              final List<Categoria> lstCategorias = state.objResponse?.categorias ?? [];
+              final Inspeccion? inspeccion  = state.objResponse?.inspeccion;
+              lstCategorias                 = state.objResponse?.categorias ?? [];
+
+              print(lstCategorias);
 
               return Column(
                 crossAxisAlignment  : CrossAxisAlignment.start,
@@ -240,7 +258,10 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
                             itemCount   : lstCategorias.length,
                             itemBuilder : (BuildContext context, int index) {
                               final Categoria categoria = lstCategorias[index];
-                              return _ChecklistTile(categoria: categoria);
+                              return _ChecklistTile(
+                                categoria: categoria,
+                                onChanged: (_) {},
+                              );
                             },
                           )
                         : RequestDataUnavailable(title: $strings.checklistEmptyTitle, message: $strings.checklistListMessage, isRefreshData: false),

@@ -1,4 +1,4 @@
-import 'package:eos_mobile/core/data/inspeccion/categoria_value.dart';
+import 'package:eos_mobile/core/data/inspeccion/categoria.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_categoria/inspeccion_categoria_store_req_entity.dart';
 
 /// [InspeccionCategoriaStoreReqModel]
@@ -10,7 +10,7 @@ class InspeccionCategoriaStoreReqModel extends InspeccionCategoriaStoreReqEntity
     required String idInspeccion,
     required bool isParcial,
     required DateTime fechaInspeccionInicial,
-    required List<CategoriaValue> categorias,
+    required List<Categoria> categorias,
     DateTime? fechaInspeccionFinal,
   }) : super(
           idInspeccion            : idInspeccion,
@@ -28,7 +28,7 @@ class InspeccionCategoriaStoreReqModel extends InspeccionCategoriaStoreReqEntity
       isParcial               : jsonMap['isParcial'] as bool,
       fechaInspeccionInicial  : DateTime.parse(jsonMap['fechaInspeccionInicial'] as String),
       fechaInspeccionFinal    : jsonMap['fechaInspeccionFinal'] != null ? DateTime.parse(jsonMap['fechaInspeccionFinal'] as String) : null,
-      categorias              : (jsonMap['categorias'] as List<dynamic>).map((item) => CategoriaValue.fromJson(item as Map<String, dynamic>)).toList(),
+      categorias              : (jsonMap['categorias'] as List<dynamic>).map((item) => Categoria.fromJson(item as Map<String, dynamic>)).toList(),
     );
   }
 
