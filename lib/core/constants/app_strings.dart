@@ -10,6 +10,9 @@ class AppStrings {
   String appPageSemanticSwipe               = '{pageTitle} {count} de {total}.';
   String appProcessingData                  = 'Procesando...';
 
+  String alertWarningAttentionTitle         = 'Atención';
+  String alertWarningInvalidFormTitle       = 'Formulario';
+
   // C
   String cancelButtonText                   = 'Cancelar';
 

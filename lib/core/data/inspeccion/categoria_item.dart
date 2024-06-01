@@ -12,6 +12,8 @@ class CategoriaItem extends Equatable {
     this.formularioTipoName,
     this.formularioValor,
     this.value,
+    this.observaciones,
+    this.noAplica,
   });
 
   /// Constructor factory para crear una nueva instancia de [CategoriaItem]
@@ -24,6 +26,8 @@ class CategoriaItem extends Equatable {
   final String? formularioTipoName;
   final String? formularioValor;
   final String? value;
+  final String? observaciones;
+  final bool? noAplica;
 
   /// Serialización de la estructura del modelo a formato JSON.
   Map<String, dynamic> toJson() => _$CategoriaItemToJson(this);
@@ -36,5 +40,7 @@ class CategoriaItem extends Equatable {
         formularioTipoName,
         formularioValor,
         value,
+        observaciones,
+        noAplica,
       ];
 }

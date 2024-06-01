@@ -102,7 +102,7 @@ class _ChecklistTileState extends State<_ChecklistTile> {
                     children  : <Widget>[
                       CircleAvatar(radius: 14, child: Text('$itemIndex', style: $styles.textStyles.h4)),
                       Gap($styles.insets.sm),
-                      Expanded(child: Text('${item.name}', style: $styles.textStyles.body.copyWith(height: 1.3), softWrap: true)),
+                      Expanded(child: Text('${item.name}'.toCapitalized(), style: $styles.textStyles.body.copyWith(height: 1.3), softWrap: true)),
                       IconButton(
                         onPressed: () {
                           setState(() {

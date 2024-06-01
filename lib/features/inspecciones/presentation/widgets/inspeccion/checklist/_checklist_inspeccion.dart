@@ -108,11 +108,20 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
       if (_fechaInspeccionInicialController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content         : const Text('Ingrese la fecha de inspección inicial'),
-            backgroundColor : Theme.of(context).colorScheme.error,
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                // TITLE:
+                Text($strings.alertWarningInvalidFormTitle, style: $styles.textStyles.bodyBold),
+                Gap($styles.insets.xxs),
+                // MESSAGE:
+                const Text('Ingresa la fecha de inspección inicial', softWrap: true),
+              ],
+            ),
+            backgroundColor : const Color(0xfff89406),
             elevation       : 0,
             behavior        : SnackBarBehavior.fixed,
-            duration        : const Duration(seconds: 2),
+            showCloseIcon   : true,
           ),
         );
         return;
@@ -151,6 +160,44 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
     // }
   }
 
+  Future<void> _showServerFailedDialog(BuildContext context, String? errorMessage) async {
+    return showDialog<void>(
+      context : context,
+      builder: (BuildContext context)  => ServerFailedDialog(
+        errorMessage: errorMessage ?? 'Se produjo un error inesperado. Intenta de nuevo guardar la evaluación.',
+      ),
+    );
+  }
+
+  void _showProgressDialog(BuildContext context) {
+    showDialog<void>(
+      context             : context,
+      barrierDismissible  : false,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
+          elevation : 0,
+          child     : Container(
+            padding : EdgeInsets.all($styles.insets.xs),
+            child   : Column(
+              mainAxisSize  : MainAxisSize.min,
+              children      : <Widget>[
+                Container(
+                  margin  : EdgeInsets.symmetric(vertical: $styles.insets.sm),
+                  child   : const AppLoadingIndicator(width: 30, height: 30),
+                ),
+                Container(
+                  margin  : EdgeInsets.only(bottom: $styles.insets.xs),
+                  child   : Text($strings.appProcessingData, style: $styles.textStyles.bodyBold, textAlign: TextAlign.center),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   // METHODS
   void _store(bool isParcial) {
     final InspeccionCategoriaStoreReqEntity objPost = InspeccionCategoriaStoreReqEntity(
@@ -181,12 +228,18 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
         appBar  : AppBar(title: Text($strings.checklistAppBarTitle, style: $styles.textStyles.h3)),
         body    : BlocConsumer<RemoteInspeccionCategoriaBloc, RemoteInspeccionCategoriaState>(
           listener: (BuildContext context, RemoteInspeccionCategoriaState state) {
+            // LOADING:
             if (state is RemoteInspeccionCategoriaGetPreguntasLoading) {
               setState(() {
                 _isLoading = true;
               });
             }
 
+            if (state is RemoteInspeccionCategoriaStoring) {
+              _showProgressDialog(context);
+            }
+
+            // ERRORS:
             if (state is RemoteInspeccionCategoriaServerFailedMessageGetPreguntas) {
               setState(() {
                 _hasServerError = true;
@@ -201,12 +254,61 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
               });
             }
 
+            if (state is RemoteInspeccionCategoriaServerFailedMessageStore) {
+              Navigator.of(context).pop();
+
+              _showServerFailedDialog(context, state.errorMessage);
+
+              // Actualizando el listado de categorías.
+              context.read<RemoteInspeccionCategoriaBloc>().add(GetInspeccionCategoriaPreguntas(widget.objData));
+
+              setState(() {
+                _isLoading = false;
+              });
+            }
+
+            if (state is RemoteInspeccionCategoriaServerFailureStore) {
+              Navigator.of(context).pop();
+
+              _showServerFailedDialog(context, state.failure?.errorMessage);
+
+              // Actualizando el listado de categorías.
+              context.read<RemoteInspeccionCategoriaBloc>().add(GetInspeccionCategoriaPreguntas(widget.objData));
+
+              setState(() {
+                _isLoading = false;
+              });
+            }
+
             // SUCCESS:
             if (state is RemoteInspeccionCategoriaGetPreguntasSuccess) {
               setState(() {
                 _hasServerError = false;
                 _updateFechaInspeccionInicial(state.objResponse?.inspeccion?.fechaInspeccionInicial);
                 _isLoading = false;
+              });
+            }
+
+            if (state is RemoteInspeccionCategoriaStored) {
+              Navigator.of(context).pop();
+
+              ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  content         : Text(state.objResponse?.message ?? 'Evaluación parcial', softWrap: true),
+                  backgroundColor : Colors.green,
+                  behavior        : SnackBarBehavior.fixed,
+                  elevation       : 0,
+                ),
+              );
+
+              // Actualizando el listado de categorías.
+              context.read<RemoteInspeccionCategoriaBloc>().add(GetInspeccionCategoriaPreguntas(widget.objData));
+
+              setState(() {
+                _hasServerError = false;
+                _isLoading      = false;
               });
             }
           },
@@ -232,8 +334,6 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
             if (state is RemoteInspeccionCategoriaGetPreguntasSuccess) {
               lstCategorias = state.objResponse?.categorias ?? [];
               inspeccion    = state.objResponse?.inspeccion;
-              print(inspeccion);
-
               return Column(
                 crossAxisAlignment  : CrossAxisAlignment.start,
                 children            : <Widget>[
@@ -376,7 +476,7 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
       child   : Row(
         mainAxisAlignment : MainAxisAlignment.end,
         children          : <Widget>[
-          FilledButton(onPressed: () => _handleStorePressed(isParcial: true), child     : Text($strings.saveButtonText, style: $styles.textStyles.button)),
+          FilledButton(onPressed: () => _handleStorePressed(isParcial: true), child: Text($strings.saveButtonText, style: $styles.textStyles.button)),
           Gap($styles.insets.sm),
           FilledButton(onPressed: () => _handleNextPressed(), child: Text($strings.nextButtonText, style: $styles.textStyles.button)),
         ],

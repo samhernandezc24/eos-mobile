@@ -44,8 +44,8 @@ class RemoteInspeccionCategoriaServerFailedMessageGetPreguntas extends RemoteIns
   List<Object?> get props => [ errorMessage ];
 }
 
-class RemoteInspeccionCategoriaServerFailedStore extends RemoteInspeccionCategoriaState {
-  const RemoteInspeccionCategoriaServerFailedStore(this.errorMessage);
+class RemoteInspeccionCategoriaServerFailedMessageStore extends RemoteInspeccionCategoriaState {
+  const RemoteInspeccionCategoriaServerFailedMessageStore(this.errorMessage);
 
   final String? errorMessage;
 

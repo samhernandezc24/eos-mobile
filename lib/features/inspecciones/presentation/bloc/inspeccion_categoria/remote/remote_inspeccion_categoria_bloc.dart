@@ -50,7 +50,7 @@ class RemoteInspeccionCategoriaBloc extends Bloc<RemoteInspeccionCategoriaEvent,
     }
 
     if (objDataState is DataFailedMessage) {
-      emit(RemoteInspeccionCategoriaServerFailedStore(objDataState.errorMessage));
+      emit(RemoteInspeccionCategoriaServerFailedMessageStore(objDataState.errorMessage));
     }
 
     if (objDataState is DataFailed) {
