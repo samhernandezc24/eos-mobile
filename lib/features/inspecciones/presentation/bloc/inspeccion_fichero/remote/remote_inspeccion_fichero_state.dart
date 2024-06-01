@@ -1,0 +1,73 @@
+part of 'remote_inspeccion_fichero_bloc.dart';
+
+class RemoteInspeccionFicheroState extends Equatable {
+  const RemoteInspeccionFicheroState();
+
+  @override
+  List<Object?> get props => [];
+}
+
+/// INITIAL STATE
+class RemoteInspeccionFicheroInitial extends RemoteInspeccionFicheroState {}
+
+/// LIST
+class RemoteInspeccionFicheroLoading extends RemoteInspeccionFicheroState {}
+
+class RemoteInspeccionFicheroSuccess extends RemoteInspeccionFicheroState {
+  const RemoteInspeccionFicheroSuccess(this.objResponse);
+
+  final InspeccionFicheroEntity? objResponse;
+
+  @override
+  List<Object?> get props => [];
+}
+
+/// STORE
+class RemoteInspeccionFicheroStoring extends RemoteInspeccionFicheroState {}
+
+class RemoteInspeccionFicheroStored extends RemoteInspeccionFicheroState {
+  const RemoteInspeccionFicheroStored(this.objResponse);
+
+  final ServerResponse? objResponse;
+
+  @override
+  List<Object?> get props => [];
+}
+
+/// SERVER FAILED MESSAGE
+class RemoteInspeccionFicheroServerFailedMessageList extends RemoteInspeccionFicheroState {
+  const RemoteInspeccionFicheroServerFailedMessageList(this.errorMessage);
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [ errorMessage ];
+}
+
+class RemoteInspeccionFicheroServerFailedMessageStore extends RemoteInspeccionFicheroState {
+  const RemoteInspeccionFicheroServerFailedMessageStore(this.errorMessage);
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [ errorMessage ];
+}
+
+/// SERVER FAILURE
+class RemoteInspeccionFicheroServerFailureList extends RemoteInspeccionFicheroState {
+  const RemoteInspeccionFicheroServerFailureList(this.failure);
+
+  final ServerException? failure;
+
+  @override
+  List<Object?> get props => [ failure ];
+}
+
+class RemoteInspeccionFicheroServerFailureStore extends RemoteInspeccionFicheroState {
+  const RemoteInspeccionFicheroServerFailureStore(this.failure);
+
+  final ServerException? failure;
+
+  @override
+  List<Object?> get props => [ failure ];
+}

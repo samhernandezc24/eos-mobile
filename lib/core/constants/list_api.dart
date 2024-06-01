@@ -34,6 +34,11 @@ class ListAPI {
 
   /// API.Inspecciones
   ///
+  /// Endpoint: InspeccionesFicheros
+  static const String inspeccionesFicheros = '$_apiBaseUrl/api/Inspecciones/Ficheros';
+
+  /// API.Inspecciones
+  ///
   /// Endpoint: InspeccionesTipos
   static const String inspeccionesTipos = '$_apiBaseUrl/api/Inspecciones/Tipos';
 

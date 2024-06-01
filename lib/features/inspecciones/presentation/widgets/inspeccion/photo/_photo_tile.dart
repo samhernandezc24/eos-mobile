@@ -1,9 +1,9 @@
 part of '../../../pages/list/list_page.dart';
 
 class _PhotoTile extends StatelessWidget {
-  const _PhotoTile({required this.imageUrl, Key? key}) : super(key: key);
+  const _PhotoTile({required this.imagePath, Key? key}) : super(key: key);
 
-  final String imageUrl;
+  final String imagePath;
 
   void _showImagePreviewDialog(BuildContext context, Widget image) {
     showDialog<void>(
@@ -28,14 +28,15 @@ class _PhotoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Widget image = AppImage(
-      key         : ValueKey<String>(imageUrl),
-      image       : NetworkImage(imageUrl),
+      key         : ValueKey<String>(imagePath),
+      image       : NetworkImage(imagePath),
       fit         : BoxFit.cover,
       scale       : 0.5,
       distractor  : true,
     );
 
     return AspectRatio(
+      // aspectRatio : 0 ? (1 % 10) / 15 + 0.6 : max(0.5, 1),
       aspectRatio : 1,
       child       : ClipRRect(
         borderRadius  : BorderRadius.circular($styles.insets.xs),
@@ -43,7 +44,7 @@ class _PhotoTile extends StatelessWidget {
           children: <Widget>[
             AppBtn.basic(
               onPressed     : () => _showImagePreviewDialog(context, image),
-              semanticLabel : '',
+              semanticLabel : 'Fotografía',
               child: Container(
                 color   : Theme.of(context).colorScheme.surfaceVariant,
                 width   : double.infinity,

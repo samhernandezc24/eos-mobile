@@ -37,10 +37,14 @@ class AppStrings {
   String circleButtonsSemanticClose         = 'Cerrar';
 
   String checklistAppBarTitle               = 'Evaluar unidad';
+  String checklistAlertSaveMessage          = 'No se puede guardar parcialmente una evaluación que no cuenta con categorías';
+  String checklistPhotoAlertNextPageMessage = 'No se puede avanzar a la etapa final, sin antes haber cargado las evidencias fotográficas';
   String checklistDrawSignatureAppBarTitle  = 'Dibujar firma';
   String checklistDrawSignatureBoxSuggest   = 'Dibuja tu firma en el espacio rectangular con bordes punteados, de preferencia en el centro del espacio rectangular.';
   String checklistPhotoEvidenceAppBarTitle  = 'Fotos de evidencia';
   String checklistPhotoEvidenceBoxSuggest   = 'Captura fotografías de todas las áreas importantes de la unidad.';
+  String checklistPhotoEmptyListTitle       = 'Aún no hay fotografías';
+  String checklistPhotoEmptyListMessage     = 'Intenta tomar fotografías dando clic en el ícono de la cámara.';
   String checklistEmptyTitle                = 'Aún no hay categorías';
   String checklistFinishAppBarTitle         = 'Finalizar inspección';
   String checklistFinishSignatureButtonText = 'Dibujar firma';

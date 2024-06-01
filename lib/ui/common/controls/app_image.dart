@@ -78,7 +78,7 @@ class _AppImageState extends State<AppImage> {
             if (size < 16) return const SizedBox.shrink();
             return Icon(
               Icons.image_not_supported,
-              color : Theme.of(context).primaryColor.withOpacity(0.1),
+              color : Theme.of(context).primaryColor,
               size  : min(size, $styles.insets.lg),
             );
           },

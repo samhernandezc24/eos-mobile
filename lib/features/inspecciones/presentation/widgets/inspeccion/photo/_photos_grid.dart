@@ -1,7 +1,9 @@
 part of '../../../pages/list/list_page.dart';
 
 class _PhotosGrid extends StatefulWidget {
-  const _PhotosGrid({Key? key}) : super(key: key);
+  const _PhotosGrid({required this.imageFiles, Key? key}) : super(key: key);
+
+  final List<XFile> imageFiles;
 
   @override
   State<_PhotosGrid> createState() => _PhotosGridState();
@@ -13,25 +15,6 @@ class _PhotosGridState extends State<_PhotosGrid> {
 
   // PROPERTIES
   double _prevVelocity = -1;
-
-  List<String> _imageUrls = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _imageUrls = [
-      'https://via.placeholder.com/300',
-      'https://via.placeholder.com/300',
-      'https://via.placeholder.com/300',
-      'https://via.placeholder.com/300',
-      'https://via.placeholder.com/300',
-      'https://via.placeholder.com/300',
-      'https://via.placeholder.com/300',
-      'https://via.placeholder.com/300',
-      'https://via.placeholder.com/300',
-      'https://via.placeholder.com/300',
-    ];
-  }
 
   // EVENTS
   void _handleResultsScrolled() {
@@ -61,8 +44,8 @@ class _PhotosGridState extends State<_PhotosGrid> {
                 crossAxisCount    : (context.widthPx / 300).ceil(),
                 mainAxisSpacing   : $styles.insets.sm,
                 crossAxisSpacing  : $styles.insets.sm,
-                childCount        : _imageUrls.length,
-                itemBuilder       : (BuildContext context, int index) => _PhotoTile(imageUrl: _imageUrls[index]),
+                childCount        : widget.imageFiles.length,
+                itemBuilder       : (BuildContext context, int index) => _PhotoTile(imagePath: widget.imageFiles[index].path),
               ),
             ),
           ],

@@ -19,7 +19,7 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
   bool _isLoading       = false;
 
   List<Categoria> lstCategorias = <Categoria>[];
-  Inspeccion? _inspeccion;
+  Inspeccion? inspeccion;
 
   // STATE
   @override
@@ -86,11 +86,19 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
     if (lstCategorias.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content         : const Text('No se puede guardar parcialmente una evaluación que no cuenta con categorías', softWrap: true),
-          backgroundColor : Theme.of(context).colorScheme.error,
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              // TITLE:
+              Text($strings.settingsAttentionText, style: $styles.textStyles.bodyBold),
+              // MESSAGE:
+              Text($strings.checklistAlertSaveMessage, softWrap: true),
+            ],
+          ),
+          backgroundColor : const Color(0xfff89406),
           elevation       : 0,
           behavior        : SnackBarBehavior.fixed,
-          duration        : const Duration(seconds: 2),
+          showCloseIcon   : true,
         ),
       );
       return;
@@ -119,7 +127,8 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
       context,
       PageRouteBuilder<void>(
         transitionDuration: $styles.times.pageTransition,
-        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) => _ChecklistInspeccionPhoto(inspeccion: _inspeccion),
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) =>
+          _ChecklistInspeccionPhoto(objData: InspeccionIdReqEntity(idInspeccion: widget.objData.idInspeccion)),
         transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
           const Offset begin    = Offset(1, 0);
           const Offset end      = Offset.zero;
@@ -197,7 +206,6 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
               setState(() {
                 _hasServerError = false;
                 _updateFechaInspeccionInicial(state.objResponse?.inspeccion?.fechaInspeccionInicial);
-                _inspeccion = state.objResponse?.inspeccion;
                 _isLoading = false;
               });
             }
@@ -222,10 +230,9 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
             }
 
             if (state is RemoteInspeccionCategoriaGetPreguntasSuccess) {
-              final Inspeccion? inspeccion  = state.objResponse?.inspeccion;
-              lstCategorias                 = state.objResponse?.categorias ?? [];
-
-              print(lstCategorias);
+              lstCategorias = state.objResponse?.categorias ?? [];
+              inspeccion    = state.objResponse?.inspeccion;
+              print(inspeccion);
 
               return Column(
                 crossAxisAlignment  : CrossAxisAlignment.start,
@@ -369,7 +376,7 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
       child   : Row(
         mainAxisAlignment : MainAxisAlignment.end,
         children          : <Widget>[
-          FilledButton(onPressed: () => _handleStorePressed(isParcial: true), child: Text($strings.saveButtonText, style: $styles.textStyles.button)),
+          FilledButton(onPressed: () => _handleStorePressed(isParcial: true), child     : Text($strings.saveButtonText, style: $styles.textStyles.button)),
           Gap($styles.insets.sm),
           FilledButton(onPressed: () => _handleNextPressed(), child: Text($strings.nextButtonText, style: $styles.textStyles.button)),
         ],

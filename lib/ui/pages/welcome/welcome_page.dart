@@ -4,8 +4,6 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/controls/app_page_indicator.dart';
 import 'package:eos_mobile/ui/common/gradient_container.dart';
 import 'package:eos_mobile/ui/common/previous_next_navigation.dart';
-import 'package:eos_mobile/ui/common/static_text_scale.dart';
-import 'package:eos_mobile/ui/common/themed_text.dart';
 import 'package:eos_mobile/ui/common/utils/app_haptics_utils.dart';
 
 class WelcomePage extends StatefulWidget {
@@ -179,9 +177,9 @@ class _WelcomePageState extends State<WelcomePage> {
                     if (PlatformInfo.isMobile) ...[
                       // BOTÓN DE FINALIZAR LA PÁGIAN DE BIENVENIDA:
                       Positioned(
-                        right: $styles.insets.lg,
-                        bottom: $styles.insets.lg,
-                        child: _buildFinishButton(context),
+                        right   : $styles.insets.lg,
+                        bottom  : $styles.insets.lg,
+                        child   : _buildFinishButton(context),
                       ),
 
                       BottomCenter(
