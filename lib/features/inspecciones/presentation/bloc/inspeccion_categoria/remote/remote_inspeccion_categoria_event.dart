@@ -8,8 +8,8 @@ sealed class RemoteInspeccionCategoriaEvent extends Equatable {
 }
 
 /// [GetPreguntasInspeccionCategoriaUseCase]
-class GetInspeccionCategoriaPreguntas extends RemoteInspeccionCategoriaEvent {
-  const GetInspeccionCategoriaPreguntas(this.objData);
+class GetPreguntas extends RemoteInspeccionCategoriaEvent {
+  const GetPreguntas(this.objData);
 
   final InspeccionIdReqEntity objData;
 

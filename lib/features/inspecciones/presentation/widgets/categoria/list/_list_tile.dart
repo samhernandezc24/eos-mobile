@@ -148,7 +148,7 @@ class _ListTile extends StatelessWidget {
             return AlertDialog(
               title   : Text($strings.categoriaDeleteAlertTitle, style: $styles.textStyles.h3.copyWith(fontSize: 18)),
               content : RichText(
-                text: TextSpan(style: $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, height: 1.5),
+                text: TextSpan(style: $styles.textStyles.body.copyWith(color: Theme.of(context).colorScheme.onSurface, height: 1.5),
                   children: <InlineSpan>[
                     TextSpan(text: $strings.categoriaDeleteAlertContent1),
                     TextSpan(

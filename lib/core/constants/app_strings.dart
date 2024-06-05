@@ -40,7 +40,7 @@ class AppStrings {
   String circleButtonsSemanticClose         = 'Cerrar';
 
   String checklistAppBarTitle               = 'Evaluar unidad';
-  String checklistAlertSaveMessage          = 'No se puede guardar parcialmente una evaluación que no cuenta con categorías';
+  String checklistAlertSaveMessage          = 'No se puede guardar parcialmente o finalizar una evaluación que no cuenta con categorías';
   String checklistPhotoAlertNextPageMessage = 'No se puede avanzar a la etapa final, sin antes haber cargado las evidencias fotográficas';
   String checklistDrawSignatureAppBarTitle  = 'Dibujar firma';
   String checklistDrawSignatureBoxSuggest   = 'Dibuja tu firma en el espacio rectangular con bordes punteados, de preferencia en el centro del espacio rectangular.';
@@ -53,6 +53,8 @@ class AppStrings {
   String checklistFinishSignatureButtonText = 'Dibujar firma';
   String checklistFinishImportantMessage    = 'Soy testigo de la inspección realizada al equipo que tengo a mi cargo y se me informo específicamente de cada punto a considerar para su atención correctiva.';
   String checklistListMessage               = 'Intenta configurar las categorías y preguntas para la evaluación de la unidad.';
+
+  String checklistModalBottomSheetTitle     = '¿Quieres terminar la inspección más tarde?';
 
   String clearButtonText              = 'Limpiar';
 

@@ -14,7 +14,7 @@ class RemoteInspeccionCategoriaBloc extends Bloc<RemoteInspeccionCategoriaEvent,
     this._getPreguntasInspeccionCategoriaUseCase,
     this._storeInspeccionCategoriaUseCase,
   ) : super(RemoteInspeccionCategoriaInitial()) {
-    on<GetInspeccionCategoriaPreguntas>(onGetInspeccionCategoriaPreguntas);
+    on<GetPreguntas>(onGetInspeccionCategoriaPreguntas);
     on<StoreInspeccionCategoria>(onStoreInspeccionCategoria);
   }
 
@@ -22,7 +22,7 @@ class RemoteInspeccionCategoriaBloc extends Bloc<RemoteInspeccionCategoriaEvent,
   final GetPreguntasInspeccionCategoriaUseCase _getPreguntasInspeccionCategoriaUseCase;
   final StoreInspeccionCategoriaUseCase _storeInspeccionCategoriaUseCase;
 
-  Future<void> onGetInspeccionCategoriaPreguntas(GetInspeccionCategoriaPreguntas event, Emitter<RemoteInspeccionCategoriaState> emit) async {
+  Future<void> onGetInspeccionCategoriaPreguntas(GetPreguntas event, Emitter<RemoteInspeccionCategoriaState> emit) async {
     emit(RemoteInspeccionCategoriaGetPreguntasLoading());
 
     final objDataState = await _getPreguntasInspeccionCategoriaUseCase(params: event.objData);

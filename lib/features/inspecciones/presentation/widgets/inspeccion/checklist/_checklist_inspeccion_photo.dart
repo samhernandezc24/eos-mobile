@@ -242,18 +242,25 @@ class __ChecklistInspeccionPhotoState extends State<_ChecklistInspeccionPhoto> {
       height  : 70,
       child   : Row(
         children  : <Widget>[
-          FilledButton(
-            onPressed : () => Navigator.pop(context),
-            style     : ButtonStyle(
-              backgroundColor : MaterialStateProperty.all<Color>(const Color(0xFFD9E4F0)),
-              foregroundColor : MaterialStateProperty.all<Color>(const Color(0xff233876)),
-            ),
-            child     : Text($strings.prevButtonText, style: $styles.textStyles.button),
+          CircleIconButton(
+            icon          : AppIcons.next_large,
+            onPressed     : () => Navigator.pop(context),
+            semanticLabel : $strings.prevButtonText,
+            flipIcon      : true,
           ),
+          // FilledButton(
+          //   onPressed : () => Navigator.pop(context),
+          //   style     : ButtonStyle(
+          //     backgroundColor : MaterialStateProperty.all<Color>(const Color(0xFFD9E4F0)),
+          //     foregroundColor : MaterialStateProperty.all<Color>(const Color(0xff233876)),
+          //   ),
+          //   child     : Text($strings.prevButtonText, style: $styles.textStyles.button),
+          // ),
           const Spacer(),
-          FilledButton(
-            onPressed : () => _handleNextPressed(),
-            child     : Text($strings.nextButtonText, style: $styles.textStyles.button),
+          CircleIconButton(
+            icon          : AppIcons.next_large,
+            onPressed     : _handleNextPressed,
+            semanticLabel : $strings.nextButtonText,
           ),
         ],
       ),
