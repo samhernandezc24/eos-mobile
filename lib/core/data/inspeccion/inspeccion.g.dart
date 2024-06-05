@@ -17,6 +17,7 @@ Inspeccion _$InspeccionFromJson(Map<String, dynamic> json) => Inspeccion(
       fechaInspeccionInicial: json['fechaInspeccionInicial'] == null
           ? null
           : DateTime.parse(json['fechaInspeccionInicial'] as String),
+      evaluado: json['evaluado'] as bool?,
     );
 
 Map<String, dynamic> _$InspeccionToJson(Inspeccion instance) =>
@@ -30,4 +31,5 @@ Map<String, dynamic> _$InspeccionToJson(Inspeccion instance) =>
       'locacion': instance.locacion,
       'fechaInspeccionInicial':
           instance.fechaInspeccionInicial?.toIso8601String(),
+      'evaluado': instance.evaluado,
     };

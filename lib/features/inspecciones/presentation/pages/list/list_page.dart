@@ -43,7 +43,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
-part '../../widgets/inspeccion/checklist/_checklist_inspeccion.dart';
+part '../../widgets/inspeccion/checklist/_checklist_inspeccion_evaluacion.dart';
 part '../../widgets/inspeccion/checklist/_checklist_inspeccion_final.dart';
 part '../../widgets/inspeccion/checklist/_checklist_inspeccion_photo.dart';
 part '../../widgets/inspeccion/checklist/_checklist_inspeccion_signature.dart';

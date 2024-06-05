@@ -1,7 +1,7 @@
 part of '../../../pages/list/list_page.dart';
 
-class _ChecklistInspeccion extends StatefulWidget {
-  const _ChecklistInspeccion({
+class _ChecklistInspeccionEvaluacion extends StatefulWidget {
+  const _ChecklistInspeccionEvaluacion({
     required this.objData,
     required this.buildDataSourceCallback,
     Key? key,
@@ -11,10 +11,10 @@ class _ChecklistInspeccion extends StatefulWidget {
   final VoidCallback buildDataSourceCallback;
 
   @override
-  State<_ChecklistInspeccion> createState() => _ChecklistInspeccionState();
+  State<_ChecklistInspeccionEvaluacion> createState() => _ChecklistInspeccionEvaluacionState();
 }
 
-class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
+class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEvaluacion> {
   // CONTROLLERS
   late final TextEditingController _fechaInspeccionInicialController;
 
@@ -222,21 +222,21 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
         final newValue = selectedValues[item.idCategoriaItem];
         return newValue != null
           ? CategoriaItem(
-              idCategoriaItem: item.idCategoriaItem,
-              name: item.name,
-              idFormularioTipo: item.idFormularioTipo,
-              formularioTipoName: item.formularioTipoName,
-              formularioValor: item.formularioValor,
-              value: newValue,
-              observaciones: item.observaciones,
-              noAplica: item.noAplica,
+              idCategoriaItem     : item.idCategoriaItem,
+              name                : item.name,
+              idFormularioTipo    : item.idFormularioTipo,
+              formularioTipoName  : item.formularioTipoName,
+              formularioValor     : item.formularioValor,
+              value               : newValue,
+              observaciones       : item.observaciones,
+              noAplica            : item.noAplica,
             )
           : item;
       }).toList();
       return Categoria(
-        idCategoria: categoria.idCategoria,
-        name: categoria.name,
-        categoriasItems: updatedItems,
+        idCategoria     : categoria.idCategoria,
+        name            : categoria.name,
+        categoriasItems : updatedItems,
       );
     }).toList();
   }
@@ -371,11 +371,18 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
                   // FECHA INSPECCION INICIAL:
                   Padding(
                     padding : EdgeInsets.all($styles.insets.sm),
-                    child   : LabeledDateTimeTextFormField(
-                      controller  : _fechaInspeccionInicialController,
-                      hintText    : 'dd/mm/aaaa hh:mm',
-                      label       : '* Fecha de inspección inicial:',
-                    ),
+                    child   : objInspeccion?.evaluado ?? false
+                    ? LabeledTextFormField(
+                        controller  : _fechaInspeccionInicialController,
+                        label       : 'Fecha de inspección inicial:',
+                        isReadOnly  : true,
+                        textAlign   : TextAlign.end,
+                      )
+                    : LabeledDateTimeTextFormField(
+                        controller  : _fechaInspeccionInicialController,
+                        hintText    : 'dd/mm/aaaa hh:mm',
+                        label       : '* Fecha de inspección inicial:',
+                      ),
                   ),
 
                   // DATOS GENERALES DE LA EVALUACIÓN:
@@ -395,6 +402,7 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
                                     lstCategorias = _updateCategoriasItems(lstCategorias, newValues);
                                   });
                                 },
+                                isEvaluado: objInspeccion?.evaluado ?? false,
                               );
                             },
                           )
@@ -503,12 +511,12 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
       child : Row(
         children: <Widget>[
           FilledButton(
-            onPressed : () => _handleStorePressed(isParcial: true),
+            onPressed : objInspeccion?.evaluado ?? false ? null : () => _handleStorePressed(isParcial: true),
             child     : Text($strings.saveButtonText, style: $styles.textStyles.button),
           ),
           Gap($styles.insets.sm),
           FilledButton(
-            onPressed : () => _handleStorePressed(),
+            onPressed : objInspeccion?.evaluado ?? false ? null : () => _handleStorePressed(),
             child     : Text($strings.finishButtonText, style: $styles.textStyles.button),
           ),
           const Spacer(),

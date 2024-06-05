@@ -5,12 +5,14 @@ class _ChecklistTile extends StatefulWidget {
     required this.categoria,
     required this.selectedValues,
     required this.onSelectedValuesChanged,
+    required this.isEvaluado,
     Key? key,
   }) : super(key: key);
 
   final Categoria categoria;
   final Map<String, String> selectedValues;
   final void Function(Map<String, String>) onSelectedValuesChanged;
+  final bool isEvaluado;
 
   @override
   State<_ChecklistTile> createState() => _ChecklistTileState();
@@ -27,16 +29,43 @@ class _ChecklistTileState extends State<_ChecklistTile> {
     _selectedValues = widget.selectedValues;
   }
 
+  // EVENTS
+  void _handleSelectRadioChange(String option) {
+    if (widget.isEvaluado) return;
+    setState(() {
+      for (final CategoriaItem item in widget.categoria.categoriasItems!) {
+        final options = item.formularioValor?.split(',') ?? [];
+        if (options.contains(option)) {
+          _selectedValues[item.idCategoriaItem!] = option;
+        }
+      }
+      widget.onSelectedValuesChanged(_selectedValues);
+    });
+  }
+
   // METHODS
   int _preguntasRespondidas() {
     final int answeredQuestions = widget.categoria.categoriasItems?.where((item) => item.value != null && item.value!.isNotEmpty).length ?? 0;
     return answeredQuestions;
   }
 
+  String? _getCommonOption() {
+    final values = widget.categoria.categoriasItems?.map((item) => _selectedValues[item.idCategoriaItem]).toSet();
+    if (values != null && values.length == 1) {
+      return values.first;
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final int totalQuestions = widget.categoria.categoriasItems?.length ?? 0;
+    final int totalQuestions    = widget.categoria.categoriasItems?.length ?? 0;
     final int answeredQuestions = _preguntasRespondidas();
+
+    final List<String> commonOptions    = widget.categoria.categoriasItems?.isNotEmpty ?? false
+        ? widget.categoria.categoriasItems!.first.formularioValor?.split(',') ?? []
+        : [];
+    final String? selectedCommonOption  = _getCommonOption();
 
     return Card(
       elevation: 3,
@@ -56,17 +85,52 @@ class _ChecklistTileState extends State<_ChecklistTile> {
         ),
         title: Text('${widget.categoria.name}', style: $styles.textStyles.h4),
         children: <Widget>[
-          SizedBox(
-            height: 200,
-            child: ListView.builder(
-              itemCount   : widget.categoria.categoriasItems?.length,
-              itemBuilder : (BuildContext context, int index) {
-                return Padding(
-                  padding : EdgeInsets.only(bottom: $styles.insets.sm),
-                  child   : _buildItemElement(widget.categoria.categoriasItems![index], index),
-                );
-              },
-            ),
+          Column(
+            children: <Widget>[
+              if (!widget.isEvaluado)
+                Text('Aplicar a todos a:', style: $styles.textStyles.body),
+              if (!widget.isEvaluado)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 4,
+                        children: commonOptions.map((option) {
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Radio(
+                                value: option,
+                                groupValue: selectedCommonOption,
+                                onChanged: (String? value) {
+                                  if (value != null) {
+                                    _handleSelectRadioChange(option);
+                                  }
+                                },
+                              ),
+                              Text(option, style: $styles.textStyles.body),
+                            ],
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
+                ),
+              SizedBox(
+                height: 200,
+                child: ListView.builder(
+                  itemCount   : widget.categoria.categoriasItems?.length,
+                  itemBuilder : (BuildContext context, int index) {
+                    return Padding(
+                      padding : EdgeInsets.only(bottom: $styles.insets.sm),
+                      child   : _buildItemElement(widget.categoria.categoriasItems![index], index),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -119,7 +183,7 @@ class _ChecklistTileState extends State<_ChecklistTile> {
               Radio(
                 value: option,
                 groupValue: _selectedValues[item.idCategoriaItem] ?? '',
-                onChanged: (String? value) {
+                onChanged: widget.isEvaluado ? null : (String? value) {
                   setState(() {
                     _selectedValues[item.idCategoriaItem!] = value!;
                     widget.onSelectedValuesChanged(_selectedValues);

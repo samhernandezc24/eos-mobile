@@ -21,7 +21,7 @@ class _ResultCard extends StatelessWidget {
 
           return SlideTransition(
             position  : animation.drive<Offset>(tween),
-            child     : _ChecklistInspeccion(objData: objData, buildDataSourceCallback: buildDataSourceCallback),
+            child     : _ChecklistInspeccionEvaluacion(objData: objData, buildDataSourceCallback: buildDataSourceCallback),
           );
         },
         fullscreenDialog: true,

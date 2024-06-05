@@ -14,6 +14,7 @@ class Inspeccion extends Equatable {
     this.inspeccionTipoName,
     this.locacion,
     this.fechaInspeccionInicial,
+    this.evaluado,
   });
 
   /// Constructor factory para crear una nueva instancia de [Inspeccion]
@@ -28,6 +29,7 @@ class Inspeccion extends Equatable {
   final String? inspeccionTipoName;
   final String? locacion;
   final DateTime? fechaInspeccionInicial;
+  final bool? evaluado;
 
   /// Serialización de la estructura del modelo a formato JSON.
   Map<String, dynamic> toJson() => _$InspeccionToJson(this);
@@ -42,5 +44,6 @@ class Inspeccion extends Equatable {
         inspeccionTipoName,
         locacion,
         fechaInspeccionInicial,
+        evaluado,
       ];
 }
