@@ -25,7 +25,6 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
   Inspeccion? objInspeccion;
 
   List<Categoria> lstCategorias = <Categoria>[];
-  Map<String, String> _selectedValues = {};
 
   // STATE
   @override
@@ -211,16 +210,16 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
       idInspeccion            : widget.objData.idInspeccion,
       isParcial               : isParcial,
       fechaInspeccionInicial  : DateFormat('dd/MM/yyyy HH:mm').parse(_fechaInspeccionInicialController.text),
-      categorias              : _updateCategoriasItems(lstCategorias),
+      categorias              : lstCategorias,
     );
 
     BlocProvider.of<RemoteInspeccionCategoriaBloc>(context).add(StoreInspeccionCategoria(objPost));
   }
 
-  List<Categoria> _updateCategoriasItems(List<Categoria> categorias) {
+  List<Categoria> _updateCategoriasItems(List<Categoria> categorias, Map<String, String> selectedValues) {
     return categorias.map((categoria) {
       final updatedItems = categoria.categoriasItems?.map((item) {
-        final newValue = _selectedValues[item.idCategoriaItem];
+        final newValue = selectedValues[item.idCategoriaItem];
         return newValue != null
           ? CategoriaItem(
               idCategoriaItem: item.idCategoriaItem,
@@ -242,7 +241,7 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
     }).toList();
   }
 
-  Map<String, String> _initializeSelectedValues() {
+  Map<String, String> _getSelectedValues(Categoria categoria) {
     final Map<String, String> initialValues = {};
     for (final categoria in lstCategorias) {
       for (final CategoriaItem item in categoria.categoriasItems ?? []) {
@@ -323,7 +322,6 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
 
                 objInspeccion = state.objResponse?.inspeccion;
                 lstCategorias = state.objResponse?.categorias ?? [];
-                _selectedValues = _initializeSelectedValues();
 
                 if (objInspeccion?.fechaInspeccionInicial != null) {
                   _fechaInspeccionInicialController.text = DateFormat('dd/MM/yyyy HH:mm').format(objInspeccion!.fechaInspeccionInicial!);
@@ -367,27 +365,42 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
             }
 
             if (state is RemoteInspeccionCategoriaGetPreguntasSuccess) {
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    // FECHA INSPECCION INICIAL:
-                    Padding(
-                      padding : EdgeInsets.all($styles.insets.sm),
-                      child   : LabeledDateTimeTextFormField(
-                        controller  : _fechaInspeccionInicialController,
-                        hintText    : 'dd/mm/aaaa hh:mm',
-                        label       : '* Fecha de inspección inicial:',
-                      ),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  // FECHA INSPECCION INICIAL:
+                  Padding(
+                    padding : EdgeInsets.all($styles.insets.sm),
+                    child   : LabeledDateTimeTextFormField(
+                      controller  : _fechaInspeccionInicialController,
+                      hintText    : 'dd/mm/aaaa hh:mm',
+                      label       : '* Fecha de inspección inicial:',
                     ),
+                  ),
 
-                    // DATOS GENERALES DE LA EVALUACIÓN:
-                    _buildInspeccionDetails(context, objInspeccion),
+                  // DATOS GENERALES DE LA EVALUACIÓN:
+                  _buildInspeccionDetails(context, objInspeccion),
 
-                    // LISTADO DE CATEGORIAS:
-                    ..._buildCategorias(),
-                  ],
-                ),
+                  // LISTADO DE CATEGORIAS:
+                  Expanded(
+                    child: lstCategorias.isNotEmpty
+                        ? ListView.builder(
+                            itemCount   : lstCategorias.length,
+                            itemBuilder : (BuildContext context, int index) {
+                              return _ChecklistTile(
+                                categoria: lstCategorias[index],
+                                selectedValues: _getSelectedValues(lstCategorias[index]),
+                                onSelectedValuesChanged: (newValues) {
+                                  setState(() {
+                                    lstCategorias = _updateCategoriasItems(lstCategorias, newValues);
+                                  });
+                                },
+                              );
+                            },
+                          )
+                        : RequestDataUnavailable(title: $strings.checklistEmptyTitle, message: $strings.checklistListMessage, isRefreshData: false),
+                  ),
+                ],
               );
             }
             return const SizedBox.shrink();
@@ -503,59 +516,5 @@ class _ChecklistInspeccionState extends State<_ChecklistInspeccion> {
         ],
       ),
     );
-  }
-
-  // CATEGORIAS:
-  List<Widget> _buildCategorias() {
-    return lstCategorias
-        .map(
-          (categoria) => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(categoria.name ?? '', style: $styles.textStyles.h4),
-              ..._buildCategoriaItems(categoria.categoriasItems ?? []),
-            ],
-          ),
-        ).toList();
-  }
-
-  // ITEMS:
-  List<Widget> _buildCategoriaItems(List<CategoriaItem> items) {
-    return items
-        .map(
-          (item) => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _buildItemElement(item),
-            ],
-          ),
-        ).toList();
-  }
-
-  Widget _buildItemElement(CategoriaItem item) {
-    switch (item.idFormularioTipo) {
-      // OPCION MULTIPLE:
-      case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb32':
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(item.name ?? ''),
-            ..._buildOpcionesMultiples(item),
-          ],
-        );
-    }
-    return Text('Tipo de formulario desconocido', style: $styles.textStyles.body.copyWith(color: Theme.of(context).hintColor));
-  }
-
-  List<Widget> _buildOpcionesMultiples(CategoriaItem item) {
-    return (item.formularioValor?.split(',') ?? [])
-        .map(
-          (option) => RadioListTile(
-            title       : Text(option),
-            value       : option,
-            groupValue  : _selectedValues[item.idCategoriaItem] ?? '',
-            onChanged   : (String? value) => setState(() => _selectedValues[item.idCategoriaItem!] = value!),
-          ),
-        ).toList();
   }
 }
