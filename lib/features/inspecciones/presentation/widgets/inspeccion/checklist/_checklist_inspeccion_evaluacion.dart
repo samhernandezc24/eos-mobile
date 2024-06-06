@@ -58,8 +58,12 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
               title     : const Text('Salir de la inspección'),
               textColor : Theme.of(context).colorScheme.error,
               onTap     : () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                Navigator.of(context).pop();        // Cerrar modal bottom
+                // Ejecutar el callback una vez finalizada la acción pop.
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.of(context).pop();      // Cerrar página
+                  widget.buildDataSourceCallback(); // Ejecutar callback
+                });
               },
             ),
             ListTile(
@@ -395,14 +399,14 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
                             itemCount   : lstCategorias.length,
                             itemBuilder : (BuildContext context, int index) {
                               return _ChecklistTile(
-                                categoria: lstCategorias[index],
-                                selectedValues: _getSelectedValues(lstCategorias[index]),
-                                onSelectedValuesChanged: (newValues) {
+                                categoria               : lstCategorias[index],
+                                selectedValues          : _getSelectedValues(lstCategorias[index]),
+                                isEvaluado              : objInspeccion?.evaluado ?? false,
+                                onSelectedValuesChanged : (newValues) {
                                   setState(() {
                                     lstCategorias = _updateCategoriasItems(lstCategorias, newValues);
                                   });
                                 },
-                                isEvaluado: objInspeccion?.evaluado ?? false,
                               );
                             },
                           )

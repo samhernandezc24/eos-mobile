@@ -1,9 +1,9 @@
 part of '../../../pages/list/list_page.dart';
 
 class _ResultCard extends StatelessWidget {
-  const _ResultCard({required this.inspeccion, required this.buildDataSourceCallback, Key? key}) : super(key: key);
+  const _ResultCard({required this.objInspeccion, required this.buildDataSourceCallback, Key? key}) : super(key: key);
 
-  final InspeccionDataSourceEntity inspeccion;
+  final InspeccionDataSourceEntity objInspeccion;
   final VoidCallback buildDataSourceCallback;
 
   // METHODS
@@ -209,7 +209,7 @@ class _ResultCard extends StatelessWidget {
             child   : Row(
               crossAxisAlignment  : CrossAxisAlignment.start,
               children            : <Widget>[
-                _buildInspeccionFechaSection(context, inspeccion),
+                _buildInspeccionFechaSection(context, objInspeccion),
 
                 Gap($styles.insets.sm),
 
@@ -221,19 +221,19 @@ class _ResultCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text('Folio inspección:', style: $styles.textStyles.bodySmall),
-                          Text(inspeccion.folio, style: $styles.textStyles.bodyBold),
+                          Text(objInspeccion.folio, style: $styles.textStyles.bodyBold),
 
                           Text('Requerimiento:', style: $styles.textStyles.bodySmall),
                           Text(
-                            inspeccion.hasRequerimiento == false ? 'SIN REQUERIMIENTO' : inspeccion.requerimientoFolio ?? '',
+                            objInspeccion.hasRequerimiento == false ? 'SIN REQUERIMIENTO' : objInspeccion.requerimientoFolio ?? '',
                             style: $styles.textStyles.bodySmallBold,
                           ),
 
                           Text('Número económico:', style: $styles.textStyles.bodySmall),
-                          Text(inspeccion.unidadNumeroEconomico, style: $styles.textStyles.bodySmallBold, overflow: TextOverflow.ellipsis),
+                          Text(objInspeccion.unidadNumeroEconomico, style: $styles.textStyles.bodySmallBold, overflow: TextOverflow.ellipsis),
 
                           Text('Tipo de unidad:', style: $styles.textStyles.bodySmall),
-                          Text(inspeccion.unidadTipoName ?? '', style: $styles.textStyles.bodySmallBold, overflow: TextOverflow.ellipsis),
+                          Text(objInspeccion.unidadTipoName ?? '', style: $styles.textStyles.bodySmallBold, overflow: TextOverflow.ellipsis),
                         ],
                       ),
                     ],
@@ -251,43 +251,62 @@ class _ResultCard extends StatelessWidget {
               onSelected  : (InspeccionMenu item) {
                 switch (item) {
                   case InspeccionMenu.details:
-                    _handleInspeccionMenuDetailsPressed(context, inspeccion);
+                    _handleInspeccionMenuDetailsPressed(context, objInspeccion);
                   case InspeccionMenu.cancel:
                 }
               },
               itemBuilder : (BuildContext context) {
-                return <PopupMenuEntry<InspeccionMenu>>[
-                  PopupMenuItem<InspeccionMenu>(
-                    value : InspeccionMenu.details,
-                    child : ListTile(
-                      leading   : const Icon(Icons.info),
-                      iconColor : Theme.of(context).colorScheme.primary,
-                      textColor : Theme.of(context).colorScheme.primary,
-                      title     : const Text('Detalles'),
+                if (objInspeccion.idInspeccionEstatus == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb34' ||
+                    objInspeccion.idInspeccionEstatus == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb35') {
+                  return <PopupMenuEntry<InspeccionMenu>>[
+                    PopupMenuItem<InspeccionMenu>(
+                      value : InspeccionMenu.details,
+                      child : ListTile(
+                        leading   : const Icon(Icons.info),
+                        iconColor : Theme.of(context).colorScheme.primary,
+                        textColor : Theme.of(context).colorScheme.primary,
+                        title     : const Text('Detalles'),
+                      ),
                     ),
-                  ),
-                  PopupMenuItem<InspeccionMenu>(
-                    value : InspeccionMenu.cancel,
-                    child : ListTile(
-                      leading   : const Icon(Icons.delete_forever),
-                      iconColor : Theme.of(context).colorScheme.error,
-                      textColor : Theme.of(context).colorScheme.error,
-                      title     : const Text('Cancelar'),
+                  ];
+                } else {
+                  return <PopupMenuEntry<InspeccionMenu>>[
+                    PopupMenuItem<InspeccionMenu>(
+                      value : InspeccionMenu.details,
+                      child : ListTile(
+                        leading   : const Icon(Icons.info),
+                        iconColor : Theme.of(context).colorScheme.primary,
+                        textColor : Theme.of(context).colorScheme.primary,
+                        title     : const Text('Detalles'),
+                      ),
                     ),
-                  ),
-                ];
+                    PopupMenuItem<InspeccionMenu>(
+                      value : InspeccionMenu.cancel,
+                      child : ListTile(
+                        leading   : const Icon(Icons.delete_forever),
+                        iconColor : Theme.of(context).colorScheme.error,
+                        textColor : Theme.of(context).colorScheme.error,
+                        title     : const Text('Cancelar'),
+                      ),
+                    ),
+                  ];
+                }
               },
             ),
           ),
 
-          if (inspeccion.idInspeccionEstatus == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb31' || inspeccion.idInspeccionEstatus == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb32')
+          if (objInspeccion.idInspeccionEstatus == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb31' ||
+              objInspeccion.idInspeccionEstatus == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb32' ||
+              objInspeccion.idInspeccionEstatus == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33')
             Positioned(
               bottom  : 0,
               right   : $styles.insets.xs,
               child   : TextButton.icon(
-                onPressed : () => _handleChecklistInspeccionPressed(context, InspeccionIdReqEntity(idInspeccion: inspeccion.idInspeccion)),
+                onPressed : () => _handleChecklistInspeccionPressed(context, InspeccionIdReqEntity(idInspeccion: objInspeccion.idInspeccion)),
                 icon: const Icon(Icons.assignment_turned_in),
-                label: const Text('Evaluar'),
+                label: objInspeccion.idInspeccionEstatus == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33'
+                    ? const Text('Finalizar')
+                    : const Text('Evaluar'),
               ),
             ),
         ],
@@ -380,8 +399,49 @@ class _ResultCard extends StatelessWidget {
           ),
         );
 
-      // FINALIZADO:
+      // POR FINALIZAR:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33':
+        return DefaultTextColor(
+          color : Theme.of(context).colorScheme.onPrimaryContainer,
+          child : Column(
+            children: <Widget>[
+              Container(
+                width       : 100,
+                decoration  : BoxDecoration(
+                  color         : Theme.of(context).colorScheme.inversePrimary,
+                  borderRadius  : BorderRadius.only(topLeft: Radius.circular(borderRadius), topRight: Radius.circular(borderRadius)),
+                ),
+                padding     : EdgeInsets.symmetric(horizontal: $styles.insets.sm, vertical: $styles.insets.lg),
+                child       : Column(
+                  children  : <Widget>[
+                    Text(DateFormat('MMM').format(inspeccion.fechaProgramada).toUpperCase(), style: $styles.textStyles.bodySmallBold),
+                    Text(DateFormat('dd').format(inspeccion.fechaProgramada), style: $styles.textStyles.h3),
+                    Divider(color: Theme.of(context).colorScheme.onPrimaryContainer, thickness: 1.5),
+                    Gap($styles.insets.xxs),
+                    Icon(Icons.hourglass_top, color: Theme.of(context).colorScheme.onPrimaryContainer),
+                    Gap($styles.insets.xxs),
+                    Text(inspeccion.inspeccionEstatusName.toProperCase(), style: $styles.textStyles.bodySmall.copyWith(fontSize: 13, height: 1.3), softWrap: true, textAlign: TextAlign.center),
+                  ],
+                ),
+              ),
+
+              Container(
+                width: 100,
+                decoration  : BoxDecoration(
+                  color         : Theme.of(context).colorScheme.inversePrimary.withOpacity(0.6),
+                  borderRadius  : BorderRadius.only(bottomLeft: Radius.circular(borderRadius), bottomRight: Radius.circular(borderRadius)),
+                ),
+                padding     : EdgeInsets.all($styles.insets.sm),
+                child       : Column(
+                  children  : <Widget>[ Text(DateFormat('hh:mm a').format(inspeccion.fechaProgramada), style: $styles.textStyles.bodySmallBold) ],
+                ),
+              ),
+            ],
+          ),
+        );
+
+      // FINALIZADO:
+      case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb34':
         return DefaultTextColor(
           color : Theme.of(context).colorScheme.onPrimaryContainer,
           child : Column(
@@ -422,7 +482,7 @@ class _ResultCard extends StatelessWidget {
         );
 
       // CANCELADO:
-      case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb34':
+      case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb35':
         return DefaultTextColor(
           color : Theme.of(context).colorScheme.onError,
           child : Column(

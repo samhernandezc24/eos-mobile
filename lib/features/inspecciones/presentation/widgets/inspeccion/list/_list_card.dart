@@ -48,8 +48,8 @@ class _ListCardState extends State<_ListCard> {
               sliver  : SliverList(
                 delegate  : SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                    final InspeccionDataSourceEntity inspeccion = widget.inspecciones[index];
-                    return _ResultCard(inspeccion: inspeccion, buildDataSourceCallback: widget.buildDataSourceCallback);
+                    final InspeccionDataSourceEntity objInspeccion = widget.inspecciones[index];
+                    return _ResultCard(objInspeccion: objInspeccion, buildDataSourceCallback: widget.buildDataSourceCallback);
                   },
                   childCount: widget.inspecciones.length,
                 ),

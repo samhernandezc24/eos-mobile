@@ -20,32 +20,35 @@ class _ChecklistTile extends StatefulWidget {
 
 class _ChecklistTileState extends State<_ChecklistTile> {
   // PROPERTIES
-  Map<String, String> _selectedValues = {};
+  late Map<String, String> _selectedValues;
 
   // STATE
   @override
   void initState() {
     super.initState();
-    _selectedValues = widget.selectedValues;
+    _selectedValues = Map<String, String>.from(widget.selectedValues);
+  }
+
+  @override
+  void didUpdateWidget (_ChecklistTile oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedValues != oldWidget.selectedValues) {
+      _selectedValues = Map<String, String>.from(widget.selectedValues);
+    }
   }
 
   // EVENTS
-  void _handleSelectRadioChange(String option) {
+  void _handleSelectRadioChange(String option, String itemId) {
     if (widget.isEvaluado) return;
     setState(() {
-      for (final CategoriaItem item in widget.categoria.categoriasItems!) {
-        final options = item.formularioValor?.split(',') ?? [];
-        if (options.contains(option)) {
-          _selectedValues[item.idCategoriaItem!] = option;
-        }
-      }
+      _selectedValues[itemId] = option;
       widget.onSelectedValuesChanged(_selectedValues);
     });
   }
 
   // METHODS
   int _preguntasRespondidas() {
-    final int answeredQuestions = widget.categoria.categoriasItems?.where((item) => item.value != null && item.value!.isNotEmpty).length ?? 0;
+    final int answeredQuestions = widget.categoria.categoriasItems?.where((item) => _selectedValues[item.idCategoriaItem] != null && _selectedValues[item.idCategoriaItem]!.isNotEmpty).length ?? 0;
     return answeredQuestions;
   }
 
@@ -106,7 +109,9 @@ class _ChecklistTileState extends State<_ChecklistTile> {
                                 groupValue: selectedCommonOption,
                                 onChanged: (String? value) {
                                   if (value != null) {
-                                    _handleSelectRadioChange(option);
+                                    for (final item in widget.categoria.categoriasItems!) {
+                                      _handleSelectRadioChange(option, item.idCategoriaItem!);
+                                    }
                                   }
                                 },
                               ),
