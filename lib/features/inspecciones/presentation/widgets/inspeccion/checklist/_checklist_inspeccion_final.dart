@@ -11,6 +11,7 @@ class _ChecklistInspeccionFinal extends StatefulWidget {
 
 class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
   // CONTROLLERS
+  late final TextEditingController _fechaInspeccionFinalController;
   late final TextEditingController _observacionesController;
   late final TextEditingController _nombreOperadorController;
   late final TextEditingController _nombreVerificadorController;
@@ -19,13 +20,15 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
   @override
   void initState() {
     super.initState();
-    _observacionesController      = TextEditingController();
-    _nombreOperadorController     = TextEditingController();
-    _nombreVerificadorController  = TextEditingController();
+    _fechaInspeccionFinalController = TextEditingController();
+    _observacionesController        = TextEditingController();
+    _nombreOperadorController       = TextEditingController();
+    _nombreVerificadorController    = TextEditingController();
   }
 
   @override
   void dispose() {
+    _fechaInspeccionFinalController.dispose();
     _observacionesController.dispose();
     _nombreOperadorController.dispose();
     _nombreVerificadorController.dispose();
@@ -55,6 +58,30 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
     );
   }
 
+  void _handleFinishPressed() {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title   : Text('Confirmar finalización', style: $styles.textStyles.h3.copyWith(fontSize: 18)),
+          content : Text(
+            'Soy testigo de la inspección realizada al equipo que tengo a mi cargo y se me informo específicamente de cada punto a considerar para su atención correctiva.',
+            style: $styles.textStyles.body.copyWith(height: 1.4),
+          ),
+          actions : [
+            TextButton(onPressed: () => Navigator.pop(context, $strings.cancelButtonText), child: Text($strings.cancelButtonText, style: $styles.textStyles.button)),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context, $strings.acceptButtonText);  // Cerrar el dialógo
+              },
+              child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -65,6 +92,15 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              // FECHA INSPECCION FINAL:
+              LabeledDateTimeTextFormField(
+                controller  : _fechaInspeccionFinalController,
+                hintText    : 'dd/mm/aaaa hh:mm',
+                label       : '* Fecha de inspección final:',
+              ),
+
+              Gap($styles.insets.sm),
+
               // OBSERVACIONES:
               LabeledTextareaFormField(
                 controller    : _observacionesController,
@@ -126,13 +162,17 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
       height  : 70,
       child   : Row(
         children  : <Widget>[
-          FilledButton(
-            onPressed : () => Navigator.pop(context),
-            style     : ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).disabledColor)),
-            child     : Text($strings.prevButtonText, style: $styles.textStyles.button),
+          CircleIconButton(
+            icon          : AppIcons.next_large,
+            onPressed     : () => Navigator.pop(context),
+            semanticLabel : $strings.prevButtonText,
+            flipIcon      : true,
           ),
           const Spacer(),
-          FilledButton(onPressed: () {}, child: Text($strings.finishButtonText, style: $styles.textStyles.button)),
+          FilledButton(
+            onPressed : _handleFinishPressed,
+            child     : Text($strings.finishButtonText, style: $styles.textStyles.button),
+          ),
         ],
       ),
     );

@@ -88,55 +88,70 @@ class _ChecklistTileState extends State<_ChecklistTile> {
         ),
         title: Text('${widget.categoria.name}', style: $styles.textStyles.h4),
         children: <Widget>[
-          Column(
-            children: <Widget>[
-              if (!widget.isEvaluado)
-                Text('Aplicar a todos a:', style: $styles.textStyles.body),
-              if (!widget.isEvaluado)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      child: Wrap(
-                        spacing: 8,
-                        runSpacing: 4,
-                        children: commonOptions.map((option) {
-                          return Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Radio(
-                                value: option,
-                                groupValue: selectedCommonOption,
-                                onChanged: (String? value) {
-                                  if (value != null) {
-                                    for (final item in widget.categoria.categoriasItems!) {
-                                      _handleSelectRadioChange(option, item.idCategoriaItem!);
+          if (widget.categoria.categoriasItems!.isNotEmpty)
+            Column(
+              children: <Widget>[
+                if (!widget.isEvaluado)
+                  Text('Aplicar a todos a:', style: $styles.textStyles.body),
+                if (!widget.isEvaluado)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 4,
+                          children: commonOptions.map((option) {
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Radio(
+                                  value: option,
+                                  groupValue: selectedCommonOption,
+                                  onChanged: (String? value) {
+                                    if (value != null) {
+                                      for (final item in widget.categoria.categoriasItems!) {
+                                        _handleSelectRadioChange(option, item.idCategoriaItem!);
+                                      }
                                     }
-                                  }
-                                },
-                              ),
-                              Text(option, style: $styles.textStyles.body),
-                            ],
-                          );
-                        }).toList(),
+                                  },
+                                ),
+                                Text(option, style: $styles.textStyles.body),
+                              ],
+                            );
+                          }).toList(),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                SizedBox(
+                  height: 200,
+                  child: ListView.builder(
+                    itemCount   : widget.categoria.categoriasItems?.length,
+                    itemBuilder : (BuildContext context, int index) {
+                      return Padding(
+                        padding : EdgeInsets.only(bottom: $styles.insets.sm),
+                        child   : _buildItemElement(widget.categoria.categoriasItems![index], index),
+                      );
+                    },
+                  ),
                 ),
-              SizedBox(
-                height: 200,
-                child: ListView.builder(
-                  itemCount   : widget.categoria.categoriasItems?.length,
-                  itemBuilder : (BuildContext context, int index) {
-                    return Padding(
-                      padding : EdgeInsets.only(bottom: $styles.insets.sm),
-                      child   : _buildItemElement(widget.categoria.categoriasItems![index], index),
-                    );
-                  },
+              ],
+            )
+          else
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding : EdgeInsets.symmetric(horizontal: $styles.insets.lg),
+                  child   : Text('Aún no hay preguntas', style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600)),
                 ),
-              ),
-            ],
-          ),
+                Padding(
+                  padding : EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
+                  child   : const Text('Intenta configurar las preguntas para la evaluación de la unidad.'),
+                ),
+              ],
+            ),
         ],
       ),
     );

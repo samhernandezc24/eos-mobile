@@ -235,7 +235,7 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
               formularioValor     : item.formularioValor,
               value               : newValue,
               observaciones       : item.observaciones,
-              noAplica            : item.noAplica,
+              noAplica            : false,
             )
           : item;
       }).toList();
