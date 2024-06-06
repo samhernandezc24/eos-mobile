@@ -15,7 +15,7 @@ CategoriaItem _$CategoriaItemFromJson(Map<String, dynamic> json) =>
       formularioValor: json['formularioValor'] as String?,
       value: json['value'] as String?,
       observaciones: json['observaciones'] as String?,
-      noAplica: json['noAplica'] as bool? ?? false,
+      noAplica: json['noAplica'] as bool?,
     );
 
 Map<String, dynamic> _$CategoriaItemToJson(CategoriaItem instance) =>

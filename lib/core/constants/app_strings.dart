@@ -93,6 +93,9 @@ class AppStrings {
   String inspeccionIndexListTileTitle       = 'Lista de inspecciones';
   String inspeccionIndexListTileSubtitle    = 'Muestra inspecciones en general.';
   String inspeccionListAppBarTitle          = 'Lista de inspecciones';
+  String inspeccionCancelAlertTitle         = '¿Cancelar inspección?';
+  String inspeccionCancelAlertContent1      = 'Se cancelará la inspección con folio ';
+  String inspeccionCancelAlertContent2      = '¿Estás seguro de querer realizar esa acción?';
 
   String inspeccionTipoAppBarTitle          = 'Configuración de inspecciones';
   String inspeccionTipoBoxDescription       = 'Crea los tipos de inspección para organizar y gestionar tus inspecciones de manera más eficiente.';

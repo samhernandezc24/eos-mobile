@@ -4,11 +4,13 @@ class _ListCard extends StatefulWidget {
   const _ListCard({
     required this.inspecciones,
     required this.buildDataSourceCallback,
+    required this.onCancelPressed,
     Key? key,
   }) : super(key: key);
 
   final List<InspeccionDataSourceEntity> inspecciones;
-  final Future<void> Function() buildDataSourceCallback;
+  final VoidCallback buildDataSourceCallback;
+  final void Function(InspeccionIdReqEntity, InspeccionDataSourceEntity)? onCancelPressed;
 
   @override
   State<_ListCard> createState() => _ListCardState();
@@ -49,7 +51,11 @@ class _ListCardState extends State<_ListCard> {
                 delegate  : SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     final InspeccionDataSourceEntity objInspeccion = widget.inspecciones[index];
-                    return _ResultCard(objInspeccion: objInspeccion, buildDataSourceCallback: widget.buildDataSourceCallback);
+                    return _ResultCard(
+                      objInspeccion           : objInspeccion,
+                      buildDataSourceCallback : widget.buildDataSourceCallback,
+                      onCancelPressed         : widget.onCancelPressed,
+                    );
                   },
                   childCount: widget.inspecciones.length,
                 ),

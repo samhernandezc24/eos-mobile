@@ -49,7 +49,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
     _store();
   }
 
-  Future<void> _handleDeletePressed(BuildContext context, CategoriaItemEntity categoriaItem) async {
+  Future<void> _handleDeletePressed(BuildContext context, CategoriaItemEntity objData) async {
     await showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -61,7 +61,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
               children  : <InlineSpan>[
                 TextSpan(text: $strings.categoriaItemDeleteAlertContent1),
                 TextSpan(
-                  text: '"${categoriaItem.name}."\n',
+                  text: '"${objData.name}."\n',
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
                 TextSpan(text: $strings.categoriaItemDeleteAlertContent2),
@@ -74,7 +74,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
               child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
             ),
             TextButton(
-              onPressed : () => context.read<RemoteCategoriaItemBloc>().add(DeleteCategoriaItem(categoriaItem)),
+              onPressed : () => context.read<RemoteCategoriaItemBloc>().add(DeleteCategoriaItem(objData)),
               child     : Text($strings.deleteButtonText, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
             ),
           ],

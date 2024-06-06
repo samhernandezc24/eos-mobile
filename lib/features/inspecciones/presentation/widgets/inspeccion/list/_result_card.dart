@@ -1,12 +1,18 @@
 part of '../../../pages/list/list_page.dart';
 
 class _ResultCard extends StatelessWidget {
-  const _ResultCard({required this.objInspeccion, required this.buildDataSourceCallback, Key? key}) : super(key: key);
+  const _ResultCard({
+    required this.objInspeccion,
+    required this.buildDataSourceCallback,
+    required this.onCancelPressed,
+    Key? key,
+  }) : super(key: key);
 
   final InspeccionDataSourceEntity objInspeccion;
   final VoidCallback buildDataSourceCallback;
+  final void Function(InspeccionIdReqEntity, InspeccionDataSourceEntity)? onCancelPressed;
 
-  // METHODS
+  // EVENTS
   void _handleChecklistInspeccionPressed(BuildContext context, InspeccionIdReqEntity objData) {
     Navigator.push<void>(
       context,
@@ -29,7 +35,7 @@ class _ResultCard extends StatelessWidget {
     );
   }
 
-  void _handleInspeccionMenuDetailsPressed(BuildContext context, InspeccionDataSourceEntity inspeccion) {
+  void _handleInspeccionMenuDetailsPressed(BuildContext context, InspeccionDataSourceEntity objInspeccion) {
     showDialog<void>(
       context : context,
       builder : (BuildContext context) {
@@ -38,9 +44,9 @@ class _ResultCard extends StatelessWidget {
             crossAxisAlignment  : CrossAxisAlignment.start,
             children            : <Widget>[
               Text('Folio inspección:', style: $styles.textStyles.bodySmall),
-              Text(inspeccion.folio, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600, height: 1.3)),
+              Text(objInspeccion.folio, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600, height: 1.3)),
               Text('Requerimiento:', style: $styles.textStyles.bodySmall),
-              Text(inspeccion.hasRequerimiento == false ? 'SIN REQUERIMIENTO' : inspeccion.requerimientoFolio ?? '', style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600, height: 1.3)),
+              Text(objInspeccion.hasRequerimiento == false ? 'SIN REQUERIMIENTO' : objInspeccion.requerimientoFolio ?? '', style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600, height: 1.3)),
               Divider(color: Theme.of(context).dividerColor, thickness: 1.5),
             ],
           ),
@@ -58,7 +64,7 @@ class _ResultCard extends StatelessWidget {
                       style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
                       children  : <InlineSpan>[
                         const TextSpan(text: 'Número económico'),
-                        TextSpan(text: ': ${inspeccion.unidadNumeroEconomico}'),
+                        TextSpan(text: ': ${objInspeccion.unidadNumeroEconomico}'),
                       ],
                     ),
                   ),
@@ -68,7 +74,7 @@ class _ResultCard extends StatelessWidget {
                       style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
                       children  : <InlineSpan>[
                         const TextSpan(text: 'Tipo de unidad'),
-                        TextSpan(text: ': ${inspeccion.unidadTipoName}'),
+                        TextSpan(text: ': ${objInspeccion.unidadTipoName}'),
                       ],
                     ),
                   ),
@@ -78,7 +84,7 @@ class _ResultCard extends StatelessWidget {
                       style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
                       children  : <InlineSpan>[
                         const TextSpan(text: 'Tipo de inspección'),
-                        TextSpan(text: ': ${inspeccion.inspeccionTipoName}'),
+                        TextSpan(text: ': ${objInspeccion.inspeccionTipoName}'),
                       ],
                     ),
                   ),
@@ -88,7 +94,7 @@ class _ResultCard extends StatelessWidget {
                       style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
                       children  : <InlineSpan>[
                         const TextSpan(text: 'Marca'),
-                        TextSpan(text: ': ${inspeccion.unidadMarcaName}'),
+                        TextSpan(text: ': ${objInspeccion.unidadMarcaName}'),
                       ],
                     ),
                   ),
@@ -98,7 +104,7 @@ class _ResultCard extends StatelessWidget {
                       style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
                       children  : <InlineSpan>[
                         const TextSpan(text: 'Modelo'),
-                        TextSpan(text: ': ${inspeccion.modelo}'),
+                        TextSpan(text: ': ${objInspeccion.modelo}'),
                       ],
                     ),
                   ),
@@ -108,7 +114,7 @@ class _ResultCard extends StatelessWidget {
                       style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
                       children  : <InlineSpan>[
                         const TextSpan(text: 'Número de serie'),
-                        TextSpan(text: ': ${inspeccion.numeroSerie}'),
+                        TextSpan(text: ': ${objInspeccion.numeroSerie}'),
                       ],
                     ),
                   ),
@@ -118,7 +124,7 @@ class _ResultCard extends StatelessWidget {
                       style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
                       children  : <InlineSpan>[
                         const TextSpan(text: 'Fecha programada'),
-                        TextSpan(text: ': ${inspeccion.fechaProgramadaNatural}'),
+                        TextSpan(text: ': ${objInspeccion.fechaProgramadaNatural}'),
                       ],
                     ),
                   ),
@@ -128,7 +134,7 @@ class _ResultCard extends StatelessWidget {
                       style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
                       children  : <InlineSpan>[
                         const TextSpan(text: 'Estatus'),
-                        TextSpan(text: ': ${inspeccion.inspeccionEstatusName}'),
+                        TextSpan(text: ': ${objInspeccion.inspeccionEstatusName}'),
                       ],
                     ),
                   ),
@@ -138,7 +144,7 @@ class _ResultCard extends StatelessWidget {
                       style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
                       children  : <InlineSpan>[
                         const TextSpan(text: 'Base'),
-                        TextSpan(text: ': ${inspeccion.baseName}'),
+                        TextSpan(text: ': ${objInspeccion.baseName}'),
                       ],
                     ),
                   ),
@@ -148,7 +154,7 @@ class _ResultCard extends StatelessWidget {
                       style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
                       children  : <InlineSpan>[
                         const TextSpan(text: 'Locación'),
-                        TextSpan(text: ': ${inspeccion.locacion}'),
+                        TextSpan(text: ': ${objInspeccion.locacion}'),
                       ],
                     ),
                   ),
@@ -158,7 +164,7 @@ class _ResultCard extends StatelessWidget {
                       style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
                       children  : <InlineSpan>[
                         const TextSpan(text: 'Capacidad'),
-                        TextSpan(text: ': ${inspeccion.capacidad} ${inspeccion.unidadCapacidadMedidaName}'),
+                        TextSpan(text: ': ${objInspeccion.capacidad} ${objInspeccion.unidadCapacidadMedidaName}'),
                       ],
                     ),
                   ),
@@ -168,7 +174,7 @@ class _ResultCard extends StatelessWidget {
                       style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
                       children  : <InlineSpan>[
                         const TextSpan(text: 'Fecha de creación'),
-                        TextSpan(text: ': ${inspeccion.createdFechaNatural}'),
+                        TextSpan(text: ': ${objInspeccion.createdFechaNatural}'),
                       ],
                     ),
                   ),
@@ -178,7 +184,7 @@ class _ResultCard extends StatelessWidget {
                       style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
                       children  : <InlineSpan>[
                         const TextSpan(text: 'Creado por'),
-                        TextSpan(text: ': ${inspeccion.createdUserName}'),
+                        TextSpan(text: ': ${objInspeccion.createdUserName}'),
                       ],
                     ),
                   ),
@@ -194,6 +200,10 @@ class _ResultCard extends StatelessWidget {
         );
       },
     );
+  }
+
+  void _handleCancelPressed(InspeccionIdReqEntity objData, InspeccionDataSourceEntity objInspeccion) {
+    if (onCancelPressed != null) { return onCancelPressed!(objData, objInspeccion); }
   }
 
   @override
@@ -253,6 +263,7 @@ class _ResultCard extends StatelessWidget {
                   case InspeccionMenu.details:
                     _handleInspeccionMenuDetailsPressed(context, objInspeccion);
                   case InspeccionMenu.cancel:
+                    _handleCancelPressed(InspeccionIdReqEntity(idInspeccion: objInspeccion.idInspeccion), objInspeccion);
                 }
               },
               itemBuilder : (BuildContext context) {

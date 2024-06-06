@@ -29,6 +29,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_cate
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_store_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/cancel_inspeccion_usecase.dart';
 
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_categoria/remote/remote_inspeccion_categoria_bloc.dart';
@@ -245,6 +246,78 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     );
   }
 
+  Future<void> _handleCancelPressed(BuildContext context, InspeccionIdReqEntity objData, InspeccionDataSourceEntity objInspeccion) async {
+    await showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title   : Text($strings.inspeccionCancelAlertTitle, style: $styles.textStyles.h3.copyWith(fontSize: 18)),
+          content : RichText(
+            text: TextSpan(
+              style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, height: 1.5),
+              children  : <InlineSpan>[
+                TextSpan(text: $strings.inspeccionCancelAlertContent1),
+                TextSpan(
+                  text: '"${objInspeccion.folio}."\n',
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                TextSpan(text: $strings.inspeccionCancelAlertContent2),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed : () => Navigator.pop(context, $strings.cancelButtonText),
+              child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
+            ),
+            TextButton(
+              onPressed : () => context.read<RemoteInspeccionBloc>().add(CancelInspeccion(objData)),
+              child     : Text($strings.acceptButtonText, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showServerFailedDialog(BuildContext context, String? errorMessage) async {
+    return showDialog<void>(
+      context : context,
+      builder: (BuildContext context)  => ServerFailedDialog(
+        errorMessage: errorMessage ?? 'Se produjo un error inesperado.',
+      ),
+    );
+  }
+
+  void _showProgressDialog(BuildContext context) {
+    showDialog<void>(
+      context             : context,
+      barrierDismissible  : false,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
+          elevation : 0,
+          child     : Container(
+            padding : EdgeInsets.all($styles.insets.xs),
+            child   : Column(
+              mainAxisSize  : MainAxisSize.min,
+              children      : <Widget>[
+                Container(
+                  margin  : EdgeInsets.symmetric(vertical: $styles.insets.sm),
+                  child   : const AppLoadingIndicator(width: 30, height: 30),
+                ),
+                Container(
+                  margin  : EdgeInsets.only(bottom: $styles.insets.xs),
+                  child   : Text($strings.appProcessingData, style: $styles.textStyles.bodyBold, textAlign: TextAlign.center),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   // METHODS
   void _renderFilters(DataSourcePersistence? dataSourcePersistence) {
     // RECUPERACION DE DROPDOWN SIN MULTIFILTROS
@@ -340,10 +413,47 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
               onRefresh: _buildDataSource,
               child: BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
                 listener: (BuildContext context, RemoteInspeccionState state) {
+                  // LOADING:
+                  if (state is RemoteInspeccionCanceling) {
+                    _showProgressDialog(context);
+                  }
+
+                  // ERRORS:
+                  if (state is RemoteInspeccionServerFailedMessageCancel) {
+                    Navigator.of(context).pop();
+                    _showServerFailedDialog(context, state.errorMessage);
+                    _buildDataSource();
+                  }
+
+                  if (state is RemoteInspeccionServerFailureCancel) {
+                    Navigator.of(context).pop();
+                    _showServerFailedDialog(context, state.failure?.errorMessage);
+                    _buildDataSource();
+                  }
+
+                  // SUCCESS:
                   if (state is RemoteInspeccionListLoaded) {
                     setState(() {
                       searchResults = state.objResponseDataSource?.count ?? 0;
                     });
+                  }
+
+                  if (state is RemoteInspeccionCanceled) {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+
+                    ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        content         : Text(state.objResponse?.message ?? 'Inspección cancelada', softWrap: true),
+                        backgroundColor : Colors.green,
+                        elevation       : 0,
+                        behavior        : SnackBarBehavior.fixed,
+                      ),
+                    );
+
+                    _buildDataSource();
                   }
                 },
                 builder: (BuildContext context, RemoteInspeccionState state) {
@@ -400,7 +510,11 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                     // FRAGMENTO NO MODIFICABLE - RENDERIZACION
                     lstRows       = state.objResponseDataSource?.rows ?? [];
                     if (lstRows.isNotEmpty) {
-                      return _ListCard(inspecciones: lstRows, buildDataSourceCallback: _buildDataSource);
+                      return _ListCard(
+                        inspecciones            : lstRows,
+                        buildDataSourceCallback : _buildDataSource,
+                        onCancelPressed         : (InspeccionIdReqEntity objData, InspeccionDataSourceEntity objInspeccion) => _handleCancelPressed(context, objData, objInspeccion),
+                      );
                     } else {
                       return Center(
                         child: Column(

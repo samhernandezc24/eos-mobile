@@ -1,8 +1,10 @@
 import 'package:eos_mobile/core/data/data_source.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_create_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_res_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_index_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/cancel_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/create_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/data_source_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/index_inspeccion_usecase.dart';
@@ -19,10 +21,12 @@ class RemoteInspeccionBloc extends Bloc<RemoteInspeccionEvent, RemoteInspeccionS
     this._dataSourceInspeccionUseCase,
     this._createInspeccionUseCase,
     this._storeInspeccionUseCase,
+    this._cancelInspeccionUseCase,
   ) : super(RemoteInspeccionInitial()) {
     on<InitializeInspeccion>(onInitializeInspeccion);
     on<FetchInspeccionCreate>(onFetchInspeccionCreate);
     on<StoreInspeccion>(onStoreInspeccion);
+    on<CancelInspeccion>(onCancelInspeccion);
   }
 
   // Casos de uso
@@ -30,6 +34,7 @@ class RemoteInspeccionBloc extends Bloc<RemoteInspeccionEvent, RemoteInspeccionS
   final DataSourceInspeccionUseCase _dataSourceInspeccionUseCase;
   final CreateInspeccionUseCase _createInspeccionUseCase;
   final StoreInspeccionUseCase _storeInspeccionUseCase;
+  final CancelInspeccionUseCase _cancelInspeccionUseCase;
 
   Future<void> onInitializeInspeccion(InitializeInspeccion event, Emitter<RemoteInspeccionState> emit) async {
     emit(RemoteInspeccionLoading());
@@ -85,6 +90,24 @@ class RemoteInspeccionBloc extends Bloc<RemoteInspeccionEvent, RemoteInspeccionS
     if (objDataState is DataFailed) {
       emit(RemoteInspeccionServerFailureStore(objDataState.serverException));
       await onFetchInspeccionCreate(FetchInspeccionCreate(), emit);
+    }
+  }
+
+  Future<void> onCancelInspeccion(CancelInspeccion event, Emitter<RemoteInspeccionState> emit) async {
+    emit(RemoteInspeccionCanceling());
+
+    final objDataState = await _cancelInspeccionUseCase(params: event.objData);
+
+    if (objDataState is DataSuccess) {
+      emit(RemoteInspeccionCanceled(objDataState.data));
+    }
+
+    if (objDataState is DataFailedMessage) {
+      emit(RemoteInspeccionServerFailedMessageCancel(objDataState.errorMessage));
+    }
+
+    if (objDataState is DataFailed) {
+      emit(RemoteInspeccionServerFailureCancel(objDataState.serverException));
     }
   }
 }
