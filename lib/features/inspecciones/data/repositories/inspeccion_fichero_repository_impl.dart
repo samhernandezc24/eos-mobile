@@ -72,6 +72,8 @@ class InspeccionFicheroRepositoryImpl implements InspeccionFicheroRepository {
         'Bearer $token',
         InspeccionFicheroStoreReqModel.fromEntity(objData),
         onSendProgress: (int sent, int total) {
+          final progress = sent / total;
+          print('progress: $progress ($sent / $total)');
           _progressController.add(sent / total);
         },
       );

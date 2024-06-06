@@ -1,15 +1,15 @@
 part of '../../../pages/list/list_page.dart';
 
-class _PhotosGrid extends StatefulWidget {
-  const _PhotosGrid({required this.imageFiles, Key? key}) : super(key: key);
+class _PhotoGrid extends StatefulWidget {
+  const _PhotoGrid({required this.imageFiles, Key? key}) : super(key: key);
 
   final List<XFile> imageFiles;
 
   @override
-  State<_PhotosGrid> createState() => _PhotosGridState();
+  State<_PhotoGrid> createState() => _PhotoGridState();
 }
 
-class _PhotosGridState extends State<_PhotosGrid> {
+class _PhotoGridState extends State<_PhotoGrid> {
   // CONTROLLERS
   late ScrollController _controller;
 

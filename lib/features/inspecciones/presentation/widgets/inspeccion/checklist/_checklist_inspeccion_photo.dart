@@ -1,9 +1,10 @@
 part of '../../../pages/list/list_page.dart';
 
 class _ChecklistInspeccionPhoto extends StatefulWidget {
-  const _ChecklistInspeccionPhoto({required this.objData, Key? key}) : super(key: key);
+  const _ChecklistInspeccionPhoto({required this.objData, required this.objInspeccion, Key? key}) : super(key: key);
 
   final InspeccionIdReqEntity objData;
+  final InspeccionDataSourceEntity objInspeccion;
 
   @override
   State<_ChecklistInspeccionPhoto> createState() => __ChecklistInspeccionPhotoState();
@@ -17,8 +18,13 @@ class __ChecklistInspeccionPhotoState extends State<_ChecklistInspeccionPhoto> {
   String? unidadNumeroSerie       = '';
   String? idInspeccionEstatus     = '';
 
+  int indexUpload       = 0;
+  int countQueueUpload  = 0;
+  int countQueueTotal   = 0;
+
   bool _isLoading       = false;
   bool _hasServerError  = false;
+  bool isSave = false;
 
   // LIST
   List<XFile> files = <XFile>[];
@@ -78,27 +84,36 @@ class __ChecklistInspeccionPhotoState extends State<_ChecklistInspeccionPhoto> {
 
   Future<void> _handleTakePhotoPressed() async {
     final XFile? photo = await imageHelper.takePhoto();
+
     if (photo != null) {
-      setState(() {
-        files.add(photo);
-      });
-      final String base64Image = await _imageToBase64(photo);
-      debugPrint('Base64 Image: $base64Image');
+      final String base64Image = await Globals.fileToBase64(File(photo.path));
+      final String fileExtension = Globals.extensionFile(photo.path);
+      print(fileExtension);
     }
   }
 
   // METHODS
-  void _getFotos() {
-    setState(() {
-      _isLoading = true;
-      _hasServerError = false;
-    });
+  Future<void> _getFotos() async {
     context.read<RemoteInspeccionFicheroBloc>().add(ListInspeccionFicheros(widget.objData));
   }
 
-  Future<String> _imageToBase64(XFile image) async {
-    final List<int> arrBytes = File(image.path).readAsBytesSync();
-    return base64Encode(arrBytes);
+  Future<void> _store({bool boolBegin = false}) async {
+    if (boolBegin) {
+      indexUpload = 0;
+    }
+
+    if (countQueueUpload < countQueueTotal) {
+      final InspeccionFicheroStoreReqEntity objPost = InspeccionFicheroStoreReqEntity(
+        fileBase64      : '',
+        fileExtension   : '',
+        idInspeccion    : widget.objInspeccion.idInspeccion,
+        inspeccionFolio : widget.objInspeccion.folio,
+      );
+
+      BlocProvider.of<RemoteInspeccionFicheroBloc>(context).add(StoreInspeccionFichero(objPost));
+    } else {
+      // Fotos guardadas exitosamente
+    }
   }
 
   @override
@@ -107,6 +122,7 @@ class __ChecklistInspeccionPhotoState extends State<_ChecklistInspeccionPhoto> {
       appBar: AppBar(title: Text($strings.checklistPhotoEvidenceAppBarTitle, style: $styles.textStyles.h3)),
       body: BlocConsumer<RemoteInspeccionFicheroBloc, RemoteInspeccionFicheroState>(
         listener: (BuildContext context, RemoteInspeccionFicheroState state) {
+          // LOADING:
           if (state is RemoteInspeccionFicheroLoading) {
             setState(() {
               _isLoading      = true;
@@ -114,6 +130,7 @@ class __ChecklistInspeccionPhotoState extends State<_ChecklistInspeccionPhoto> {
             });
           }
 
+          // ERRORS:
           if (state is RemoteInspeccionFicheroServerFailedMessageList) {
             setState(() {
               _hasServerError = true;
@@ -128,6 +145,7 @@ class __ChecklistInspeccionPhotoState extends State<_ChecklistInspeccionPhoto> {
             });
           }
 
+          // SUCCESS:
           if (state is RemoteInspeccionFicheroSuccess) {
             setState(() {
               unidadNumeroEconomico   = state.objResponse?.inspeccion.unidadNumeroEconomico ?? '';
@@ -141,6 +159,10 @@ class __ChecklistInspeccionPhotoState extends State<_ChecklistInspeccionPhoto> {
           }
         },
         builder: (BuildContext context, RemoteInspeccionFicheroState state) {
+          if (state is RemoteInspeccionFicheroLoading) {
+            return const Center(child: AppLoadingIndicator());
+          }
+
           if (state is RemoteInspeccionFicheroServerFailedMessageList) {
             return ErrorInfoContainer(
               onPressed     : _getFotos,
@@ -153,10 +175,6 @@ class __ChecklistInspeccionPhotoState extends State<_ChecklistInspeccionPhoto> {
               onPressed     : _getFotos,
               errorMessage  : state.failure?.errorMessage,
             );
-          }
-
-          if (state is RemoteInspeccionFicheroLoading) {
-            return const Center(child: AppLoadingIndicator());
           }
 
           if (state is RemoteInspeccionFicheroSuccess) {
@@ -209,7 +227,7 @@ class __ChecklistInspeccionPhotoState extends State<_ChecklistInspeccionPhoto> {
                 if (files.isNotEmpty)
                   Expanded(
                     child: RepaintBoundary(
-                      child: _PhotosGrid(imageFiles: files),
+                      child: _PhotoGrid(imageFiles: files),
                     ),
                   )
                 else
@@ -248,14 +266,6 @@ class __ChecklistInspeccionPhotoState extends State<_ChecklistInspeccionPhoto> {
             semanticLabel : $strings.prevButtonText,
             flipIcon      : true,
           ),
-          // FilledButton(
-          //   onPressed : () => Navigator.pop(context),
-          //   style     : ButtonStyle(
-          //     backgroundColor : MaterialStateProperty.all<Color>(const Color(0xFFD9E4F0)),
-          //     foregroundColor : MaterialStateProperty.all<Color>(const Color(0xff233876)),
-          //   ),
-          //   child     : Text($strings.prevButtonText, style: $styles.textStyles.button),
-          // ),
           const Spacer(),
           CircleIconButton(
             icon          : AppIcons.next_large,
