@@ -133,7 +133,7 @@ class _ResultTileInspeccion extends StatelessWidget {
       child   : Row(
         crossAxisAlignment  : CrossAxisAlignment.start,
         children            : <Widget>[
-          _buildInspeccionEstatusCard(context, objInspeccion!),
+          _buildInspeccionEstatus(context, objInspeccion!),
           Gap($styles.insets.sm),
           _buildInspeccionInfo(context, objInspeccion!),
         ],
@@ -141,7 +141,7 @@ class _ResultTileInspeccion extends StatelessWidget {
     );
   }
 
-  Widget _buildInspeccionEstatusCard(BuildContext context, InspeccionDataSourceEntity objInspeccion) {
+  Widget _buildInspeccionEstatus(BuildContext context, InspeccionDataSourceEntity objInspeccion) {
     final double borderRadius         = $styles.corners.md;
     final String idInspeccionEstatus  = objInspeccion.idInspeccionEstatus;
     final ColorScheme colorScheme     = Theme.of(context).colorScheme;

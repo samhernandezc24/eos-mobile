@@ -117,135 +117,19 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                RichText(
-                  text: TextSpan(
-                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
-                    children  : <InlineSpan>[
-                      const TextSpan(text: 'Número económico'),
-                      TextSpan(text: ': ${objInspeccion.unidadNumeroEconomico}'),
-                    ],
-                  ),
-                ),
-                Gap($styles.insets.xxs),
-                RichText(
-                  text: TextSpan(
-                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
-                    children  : <InlineSpan>[
-                      const TextSpan(text: 'Tipo de unidad'),
-                      TextSpan(text: ': ${objInspeccion.unidadTipoName}'),
-                    ],
-                  ),
-                ),
-                Gap($styles.insets.xxs),
-                RichText(
-                  text: TextSpan(
-                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
-                    children  : <InlineSpan>[
-                      const TextSpan(text: 'Tipo de inspección'),
-                      TextSpan(text: ': ${objInspeccion.inspeccionTipoName}'),
-                    ],
-                  ),
-                ),
-                Gap($styles.insets.xxs),
-                RichText(
-                  text: TextSpan(
-                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
-                    children  : <InlineSpan>[
-                      const TextSpan(text: 'Marca'),
-                      TextSpan(text: ': ${objInspeccion.unidadMarcaName}'),
-                    ],
-                  ),
-                ),
-                Gap($styles.insets.xxs),
-                RichText(
-                  text: TextSpan(
-                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
-                    children  : <InlineSpan>[
-                      const TextSpan(text: 'Modelo'),
-                      TextSpan(text: ': ${objInspeccion.modelo}'),
-                    ],
-                  ),
-                ),
-                Gap($styles.insets.xxs),
-                RichText(
-                  text: TextSpan(
-                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
-                    children  : <InlineSpan>[
-                      const TextSpan(text: 'Número de serie'),
-                      TextSpan(text: ': ${objInspeccion.numeroSerie}'),
-                    ],
-                  ),
-                ),
-                Gap($styles.insets.xxs),
-                RichText(
-                  text: TextSpan(
-                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
-                    children  : <InlineSpan>[
-                      const TextSpan(text: 'Fecha programada'),
-                      TextSpan(text: ': ${objInspeccion.fechaProgramadaNatural}'),
-                    ],
-                  ),
-                ),
-                Gap($styles.insets.xxs),
-                RichText(
-                  text: TextSpan(
-                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
-                    children  : <InlineSpan>[
-                      const TextSpan(text: 'Estatus'),
-                      TextSpan(text: ': ${objInspeccion.inspeccionEstatusName}'),
-                    ],
-                  ),
-                ),
-                Gap($styles.insets.xxs),
-                RichText(
-                  text: TextSpan(
-                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
-                    children  : <InlineSpan>[
-                      const TextSpan(text: 'Base'),
-                      TextSpan(text: ': ${objInspeccion.baseName}'),
-                    ],
-                  ),
-                ),
-                Gap($styles.insets.xxs),
-                RichText(
-                  text: TextSpan(
-                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
-                    children  : <InlineSpan>[
-                      const TextSpan(text: 'Locación'),
-                      TextSpan(text: ': ${objInspeccion.locacion}'),
-                    ],
-                  ),
-                ),
-                Gap($styles.insets.xxs),
-                RichText(
-                  text: TextSpan(
-                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
-                    children  : <InlineSpan>[
-                      const TextSpan(text: 'Capacidad'),
-                      TextSpan(text: ': ${objInspeccion.capacidad} ${objInspeccion.unidadCapacidadMedidaName}'),
-                    ],
-                  ),
-                ),
-                Gap($styles.insets.xxs),
-                RichText(
-                  text: TextSpan(
-                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
-                    children  : <InlineSpan>[
-                      const TextSpan(text: 'Fecha de creación'),
-                      TextSpan(text: ': ${objInspeccion.createdFechaNatural}'),
-                    ],
-                  ),
-                ),
-                Gap($styles.insets.xxs),
-                RichText(
-                  text: TextSpan(
-                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
-                    children  : <InlineSpan>[
-                      const TextSpan(text: 'Creado por'),
-                      TextSpan(text: ': ${objInspeccion.createdUserName}'),
-                    ],
-                  ),
-                ),
+                _buildRichText(context, 'Número económico', objInspeccion.unidadNumeroEconomico),
+                _buildRichText(context, 'Tipo de unidad', objInspeccion.unidadTipoName ?? ''),
+                _buildRichText(context, 'Tipo de inspección', objInspeccion.inspeccionTipoName),
+                _buildRichText(context, 'Marca', objInspeccion.unidadMarcaName ?? ''),
+                _buildRichText(context, 'Modelo', objInspeccion.modelo ?? ''),
+                _buildRichText(context, 'Número de serie', objInspeccion.numeroSerie ?? ''),
+                _buildRichText(context, 'Fecha programada', objInspeccion.fechaProgramadaNatural),
+                _buildRichText(context, 'Estatus', objInspeccion.inspeccionEstatusName),
+                _buildRichText(context, 'Base', objInspeccion.baseName ?? ''),
+                _buildRichText(context, 'Locación', objInspeccion.locacion),
+                _buildRichText(context, 'Capacidad', '${objInspeccion.capacidad} ${objInspeccion.unidadCapacidadMedidaName}'),
+                _buildRichText(context, 'Fecha de creación', objInspeccion.createdFechaNatural),
+                _buildRichText(context, 'Creado por', objInspeccion.createdUserName),
               ],
             ),
           ),
@@ -524,6 +408,21 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
             child   : Text($strings.inspeccionEmptyListMessage, textAlign: TextAlign.center),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildRichText(BuildContext context, String label, String value) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: $styles.insets.xxs),
+      child: RichText(
+        text: TextSpan(
+          style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+          children  : <InlineSpan>[
+            TextSpan(text: label),
+            TextSpan(text: ': $value'),
+          ],
+        ),
       ),
     );
   }
