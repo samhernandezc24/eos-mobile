@@ -23,13 +23,13 @@ class DataSourceUtils {
     return arrFilters.where((a) => lstValues.any((b) => b[key] == a)).toList();
   }
 
-  static String renderDateSelected(DataSourcePersistence? dataSourcePersistence, { String dateDefault = 'CreatedFecha' }) {
-    final String dateSelected = dataSourcePersistence != null && Globals.isValidValue(dataSourcePersistence.dateOption)
-        ? dataSourcePersistence.dateOption!
-        : dateDefault;
+  // static String renderDateSelected(DataSourcePersistence? dataSourcePersistence, { String dateDefault = 'CreatedFecha' }) {
+  //   final String dateSelected = dataSourcePersistence != null && Globals.isValidValue(dataSourcePersistence.dateOption)
+  //       ? dataSourcePersistence.dateOption!
+  //       : dateDefault;
 
-    return dateSelected;
-  }
+  //   return dateSelected;
+  // }
 
   static DateTime? renderDate(DataSourcePersistence? dataSourcePersistence, String key) {
     final valueDate = dataSourcePersistence == null ? null : dataSourcePersistence.toJson()[key];

@@ -15,7 +15,6 @@ import 'package:eos_mobile/features/inspecciones/domain/repositories/categoria_i
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class CategoriaItemRepositoryImpl implements CategoriaItemRepository {
-
   CategoriaItemRepositoryImpl(this._categoriaItemRemoteApiService);
 
   final CategoriaItemRemoteApiService _categoriaItemRemoteApiService;

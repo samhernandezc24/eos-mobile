@@ -70,6 +70,9 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   // CONTROLLERS
   late final TextEditingController _searchController;
 
+  // SEARCH FILTERS
+  List<SearchFilter> searchFilters = [];
+
   List<InspeccionDataSourceEntity> lstRows = [];
 
   @override
@@ -92,6 +95,19 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     _searchController.text = query;
     // Construye el data source.
     _buildDataSource();
+  }
+
+  void _handleSearchFiltersPressed(BuildContext context) {
+    showModalBottomSheet<void>(
+      context : context,
+      builder : (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container();
+          },
+        );
+      },
+    );
   }
 
   void _handleDetailsPressed(BuildContext context, InspeccionDataSourceEntity objInspeccion) {
@@ -222,7 +238,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   Future<void> _buildDataSource() async {
     final varArgs = DataSource(
       search          : Globals.isValidValue(_searchController.text) ? _searchController.text : '',
-      searchFilters   : const [],
+      searchFilters   : DataSourceUtils.searchFilters(searchFilters),
       filters         : const [],
       filtersMultiple : const [],
       dateFrom        : '',
@@ -234,6 +250,36 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     );
 
     context.read<RemoteInspeccionBloc>().add(FetchInspeccionData(varArgs));
+  }
+
+  Future<void> _updateResults({bool showLoading = true}) async {
+    if (showLoading) { }
+
+    final varArgs = DataSourcePersistence(
+      table             : 'Inspecciones',
+      searchFilters     : searchFilters,
+      columns           : const [],
+      sort              : const Sort(column: '', direction: ''),
+      displayedColumns  : const [],
+      filters           : const [],
+      filtersMultiple   : const [],
+      dateOption        : '',
+      dateFrom          : '',
+      dateTo            : '',
+    );
+
+    print(varArgs);
+  }
+
+  List<SearchFilter> _getSearchFilters() {
+    final List<SearchFilter> arrSearchFilters = [
+      const SearchFilter(field: 'Folio',                  isChecked: true,  title: 'Folio'                  ),
+      const SearchFilter(field: 'RequerimientoFolio',     isChecked: false, title: 'Requerimiento / folio'  ),
+      const SearchFilter(field: 'UnidadNumeroEconomico',  isChecked: true,  title: 'No. económico'          ),
+      const SearchFilter(field: 'Locacion',               isChecked: false, title: 'Locación'               ),
+    ];
+
+    return arrSearchFilters;
   }
 
   @override
@@ -280,6 +326,11 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                   if (state is RemoteInspeccionFetchDataSuccess) {
                     setState(() {
                       lstRows = state.objResponseDataSource?.rows ?? [];
+
+                      // FRAGMENTO NO MODIFICABLE - DATOS
+                      final DataSourcePersistence? dataSourcePersistence = state.objResponseIndex?.dataSourcePersistence;
+
+                      searchFilters = dataSourcePersistence == null ? _getSearchFilters() : dataSourcePersistence.searchFilters ?? [];
                     });
                   }
 

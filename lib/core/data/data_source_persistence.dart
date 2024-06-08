@@ -1,4 +1,3 @@
-import 'package:eos_mobile/core/data/column_data.dart';
 import 'package:eos_mobile/core/data/filter.dart';
 import 'package:eos_mobile/core/data/filters_multiple.dart';
 import 'package:eos_mobile/core/data/search_filter.dart';
@@ -29,9 +28,9 @@ class DataSourcePersistence extends Equatable {
 
   final String? table;
   final List<SearchFilter>? searchFilters;
-  final List<ColumnData>? columns;
+  final List<dynamic>? columns;
   final Sort? sort;
-  final List<String>? displayedColumns;
+  final List<dynamic>? displayedColumns;
   final List<Filter>? filters;
   final List<FiltersMultiple>? filtersMultiple;
   final String? dateOption;

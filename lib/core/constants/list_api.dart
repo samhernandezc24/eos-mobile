@@ -12,6 +12,11 @@ class ListAPI {
   /// Endpoint: AspNetUser
   static const String aspNetUser = '$_apiBaseUrl/api/AspNetUser';
 
+  /// API.Account
+  ///
+  /// Endpoint: DataSourcePersistence
+  static const String dataSourcePersistence = '$_apiBaseUrl/api/DataSourcePersistence';
+
   /// API.Inspecciones
   ///
   /// Endpoint: Categorias

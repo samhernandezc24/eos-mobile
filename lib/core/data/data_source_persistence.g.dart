@@ -13,15 +13,11 @@ DataSourcePersistence _$DataSourcePersistenceFromJson(
       searchFilters: (json['searchFilters'] as List<dynamic>?)
           ?.map((e) => SearchFilter.fromJson(e as Map<String, dynamic>))
           .toList(),
-      columns: (json['columns'] as List<dynamic>?)
-          ?.map((e) => ColumnData.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      columns: json['columns'] as List<dynamic>?,
       sort: json['sort'] == null
           ? null
           : Sort.fromJson(json['sort'] as Map<String, dynamic>),
-      displayedColumns: (json['displayedColumns'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
+      displayedColumns: json['displayedColumns'] as List<dynamic>?,
       filters: (json['filters'] as List<dynamic>?)
           ?.map((e) => Filter.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -38,7 +34,7 @@ Map<String, dynamic> _$DataSourcePersistenceToJson(
     <String, dynamic>{
       'table': instance.table,
       'searchFilters': instance.searchFilters?.map((e) => e.toJson()).toList(),
-      'columns': instance.columns?.map((e) => e.toJson()).toList(),
+      'columns': instance.columns,
       'sort': instance.sort?.toJson(),
       'displayedColumns': instance.displayedColumns,
       'filters': instance.filters?.map((e) => e.toJson()).toList(),

@@ -17,6 +17,10 @@ class _SearchInputInspeccion extends StatelessWidget {
     onSubmit('');
   }
 
+  void _handleSearchFiltersPressed() {
+    print('Filtros de búsqueda');
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -31,10 +35,7 @@ class _SearchInputInspeccion extends StatelessWidget {
           child: Row(
             children: <Widget>[
               Gap($styles.insets.xs * 1.5),
-              GestureDetector(
-                onTap: (){},
-                child: const Icon(Icons.search),
-              ),
+              GestureDetector(onTap: _handleSearchFiltersPressed, child: const Icon(Icons.search)),
               _buildInput(context, controller),
               Gap($styles.insets.xs),
               ValueListenableBuilder(

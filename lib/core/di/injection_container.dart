@@ -1,3 +1,8 @@
+import 'package:eos_mobile/core/components/data_source_persistence/data/datasources/remote/data_source_persistence_remote_api_service.dart';
+import 'package:eos_mobile/core/components/data_source_persistence/data/repositories/data_source_persistence_repository_impl.dart';
+import 'package:eos_mobile/core/components/data_source_persistence/domain/repositories/data_source_persistence_repository.dart';
+import 'package:eos_mobile/core/components/data_source_persistence/domain/usecases/update_data_source_persistence_usecase.dart';
+import 'package:eos_mobile/core/components/data_source_persistence/presentation/bloc/remote/remote_data_source_persistence_bloc.dart';
 import 'package:eos_mobile/core/helpers/auth_token_helper.dart';
 import 'package:eos_mobile/core/helpers/image_helper.dart';
 
@@ -102,6 +107,8 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<CategoriaRemoteApiService>(CategoriaRemoteApiService(sl()));
   sl.registerSingleton<CategoriaItemRemoteApiService>(CategoriaItemRemoteApiService(sl()));
 
+  sl.registerSingleton<DataSourcePersistenceRemoteApiService>(DataSourcePersistenceRemoteApiService(sl()));
+
   sl.registerSingleton<InspeccionRemoteApiService>(InspeccionRemoteApiService(sl()));
   sl.registerSingleton<InspeccionCategoriaRemoteApiService>(InspeccionCategoriaRemoteApiService(sl()));
   sl.registerSingleton<InspeccionFicheroRemoteApiService>(InspeccionFicheroRemoteApiService(sl()));
@@ -111,6 +118,7 @@ Future<void> initializeDependencies() async {
 
   // Repositorios
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
+  sl.registerSingleton<DataSourcePersistenceRepository>(DataSourcePersistenceRepositoryImpl(sl()));
   sl.registerSingleton<CategoriaRepository>(CategoriaRepositoryImpl(sl()));
   sl.registerSingleton<CategoriaItemRepository>(CategoriaItemRepositoryImpl(sl()));
   sl.registerSingleton<InspeccionRepository>(InspeccionRepositoryImpl(sl()));
@@ -167,6 +175,7 @@ Future<void> initializeDependencies() async {
 
   sl.registerSingleton<UpdateCategoriaUseCase>(UpdateCategoriaUseCase(sl()));
   sl.registerSingleton<UpdateCategoriaItemUseCase>(UpdateCategoriaItemUseCase(sl()));
+  sl.registerSingleton<UpdateDataSourcePersistenceUseCase>(UpdateDataSourcePersistenceUseCase(sl()));
   sl.registerSingleton<UpdateInspeccionTipoUseCase>(UpdateInspeccionTipoUseCase(sl()));
 
   // BLoCs
@@ -176,6 +185,8 @@ Future<void> initializeDependencies() async {
 
   sl.registerFactory<RemoteCategoriaBloc>(() => RemoteCategoriaBloc(sl(), sl(), sl(), sl()));
   sl.registerFactory<RemoteCategoriaItemBloc>(() => RemoteCategoriaItemBloc(sl(), sl(), sl(), sl(), sl()));
+
+  sl.registerFactory<RemoteDataSourcePersistenceBloc>(() =>  RemoteDataSourcePersistenceBloc(sl()));
 
   sl.registerFactory<RemoteInspeccionBloc>(() => RemoteInspeccionBloc(sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory<RemoteInspeccionCategoriaBloc>(() => RemoteInspeccionCategoriaBloc(sl(), sl()));
