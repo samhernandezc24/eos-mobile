@@ -36,10 +36,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_fi
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
-import 'package:eos_mobile/ui/common/controls/app_image.dart';
 
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
@@ -51,15 +48,14 @@ part '../../widgets/inspeccion/checklist/_checklist_tile.dart';
 part '../../widgets/inspeccion/create/_create_form.dart';
 part '../../widgets/inspeccion/create/_search_input.dart';
 part '../../widgets/inspeccion/filter/_filter_inspeccion.dart';
-part '../../widgets/inspeccion/list/_list_card.dart';
-part '../../widgets/inspeccion/list/_result_card.dart';
+part '../../widgets/inspeccion/list/_results_list.dart';
+part '../../widgets/inspeccion/list/_result_tile.dart';
 part '../../widgets/inspeccion/list/_search_input.dart';
 part '../../widgets/inspeccion/photo/_photo_grid.dart';
 part '../../widgets/inspeccion/photo/_photo_tile.dart';
 part '../../widgets/unidad/create/_create_form.dart';
 
-/// El usuario puede utilizar esta página para buscar en el servidor EOS una inspección
-/// por folio, número económico o locación.
+/// El usuario puede utilizar esta página para buscar en el servidor EOS una inspección.
 ///
 /// Los resultados aparecerán como cards, sobre las que el usuario puede hacer clic para obtener más información
 /// o realizar operaciones como evaluación de inspección.
@@ -72,176 +68,197 @@ class InspeccionListPage extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _InspeccionListPageState extends State<InspeccionListPage> with GetItStateMixin {
   // CONTROLLERS
-  late final TextEditingController _txtSearchController;
-  late final TextEditingController _txtDateDesdeController;
-  late final TextEditingController _txtDateHastaController;
+  late final TextEditingController _searchController;
 
-  // PROPERTIES
-  bool isLoading = false;
-  int searchResults = 0;
+  List<InspeccionDataSourceEntity> lstRows = [];
 
-  // SEARCH
-  String? _selectedSortOption;
-
-  // DATES FILTER
-
-  // FILTERS
-  List<UnidadTipo> lstUnidadesTipos               = <UnidadTipo>[];
-  List<InspeccionEstatus> lstInspeccionesEstatus  = <InspeccionEstatus>[];
-  List<Usuario> lstUsuarios                       = <Usuario>[];
-
-  List<Map<String, dynamic>> lstHasRequerimiento  = [{'value': true, 'name': 'Con requerimiento'}, {'value': false, 'name': 'Sin requerimiento'}];
-
-  // SEARCH FILTERS
-  List<SearchFilter> searchFilters = <SearchFilter>[];
-
-  // DATE OPTIONS
-  List<DateOption> dateOptions = <DateOption>[
-    const DateOption(label: 'Fecha programada', field: 'FechaProgramada'),
-    const DateOption(label: 'Fecha de evaluación', field: 'FechaEvaluacion'),
-    const DateOption(label: 'Fecha de creación', field: 'CreatedFecha'),
-    const DateOption(label: 'Fecha de actualización', field: 'UpdatedFecha'),
-  ];
-
-  List<InspeccionDataSourceEntity> lstRows = <InspeccionDataSourceEntity>[];
-
-  // STATE
   @override
   void initState() {
     super.initState();
-
-    _txtSearchController    = TextEditingController();
-    _txtDateDesdeController = TextEditingController();
-    _txtDateHastaController = TextEditingController();
+    _searchController = TextEditingController();
 
     _buildDataSource();
   }
 
   @override
   void dispose() {
-    _txtSearchController.dispose();
-    _txtDateDesdeController.dispose();
-    _txtDateHastaController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
   // EVENTS
-  void _handleCreatePressed(BuildContext context) {
-    Navigator.push<void>(
-      context,
-      PageRouteBuilder<void>(
-        transitionDuration: $styles.times.pageTransition,
-        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-          const Offset begin    = Offset(0, 1);
-          const Offset end      = Offset.zero;
-          const Cubic curve     = Curves.ease;
-
-          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position  : animation.drive<Offset>(tween),
-            child     : _CreateInspeccionForm(buildDataSourceCallback: _buildDataSource),
-          );
-        },
-        fullscreenDialog: true,
-      ),
-    );
+  void _handleSearchSubmitted(String query) {
+    // Actualiza el controlador con el texto ingresado.
+    _searchController.text = query;
+    // Construye el data source.
+    _buildDataSource();
   }
 
-  void _handleSearchFiltersPressed(BuildContext context) {
-    showModalBottomSheet<void>(
-      context : context,
-      builder : (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return SearchFilters(
-              searchFilters : searchFilters,
-              onChange      : (updatedFilters) {
-                setState(() {
-                  searchFilters = updatedFilters;
-                });
-                _buildDataSource();
-              },
-            );
-          },
-        );
-      },
-    );
-  }
-
-  void _handleFiltersPressed(BuildContext context) {
-    Navigator.push<void>(
-      context,
-      PageRouteBuilder<void>(
-        transitionDuration: $styles.times.pageTransition,
-        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-          const Offset begin    = Offset(0, 1);
-          const Offset end      = Offset.zero;
-          const Cubic curve     = Curves.ease;
-
-          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position  : animation.drive<Offset>(tween),
-            child     : _FilterInspeccion(
-              dateOptions         : dateOptions,
-              unidadesTipos       : lstUnidadesTipos,
-              inspeccionesEstatus : lstInspeccionesEstatus,
-              usuarios            : lstUsuarios,
-              hasRequerimiento    : lstHasRequerimiento,
-            ),
-          );
-        },
-        fullscreenDialog: true,
-      ),
-    );
-  }
-
-  void _handleSortPressed(BuildContext context) {
-    showModalBottomSheet<void>(
-      context : context,
-      builder : (BuildContext context) {
-        // Manejamos el estado local del modal.
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return Column(
-              mainAxisSize  : MainAxisSize.min,
-              children      : <Widget>[
-                Padding(
-                  padding : EdgeInsets.all($styles.insets.sm),
-                  child   : Center(
-                    child : Text('Ordenar por', style: $styles.textStyles.h3.copyWith(fontSize: 18)),
+  void _handleDetailsPressed(BuildContext context, InspeccionDataSourceEntity objInspeccion) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text('Folio inspección:', style: $styles.textStyles.bodySmall),
+            Text(objInspeccion.folio, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600, height: 1.3)),
+            Text('Requerimiento:', style: $styles.textStyles.bodySmall),
+            Text(objInspeccion.hasRequerimiento == false ? 'SIN REQUERIMIENTO' : objInspeccion.requerimientoFolio ?? '', style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600, height: 1.3)),
+            Divider(color: Theme.of(context).dividerColor, thickness: 1.5),
+          ],
+        ),
+        titlePadding: EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, 0),
+        content: SizedBox(
+          height: 200,
+          width: 400,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                RichText(
+                  text: TextSpan(
+                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                    children  : <InlineSpan>[
+                      const TextSpan(text: 'Número económico'),
+                      TextSpan(text: ': ${objInspeccion.unidadNumeroEconomico}'),
+                    ],
                   ),
                 ),
-                RadioListTile<String>(
-                  value       : 'folio',
-                  groupValue  : _selectedSortOption,
-                  onChanged   : (String? value) => setState(() => _selectedSortOption = value),
-                  title       : const Text('Folio'),
+                Gap($styles.insets.xxs),
+                RichText(
+                  text: TextSpan(
+                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                    children  : <InlineSpan>[
+                      const TextSpan(text: 'Tipo de unidad'),
+                      TextSpan(text: ': ${objInspeccion.unidadTipoName}'),
+                    ],
+                  ),
                 ),
-                RadioListTile<String>(
-                  value       : 'inspeccionEstatusName',
-                  groupValue  : _selectedSortOption,
-                  onChanged   : (String? value) => setState(() => _selectedSortOption = value),
-                  title       : const Text('Estatus'),
+                Gap($styles.insets.xxs),
+                RichText(
+                  text: TextSpan(
+                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                    children  : <InlineSpan>[
+                      const TextSpan(text: 'Tipo de inspección'),
+                      TextSpan(text: ': ${objInspeccion.inspeccionTipoName}'),
+                    ],
+                  ),
                 ),
-                RadioListTile<String>(
-                  value       : 'fechaProgramada',
-                  groupValue  : _selectedSortOption,
-                  onChanged   : (String? value) => setState(() => _selectedSortOption = value),
-                  title       : const Text('Fecha programada'),
+                Gap($styles.insets.xxs),
+                RichText(
+                  text: TextSpan(
+                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                    children  : <InlineSpan>[
+                      const TextSpan(text: 'Marca'),
+                      TextSpan(text: ': ${objInspeccion.unidadMarcaName}'),
+                    ],
+                  ),
                 ),
-                RadioListTile<String>(
-                  value       : 'createdFechaNatural',
-                  groupValue  : _selectedSortOption,
-                  onChanged   : (String? value) => setState(() => _selectedSortOption = value),
-                  title       : const Text('Fecha de creación'),
+                Gap($styles.insets.xxs),
+                RichText(
+                  text: TextSpan(
+                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                    children  : <InlineSpan>[
+                      const TextSpan(text: 'Modelo'),
+                      TextSpan(text: ': ${objInspeccion.modelo}'),
+                    ],
+                  ),
+                ),
+                Gap($styles.insets.xxs),
+                RichText(
+                  text: TextSpan(
+                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                    children  : <InlineSpan>[
+                      const TextSpan(text: 'Número de serie'),
+                      TextSpan(text: ': ${objInspeccion.numeroSerie}'),
+                    ],
+                  ),
+                ),
+                Gap($styles.insets.xxs),
+                RichText(
+                  text: TextSpan(
+                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                    children  : <InlineSpan>[
+                      const TextSpan(text: 'Fecha programada'),
+                      TextSpan(text: ': ${objInspeccion.fechaProgramadaNatural}'),
+                    ],
+                  ),
+                ),
+                Gap($styles.insets.xxs),
+                RichText(
+                  text: TextSpan(
+                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                    children  : <InlineSpan>[
+                      const TextSpan(text: 'Estatus'),
+                      TextSpan(text: ': ${objInspeccion.inspeccionEstatusName}'),
+                    ],
+                  ),
+                ),
+                Gap($styles.insets.xxs),
+                RichText(
+                  text: TextSpan(
+                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                    children  : <InlineSpan>[
+                      const TextSpan(text: 'Base'),
+                      TextSpan(text: ': ${objInspeccion.baseName}'),
+                    ],
+                  ),
+                ),
+                Gap($styles.insets.xxs),
+                RichText(
+                  text: TextSpan(
+                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                    children  : <InlineSpan>[
+                      const TextSpan(text: 'Locación'),
+                      TextSpan(text: ': ${objInspeccion.locacion}'),
+                    ],
+                  ),
+                ),
+                Gap($styles.insets.xxs),
+                RichText(
+                  text: TextSpan(
+                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                    children  : <InlineSpan>[
+                      const TextSpan(text: 'Capacidad'),
+                      TextSpan(text: ': ${objInspeccion.capacidad} ${objInspeccion.unidadCapacidadMedidaName}'),
+                    ],
+                  ),
+                ),
+                Gap($styles.insets.xxs),
+                RichText(
+                  text: TextSpan(
+                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                    children  : <InlineSpan>[
+                      const TextSpan(text: 'Fecha de creación'),
+                      TextSpan(text: ': ${objInspeccion.createdFechaNatural}'),
+                    ],
+                  ),
+                ),
+                Gap($styles.insets.xxs),
+                RichText(
+                  text: TextSpan(
+                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3),
+                    children  : <InlineSpan>[
+                      const TextSpan(text: 'Creado por'),
+                      TextSpan(text: ': ${objInspeccion.createdUserName}'),
+                    ],
+                  ),
                 ),
               ],
-            );
-          },
-        );
-      },
+            ),
+          ),
+        ),
+        contentPadding: EdgeInsets.fromLTRB($styles.insets.sm, 0, $styles.insets.sm, 0),
+        actions: <Widget>[
+          TextButton(
+            onPressed : () => Navigator.of(context).pop($strings.closeButtonText),
+            child     : Text($strings.closeButtonText, style: $styles.textStyles.button),
+          ),
+        ],
+        actionsPadding: EdgeInsets.fromLTRB(0, 0, $styles.insets.sm, $styles.insets.xs),
+      ),
     );
   }
 
@@ -282,7 +299,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   Future<void> _showServerFailedDialog(BuildContext context, String? errorMessage) async {
     return showDialog<void>(
       context : context,
-      builder: (BuildContext context)  => ServerFailedDialog(
+      builder : (BuildContext context)  => ServerFailedDialog(
         errorMessage: errorMessage ?? 'Se produjo un error inesperado.',
       ),
     );
@@ -318,28 +335,10 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   }
 
   // METHODS
-  void _renderFilters(DataSourcePersistence? dataSourcePersistence) {
-    // RECUPERACION DE DROPDOWN SIN MULTIFILTROS
-    final List<Filter> arrFilters = dataSourcePersistence == null ? [] : dataSourcePersistence.filters ?? [];
-
-    // DataSourceUtils.renderFilter(arrFilters, lstUnidadesTipos, 'IdUnidadTipo', 'IdUnidadTipo');
-    // DataSourceUtils.renderFilter(arrFilters, lstInspeccionesEstatus, 'IdInspeccionEstatus', 'IdInspeccionEstatus');
-    // DataSourceUtils.renderFilter(arrFilters, lstUsuarios, 'IdCreatedUser', 'IdCreatedUser');
-    // DataSourceUtils.renderFilter(arrFilters, lstUsuarios, 'IdUpdatedUser', 'IdUpdatedUser');
-
-    // RECUPERACION DE FECHAS
-    final DateTime? dateFrom  = DataSourceUtils.renderDate(dataSourcePersistence, 'dateFrom');
-    final DateTime? dateTo    = DataSourceUtils.renderDate(dataSourcePersistence, 'dateTo');
-
-    DataSourceUtils.renderDateSelected(dataSourcePersistence);
-    _txtDateDesdeController.text = dateFrom != null   ? DateFormat('dd/MM/yyyy').format(dateFrom)   : '';
-    _txtDateHastaController.text = dateTo   != null   ? DateFormat('dd/MM/yyyy').format(dateTo)     : '';
-  }
-
   Future<void> _buildDataSource() async {
-    final DataSource varArgs = DataSource(
-      search          : Globals.isValidValue(_txtSearchController.text) ? _txtSearchController.text : '',
-      searchFilters   : DataSourceUtils.searchFilters(searchFilters),
+    final varArgs = DataSource(
+      search          : Globals.isValidValue(_searchController.text) ? _searchController.text : '',
+      searchFilters   : const [],
       filters         : const [],
       filtersMultiple : const [],
       dateFrom        : '',
@@ -350,94 +349,57 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
       sort            : const Sort(column: '', direction: ''),
     );
 
-    context.read<RemoteInspeccionBloc>().add(InitializeInspeccion(varArgs));
-  }
-
-  void cleanFilters() {}
-
-  List<SearchFilter> _getSearchFilters() {
-    final List<SearchFilter> arrSearchFilters = [
-      const SearchFilter(field: 'Folio',                  isChecked: true,    title: 'Folio'                  ),
-      const SearchFilter(field: 'RequerimientoFolio',     isChecked: false,   title: 'Requerimiento / folio'  ),
-      const SearchFilter(field: 'UnidadNumeroEconomico',  isChecked: true,    title: 'No. económico'          ),
-      const SearchFilter(field: 'Locacion',               isChecked: false,   title: 'Lugar de inspección'    ),
-    ];
-
-    return arrSearchFilters;
-  }
-
-  void _handleSearchSubmitted(String query) {
-    _txtSearchController.text = query;
-    _buildDataSource();
-  }
-
-  void _updateResults({bool showLoading = true}) {
-    if (showLoading) {
-      isLoading = true;
-    }
-
-    final DataSourcePersistence varArgs = DataSourcePersistence(
-      table             : 'Inspecciones',
-      searchFilters     : searchFilters,
-      columns           : const [],
-      sort              : const Sort(column: '', direction: ''),
-      displayedColumns  : const [],
-      filters           : const [],
-      filtersMultiple   : const [],
-      dateOption        : '',
-      dateFrom          : '',
-      dateTo            : '',
-    );
-
-    print(varArgs);
+    context.read<RemoteInspeccionBloc>().add(FetchInspeccionData(varArgs));
   }
 
   @override
   Widget build(BuildContext context) {
     final Widget content = GestureDetector(
-      onTap : FocusManager.instance.primaryFocus?.unfocus,
-      child : Column(
-        crossAxisAlignment  : CrossAxisAlignment.stretch,
-        children            : <Widget>[
+      onTap: FocusManager.instance.primaryFocus?.unfocus,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
           Container(
+            color   : Theme.of(context).colorScheme.background,
             padding : EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, 0),
-            child   : _SearchInput(controller: _txtSearchController, onSubmit: _handleSearchSubmitted, onSearchFilterPressed: _handleSearchFiltersPressed),
+            child   : _SearchInputInspeccion(controller: _searchController, onSubmit: _handleSearchSubmitted),
           ),
           Container(
-            padding : EdgeInsets.all($styles.insets.xxs * 1.5),
-            child   : _buildStatusBar(context, searchResults),
+            color   : Theme.of(context).colorScheme.background,
+            padding : EdgeInsets.all($styles.insets.xs * 1.5),
+            child   : _buildStatusBar(context),
           ),
           Expanded(
             child: RefreshIndicator(
-              onRefresh: _buildDataSource,
-              child: BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
+              onRefresh : _buildDataSource,
+              child     : BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
                 listener: (BuildContext context, RemoteInspeccionState state) {
                   // LOADING:
                   if (state is RemoteInspeccionCanceling) {
                     _showProgressDialog(context);
                   }
 
-                  // ERRORS:
+                  // ERROR:
                   if (state is RemoteInspeccionServerFailedMessageCancel) {
                     Navigator.of(context).pop();
                     _showServerFailedDialog(context, state.errorMessage);
-                    _buildDataSource();
+                    _buildDataSource(); // Actualizar listado
                   }
 
                   if (state is RemoteInspeccionServerFailureCancel) {
                     Navigator.of(context).pop();
                     _showServerFailedDialog(context, state.failure?.errorMessage);
-                    _buildDataSource();
+                    _buildDataSource(); // Actualizar listado
                   }
 
                   // SUCCESS:
-                  if (state is RemoteInspeccionListLoaded) {
+                  if (state is RemoteInspeccionFetchDataSuccess) {
                     setState(() {
-                      searchResults = state.objResponseDataSource?.count ?? 0;
+                      lstRows = state.objResponseDataSource?.rows ?? [];
                     });
                   }
 
-                  if (state is RemoteInspeccionCanceled) {
+                  if (state is RemoteInspeccionCanceledSuccess) {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
 
@@ -452,96 +414,44 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                       ),
                     );
 
-                    _buildDataSource();
+                    _buildDataSource(); // Actualizar listado
                   }
                 },
                 builder: (BuildContext context, RemoteInspeccionState state) {
-                  // LOADING
-                  if (state is RemoteInspeccionLoading) {
-                    return const Center(child: AppLoadingIndicator());
+                  // LOADING:
+                  if (state is RemoteInspeccionFetchDataLoading) {
+                    return const Center(child: AppLoadingIndicator(width: 30, height: 30));
                   }
 
-                  // ERRORS
+                  // ERROR:
                   if (state is RemoteInspeccionServerFailedMessageIndex) {
-                      return ErrorInfoContainer(
-                      onPressed     : () => _buildDataSource(),
-                      errorMessage  : state.errorMessage,
-                    );
+                    return ErrorInfoContainer(onPressed: _buildDataSource, errorMessage: state.errorMessage);
                   }
 
                   if (state is RemoteInspeccionServerFailedMessageDataSource) {
-                    return ErrorInfoContainer(
-                      onPressed     : () => _buildDataSource(),
-                      errorMessage  : state.errorMessage,
-                    );
+                    return ErrorInfoContainer(onPressed: _buildDataSource, errorMessage: state.errorMessage);
                   }
 
                   if (state is RemoteInspeccionServerFailureIndex) {
-                    return ErrorInfoContainer(
-                      onPressed     : () => _buildDataSource(),
-                      errorMessage  : state.failure?.errorMessage,
-                    );
+                    return ErrorInfoContainer(onPressed: _buildDataSource, errorMessage: state.failure?.errorMessage);
                   }
 
                   if (state is RemoteInspeccionServerFailureDataSource) {
-                    return ErrorInfoContainer(
-                      onPressed     : () => _buildDataSource(),
-                      errorMessage  : state.failure?.errorMessage,
-                    );
+                    return ErrorInfoContainer(onPressed: _buildDataSource, errorMessage: state.failure?.errorMessage);
                   }
 
-                  // SUCCESS
-                  if (state is RemoteInspeccionListLoaded) {
-                    // FRAGMENTO MODIFICABLE - LISTAS
-                    lstInspeccionesEstatus  = state.objResponseIndex?.inspeccionesEstatus  ?? [];
-                    lstUnidadesTipos        = state.objResponseIndex?.unidadesTipos        ?? [];
-                    lstUsuarios             = state.objResponseIndex?.usuarios             ?? [];
-
-                    final DataSourcePersistence? dataSourcePersistence = state.objResponseIndex?.dataSourcePersistence;
-
-                    searchFilters = dataSourcePersistence == null ? _getSearchFilters() : dataSourcePersistence.searchFilters ?? [];
-
-                    // FRAGMENTO NO MODIFICABLE - FILTROS
-                    _renderFilters(dataSourcePersistence);
-
-                    // _updateResults();
-
-                    // FRAGMENTO NO MODIFICABLE - RENDERIZACION
-                    lstRows       = state.objResponseDataSource?.rows ?? [];
+                  // SUCCESS:
+                  if (state is RemoteInspeccionFetchDataSuccess) {
                     if (lstRows.isNotEmpty) {
-                      return _ListCard(
-                        inspecciones            : lstRows,
-                        buildDataSourceCallback : _buildDataSource,
-                        onCancelPressed         : (InspeccionIdReqEntity objData, InspeccionDataSourceEntity objInspeccion) => _handleCancelPressed(context, objData, objInspeccion),
+                      return _ResultsListInspeccion(
+                        lstRows           : lstRows,
+                        onDetailsPressed  : (objInspeccion) =>
+                          _handleDetailsPressed(context, objInspeccion),
+                        onCancelPressed   : (objData, objInspeccion) =>
+                            _handleCancelPressed(context, objData, objInspeccion),
                       );
                     } else {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(Icons.info, color: Theme.of(context).colorScheme.secondary, size: 64),
-
-                            Gap($styles.insets.sm),
-
-                            Padding(
-                              padding : EdgeInsets.symmetric(horizontal: $styles.insets.lg * 1.5),
-                              child   : Text(
-                                $strings.inspeccionEmptyListTitle,
-                                style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-
-                            Padding(
-                              padding : EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
-                              child   : const Text(
-                                'Lo sentimos, pero no hemos encontrado ningún resultado que coincida con tu búsqueda.',
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
+                      return _buildNoDataFound(context);
                     }
                   }
                   return const SizedBox.shrink();
@@ -557,57 +467,63 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
       appBar: AppBar(title: Text($strings.inspeccionListAppBarTitle, style: $styles.textStyles.h3)),
       body: Stack(
         children: <Widget>[
-          Positioned.fill(child: ColoredBox(color: Theme.of(context).colorScheme.background, child: content)),
+          Positioned.fill(
+            child: ColoredBox(
+              color : Theme.of(context).colorScheme.background.withOpacity(0.4),
+              child : content,
+            ),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed : () => _handleCreatePressed(context),
+        onPressed : () {},
         tooltip   : 'Nueva inspección',
         child     : const Icon(Icons.add),
       ),
     );
   }
 
-  Widget _buildStatusBar(BuildContext context, int searchResults) {
+  Widget _buildStatusBar(BuildContext context) {
+    final TextStyle statusStyle = $styles.textStyles.body.copyWith(color: Theme.of(context).colorScheme.onBackground);
     return MergeSemantics(
-      child : StaticTextScale(
-        child : Row(
-          mainAxisAlignment : MainAxisAlignment.spaceBetween,
-          children          : <Widget>[
-            Row(
-              children: <Widget>[
-                Gap($styles.insets.sm),
-
-                Text(
-                  '$searchResults ${searchResults == 1 ? 'resultado' : 'resultados'}',
-                  textHeightBehavior  : const TextHeightBehavior(applyHeightToFirstAscent: false),
-                  style               : $styles.textStyles.body,
-                ),
-              ],
+      child: StaticTextScale(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              lstRows.isEmpty ? $strings.inspeccionSearchLabelNotFound : '${lstRows.length} resultado(s)',
+              textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false),
+              style: statusStyle,
             ),
-
             Row(
               children: <Widget>[
-                IconButton(
-                  onPressed : _buildDataSource,
-                  icon      : const Icon(Icons.refresh),
-                  tooltip   : 'Actualizar lista',
-                ),
-                IconButton(
-                  onPressed : () => _handleFiltersPressed(context),
-                  icon      : const Icon(Icons.filter_list),
-                  tooltip   : 'Filtros',
-                ),
-                IconButton(
-                  onPressed : () => _handleSortPressed(context),
-                  icon      : const Icon(Icons.format_line_spacing),
-                  tooltip   : 'Ordenar',
-                ),
-                Gap($styles.insets.xs),
+                IconButton(onPressed: _buildDataSource, icon: const Icon(Icons.refresh), tooltip: 'Actualizar lista'),
+                IconButton(onPressed: (){}, icon: const Icon(Icons.filter_list), tooltip: 'Filtros'),
+                IconButton(onPressed: (){}, icon: const Icon(Icons.format_line_spacing), tooltip: 'Ordenar'),
               ],
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildNoDataFound(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(Icons.info, color: Theme.of(context).primaryColor, size: 64),
+          Gap($styles.insets.sm),
+          Padding(
+            padding : EdgeInsets.symmetric(horizontal: $styles.insets.lg * 1.5),
+            child   : Text($strings.inspeccionEmptyListTitle, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600)),
+          ),
+          Padding(
+            padding : EdgeInsets.symmetric(horizontal: $styles.insets.lg, vertical: $styles.insets.sm),
+            child   : Text($strings.inspeccionEmptyListMessage, textAlign: TextAlign.center),
+          ),
+        ],
       ),
     );
   }

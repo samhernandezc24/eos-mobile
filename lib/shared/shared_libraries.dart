@@ -51,6 +51,7 @@ export 'package:eos_mobile/main.dart';
 export 'package:eos_mobile/styles/app_styles.dart';
 
 // COMMON ELEMENTS
+export 'package:eos_mobile/ui/common/controls/app_image.dart';
 export 'package:eos_mobile/ui/common/controls/app_loading_indicator.dart';
 export 'package:eos_mobile/ui/common/controls/buttons.dart';
 export 'package:eos_mobile/ui/common/controls/circle_buttons.dart';
@@ -90,6 +91,9 @@ export 'package:flutter_bloc/flutter_bloc.dart';
 // FLUTTER SECURE STORAGE
 export 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+// FLUTTER STAGGERED GRID VIEW
+export 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+
 // FLUTTER SVG
 export 'package:flutter_svg/flutter_svg.dart';
 
@@ -102,6 +106,9 @@ export 'package:get_it_mixin/get_it_mixin.dart';
 
 // ROUTING
 export 'package:go_router/go_router.dart';
+
+// IMAGE PICKER
+export 'package:image_picker/image_picker.dart';
 
 // LOGGER
 export 'package:logger/logger.dart';

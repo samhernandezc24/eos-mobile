@@ -8,8 +8,8 @@ sealed class RemoteInspeccionEvent extends Equatable {
 }
 
 /// [IndexInspeccionUseCase], [DataSourceInspeccionUseCase]
-class InitializeInspeccion extends RemoteInspeccionEvent {
-  const InitializeInspeccion(this.objData);
+class FetchInspeccionData extends RemoteInspeccionEvent {
+  const FetchInspeccionData(this.objData);
 
   final DataSource objData;
 

@@ -15,6 +15,7 @@ class AppStrings {
 
   // C
   String cancelButtonText                   = 'Cancelar';
+  String closeButtonText                    = 'Cerrar';
 
   String categoriaAppBarTitle               = 'Configuración de categorías';
   String categoriaBoxDescription            = 'Crea las categorías para agrupar las preguntas de las inspecciones.';
@@ -90,12 +91,14 @@ class AppStrings {
   String inspeccionCreateAppBarTitle        = 'Nueva inspección';
   String inspeccionCreateSuggestion         = 'Es necesario que realice la búsqueda de la unidad a inspeccionar antes de continuar.';
   String inspeccionEmptyListTitle           = 'No se encontraron resultados';
+  String inspeccionEmptyListMessage         = 'Lo sentimos, pero no hemos podido encontrar ningún resultado que coincida con tu búsqueda.';
   String inspeccionIndexListTileTitle       = 'Lista de inspecciones';
   String inspeccionIndexListTileSubtitle    = 'Muestra inspecciones en general.';
   String inspeccionListAppBarTitle          = 'Lista de inspecciones';
   String inspeccionCancelAlertTitle         = '¿Cancelar inspección?';
   String inspeccionCancelAlertContent1      = 'Se cancelará la inspección con folio ';
   String inspeccionCancelAlertContent2      = '¿Estás seguro de querer realizar esa acción?';
+  String inspeccionSearchLabelNotFound      = 'Sin resultados';
 
   String inspeccionTipoAppBarTitle          = 'Configuración de inspecciones';
   String inspeccionTipoBoxDescription       = 'Crea los tipos de inspección para organizar y gestionar tus inspecciones de manera más eficiente.';

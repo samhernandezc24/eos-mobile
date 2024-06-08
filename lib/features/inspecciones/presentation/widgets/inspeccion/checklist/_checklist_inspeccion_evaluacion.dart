@@ -4,13 +4,11 @@ class _ChecklistInspeccionEvaluacion extends StatefulWidget {
   const _ChecklistInspeccionEvaluacion({
     required this.objData,
     required this.objInspeccion,
-    required this.buildDataSourceCallback,
     Key? key,
   }) : super(key: key);
 
   final InspeccionIdReqEntity objData;
   final InspeccionDataSourceEntity objInspeccion;
-  final VoidCallback buildDataSourceCallback;
 
   @override
   State<_ChecklistInspeccionEvaluacion> createState() => _ChecklistInspeccionEvaluacionState();
@@ -61,11 +59,7 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
               textColor : Theme.of(context).colorScheme.error,
               onTap     : () {
                 Navigator.of(context).pop();        // Cerrar modal bottom
-                // Ejecutar el callback una vez finalizada la acción pop.
-                WidgetsBinding.instance.addPostFrameCallback((_) {
                   Navigator.of(context).pop();      // Cerrar página
-                  widget.buildDataSourceCallback(); // Ejecutar callback
-                });
               },
             ),
             ListTile(

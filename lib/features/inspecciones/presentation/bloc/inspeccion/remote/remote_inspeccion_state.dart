@@ -11,11 +11,11 @@ class RemoteInspeccionState extends Equatable {
 class RemoteInspeccionInitial extends RemoteInspeccionState {}
 
 /// LOADING
-class RemoteInspeccionLoading extends RemoteInspeccionState {}
+class RemoteInspeccionFetchDataLoading extends RemoteInspeccionState {}
 
 /// INSPECCION LOADED (INDEX, DATASOURCE)
-class RemoteInspeccionListLoaded extends RemoteInspeccionState {
-  const RemoteInspeccionListLoaded(this.objResponseIndex, this.objResponseDataSource);
+class RemoteInspeccionFetchDataSuccess extends RemoteInspeccionState {
+  const RemoteInspeccionFetchDataSuccess(this.objResponseIndex, this.objResponseDataSource);
 
   final InspeccionIndexEntity? objResponseIndex;
   final InspeccionDataSourceResEntity? objResponseDataSource;
@@ -48,11 +48,11 @@ class RemoteInspeccionStored extends RemoteInspeccionState {
   List<Object?> get props => [ objResponse ];
 }
 
-/// STORE
+/// CANCEL
 class RemoteInspeccionCanceling extends RemoteInspeccionState {}
 
-class RemoteInspeccionCanceled extends RemoteInspeccionState {
-  const RemoteInspeccionCanceled(this.objResponse);
+class RemoteInspeccionCanceledSuccess extends RemoteInspeccionState {
+  const RemoteInspeccionCanceledSuccess(this.objResponse);
 
   final ServerResponse? objResponse;
 

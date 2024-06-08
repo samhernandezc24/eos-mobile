@@ -23,7 +23,7 @@ class RemoteInspeccionBloc extends Bloc<RemoteInspeccionEvent, RemoteInspeccionS
     this._storeInspeccionUseCase,
     this._cancelInspeccionUseCase,
   ) : super(RemoteInspeccionInitial()) {
-    on<InitializeInspeccion>(onInitializeInspeccion);
+    on<FetchInspeccionData>(onFetchInspeccionData);
     on<FetchInspeccionCreate>(onFetchInspeccionCreate);
     on<StoreInspeccion>(onStoreInspeccion);
     on<CancelInspeccion>(onCancelInspeccion);
@@ -36,14 +36,14 @@ class RemoteInspeccionBloc extends Bloc<RemoteInspeccionEvent, RemoteInspeccionS
   final StoreInspeccionUseCase _storeInspeccionUseCase;
   final CancelInspeccionUseCase _cancelInspeccionUseCase;
 
-  Future<void> onInitializeInspeccion(InitializeInspeccion event, Emitter<RemoteInspeccionState> emit) async {
-    emit(RemoteInspeccionLoading());
+  Future<void> onFetchInspeccionData(FetchInspeccionData event, Emitter<RemoteInspeccionState> emit) async {
+    emit(RemoteInspeccionFetchDataLoading());
 
     final objDataIndex  = await _indexInspeccionUseCase(params: NoParams());
     final objDataSource = await _dataSourceInspeccionUseCase(params: event.objData);
 
     if (objDataIndex is DataSuccess && objDataSource is DataSuccess) {
-      emit(RemoteInspeccionListLoaded(objDataIndex.data, objDataSource.data));
+      emit(RemoteInspeccionFetchDataSuccess(objDataIndex.data, objDataSource.data));
     } else if (objDataIndex is DataFailedMessage) {
       emit(RemoteInspeccionServerFailedMessageIndex(objDataIndex.errorMessage));
     } else if (objDataSource is DataFailedMessage) {
@@ -99,7 +99,7 @@ class RemoteInspeccionBloc extends Bloc<RemoteInspeccionEvent, RemoteInspeccionS
     final objDataState = await _cancelInspeccionUseCase(params: event.objData);
 
     if (objDataState is DataSuccess) {
-      emit(RemoteInspeccionCanceled(objDataState.data));
+      emit(RemoteInspeccionCanceledSuccess(objDataState.data));
     }
 
     if (objDataState is DataFailedMessage) {
