@@ -1,5 +1,5 @@
-import 'package:eos_mobile/core/components/data_source_persistence/domain/repositories/data_source_persistence_repository.dart';
 import 'package:eos_mobile/core/data/data_source_persistence.dart';
+import 'package:eos_mobile/features/inspecciones/domain/repositories/data_source_persistence_repository.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 

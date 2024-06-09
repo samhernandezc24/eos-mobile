@@ -1,5 +1,4 @@
 import 'package:eos_mobile/config/themes/app_theme.dart';
-import 'package:eos_mobile/core/components/data_source_persistence/presentation/bloc/remote/remote_data_source_persistence_bloc.dart';
 import 'package:eos_mobile/core/di/injection_container.dart';
 import 'package:eos_mobile/core/helpers/auth_token_helper.dart';
 import 'package:eos_mobile/core/helpers/image_helper.dart';
@@ -7,6 +6,7 @@ import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/remote/remote_auth_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria_item/remote/remote_categoria_item_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/data_source_persistence/remote_data_source_persistence_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_categoria/remote/remote_inspeccion_categoria_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_fichero/remote/remote_inspeccion_fichero_bloc.dart';

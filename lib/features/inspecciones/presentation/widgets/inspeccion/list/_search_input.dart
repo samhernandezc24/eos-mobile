@@ -6,10 +6,12 @@ class _SearchInputInspeccion extends StatelessWidget {
     required this.controller,
     required this.onSubmit,
     Key? key,
+    this.onSearchFiltersPressed,
   }) : super(key: key);
 
   final TextEditingController controller;
   final void Function(String) onSubmit;
+  final void Function()? onSearchFiltersPressed;
 
   // EVENTS
   void _handleClearTextPressed() {
@@ -18,7 +20,7 @@ class _SearchInputInspeccion extends StatelessWidget {
   }
 
   void _handleSearchFiltersPressed() {
-    print('Filtros de búsqueda');
+    if (onSearchFiltersPressed != null) { return onSearchFiltersPressed!(); }
   }
 
   @override

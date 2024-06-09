@@ -29,6 +29,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_fich
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_store_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/data_source_persistence/remote_data_source_persistence_bloc.dart';
 
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_categoria/remote/remote_inspeccion_categoria_bloc.dart';
@@ -70,6 +71,9 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   // CONTROLLERS
   late final TextEditingController _searchController;
 
+  // PROPERTIES
+  bool _isLoading = false;
+
   // SEARCH FILTERS
   List<SearchFilter> searchFilters = [];
 
@@ -103,7 +107,14 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
       builder : (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
-            return Container();
+            return SearchFilters(
+              searchFilters : searchFilters,
+              onChange      : (value) {
+                setState(() => searchFilters = value);
+                _updateResults(showLoading: false);
+                _buildDataSource();
+              },
+            );
           },
         );
       },
@@ -253,7 +264,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   }
 
   Future<void> _updateResults({bool showLoading = true}) async {
-    if (showLoading) { }
+    if (showLoading) { setState(() => _isLoading = true); }
 
     final varArgs = DataSourcePersistence(
       table             : 'Inspecciones',
@@ -268,7 +279,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
       dateTo            : '',
     );
 
-    print(varArgs);
+    BlocProvider.of<RemoteDataSourcePersistenceBloc>(context).add(UpdateDataSourcePersistence(varArgs));
   }
 
   List<SearchFilter> _getSearchFilters() {
@@ -292,7 +303,11 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
           Container(
             color   : Theme.of(context).colorScheme.background,
             padding : EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, 0),
-            child   : _SearchInputInspeccion(controller: _searchController, onSubmit: _handleSearchSubmitted),
+            child   : _SearchInputInspeccion(
+              controller              : _searchController,
+              onSubmit                : _handleSearchSubmitted,
+              onSearchFiltersPressed  : () => _handleSearchFiltersPressed(context),
+            ),
           ),
           Container(
             color   : Theme.of(context).colorScheme.background,

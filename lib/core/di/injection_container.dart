@@ -1,8 +1,3 @@
-import 'package:eos_mobile/core/components/data_source_persistence/data/datasources/remote/data_source_persistence_remote_api_service.dart';
-import 'package:eos_mobile/core/components/data_source_persistence/data/repositories/data_source_persistence_repository_impl.dart';
-import 'package:eos_mobile/core/components/data_source_persistence/domain/repositories/data_source_persistence_repository.dart';
-import 'package:eos_mobile/core/components/data_source_persistence/domain/usecases/update_data_source_persistence_usecase.dart';
-import 'package:eos_mobile/core/components/data_source_persistence/presentation/bloc/remote/remote_data_source_persistence_bloc.dart';
 import 'package:eos_mobile/core/helpers/auth_token_helper.dart';
 import 'package:eos_mobile/core/helpers/image_helper.dart';
 
@@ -24,6 +19,7 @@ import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/remote/remote_auth_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/categoria/categoria_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/categoria_item/categoria_item_remote_api_service.dart';
+import 'package:eos_mobile/features/inspecciones/data/datasources/remote/data_source_persistence/data_source_persistence_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion/inspeccion_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion_categoria/inspeccion_categoria_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion_fichero/inspeccion_fichero_remote_api_service.dart';
@@ -31,6 +27,7 @@ import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspecc
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/unidad/unidad_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/repositories/categoria_item_repository_impl.dart';
 import 'package:eos_mobile/features/inspecciones/data/repositories/categoria_repository_impl.dart';
+import 'package:eos_mobile/features/inspecciones/data/repositories/data_source_persistence_repository_impl.dart';
 import 'package:eos_mobile/features/inspecciones/data/repositories/inspeccion_categoria_repository_impl.dart';
 import 'package:eos_mobile/features/inspecciones/data/repositories/inspeccion_fichero_repository_impl.dart';
 import 'package:eos_mobile/features/inspecciones/data/repositories/inspeccion_repository_impl.dart';
@@ -38,6 +35,7 @@ import 'package:eos_mobile/features/inspecciones/data/repositories/inspeccion_ti
 import 'package:eos_mobile/features/inspecciones/data/repositories/unidad_repository_impl.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/categoria_item_repository.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/categoria_repository.dart';
+import 'package:eos_mobile/features/inspecciones/domain/repositories/data_source_persistence_repository.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_categoria_repository.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_fichero_repository.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_repository.dart';
@@ -52,6 +50,7 @@ import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/store_categoria_item_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/store_duplicate_categoria_item_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/categoria_item/update_categoria_item_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/data_source_persistence/update_data_source_persistence_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/cancel_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/create_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/data_source_inspeccion_usecase.dart';
@@ -72,6 +71,7 @@ import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/list_uni
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/store_unidad_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria/remote/remote_categoria_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/categoria_item/remote/remote_categoria_item_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/data_source_persistence/remote_data_source_persistence_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/remote/remote_inspeccion_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_categoria/remote/remote_inspeccion_categoria_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_fichero/remote/remote_inspeccion_fichero_bloc.dart';
