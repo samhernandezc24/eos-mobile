@@ -11,11 +11,11 @@ import 'package:eos_mobile/core/data/catalogos/unidad_tipo.dart';
 import 'package:eos_mobile/core/data/catalogos/usuario.dart';
 import 'package:eos_mobile/core/data/data_source.dart';
 import 'package:eos_mobile/core/data/data_source_persistence.dart';
-import 'package:eos_mobile/core/data/date_option.dart';
 import 'package:eos_mobile/core/data/filter.dart';
 import 'package:eos_mobile/core/data/inspeccion/categoria.dart';
 import 'package:eos_mobile/core/data/inspeccion/categoria_item.dart';
 import 'package:eos_mobile/core/data/inspeccion/inspeccion.dart';
+import 'package:eos_mobile/core/data/inspeccion/requerimiento.dart';
 import 'package:eos_mobile/core/data/search_filter.dart';
 import 'package:eos_mobile/core/data/sort.dart';
 
@@ -37,6 +37,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_fi
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/shimmer_loading.dart';
 
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
@@ -48,7 +49,7 @@ part '../../widgets/inspeccion/checklist/_checklist_inspeccion_signature.dart';
 part '../../widgets/inspeccion/checklist/_checklist_tile.dart';
 part '../../widgets/inspeccion/create/_create_form.dart';
 part '../../widgets/inspeccion/create/_search_input.dart';
-part '../../widgets/inspeccion/filter/_filter_inspeccion.dart';
+part '../../widgets/inspeccion/filter/_filter_data.dart';
 part '../../widgets/inspeccion/list/_results_list.dart';
 part '../../widgets/inspeccion/list/_result_tile.dart';
 part '../../widgets/inspeccion/list/_search_input.dart';
@@ -74,8 +75,26 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   // PROPERTIES
   bool _isLoading = false;
 
+  List<Filter> sltFilter = [];
+
+  // DATES FILTER
+
+  // FILTERS
+  List<UnidadTipo> lstUnidadesTipos                 = [];
+  List<InspeccionEstatus> lstInspeccionesEstatus    = [];
+  List<Usuario> lstUsuarios                         = [];
+  List<Requerimiento> lstHasRequerimiento           = [
+    const Requerimiento(value: true, name: 'Con requerimiento'),
+    const Requerimiento(value: false, name: 'Sin requerimiento'),
+  ];
+
+
   // SEARCH FILTERS
   List<SearchFilter> searchFilters = [];
+
+  // SORT OPTIONS
+  Sort? selectedOption;
+  List<Sort> sortOptions = [];
 
   List<InspeccionDataSourceEntity> lstRows = [];
 
@@ -84,7 +103,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     super.initState();
     _searchController = TextEditingController();
 
-    _buildDataSource();
+    _initialization();
   }
 
   @override
@@ -118,6 +137,52 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
           },
         );
       },
+    );
+  }
+
+  void _handleSortPressed(BuildContext context) {
+    showModalBottomSheet<void>(
+      context : context,
+      builder : (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return SortList(
+              sortOptions   : sortOptions,
+              selectedSort  : selectedOption,
+              onChange      : (value) {
+                setState(() => selectedOption = value);
+                _updateResults(showLoading: false);
+                _buildDataSource();
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _handleFiltersPressed() {
+    Navigator.push<void>(
+      context,
+      PageRouteBuilder<void>(
+        transitionDuration: $styles.times.pageTransition,
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation)
+            => _FilterDataInspeccion(
+              lstUnidadesTipos        : lstUnidadesTipos,
+              lstInspeccionesEstatus  : lstInspeccionesEstatus,
+              lstUsuarios             : lstUsuarios,
+              hasRequerimiento        : lstHasRequerimiento,
+            ),
+        transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+          const Offset begin    = Offset(1, 0);
+          const Offset end      = Offset.zero;
+          const Cubic curve     = Curves.ease;
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(position: animation.drive<Offset>(tween), child: child);
+        },
+        fullscreenDialog: true,
+      ),
     );
   }
 
@@ -246,6 +311,10 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   }
 
   // METHODS
+  Future<void> _initialization() async {
+    context.read<RemoteInspeccionBloc>().add(FetchInspeccionIndex());
+  }
+
   Future<void> _buildDataSource() async {
     final varArgs = DataSource(
       search          : Globals.isValidValue(_searchController.text) ? _searchController.text : '',
@@ -257,10 +326,21 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
       dateOptions     : const [],
       length          : 25,
       page            : 1,
-      sort            : const Sort(column: '', direction: ''),
+      sort            : Sort(column: selectedOption?.column, direction: selectedOption?.direction),
     );
 
-    context.read<RemoteInspeccionBloc>().add(FetchInspeccionData(varArgs));
+    context.read<RemoteInspeccionBloc>().add(FetchInspeccionDataSource(varArgs));
+  }
+
+  void _renderFilters(DataSourcePersistence? dataSourcePersistence) {
+    // RECUPERACION DE DROPDOWN SIN MULTIFILTROS
+    final List<Filter> arrFilters = dataSourcePersistence == null ? [] : dataSourcePersistence.filters ?? [];
+
+    // sltFilter[0].value = DataSourceUtils.renderFilter(arrFilters, lstInspeccionesEstatus, 'IdInspeccionEstatus', 'idInspeccionEstatus');
+    // sltFilter[1].value = DataSourceUtils.renderFilter(arrFilters, lstUnidadesTipos, 'IdUnidadTipo', 'idUnidadTipo');
+    // sltFilter[2].value = DataSourceUtils.renderFilter(arrFilters, lstHasRequerimiento, 'HasRequerimiento', 'value');
+    // sltFilter[3].value = DataSourceUtils.renderFilter(arrFilters, lstUsuarios, 'IdCreatedUser', 'id');
+    // sltFilter[4].value = DataSourceUtils.renderFilter(arrFilters, lstUsuarios, 'IdUpdatedUser', 'id');
   }
 
   Future<void> _updateResults({bool showLoading = true}) async {
@@ -270,7 +350,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
       table             : 'Inspecciones',
       searchFilters     : searchFilters,
       columns           : const [],
-      sort              : const Sort(column: '', direction: ''),
+      sort              : Sort(column: selectedOption?.column, direction: selectedOption?.direction),
       displayedColumns  : const [],
       filters           : const [],
       filtersMultiple   : const [],
@@ -291,6 +371,19 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     ];
 
     return arrSearchFilters;
+  }
+
+  List<Sort> _getSortOptions() {
+    final List<Sort> arrSortOptions = [
+      const Sort(column: 'Folio',           direction: 'asc'  ),
+      const Sort(column: 'Folio',           direction: 'desc' ),
+      const Sort(column: 'FechaProgramada', direction: 'desc' ),
+      const Sort(column: 'FechaProgramada', direction: 'asc'  ),
+      const Sort(column: 'CreatedFecha',    direction: 'desc' ),
+      const Sort(column: 'CreatedFecha',    direction: 'asc' ),
+    ];
+
+    return arrSortOptions;
   }
 
   @override
@@ -338,14 +431,33 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                   }
 
                   // SUCCESS:
-                  if (state is RemoteInspeccionFetchDataSuccess) {
+                  if (state is RemoteInspeccionIndexSuccess) {
                     setState(() {
-                      lstRows = state.objResponseDataSource?.rows ?? [];
+                      // FRAGMENTO MODIFICABLE - LISTAS
+                      lstUnidadesTipos        = state.objResponse?.unidadesTipos         ?? [];
+                      lstInspeccionesEstatus  = state.objResponse?.inspeccionesEstatus   ?? [];
+                      lstUsuarios             = state.objResponse?.usuarios              ?? [];
 
                       // FRAGMENTO NO MODIFICABLE - DATOS
-                      final DataSourcePersistence? dataSourcePersistence = state.objResponseIndex?.dataSourcePersistence;
+                      final DataSourcePersistence? dataSourcePersistence = state.objResponse?.dataSourcePersistence;
 
                       searchFilters = dataSourcePersistence == null ? _getSearchFilters() : dataSourcePersistence.searchFilters ?? [];
+                      sortOptions   = _getSortOptions();
+
+                      // FRAGMENTO NO MODIFICABLE - SORT
+                      selectedOption = dataSourcePersistence == null ? const Sort(column: '', direction: 'desc') : dataSourcePersistence.sort;
+
+                      // FRAGMENTO NO MODIFICABLE - FILTROS
+                      _renderFilters(dataSourcePersistence);
+                    });
+
+                    // FRAGMENTO NO MODIFICABLE - RENDERIZACION
+                    _buildDataSource();
+                  }
+
+                  if (state is RemoteInspeccionDataSourceSuccess) {
+                    setState(() {
+                      lstRows = state.objResponse?.rows ?? [];
                     });
                   }
 
@@ -369,8 +481,15 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                 },
                 builder: (BuildContext context, RemoteInspeccionState state) {
                   // LOADING:
-                  if (state is RemoteInspeccionFetchDataLoading) {
+                  if (state is RemoteInspeccionIndexLoading) {
                     return const Center(child: AppLoadingIndicator(width: 30, height: 30));
+                  }
+
+                  if (state is RemoteInspeccionDataSourceLoading) {
+                    return ListView.builder(
+                      itemCount   : 10,
+                      itemBuilder : (BuildContext context, int index) => const ShimmerLoading(),
+                    );
                   }
 
                   // ERROR:
@@ -391,7 +510,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                   }
 
                   // SUCCESS:
-                  if (state is RemoteInspeccionFetchDataSuccess) {
+                  if (state is RemoteInspeccionDataSourceSuccess) {
                     if (lstRows.isNotEmpty) {
                       return _ResultsListInspeccion(
                         lstRows           : lstRows,
@@ -448,8 +567,8 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
             Row(
               children: <Widget>[
                 IconButton(onPressed: _buildDataSource, icon: const Icon(Icons.refresh), tooltip: 'Actualizar lista'),
-                IconButton(onPressed: (){}, icon: const Icon(Icons.filter_list), tooltip: 'Filtros'),
-                IconButton(onPressed: (){}, icon: const Icon(Icons.format_line_spacing), tooltip: 'Ordenar'),
+                IconButton(onPressed: _handleFiltersPressed, icon: const Icon(Icons.filter_list), tooltip: 'Filtros'),
+                IconButton(onPressed: () => _handleSortPressed(context), icon: const Icon(Icons.format_line_spacing), tooltip: 'Ordenar'),
               ],
             ),
           ],

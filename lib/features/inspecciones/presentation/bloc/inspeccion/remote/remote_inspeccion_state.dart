@@ -10,18 +10,28 @@ class RemoteInspeccionState extends Equatable {
 /// INITIAL STATE
 class RemoteInspeccionInitial extends RemoteInspeccionState {}
 
-/// LOADING
-class RemoteInspeccionFetchDataLoading extends RemoteInspeccionState {}
+/// INDEX
+class RemoteInspeccionIndexLoading extends RemoteInspeccionState {}
 
-/// INSPECCION LOADED (INDEX, DATASOURCE)
-class RemoteInspeccionFetchDataSuccess extends RemoteInspeccionState {
-  const RemoteInspeccionFetchDataSuccess(this.objResponseIndex, this.objResponseDataSource);
+class RemoteInspeccionIndexSuccess extends RemoteInspeccionState {
+  const RemoteInspeccionIndexSuccess(this.objResponse);
 
-  final InspeccionIndexEntity? objResponseIndex;
-  final InspeccionDataSourceResEntity? objResponseDataSource;
+  final InspeccionIndexEntity? objResponse;
 
   @override
-  List<Object?> get props => [ objResponseIndex, objResponseDataSource ];
+  List<Object?> get props => [ objResponse ];
+}
+
+/// DATASOURCE
+class RemoteInspeccionDataSourceLoading extends RemoteInspeccionState {}
+
+class RemoteInspeccionDataSourceSuccess extends RemoteInspeccionState {
+  const RemoteInspeccionDataSourceSuccess(this.objResponse);
+
+  final InspeccionDataSourceResEntity? objResponse;
+
+  @override
+  List<Object?> get props => [ objResponse ];
 }
 
 /// CREATE
