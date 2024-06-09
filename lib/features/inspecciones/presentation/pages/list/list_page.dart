@@ -151,6 +151,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
               selectedSort  : selectedOption,
               onChange      : (value) {
                 setState(() => selectedOption = value);
+                Navigator.of(context).pop();
                 _updateResults(showLoading: false);
                 _buildDataSource();
               },
@@ -487,6 +488,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
 
                   if (state is RemoteInspeccionDataSourceLoading) {
                     return ListView.builder(
+                      padding     : EdgeInsets.all($styles.insets.sm),
                       itemCount   : 10,
                       itemBuilder : (BuildContext context, int index) => const ShimmerLoading(),
                     );
