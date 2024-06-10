@@ -7,21 +7,21 @@ class UnidadEntity extends Equatable {
   const UnidadEntity({
     required this.idUnidad,
     required this.numeroEconomico,
-    required this.idBase,
-    required this.baseName,
     required this.idUnidadTipo,
     required this.unidadTipoName,
-    required this.idUnidadMarca,
-    required this.unidadMarcaName,
-    required this.numeroSerie,
-    required this.modelo,
-    required this.capacidad,
-    required this.idUnidadCapacidadMedida,
-    required this.unidadCapacidadMedidaName,
     required this.value,
+    this.idBase,
+    this.baseName,
+    this.idUnidadMarca,
+    this.unidadMarcaName,
     this.idUnidadPlacaTipo,
     this.unidadPlacaTipoName,
     this.placa,
+    this.numeroSerie,
+    this.modelo,
+    this.capacidad,
+    this.idUnidadCapacidadMedida,
+    this.unidadCapacidadMedidaName,
     this.anioEquipo,
     this.odometro,
     this.horometro,
@@ -29,21 +29,21 @@ class UnidadEntity extends Equatable {
 
   final String idUnidad;
   final String numeroEconomico;
-  final String idBase;
-  final String baseName;
+  final String? idBase;
+  final String? baseName;
   final String idUnidadTipo;
   final String unidadTipoName;
-  final String idUnidadMarca;
-  final String unidadMarcaName;
+  final String? idUnidadMarca;
+  final String? unidadMarcaName;
   final String? idUnidadPlacaTipo;
   final String? unidadPlacaTipoName;
   final String? placa;
-  final String numeroSerie;
-  final String modelo;
+  final String? numeroSerie;
+  final String? modelo;
   final String? anioEquipo;
-  final String capacidad;
-  final String idUnidadCapacidadMedida;
-  final String unidadCapacidadMedidaName;
+  final String? capacidad;
+  final String? idUnidadCapacidadMedida;
+  final String? unidadCapacidadMedidaName;
   final String? odometro;
   final String? horometro;
   final String value;

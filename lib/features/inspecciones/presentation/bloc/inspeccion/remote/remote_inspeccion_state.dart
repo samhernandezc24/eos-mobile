@@ -47,10 +47,10 @@ class RemoteInspeccionCreateLoaded extends RemoteInspeccionState {
 }
 
 /// STORE
-class RemoteInspeccionStoring extends RemoteInspeccionState {}
+class RemoteInspeccionStoreLoading extends RemoteInspeccionState {}
 
-class RemoteInspeccionStored extends RemoteInspeccionState {
-  const RemoteInspeccionStored(this.objResponse);
+class RemoteInspeccionStoreSuccess extends RemoteInspeccionState {
+  const RemoteInspeccionStoreSuccess(this.objResponse);
 
   final ServerResponse? objResponse;
 

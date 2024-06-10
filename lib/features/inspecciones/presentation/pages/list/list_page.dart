@@ -37,6 +37,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_fi
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/controls/labeled_textarea_form_field.dart';
 import 'package:eos_mobile/ui/common/shimmer_loading.dart';
 
 import 'package:intl/intl.dart';
@@ -73,7 +74,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   late final TextEditingController _searchController;
 
   // PROPERTIES
-  bool _isLoading = false;
+  bool isLoading = false;
 
   List<Filter> sltFilter = [];
 
@@ -88,7 +89,6 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     const Requerimiento(value: false, name: 'Sin requerimiento'),
   ];
 
-
   // SEARCH FILTERS
   List<SearchFilter> searchFilters = [];
 
@@ -102,7 +102,6 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   void initState() {
     super.initState();
     _searchController = TextEditingController();
-
     _initialization();
   }
 
@@ -239,6 +238,28 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     );
   }
 
+  void _handleCreatePressed(BuildContext context) {
+    Navigator.push<void>(
+      context,
+      PageRouteBuilder<void>(
+        transitionDuration: $styles.times.pageTransition,
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+          const Offset begin    = Offset(0, 1);
+          const Offset end      = Offset.zero;
+          const Cubic curve     = Curves.ease;
+
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position  : animation.drive<Offset>(tween),
+            child     : _CreateInspeccionForm(buildDataSourceCallback: _buildDataSource),
+          );
+        },
+        fullscreenDialog: true,
+      ),
+    );
+  }
+
   Future<void> _handleCancelPressed(BuildContext context, InspeccionIdReqEntity objData, InspeccionDataSourceEntity objInspeccion) async {
     await showDialog<void>(
       context: context,
@@ -345,7 +366,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   }
 
   Future<void> _updateResults({bool showLoading = true}) async {
-    if (showLoading) { setState(() => _isLoading = true); }
+    if (showLoading) { setState(() => isLoading = true); }
 
     final varArgs = DataSourcePersistence(
       table             : 'Inspecciones',
@@ -547,7 +568,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed : () {},
+        onPressed : () => _handleCreatePressed(context),
         tooltip   : 'Nueva inspección',
         child     : const Icon(Icons.add),
       ),

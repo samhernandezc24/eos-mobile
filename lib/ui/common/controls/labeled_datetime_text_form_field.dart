@@ -71,13 +71,13 @@ class LabeledDateTimeTextFormField extends StatelessWidget {
                   return Padding(
                     padding : EdgeInsets.only(left: $styles.insets.xxs, right: $styles.insets.sm),
                     child   : CircleIconButton(
-                      backgroundColor : Theme.of(context).disabledColor,
+                      backgroundColor : const Color(0xFF7D7873),
                       color           : Colors.white,
                       icon            : AppIcons.close,
-                      iconSize        : $styles.insets.sm,
                       onPressed       : () { controller.clear(); },
                       semanticLabel   : 'Borrar fecha',
                       size            : $styles.insets.md,
+                      iconSize        : $styles.insets.sm,
                     ),
                   );
                 },
