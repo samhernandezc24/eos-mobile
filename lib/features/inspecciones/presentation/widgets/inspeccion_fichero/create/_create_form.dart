@@ -88,6 +88,8 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
     );
   }
 
+  // METHODS
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -104,7 +106,7 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
           children: <Widget>[
             Expanded(
               child: _files.isEmpty
-                  ? const Center(child: Text('No hay fotos'))
+                  ? RequestDataUnavailable(title: $strings.checklistPhotoEmptyListTitle, message: $strings.checklistPhotoEmptyListMessage, isRefreshData: false)
                   : RepaintBoundary(
                       child: CustomScrollView(
                         scrollBehavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
