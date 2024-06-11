@@ -45,10 +45,10 @@ class RemoteUnidadCreateLoaded extends RemoteUnidadState {
 }
 
 /// STORE
-class RemoteUnidadStoring extends RemoteUnidadState {}
+class RemoteUnidadStoreLoading extends RemoteUnidadState {}
 
-class RemoteUnidadStored extends RemoteUnidadState {
-  const RemoteUnidadStored(this.objResponse);
+class RemoteUnidadStoreSuccess extends RemoteUnidadState {
+  const RemoteUnidadStoreSuccess(this.objResponse);
 
   final ServerResponse? objResponse;
 

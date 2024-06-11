@@ -1,9 +1,9 @@
 part of '../../../pages/list/list_page.dart';
 
 class _CreateUnidadForm extends StatefulWidget {
-  const _CreateUnidadForm({required this.buildListUnidadesCallback, Key? key}) : super(key: key);
+  const _CreateUnidadForm({Key? key, this.buildSearchUnidadCallback}) : super(key: key);
 
-  final VoidCallback buildListUnidadesCallback;
+  final VoidCallback? buildSearchUnidadCallback;
 
   @override
   State<_CreateUnidadForm> createState() => _CreateUnidadFormState();
@@ -14,21 +14,21 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // CONTROLLERS
-  late final TextEditingController _numeroEconomicoController;
-  late final TextEditingController _placaController;
-  late final TextEditingController _numeroSerieController;
-  late final TextEditingController _modeloController;
-  late final TextEditingController _anioEquipoController;
-  late final TextEditingController _descripcionController;
-  late final TextEditingController _capacidadController;
-  late final TextEditingController _odometroController;
-  late final TextEditingController _horometroController;
+  late final TextEditingController _unidadNumeroEconomicoController;
+  late final TextEditingController _unidadPlacaController;
+  late final TextEditingController _unidadNumeroSerieController;
+  late final TextEditingController _unidadModeloController;
+  late final TextEditingController _unidadAnioEquipoController;
+  late final TextEditingController _unidadDescripcionController;
+  late final TextEditingController _unidadCapacidadController;
+  late final TextEditingController _unidadOdometroController;
+  late final TextEditingController _unidadHorometroController;
 
   // LIST
-  List<Base> lstBases                                       = <Base>[];
-  List<UnidadCapacidadMedida> lstUnidadCapacidadesMedidas   = <UnidadCapacidadMedida>[];
-  List<UnidadMarca> lstUnidadesMarcas                       = <UnidadMarca>[];
-  List<UnidadTipo> lstUnidadesTipos                         = <UnidadTipo>[];
+  List<Base> lstBases                                       = [];
+  List<UnidadCapacidadMedida> lstUnidadesCapacidadesMedidas = [];
+  List<UnidadMarca> lstUnidadesMarcas                       = [];
+  List<UnidadTipo> lstUnidadesTipos                         = [];
 
   final List<UnidadPlacaTipo> lstUnidadesPlacasTipos = <UnidadPlacaTipo>[
     const UnidadPlacaTipo(idUnidadPlacaTipo: 'ea52bdfd-8af6-4f5a-b182-2b99e554eb31', name: 'Estatal'),
@@ -36,50 +36,41 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
     const UnidadPlacaTipo(idUnidadPlacaTipo: 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33', name: 'No aplica'),
   ];
 
-  // SELECTED UNIDAD PLACA TIPO
-  UnidadPlacaTipo? _selectedUnidadPlacaTipo;
-
-  // SELECTED UNIDAD MARCA
+  // SELECTED
   UnidadMarca? _selectedUnidadMarca;
-
-  // SELECTED UNIDAD TIPO
   UnidadTipo? _selectedUnidadTipo;
-
-  // SELECTED BASE
-  Base? _selectedBase;
-
-  // SELECTED UNIDAD CAPACIDAD MEDIDA
+  UnidadPlacaTipo? _selectedUnidadPlacaTipo;
   UnidadCapacidadMedida? _selectedUnidadCapacidadMedida;
+  Base? _selectedUnidadBase;
 
   // STATE
   @override
   void initState() {
     super.initState();
-    context.read<RemoteUnidadBloc>().add(FetchUnidadCreate());
-
-    _numeroEconomicoController  = TextEditingController();
-    _placaController            = TextEditingController();
-    _numeroSerieController      = TextEditingController();
-    _modeloController           = TextEditingController();
-    _anioEquipoController       = TextEditingController();
-    _descripcionController      = TextEditingController();
-    _capacidadController        = TextEditingController();
-    _odometroController         = TextEditingController();
-    _horometroController        = TextEditingController();
+    _unidadNumeroEconomicoController  = TextEditingController();
+    _unidadPlacaController            = TextEditingController();
+    _unidadNumeroSerieController      = TextEditingController();
+    _unidadModeloController           = TextEditingController();
+    _unidadAnioEquipoController       = TextEditingController();
+    _unidadDescripcionController      = TextEditingController();
+    _unidadCapacidadController        = TextEditingController();
+    _unidadOdometroController         = TextEditingController();
+    _unidadHorometroController        = TextEditingController();
+    _create();
   }
 
   @override
   void dispose() {
-    _numeroEconomicoController.dispose();
-    _placaController.dispose();
-    _numeroSerieController.dispose();
-    _modeloController.dispose();
-    _anioEquipoController.dispose();
-    _descripcionController.dispose();
-    _capacidadController.dispose();
-    _odometroController.dispose();
-    _horometroController.dispose();
     super.dispose();
+    _unidadNumeroEconomicoController.dispose();
+    _unidadPlacaController.dispose();
+    _unidadNumeroSerieController.dispose();
+    _unidadModeloController.dispose();
+    _unidadAnioEquipoController.dispose();
+    _unidadDescripcionController.dispose();
+    _unidadCapacidadController.dispose();
+    _unidadOdometroController.dispose();
+    _unidadHorometroController.dispose();
   }
 
   // EVENTS
@@ -91,19 +82,18 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
         content : Text('¿Estás seguro que deseas salir?', style: $styles.textStyles.bodySmall.copyWith(fontSize: 16)),
         actions : <Widget>[
           TextButton(
-            onPressed : () { Navigator.of(context).pop(); },
+            onPressed : () => Navigator.pop(context, $strings.cancelButtonText),
             child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
           ),
           TextButton(
-            onPressed : () {
-              Navigator.of(context).pop();          // Cerrar dialog
-              // Ejecutar el callback una vez finalizada la acción pop.
+            onPressed: () {
+              Navigator.of(context).pop();            // Cerrar dialog
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.of(context).pop();        // Cerrar página
-                widget.buildListUnidadesCallback(); // Ejecutar callback
+                Navigator.of(context).pop();          // Cerrar página
+                widget.buildSearchUnidadCallback!();  // Ejecutar callback
               });
             },
-            child : Text($strings.acceptButtonText, style: $styles.textStyles.button),
+            child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
           ),
         ],
       ),
@@ -111,43 +101,64 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
   }
 
   void _handleStorePressed() {
-    if (_formKey.currentState!.validate()) {
+    if (!_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text($strings.alertWarningInvalidFormTitle, style: $styles.textStyles.bodyBold),
+              const Text('Por favor, revisa los campos del formulario.', softWrap: true),
+            ],
+          ),
+          backgroundColor : const Color(0xfff89406),
+          elevation       : 0,
+          behavior        : SnackBarBehavior.fixed,
+          showCloseIcon   : true,
+        ),
+      );
+      return;
+    } else {
       _formKey.currentState!.save();
       _store();
     }
   }
 
-  Future<void> _showServerErrorDialog(BuildContext context, String? errorMessage) {
+  Future<void> _showServerFailedDialog(BuildContext context, String? errorMessage) async {
     return showDialog<void>(
-      context   : context,
-      builder: (BuildContext context) => ServerFailedDialog(
-        errorMessage: errorMessage ?? 'Se produjo un error inesperado. Intenta crear de nuevo la unidad.',
+      context : context,
+      builder: (BuildContext context)  => ServerFailedDialog(
+        errorMessage: errorMessage ?? 'Se produjo un error inesperado. Intenta de nuevo guardar la unidad.',
       ),
     );
   }
 
   // METHODS
-  void _store() {
+  Future<void> _create() async {
+    context.read<RemoteUnidadBloc>().add(FetchUnidadCreate());
+  }
+
+  Future<void> _store() async {
     final UnidadStoreReqEntity objPost = UnidadStoreReqEntity(
-      numeroEconomico             : _numeroEconomicoController.text,
-      idBase                      : _selectedBase?.idBase                                   ?? '',
-      baseName                    : _selectedBase?.name                                     ?? '',
-      idUnidadTipo                : _selectedUnidadTipo?.idUnidadTipo                       ?? '',
-      unidadTipoName              : _selectedUnidadTipo?.name                               ?? '',
-      idUnidadMarca               : _selectedUnidadMarca?.idUnidadMarca                     ?? '',
-      unidadMarcaName             : _selectedUnidadMarca?.name                              ?? '',
-      idUnidadPlacaTipo           : _selectedUnidadPlacaTipo?.idUnidadPlacaTipo             ?? '',
-      unidadPlacaTipoName         : _selectedUnidadPlacaTipo?.name                          ?? '',
-      placa                       : _placaController.text,
-      numeroSerie                 : _numeroSerieController.text,
-      modelo                      : _modeloController.text,
-      anioEquipo                  : _anioEquipoController.text,
-      descripcion                 : _descripcionController.text,
-      capacidad                   : double.tryParse(_capacidadController.text)              ?? 0.000,
+      numeroEconomico             : _unidadNumeroEconomicoController.text,
+      idBase                      : _selectedUnidadBase?.idBase ?? '',
+      baseName                    : _selectedUnidadBase?.name ?? '',
+      idUnidadTipo                : _selectedUnidadTipo?.idUnidadTipo ?? '',
+      unidadTipoName              : _selectedUnidadTipo?.name ?? '',
+      idUnidadMarca               : _selectedUnidadMarca?.idUnidadMarca ?? '',
+      unidadMarcaName             : _selectedUnidadMarca?.name ?? '',
+      idUnidadPlacaTipo           : _selectedUnidadPlacaTipo?.idUnidadPlacaTipo ?? '',
+      unidadPlacaTipoName         : _selectedUnidadPlacaTipo?.name ?? '',
+      placa                       : _unidadPlacaController.text,
+      numeroSerie                 : _unidadNumeroSerieController.text,
+      modelo                      : _unidadModeloController.text,
+      anioEquipo                  : _unidadAnioEquipoController.text,
+      descripcion                 : _unidadDescripcionController.text,
+      capacidad                   : double.tryParse(_unidadCapacidadController.text) ?? 0.00,
       idUnidadCapacidadMedida     : _selectedUnidadCapacidadMedida?.idUnidadCapacidadMedida ?? '',
-      unidadCapacidadMedidaName   : _selectedUnidadCapacidadMedida?.name                    ?? '',
-      odometro                    : int.tryParse(_odometroController.text),
-      horometro                   : int.tryParse(_horometroController.text),
+      unidadCapacidadMedidaName   : _selectedUnidadCapacidadMedida?.name ?? '',
+      odometro                    : int.tryParse(_unidadOdometroController.text),
+      horometro                   : int.tryParse(_unidadHorometroController.text),
     );
 
     BlocProvider.of<RemoteUnidadBloc>(context).add(StoreUnidad(objPost));
@@ -158,339 +169,287 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) {
-        if (didPop) return;
-        _handleDidPopPressed(context);
+        if (!didPop) {
+          _handleDidPopPressed(context);
+        }
       },
       child: Scaffold(
-        appBar  : AppBar(title: Text($strings.unidadCreateAppBarTitle, style: $styles.textStyles.h3)),
-        body    : SafeArea(
-          child: SingleChildScrollView(
-            padding : EdgeInsets.all($styles.insets.sm).copyWith(bottom: $styles.insets.lg),
-            child   : Form(
-              key   : _formKey,
-              child : Column(
-                crossAxisAlignment  : CrossAxisAlignment.stretch,
-                children            : <Widget>[
-                  // UNIDAD NUMERO ECONOMICO:
-                  LabeledTextFormField(
-                    autoFocus   : true,
-                    controller  : _numeroEconomicoController,
-                    hintText    : 'Ingrese número económico',
-                    label       : '* Número económico:',
-                    validator   : FormValidators.textValidator,
-                  ),
+        appBar: AppBar(title: Text($strings.unidadCreateAppBarTitle, style: $styles.textStyles.h3)),
+        body: BlocConsumer<RemoteUnidadBloc, RemoteUnidadState>(
+          listener: (BuildContext context, RemoteUnidadState state) {
+            if (state is RemoteUnidadCreateLoaded) {
+              setState(() {
+                // FRAGMENTO MODIFICABLE - LISTAS
+                lstBases                      = state.objResponse?.bases                      ?? [];
+                lstUnidadesCapacidadesMedidas = state.objResponse?.unidadesCapacidadesMedidas ?? [];
+                lstUnidadesMarcas             = state.objResponse?.unidadesMarcas             ?? [];
+                lstUnidadesTipos              = state.objResponse?.unidadesTipos              ?? [];
+              });
+            }
+          },
+          builder: (BuildContext context, RemoteUnidadState state) {
+            // LOADING
+            if (state is RemoteUnidadCreateLoading) {
+              return const Center(child: AppLoadingIndicator(width: 30, height: 30));
+            }
 
-                  Gap($styles.insets.sm),
+            // ERROR
+            if (state is RemoteUnidadServerFailedMessageCreate) {
+              return ErrorInfoContainer(
+                onPressed     : _create,
+                errorMessage  : state.errorMessage,
+              );
+            }
 
-                  // MODELO:
-                  LabeledTextFormField(
-                    controller  : _modeloController,
-                    hintText    : 'Ingrese modelo',
-                    label       : '* Modelo:',
-                    validator   : FormValidators.textValidator,
-                  ),
+            if (state is RemoteUnidadServerFailureCreate) {
+              return ErrorInfoContainer(
+                onPressed     : _create,
+                errorMessage  : state.failure?.errorMessage,
+              );
+            }
 
-                  Gap($styles.insets.sm),
+            // SUCCESS
+            if (state is RemoteUnidadCreateLoaded) {
+              return SafeArea(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all($styles.insets.sm).copyWith(bottom: $styles.insets.lg),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        // UNIDAD NUMERO ECONOMICO:
+                        LabeledTextFormField(
+                          autoFocus   : true,
+                          controller  : _unidadNumeroEconomicoController,
+                          hintText    : 'Ingrese número económico',
+                          label       : '* Número económico:',
+                          validator   : FormValidators.textValidator,
+                        ),
 
-                  // NUMERO DE SERIE:
-                  LabeledTextFormField(
-                    controller  : _numeroSerieController,
-                    hintText    : 'Ingrese número de serie',
-                    label       : '* Número de serie:',
-                    validator   : FormValidators.textValidator,
-                  ),
+                        Gap($styles.insets.sm),
 
-                  Gap($styles.insets.sm),
-
-                  // SELECCIONAR MARCA:
-                  BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
-                    builder: (BuildContext context, RemoteUnidadState state) {
-                      if (state is RemoteUnidadCreateLoading) {
-                        return const Center(child: AppLoadingIndicator(width: 20, height: 20));
-                      }
-
-                      if (state is RemoteUnidadServerFailedMessageCreate) {
-                        return ErrorBoxContainer(
-                          errorMessage  : state.errorMessage ?? 'Se produjo un error al cargar el listado de marcas.',
-                          onPressed     : () => context.read<RemoteUnidadBloc>().add(FetchUnidadCreate()),
-                        );
-                      }
-
-                      if (state is RemoteUnidadServerFailureCreate) {
-                        return ErrorBoxContainer(
-                          errorMessage  : state.failure?.errorMessage ?? 'Se produjo un error al cargar el listado de marcas.',
-                          onPressed     : () => context.read<RemoteUnidadBloc>().add(FetchUnidadCreate()),
-                        );
-                      }
-
-                      if (state is RemoteUnidadCreateLoaded) {
-                        lstUnidadesMarcas = state.objResponse?.unidadesMarcas ?? [];
-                        return LabeledDropdownFormField<UnidadMarca>(
-                          label       : '* Marca:',
-                          items       : lstUnidadesMarcas,
-                          itemBuilder : (item) => Text(item.name ?? ''),
-                          onChanged   : (value) => setState(() => _selectedUnidadMarca = value),
-                          validator   : FormValidators.dropdownValidator,
-                          value       : _selectedUnidadMarca,
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-
-                  Gap($styles.insets.sm),
-
-                  // SELECCIONAR UNIDAD TIPO:
-                  BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
-                    builder: (context, state) {
-                      if (state is RemoteUnidadCreateLoading) {
-                        return const Center(child: AppLoadingIndicator(width: 20, height: 20));
-                      }
-
-                      if (state is RemoteUnidadServerFailedMessageCreate) {
-                        return ErrorBoxContainer(
-                          errorMessage  : state.errorMessage ?? 'Se produjo un error al cargar el listado de tipos de unidad.',
-                          onPressed     : () => context.read<RemoteUnidadBloc>().add(FetchUnidadCreate()),
-                        );
-                      }
-
-                      if (state is RemoteUnidadServerFailureCreate) {
-                        return ErrorBoxContainer(
-                          errorMessage  : state.failure?.errorMessage ?? 'Se produjo un error al cargar el listado de tipos de unidad.',
-                          onPressed     : () => context.read<RemoteUnidadBloc>().add(FetchUnidadCreate()),
-                        );
-                      }
-
-                      if (state is RemoteUnidadCreateLoaded) {
-                        lstUnidadesTipos = state.objResponse?.unidadesTipos ?? [];
-                        return LabeledDropdownFormField<UnidadTipo>(
+                        // SELECCIONAR UNIDAD TIPO:
+                        LabeledDropdownFormField<UnidadTipo>(
                           label       : '* Tipo de unidad:',
                           items       : lstUnidadesTipos,
                           itemBuilder : (item) => Text(item.name ?? ''),
                           onChanged   : (value) => setState(() => _selectedUnidadTipo = value),
                           validator   : FormValidators.dropdownValidator,
                           value       : _selectedUnidadTipo,
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-
-                  Gap($styles.insets.sm),
-
-                  // UNIDAD PLACA TIPO / PLACA:
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: LabeledTextFormField(
-                          controller  : _placaController,
-                          hintText    : 'Ingrese placa',
-                          label       : 'Placa:',
                         ),
-                      ),
-                      Gap($styles.insets.sm),
-                      Expanded(
-                        child: LabeledDropdownFormField<UnidadPlacaTipo>(
-                          label       : 'Tipo de placa:',
-                          items       : lstUnidadesPlacasTipos,
+
+                        Gap($styles.insets.sm),
+
+                        // SELECCIONAR UNIDAD MARCA:
+                        LabeledDropdownFormField<UnidadMarca>(
+                          label       : '* Marca:',
+                          items       : lstUnidadesMarcas,
                           itemBuilder : (item) => Text(item.name ?? ''),
-                          onChanged   : (value) => setState(() => _selectedUnidadPlacaTipo = value),
-                          value       : _selectedUnidadPlacaTipo,
+                          onChanged   : (value) => setState(() => _selectedUnidadMarca = value),
+                          validator   : FormValidators.dropdownValidator,
+                          value       : _selectedUnidadMarca,
                         ),
-                      ),
-                    ],
-                  ),
 
-                  Gap($styles.insets.sm),
+                        Gap($styles.insets.sm),
 
-                  // AÑO DEL EQUIPO:
-                  LabeledTextFormField(controller: _anioEquipoController, label: 'Año del equipo:'),
+                        // UNIDAD MODELO:
+                        LabeledTextFormField(
+                          controller  : _unidadModeloController,
+                          hintText    : 'Ingrese modelo',
+                          label       : '* Modelo:',
+                          validator   : FormValidators.textValidator,
+                        ),
 
-                  Gap($styles.insets.sm),
+                        Gap($styles.insets.sm),
 
-                  // SELECCIONAR BASE:
-                  BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
-                    builder: (BuildContext context, RemoteUnidadState state) {
-                      if (state is RemoteUnidadCreateLoading) {
-                        return const Center(child: AppLoadingIndicator(width: 20, height: 20));
-                      }
+                        // UNIDAD NUMERO DE SERIE:
+                        LabeledTextFormField(
+                          controller  : _unidadNumeroSerieController,
+                          hintText    : 'Ingrese número de serie',
+                          label       : '* Número de serie:',
+                          validator   : FormValidators.textValidator,
+                        ),
 
-                      if (state is RemoteUnidadServerFailedMessageCreate) {
-                        return ErrorBoxContainer(
-                          errorMessage  : state.errorMessage ?? 'Se produjo un error al cargar el listado de bases.',
-                          onPressed     : () => context.read<RemoteUnidadBloc>().add(FetchUnidadCreate()),
-                        );
-                      }
+                        Gap($styles.insets.sm),
 
-                      if (state is RemoteUnidadServerFailureCreate) {
-                        return ErrorBoxContainer(
-                          errorMessage  : state.failure?.errorMessage ?? 'Se produjo un error al cargar el listado de bases.',
-                          onPressed     : () => context.read<RemoteUnidadBloc>().add(FetchUnidadCreate()),
-                        );
-                      }
-
-                      if (state is RemoteUnidadCreateLoaded) {
-                        lstBases = state.objResponse?.bases ?? [];
-                        return LabeledDropdownFormField<Base>(
+                        // SELECCIONA LA BASE DE LA UNIDAD:
+                        LabeledDropdownFormField<Base>(
                           label       : '* Base:',
                           items       : lstBases,
                           itemBuilder : (item) => Text(item.name ?? ''),
-                          onChanged   : (value) => setState(() => _selectedBase = value),
+                          onChanged   : (value) => setState(() => _selectedUnidadBase = value),
                           validator   : FormValidators.dropdownValidator,
-                          value       : _selectedBase,
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-
-                  Gap($styles.insets.sm),
-
-                  // LOCACIÓN:
-                  LabeledTextareaFormField(
-                    controller    : _descripcionController,
-                    hintText      : 'Ingrese descripción de creación de unidad',
-                    labelText     : 'Descripción (opcional):',
-                    maxLines      : 2,
-                    maxCharacters : 300,
-                  ),
-
-                  Gap($styles.insets.sm),
-
-                  // UNIDAD CAPACIDAD / SELECCIONAR CAPACIDAD MEDIDA:
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child : LabeledTextFormField(
-                          controller    : _capacidadController,
-                          hintText      : 'Ingrese cantidad',
-                          label         : '* Capacidad:',
-                          keyboardType  : TextInputType.number,
-                          validator     : FormValidators.decimalValidator,
+                          value       : _selectedUnidadBase,
                         ),
-                      ),
-                      Gap($styles.insets.sm),
-                      Expanded(
-                        child: BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
-                          builder: (BuildContext context, RemoteUnidadState state) {
-                            if (state is RemoteUnidadCreateLoading) {
-                              return const Center(child: AppLoadingIndicator(width: 20, height: 20));
-                            }
 
-                            if (state is RemoteUnidadServerFailedMessageCreate) {
-                              return ErrorBoxContainer(
-                                errorMessage  : state.errorMessage ?? 'Se produjo un error al cargar el listado de tipos de unidades capacidades medidas.',
-                                onPressed     : () => context.read<RemoteUnidadBloc>().add(FetchUnidadCreate()),
-                              );
-                            }
+                        Gap($styles.insets.sm),
 
-                            if (state is RemoteUnidadServerFailureCreate) {
-                              return ErrorBoxContainer(
-                                errorMessage  : state.failure?.errorMessage ?? 'Se produjo un error al cargar el listado de tipos de unidades capacidades medidas.',
-                                onPressed     : () => context.read<RemoteUnidadBloc>().add(FetchUnidadCreate()),
-                              );
-                            }
+                        // UNIDAD PLACA / SELECCIONAR UNIDAD PLACA TIPO:
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: LabeledTextFormField(
+                                controller  : _unidadPlacaController,
+                                hintText    : 'Ingrese placa',
+                                label       : 'Placa:',
+                              ),
+                            ),
+                            Gap($styles.insets.sm),
+                            Expanded(
+                              child: LabeledDropdownFormField<UnidadPlacaTipo>(
+                                label       : 'Tipo de placa:',
+                                items       : lstUnidadesPlacasTipos,
+                                itemBuilder : (item) => Text(item.name ?? ''),
+                                onChanged   : (value) => setState(() => _selectedUnidadPlacaTipo = value),
+                                value       : _selectedUnidadPlacaTipo,
+                              ),
+                            ),
+                          ],
+                        ),
 
-                            if (state is RemoteUnidadCreateLoaded) {
-                              lstUnidadCapacidadesMedidas = state.objResponse?.unidadesCapacidadesMedidas ?? [];
-                              return LabeledDropdownFormField<UnidadCapacidadMedida>(
+                        Gap($styles.insets.sm),
+
+                        // UNIDAD AÑO DEL EQUIPO:
+                        LabeledTextFormField(
+                          controller  : _unidadAnioEquipoController,
+                          hintText    : 'Ingrese año del equipo',
+                          label       : 'Año del equipo:',
+                        ),
+
+                        Gap($styles.insets.sm),
+
+                        // DESCRIPCIÓN O MOTIVO DE CREACIÓN DE UNIDAD:
+                        LabeledTextareaFormField(
+                          controller      : _unidadDescripcionController,
+                          hintText        : 'Ingrese descripción de creación de unidad temporal...',
+                          labelText       : 'Descripción (opcional):',
+                          maxLines        : 3,
+                          maxCharacters   : 300,
+                        ),
+
+                        Gap($styles.insets.sm),
+
+                        // UNIDAD CAPACIDAD / SELECCIONAR UNIDAD CAPACIDAD MEDIDA:
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: LabeledTextFormField(
+                                controller    : _unidadCapacidadController,
+                                hintText      : 'Ingrese cantidad',
+                                label         : '* Capacidad:',
+                                keyboardType  : TextInputType.number,
+                                validator     : FormValidators.decimalValidator,
+                              ),
+                            ),
+                            Gap($styles.insets.sm),
+                            Expanded(
+                              child: LabeledDropdownFormField<UnidadCapacidadMedida>(
                                 label       : '* Tipo de capacidad:',
-                                items       : lstUnidadCapacidadesMedidas,
+                                items       : lstUnidadesCapacidadesMedidas,
                                 itemBuilder : (item) => Text(item.name ?? ''),
                                 onChanged   : (value) => setState(() => _selectedUnidadCapacidadMedida = value),
                                 validator   : FormValidators.dropdownValidator,
                                 value       : _selectedUnidadCapacidadMedida,
-                              );
-                            }
-                            return const SizedBox.shrink();
-                          },
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
 
-                  Gap($styles.insets.sm),
+                        Gap($styles.insets.sm),
 
-                  // ODOMETRO / HOROMETRO:
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: LabeledTextFormField(
-                          controller    : _odometroController,
-                          hintText      : 'Ingrese cantidad',
-                          keyboardType  : TextInputType.number,
-                          label         : 'Odómetro (Si aplica):',
-                          validator     : FormValidators.integerValidator,
+                        // ODOMETRO / HOROMETRO:
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: LabeledTextFormField(
+                                controller    : _unidadOdometroController,
+                                hintText      : 'Ingrese cantidad',
+                                keyboardType  : TextInputType.number,
+                                label         : 'Odómetro (Si aplica):',
+                                validator     : FormValidators.integerValidator,
+                              ),
+                            ),
+                            Gap($styles.insets.sm),
+                            Expanded(
+                              child: LabeledTextFormField(
+                                controller    : _unidadHorometroController,
+                                hintText      : 'Ingrese cantidad',
+                                keyboardType  : TextInputType.number,
+                                label         : 'Horómetro (Si aplica):',
+                                validator     : FormValidators.integerValidator,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      Gap($styles.insets.sm),
-                      Expanded(
-                        child: LabeledTextFormField(
-                          controller      : _horometroController,
-                          hintText        : 'Ingrese cantidad',
-                          keyboardType    : TextInputType.number,
-                          label           : 'Horómetro (Si aplica):',
-                          textInputAction : TextInputAction.done,
-                          validator       : FormValidators.integerValidator,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-
-                  Gap($styles.insets.lg),
-
-                  BlocConsumer<RemoteUnidadBloc, RemoteUnidadState>(
-                    listener: (BuildContext context, RemoteUnidadState state) {
-                      if (state is RemoteUnidadServerFailedMessageStore) {
-                        _showServerErrorDialog(context, state.errorMessage);
-                        context.read<RemoteUnidadBloc>().add(FetchUnidadCreate());
-                      }
-
-                      if (state is RemoteUnidadServerFailureStore) {
-                        _showServerErrorDialog(context, state.failure?.errorMessage);
-                        context.read<RemoteUnidadBloc>().add(FetchUnidadCreate());
-                      }
-
-                      if (state is RemoteUnidadStored) {
-                        // Cerrar el diálogo antes de mostrar el SnackBar.
-                        Navigator.of(context).pop();
-
-                        // Mostramos el SnackBar.
-                        ScaffoldMessenger.of(context)
-                        ..hideCurrentSnackBar()
-                        ..showSnackBar(
-                          SnackBar(
-                            content         : Text(state.objResponse?.message ?? 'Nueva unidad', softWrap: true),
-                            backgroundColor : Colors.green,
-                            elevation       : 0,
-                            behavior        : SnackBarBehavior.fixed,
-                          ),
-                        );
-
-                        // Actualizar el listado de unidades.
-                        context.read<RemoteUnidadBloc>().add(ListUnidades());
-                      }
-                    },
-                    builder: (BuildContext context, RemoteUnidadState state) {
-                      if (state is RemoteUnidadStoring) {
-                        return FilledButton(
-                          onPressed : null,
-                          style     : ButtonStyle(minimumSize: MaterialStateProperty.all<Size?>(const Size(double.infinity, 48))),
-                          child     : const AppLoadingIndicator(width: 20, height: 20),
-                        );
-                      }
-                      return FilledButton(
-                        onPressed : _handleStorePressed,
-                        style     : ButtonStyle(minimumSize: MaterialStateProperty.all<Size?>(const Size(double.infinity, 48))),
-                        child     : Text($strings.saveButtonText, style: $styles.textStyles.button),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          },
         ),
+        bottomNavigationBar: _buildBottomAppBar(context),
+      ),
+    );
+  }
+
+  Widget _buildBottomAppBar(BuildContext context) {
+    return BottomAppBar(
+      height: 70,
+      child : Row(
+        children: <Widget>[
+          IconButton(
+            onPressed : _create,
+            icon      : const Icon(Icons.refresh),
+            tooltip   : 'Actualizar datos',
+          ),
+          const Spacer(),
+          BlocConsumer<RemoteUnidadBloc, RemoteUnidadState>(
+            listener: (BuildContext context, RemoteUnidadState state) {
+              if (state is RemoteUnidadServerFailedMessageStore) {
+                _showServerFailedDialog(context, state.errorMessage);
+                _create();
+              }
+
+              if (state is RemoteUnidadServerFailureStore) {
+                _showServerFailedDialog(context, state.failure?.errorMessage);
+                _create();
+              }
+
+              if (state is RemoteUnidadStoreSuccess) {
+                Navigator.of(context).pop();
+
+                ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content         : Text(state.objResponse?.message ?? 'Nueva unidad', softWrap: true),
+                    backgroundColor : Colors.green,
+                    elevation       : 0,
+                    behavior        : SnackBarBehavior.fixed,
+                  ),
+                );
+
+                // Ejecutar callback.
+                widget.buildSearchUnidadCallback!();
+              }
+            },
+            builder: (BuildContext context, RemoteUnidadState state) {
+              if (state is RemoteUnidadStoreLoading) {
+                return const FilledButton(
+                  onPressed : null,
+                  child     : AppLoadingIndicator(width: 20, height: 20),
+                );
+              }
+              return FilledButton(
+                onPressed : _handleStorePressed,
+                child     : Text($strings.saveButtonText, style: $styles.textStyles.button),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

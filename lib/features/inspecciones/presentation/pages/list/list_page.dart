@@ -37,7 +37,6 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_fi
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
-import 'package:eos_mobile/ui/common/controls/labeled_textarea_form_field.dart';
 import 'package:eos_mobile/ui/common/shimmer_loading.dart';
 
 import 'package:intl/intl.dart';
@@ -517,7 +516,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
 
                   // ERROR:
                   if (state is RemoteInspeccionServerFailedMessageIndex) {
-                    return ErrorInfoContainer(onPressed: _buildDataSource, errorMessage: state.errorMessage);
+                    return ErrorInfoContainer(onPressed: _initialization, errorMessage: state.errorMessage);
                   }
 
                   if (state is RemoteInspeccionServerFailedMessageDataSource) {
@@ -525,7 +524,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                   }
 
                   if (state is RemoteInspeccionServerFailureIndex) {
-                    return ErrorInfoContainer(onPressed: _buildDataSource, errorMessage: state.failure?.errorMessage);
+                    return ErrorInfoContainer(onPressed: _initialization, errorMessage: state.failure?.errorMessage);
                   }
 
                   if (state is RemoteInspeccionServerFailureDataSource) {

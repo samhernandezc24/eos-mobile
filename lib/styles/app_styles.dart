@@ -73,10 +73,10 @@ class _TextStyles {
     final double? letterSpacing   = spacingPc != null ? scaledSizePx * spacingPc * 0.01 : style.letterSpacing;
 
     return style.copyWith(
-      fontSize: scaledSizePx,
-      height: scaledHeightPx != null ? scaledHeightPx / scaledSizePx : style.height,
-      letterSpacing: letterSpacing,
-      fontWeight: weight,
+      fontSize      : scaledSizePx,
+      height        : scaledHeightPx != null ? scaledHeightPx / scaledSizePx : style.height,
+      letterSpacing : letterSpacing,
+      fontWeight    : weight,
     );
   }
 }

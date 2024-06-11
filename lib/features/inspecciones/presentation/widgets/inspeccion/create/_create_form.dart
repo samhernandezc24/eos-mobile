@@ -125,7 +125,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
 
           final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-          return SlideTransition(position: animation.drive<Offset>(tween), child: _CreateUnidadForm(buildListUnidadesCallback: _getUnidadesList));
+          return SlideTransition(position: animation.drive<Offset>(tween), child: _CreateUnidadForm(buildSearchUnidadCallback: _getUnidadesList));
         },
         fullscreenDialog: true,
       ),
@@ -290,10 +290,27 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
             }
           },
           builder: (BuildContext context, RemoteInspeccionState state) {
+            // LOADING
             if (state is RemoteInspeccionCreateLoading) {
               return const Center(child: AppLoadingIndicator(width: 30, height: 30));
             }
 
+            // ERROR
+            if (state is RemoteInspeccionServerFailedMessageCreate) {
+              return ErrorInfoContainer(
+                onPressed     : _create,
+                errorMessage  : state.errorMessage,
+              );
+            }
+
+            if (state is RemoteInspeccionServerFailureCreate) {
+              return ErrorInfoContainer(
+                onPressed     : _create,
+                errorMessage  : state.failure?.errorMessage,
+              );
+            }
+
+            // SUCCESS
             if (state is RemoteInspeccionCreateLoaded) {
               return SafeArea(
                 child: SingleChildScrollView(
@@ -641,10 +658,12 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
             listener: (BuildContext context, RemoteInspeccionState state) {
               if (state is RemoteInspeccionServerFailedMessageStore) {
                 _showServerFailedDialog(context, state.errorMessage);
+                _create();
               }
 
               if (state is RemoteInspeccionServerFailureStore) {
                 _showServerFailedDialog(context, state.failure?.errorMessage);
+                _create();
               }
 
               if (state is RemoteInspeccionStoreSuccess) {

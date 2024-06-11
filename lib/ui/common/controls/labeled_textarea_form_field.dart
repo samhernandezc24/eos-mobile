@@ -44,6 +44,7 @@ class LabeledTextareaFormField extends StatelessWidget {
           keyboardType      : keyboardType,
           maxLines          : maxLines,
           maxLength         : maxCharacters,
+          style             : const TextStyle(height: 1.3, letterSpacing: 0.01),
           textInputAction   : textInputAction,
           validator         : validator,
         ),

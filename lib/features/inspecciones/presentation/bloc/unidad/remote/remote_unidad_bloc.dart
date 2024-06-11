@@ -91,12 +91,12 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
   }
 
   Future<void> onStoreUnidad(StoreUnidad event, Emitter<RemoteUnidadState> emit) async {
-    emit(RemoteUnidadStoring());
+    emit(RemoteUnidadStoreLoading());
 
     final objDataState = await _storeUnidadUseCase(params: event.objData);
 
     if (objDataState is DataSuccess) {
-      emit(RemoteUnidadStored(objDataState.data));
+      emit(RemoteUnidadStoreSuccess(objDataState.data));
     }
 
     if (objDataState is DataFailedMessage) {
