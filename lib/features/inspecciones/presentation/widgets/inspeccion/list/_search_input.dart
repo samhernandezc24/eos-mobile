@@ -37,7 +37,11 @@ class _SearchInputInspeccion extends StatelessWidget {
           child: Row(
             children: <Widget>[
               Gap($styles.insets.xs * 1.5),
-              GestureDetector(onTap: _handleSearchFiltersPressed, child: const Icon(Icons.search)),
+              IconButton(
+                onPressed     : _handleSearchFiltersPressed,
+                visualDensity : VisualDensity.compact,
+                icon          : const Icon(Icons.search),
+              ),
               _buildInput(context, controller),
               Gap($styles.insets.xs),
               ValueListenableBuilder(
