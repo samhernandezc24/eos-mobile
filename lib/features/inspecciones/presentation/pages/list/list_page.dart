@@ -55,6 +55,7 @@ part '../../widgets/inspeccion/list/_result_tile.dart';
 part '../../widgets/inspeccion/list/_search_input.dart';
 part '../../widgets/inspeccion/photo/_photo_grid.dart';
 part '../../widgets/inspeccion/photo/_photo_tile.dart';
+part '../../widgets/inspeccion_fichero/create/_create_form.dart';
 part '../../widgets/unidad/create/_create_form.dart';
 
 /// El usuario puede utilizar esta página para buscar en el servidor EOS una inspección.
@@ -317,7 +318,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
               children      : <Widget>[
                 Container(
                   margin  : EdgeInsets.symmetric(vertical: $styles.insets.sm),
-                  child   : const AppLoadingIndicator(width: 30, height: 30),
+                  child   : const AppLoadingIndicator(),
                 ),
                 Container(
                   margin  : EdgeInsets.only(bottom: $styles.insets.xs),
@@ -401,7 +402,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
       const Sort(column: 'FechaProgramada', direction: 'desc' ),
       const Sort(column: 'FechaProgramada', direction: 'asc'  ),
       const Sort(column: 'CreatedFecha',    direction: 'desc' ),
-      const Sort(column: 'CreatedFecha',    direction: 'asc' ),
+      const Sort(column: 'CreatedFecha',    direction: 'asc'  ),
     ];
 
     return arrSortOptions;
@@ -503,7 +504,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                 builder: (BuildContext context, RemoteInspeccionState state) {
                   // LOADING:
                   if (state is RemoteInspeccionIndexLoading) {
-                    return const Center(child: AppLoadingIndicator(width: 30, height: 30));
+                    return const Center(child: AppLoadingIndicator());
                   }
 
                   if (state is RemoteInspeccionDataSourceLoading) {

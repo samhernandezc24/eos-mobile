@@ -123,7 +123,7 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
               children      : <Widget>[
                 Container(
                   margin  : EdgeInsets.symmetric(vertical: $styles.insets.sm),
-                  child   : const AppLoadingIndicator(width: 30, height: 30),
+                  child   : const AppLoadingIndicator(),
                 ),
                 Container(
                   margin  : EdgeInsets.only(bottom: $styles.insets.xs),

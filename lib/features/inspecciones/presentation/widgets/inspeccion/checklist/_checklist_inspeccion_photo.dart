@@ -82,6 +82,28 @@ class __ChecklistInspeccionPhotoState extends State<_ChecklistInspeccionPhoto> {
     }
   }
 
+  void _handleCreatePressed(BuildContext context) {
+    Navigator.push<void>(
+      context,
+      PageRouteBuilder<void>(
+        transitionDuration: $styles.times.pageTransition,
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+          const Offset begin    = Offset(0, 1);
+          const Offset end      = Offset.zero;
+          const Cubic curve     = Curves.ease;
+
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position  : animation.drive<Offset>(tween),
+            child     : _CreateInspeccionFicheroForm(buildFicheroDataCallback: _getFotos),
+          );
+        },
+        fullscreenDialog: true,
+      ),
+    );
+  }
+
   Future<void> _handleTakePhotoPressed() async {
     final XFile? photo = await imageHelper.takePhoto();
 
@@ -246,9 +268,9 @@ class __ChecklistInspeccionPhotoState extends State<_ChecklistInspeccionPhoto> {
       ),
       floatingActionButton: !_isLoading && !_hasServerError
           ? FloatingActionButton(
-              onPressed : _handleTakePhotoPressed,
-              tooltip   : 'Tomar fotografía',
-              child     : const Icon(Icons.camera_alt),
+              onPressed : () => _handleCreatePressed(context),
+              tooltip   : 'Agregar fotografías',
+              child     : const Icon(Icons.add_a_photo),
             )
           : null,
       bottomNavigationBar: _buildBottomAppBar(context),

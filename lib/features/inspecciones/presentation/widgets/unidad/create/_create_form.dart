@@ -190,7 +190,7 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
           builder: (BuildContext context, RemoteUnidadState state) {
             // LOADING
             if (state is RemoteUnidadCreateLoading) {
-              return const Center(child: AppLoadingIndicator(width: 30, height: 30));
+              return const Center(child: AppLoadingIndicator());
             }
 
             // ERROR

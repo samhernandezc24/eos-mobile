@@ -22,8 +22,8 @@ class AppLoadingIndicator extends StatelessWidget {
     final progress = (value == null || value! < .05) ? null : value;
 
     return SizedBox(
-      width   : width ?? 40,
-      height  : height ?? 40,
+      width   : width ?? 30,
+      height  : height ?? 30,
       child   : CircularProgressIndicator(
         color       : color ?? Theme.of(context).primaryColor,
         value       : progress,

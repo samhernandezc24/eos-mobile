@@ -292,7 +292,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
           builder: (BuildContext context, RemoteInspeccionState state) {
             // LOADING
             if (state is RemoteInspeccionCreateLoading) {
-              return const Center(child: AppLoadingIndicator(width: 30, height: 30));
+              return const Center(child: AppLoadingIndicator());
             }
 
             // ERROR
