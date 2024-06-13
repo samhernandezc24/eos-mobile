@@ -1,17 +1,22 @@
 part of '../../../pages/list/list_page.dart';
 
 class _CreateInspeccionFicheroForm extends StatefulWidget {
-  const _CreateInspeccionFicheroForm({Key? key, this.buildFicheroDataCallback}) : super(key: key);
+  const _CreateInspeccionFicheroForm({required this.objInspeccion, Key? key, this.buildFicheroDataCallback}) : super(key: key);
 
   final VoidCallback? buildFicheroDataCallback;
+  final InspeccionDataSourceEntity objInspeccion;
 
   @override
-  State<_CreateInspeccionFicheroForm> createState() =>  _CreateInspeccionFicheroFormState();
+  State<_CreateInspeccionFicheroForm> createState() => _CreateInspeccionFicheroFormState();
 }
 
 class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroForm> {
-  // LIST
+  // REGISTROS ITEMS
+  final UploadResponse uploadResponse = const UploadResponse(status: '', uploadProgress: '', message: '', boolFinalize: false, boolInitial: true, boolSuccess: true);
+
   final List<File> _files = [];
+
+  bool _isSave = false;
 
   // EVENTS
   void _handleDidPopPressed(BuildContext context) {
@@ -19,24 +24,21 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: const SizedBox.shrink(),
-        content: Text('¿Estás seguro que deseas salir?',
-            style: $styles.textStyles.bodySmall.copyWith(fontSize: 16)),
+        content: Text('¿Estás seguro que deseas salir?', style: $styles.textStyles.bodySmall.copyWith(fontSize: 16)),
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.pop(context, $strings.cancelButtonText),
-            child: Text($strings.cancelButtonText,
-                style: $styles.textStyles.button),
+            onPressed : () => Navigator.pop(context, $strings.cancelButtonText),
+            child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop(); // Cerrar dialog
+              Navigator.of(context).pop();             // Cerrar dialog
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.of(context).pop(); // Cerrar página
-                widget.buildFicheroDataCallback!(); // Ejecutar callback
+                Navigator.of(context).pop();          // Cerrar página
+                widget.buildFicheroDataCallback!();   // Ejecutar callback
               });
             },
-            child: Text($strings.acceptButtonText,
-                style: $styles.textStyles.button),
+            child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
           ),
         ],
       ),
@@ -61,14 +63,8 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
     }
   }
 
-  void _handleRemovePhotoPressed(int index) {
-    setState(() {
-      _files.removeAt(index);
-    });
-  }
-
-  void _handleViewPhotoPressed(File file) {
-     Navigator.push<void>(
+  void _handleOpenPhotoTap(File file) {
+    Navigator.push<void>(
       context,
       PageRouteBuilder<void>(
         transitionDuration: $styles.times.pageTransition,
@@ -88,7 +84,13 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
     );
   }
 
-  // METHODS
+  void _handleDeletePhotoPressed(int index) {
+    if (!_isSave) {
+      setState(() {
+        _files.removeAt(index);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,14 +102,13 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
         }
       },
       child: Scaffold(
-        appBar: AppBar(title: Text('Cargar evidencias fotográficas', style: $styles.textStyles.h3)),
+        appBar: AppBar(title: Text($strings.checklistPhotoAddAppBarTitle, style: $styles.textStyles.h3)),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Expanded(
-              child: _files.isEmpty
-                  ? RequestDataUnavailable(title: $strings.checklistPhotoEmptyListTitle, message: $strings.checklistPhotoEmptyListMessage, isRefreshData: false)
-                  : RepaintBoundary(
+              child: _files.isNotEmpty
+                  ? RepaintBoundary(
                       child: CustomScrollView(
                         scrollBehavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
                         slivers: [
@@ -115,42 +116,23 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
                             padding: EdgeInsets.all($styles.insets.sm),
                             sliver: SliverMasonryGrid.count(
                               crossAxisCount    : (context.widthPx / 300).ceil(),
-                              mainAxisSpacing   : $styles.insets.sm,
                               crossAxisSpacing  : $styles.insets.sm,
+                              mainAxisSpacing   : $styles.insets.sm,
                               childCount        : _files.length,
                               itemBuilder       : (BuildContext context, int index) {
-                                final int fileIndex = index + 1;
-                                return Stack(
-                                  children: <Widget>[
-                                    GestureDetector(
-                                      onTap: () => _handleViewPhotoPressed(_files[index]),
-                                      child: Image.file(_files[index]),
-                                    ),
-                                    Positioned(
-                                      top: 8,
-                                      left: 8,
-                                      child: CircleAvatar(
-                                        child: Text('$fileIndex', style: $styles.textStyles.h4),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 8,
-                                      right: 8,
-                                      child: IconButton(
-                                        icon      : const Icon(Icons.delete),
-                                        color     : Theme.of(context).colorScheme.error,
-                                        onPressed : () => _handleRemovePhotoPressed(index),
-                                        tooltip   : 'Eliminar',
-                                      ),
-                                    ),
-                                  ],
+                                return _InspeccionFicheroItemTile(
+                                  objFile         : _files[index],
+                                  index           : index,
+                                  onOpenTap       : _handleOpenPhotoTap,
+                                  onDeletePressed : _handleDeletePhotoPressed,
                                 );
                               },
                             ),
                           ),
                         ],
                       ),
-                    ),
+                    )
+                  : RequestDataUnavailable(title: $strings.checklistPhotoAddEmptyListTitle, message: $strings.checklistPhotoAddEmptyListMessage, isRefreshData: false),
             ),
           ],
         ),

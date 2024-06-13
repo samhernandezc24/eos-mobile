@@ -12,20 +12,23 @@ import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class InspeccionFicheroRepositoryImpl implements InspeccionFicheroRepository {
-  InspeccionFicheroRepositoryImpl(this._inspeccionFicheroRemoteApiService) : _progressController = StreamController<double>.broadcast();
+  InspeccionFicheroRepositoryImpl(this._inspeccionFicheroRemoteApiService);
 
   final InspeccionFicheroRemoteApiService _inspeccionFicheroRemoteApiService;
-  final StreamController<double> _progressController;
 
   /// LISTADO DE FICHEROS (FOTOGRAFÍAS) DE UNA INSPECCION
   @override
-  Future<DataState<InspeccionFicheroModel>> list(InspeccionIdReqEntity objData) async {
+  Future<DataState<InspeccionFicheroModel>> list(
+      InspeccionIdReqEntity objData) async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
 
       // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _inspeccionFicheroRemoteApiService.list('application/json', 'Bearer $token', InspeccionIdReqModel.fromEntity(objData));
+      final httpResponse = await _inspeccionFicheroRemoteApiService.list(
+          'application/json',
+          'Bearer $token',
+          InspeccionIdReqModel.fromEntity(objData));
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         final ServerResponse objResponse = httpResponse.data;
@@ -33,7 +36,8 @@ class InspeccionFicheroRepositoryImpl implements InspeccionFicheroRepository {
         if (objResponse.session!) {
           if (objResponse.action!) {
             final result = objResponse.result as Map<String, dynamic>;
-            final InspeccionFicheroModel objInspeccionFichero = InspeccionFicheroModel.fromJson(result);
+            final InspeccionFicheroModel objInspeccionFichero =
+                InspeccionFicheroModel.fromJson(result);
 
             return DataSuccess(objInspeccionFichero);
           } else {
@@ -46,10 +50,10 @@ class InspeccionFicheroRepositoryImpl implements InspeccionFicheroRepository {
         return DataFailed(
           ServerException.fromDioException(
             DioException(
-              error           : httpResponse.response.statusMessage,
-              response        : httpResponse.response,
-              type            : DioExceptionType.badResponse,
-              requestOptions  : httpResponse.response.requestOptions,
+              error: httpResponse.response.statusMessage,
+              response: httpResponse.response,
+              type: DioExceptionType.badResponse,
+              requestOptions: httpResponse.response.requestOptions,
             ),
           ),
         );
@@ -59,7 +63,6 @@ class InspeccionFicheroRepositoryImpl implements InspeccionFicheroRepository {
     }
   }
 
-  /// GUARDADO DE FICHERO (FOTOGRAFÍA) DE UNA INSPECCION
   @override
   Future<DataState<ServerResponse>> store(InspeccionFicheroStoreReqEntity objData) async {
     try {
@@ -72,9 +75,8 @@ class InspeccionFicheroRepositoryImpl implements InspeccionFicheroRepository {
         'Bearer $token',
         InspeccionFicheroStoreReqModel.fromEntity(objData),
         onSendProgress: (int sent, int total) {
-          final progress = sent / total;
-          print('progress: $progress ($sent / $total)');
-          _progressController.add(sent / total);
+          final progress = (sent / total * 100).round();
+          print('progress: $progress');
         },
       );
 
@@ -93,10 +95,10 @@ class InspeccionFicheroRepositoryImpl implements InspeccionFicheroRepository {
         return DataFailed(
           ServerException.fromDioException(
             DioException(
-              error           : httpResponse.response.statusMessage,
-              response        : httpResponse.response,
-              type            : DioExceptionType.badResponse,
-              requestOptions  : httpResponse.response.requestOptions,
+              error: httpResponse.response.statusMessage,
+              response: httpResponse.response,
+              type: DioExceptionType.badResponse,
+              requestOptions: httpResponse.response.requestOptions,
             ),
           ),
         );
@@ -106,11 +108,35 @@ class InspeccionFicheroRepositoryImpl implements InspeccionFicheroRepository {
     }
   }
 
-  @override
-  Stream<double> getProgress() => _progressController.stream;
+  /// GUARDADO DE FICHERO (FOTOGRAFÍA) DE UNA INSPECCION
+  // @override
+  // Future<DataState<ServerResponse>> store(InspeccionFicheroStoreReqEntity objData) async {
+  // try {
+  //   // Obtener el token localmente.
+  //   final String? token = await authTokenHelper.retrieveRefreshToken();
 
-  // Close the StreamController when no longer needed
-  void dispose() {
-    _progressController.close();
-  }
+  //   // Realizar la solicitud usando el token actualizado o el actual.
+  //   final httpResponse = await _inspeccionFicheroRemoteApiService.store(
+  //     'application/json',
+  //     'Bearer $token',
+  //     InspeccionFicheroStoreReqModel.fromEntity(objData),
+  //     onSendProgress:(int loaded, int total) {
+  //       final int progress = (loaded / total * 100).round();
+  //       print(progress);
+  //     },
+  //   );
+
+  //   if (httpResponse.response.statusCode == HttpStatus.ok) {
+  //     if (httpResponse.response.)
+  //     final ServerResponse objResponse = httpResponse.data;
+  //     if (Globals.isValidValue(objResponse)) {
+  //       if (objResponse.status == 'progress') {
+
+  //       }
+  //     }
+  //   }
+  // } catch (e) {
+
+  // }
+
 }

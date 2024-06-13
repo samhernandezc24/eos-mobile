@@ -10,5 +10,4 @@ abstract class InspeccionFicheroRepository {
   Future<DataState<ServerResponse>> store(InspeccionFicheroStoreReqEntity objData);
 
   // LOCAL METHODS
-  Stream<double> getProgress();
 }

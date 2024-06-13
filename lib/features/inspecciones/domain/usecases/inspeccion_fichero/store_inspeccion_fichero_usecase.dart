@@ -12,8 +12,4 @@ class StoreInspeccionFicheroUseCase implements UseCase<DataState<ServerResponse>
   Future<DataState<ServerResponse>> call({required InspeccionFicheroStoreReqEntity params}) {
     return _inspeccionFicheroRepository.store(params);
   }
-
-  Stream<double> getProgress() {
-    return _inspeccionFicheroRepository.getProgress();
-  }
 }

@@ -96,7 +96,7 @@ class __ChecklistInspeccionPhotoState extends State<_ChecklistInspeccionPhoto> {
 
           return SlideTransition(
             position  : animation.drive<Offset>(tween),
-            child     : _CreateInspeccionFicheroForm(buildFicheroDataCallback: _getFotos),
+            child     : _CreateInspeccionFicheroForm(buildFicheroDataCallback: _getFotos, objInspeccion: widget.objInspeccion),
           );
         },
         fullscreenDialog: true,

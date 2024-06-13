@@ -20,6 +20,7 @@ import 'package:eos_mobile/core/data/search_filter.dart';
 import 'package:eos_mobile/core/data/sort.dart';
 
 import 'package:eos_mobile/core/enums/inspeccion_menu.dart';
+import 'package:eos_mobile/core/network/data/upload_response.dart';
 
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_req_entity.dart';
@@ -39,6 +40,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/shimmer_loading.dart';
 
+import 'package:image/image.dart' as img;
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
@@ -56,6 +58,7 @@ part '../../widgets/inspeccion/list/_search_input.dart';
 part '../../widgets/inspeccion/photo/_photo_grid.dart';
 part '../../widgets/inspeccion/photo/_photo_tile.dart';
 part '../../widgets/inspeccion_fichero/create/_create_form.dart';
+part '../../widgets/inspeccion_fichero/item/_item_tile.dart';
 part '../../widgets/unidad/create/_create_form.dart';
 
 /// El usuario puede utilizar esta página para buscar en el servidor EOS una inspección.
