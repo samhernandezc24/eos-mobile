@@ -38,7 +38,7 @@ class SaveUserInfo extends LocalAuthEvent {
   });
 
   final String id;
-  final UserEntity user;
+  final User user;
   final String? privilegies;
   final DateTime expiration;
   final String? foto;

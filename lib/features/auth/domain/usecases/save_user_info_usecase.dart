@@ -1,5 +1,5 @@
+import 'package:eos_mobile/core/data/catalogos/user.dart';
 import 'package:eos_mobile/core/usecases/usecase.dart';
-import 'package:eos_mobile/features/auth/domain/entities/user_entity.dart';
 import 'package:eos_mobile/features/auth/domain/repositories/auth_repository.dart';
 
 class SaveUserInfoUseCase implements UseCase<void, UserInfoParams> {
@@ -33,7 +33,7 @@ class UserInfoParams {
   });
 
   final String id;
-  final UserEntity user;
+  final User user;
   final String? privilegies;
   final DateTime expiration;
   final String? foto;

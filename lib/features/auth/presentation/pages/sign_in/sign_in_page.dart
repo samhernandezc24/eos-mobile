@@ -1,8 +1,6 @@
 import 'package:eos_mobile/features/auth/presentation/widgets/sign_in/sign_in_form.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/eos_mobile_logo.dart';
-import 'package:eos_mobile/ui/common/static_text_scale.dart';
-import 'package:eos_mobile/ui/common/themed_text.dart';
 import 'package:eos_mobile/ui/common/wave_clipper.dart';
 
 class AuthSignInPage extends StatefulWidget {

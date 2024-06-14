@@ -1,5 +1,4 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import 'package:eos_mobile/config/logic/common/session_manager.dart';
 import 'package:eos_mobile/core/utils/auth_utils.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:jwt_decode/jwt_decode.dart';
@@ -80,10 +79,10 @@ class AuthTokenHelper {
   }
 
   /// Test para verificar si el token ha expirado o no.
-  Future<void> testExpirationToken() async {
-    final SessionManager sessionManager = SessionManager();
-    $logger.d('Comprobar la expiración del token ⏳...');
-    await sessionManager.checkTokenExpiration();
-    $logger.i('Comprobación de la expiración del token completada.');
-  }
+  // Future<void> testExpirationToken() async {
+  //   final SessionManager sessionManager = SessionManager();
+  //   $logger.d('Comprobar la expiración del token ⏳...');
+  //   await sessionManager.checkTokenExpiration();
+  //   $logger.i('Comprobación de la expiración del token completada.');
+  // }
 }

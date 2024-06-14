@@ -1,5 +1,5 @@
+import 'package:eos_mobile/core/data/catalogos/user.dart';
 import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
-import 'package:eos_mobile/features/auth/domain/entities/user_entity.dart';
 import 'package:eos_mobile/features/auth/domain/usecases/get_credentials_usecase.dart';
 import 'package:eos_mobile/features/auth/domain/usecases/get_user_info_usecase.dart';
 import 'package:eos_mobile/features/auth/domain/usecases/get_user_session_usecase.dart';

@@ -7,21 +7,24 @@ class RemoteAuthState extends Equatable {
   List<Object?> get props => [];
 }
 
+/// INITIAL STATE
 class RemoteAuthInitial extends RemoteAuthState {}
 
-class RemoteSignInLoading extends RemoteAuthState {}
+/// LOGIN
+class RemoteAuthLoading extends RemoteAuthState {}
 
-class RemoteSignInSuccess extends RemoteAuthState {
-  const RemoteSignInSuccess(this.account);
+class RemoteAuthSuccess extends RemoteAuthState {
+  const RemoteAuthSuccess(this.objResponse);
 
-  final AccountEntity? account;
+  final AccountEntity? objResponse;
 
   @override
-  List<Object?> get props => [ account ];
+  List<Object?> get props => [ objResponse ];
 }
 
-class RemoteSignInFailure extends RemoteAuthState {
-  const RemoteSignInFailure(this.failure);
+/// SERVER FAILURE
+class RemoteAuthServerFailure extends RemoteAuthState {
+  const RemoteAuthServerFailure(this.failure);
 
   final ServerException? failure;
 

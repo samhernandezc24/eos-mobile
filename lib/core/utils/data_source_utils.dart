@@ -19,14 +19,6 @@ class DataSourceUtils {
     return lstValues.firstWhereOrNull((a) => key(a) == id);
   }
 
-  static List<dynamic> renderFilterMultiple(List<dynamic> arrFiltersMultiple, List<dynamic> lstValues, String field, String key) {
-    final objFilterMultiple = arrFiltersMultiple.firstWhere((x) => x['field'] == field, orElse: () => null) as Map<String, dynamic>?;
-
-    final arrFilters = Globals.isValidValue(objFilterMultiple) ? objFilterMultiple!['value'] as List<dynamic> : <dynamic>[];
-
-    return arrFilters.where((a) => lstValues.any((b) => b[key] == a)).toList();
-  }
-
   /// Renderiza y retorna la fecha seleccionada a partir de los datos proporcionados.
   ///
   /// Retorna [dateDefault] si [dataSourcePersistence] es null, si `dataSourcePersistence.dateOption` es válido,
@@ -48,28 +40,20 @@ class DataSourceUtils {
     return (valueDate == null || valueDate.isEmpty) ? null : DateTime.parse(valueDate);
   }
 
-  /// Filtra una lista de filtros de búsqueda para incluir solo aquellos cuya propiedad `isChecked` sea true.
-  ///
-  /// Retorna una nueva lista de [SearchFilter] que contienen solo el campo `field` de los elementos filtrados.
-  static List<Filter> filters(List<Filter> sltFilter) {
+  static List<Filter> filters(List<LabeledDropdownFormField<dynamic>> sltFilter) {
     final List<Filter> lstFilters = [];
 
-    // if (Globals.isValidValue(sltFilter)) {
-    //   for (var itemFilter in sltFilter) {
-    //     var component = itemFilter;
-    //     // var parent = component._parentFormField._elementRef.na
+    if (Globals.isValidValue(sltFilter)) {
+      for (final itemFilter in sltFilter) {
+        final String field = itemFilter.key.toString();
+        final String value = itemFilter.value.toString();
 
-    //     if (Globals.isValidValue(itemFilter.value)) {
-    //       var filter = {
-    //         'field': itemFilter.field,
-    //         'value': itemFilter.value,
-    //       };
-    //       lstFilters.add(filter);
-    //     } else {
-
-    //     }
-    //   }
-    // }
+        if (Globals.isValidValue(value)) {
+          final filter = Filter(field: field, value: value);
+          lstFilters.add(filter);
+        }
+      }
+    }
 
     return lstFilters;
   }

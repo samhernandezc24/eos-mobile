@@ -68,7 +68,7 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
       final String? token = await authTokenHelper.retrieveRefreshToken();
 
       // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _inspeccionRemoteApiService.dataSource('application/json', 'Bearer $token', objData.toJson());
+      final httpResponse = await _inspeccionRemoteApiService.dataSource('application/json', 'Bearer $token', objData);
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         final ServerResponse objResponse = httpResponse.data;

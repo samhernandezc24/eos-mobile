@@ -1,13 +1,13 @@
 import 'dart:io';
 
+import 'package:eos_mobile/core/data/catalogos/user.dart';
 import 'package:eos_mobile/features/auth/data/datasources/local/auth_local_source.dart';
 import 'package:eos_mobile/features/auth/data/datasources/remote/auth_remote_api_service.dart';
 import 'package:eos_mobile/features/auth/data/models/account_model.dart';
 import 'package:eos_mobile/features/auth/data/models/sign_in_model.dart';
-import 'package:eos_mobile/features/auth/data/models/user_model.dart';
 import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
-import 'package:eos_mobile/features/auth/domain/entities/user_entity.dart';
 import 'package:eos_mobile/features/auth/domain/repositories/auth_repository.dart';
+
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -18,12 +18,13 @@ class AuthRepositoryImpl implements AuthRepository {
 
   /// INICIO DE SESIÓN
   @override
-  Future<DataState<AccountModel>> signIn(SignInEntity signIn) async {
+  Future<DataState<AccountModel>> signIn(SignInEntity credentials) async {
     try {
-      final httpResponse = await _authRemoteApiService.signIn('application/json', SignInModel.fromEntity(signIn));
+      final httpResponse = await _authRemoteApiService.signIn('application/json', SignInModel.fromEntity(credentials));
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
-        return DataSuccess(httpResponse.data);
+        final objResponse = httpResponse.data;
+        return DataSuccess(objResponse);
       } else {
         return DataFailed(
           ServerException.fromDioException(
@@ -51,7 +52,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> saveUserInfo({
     required String id,
-    required UserEntity user,
+    required User user,
     required DateTime expiration,
     required String nombre,
     required String key,
@@ -60,7 +61,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }) async {
     return _authLocalSource.saveUserInfo(
       id          : id,
-      user        : UserModel.fromEntity(user),
+      user        : user,
       privilegies : privilegies,
       expiration  : expiration,
       foto        : foto,

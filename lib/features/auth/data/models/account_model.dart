@@ -1,4 +1,4 @@
-import 'package:eos_mobile/features/auth/data/models/user_model.dart';
+import 'package:eos_mobile/core/data/catalogos/user.dart';
 import 'package:eos_mobile/features/auth/domain/entities/account_entity.dart';
 
 /// [AccountModel]
@@ -7,7 +7,7 @@ import 'package:eos_mobile/features/auth/domain/entities/account_entity.dart';
 class AccountModel extends AccountEntity {
   const AccountModel({
     required String id,
-    required UserModel user,
+    required User user,
     required String token,
     required DateTime expiration,
     required String nombre,
@@ -36,7 +36,7 @@ class AccountModel extends AccountEntity {
   factory AccountModel.fromJson(Map<String, dynamic> jsonMap) {
     return AccountModel(
       id          : jsonMap['id'] as String,
-      user        : UserModel.fromJson(jsonMap['user'] as Map<String, dynamic>),
+      user        : User.fromJson(jsonMap['user'] as Map<String, dynamic>),
       token       : jsonMap['token'] as String,
       rol         : jsonMap['rol'] as String? ?? '',
       idRol       : jsonMap['idRol'] as String? ?? '',
@@ -54,7 +54,7 @@ class AccountModel extends AccountEntity {
   factory AccountModel.fromEntity(AccountEntity entity) {
     return AccountModel(
       id          : entity.id,
-      user        : UserModel.fromEntity(entity.user),
+      user        : entity.user,
       token       : entity.token,
       rol         : entity.rol,
       idRol       : entity.idRol,

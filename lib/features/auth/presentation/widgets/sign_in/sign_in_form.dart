@@ -13,18 +13,18 @@ class AuthSignInForm extends StatefulWidget {
 }
 
 class _AuthSignInFormState extends State<AuthSignInForm> {
-  /// GENERAL INSTANCES
+  // GLOBAL KEY
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  /// CONTROLLERS
+  // CONTROLLERS
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
 
   @override
   void initState() {
+    super.initState();
     _emailController    = TextEditingController();
     _passwordController = TextEditingController();
-    super.initState();
   }
 
   @override
@@ -34,7 +34,46 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
     super.dispose();
   }
 
+  // EVENTS
+  void _handleSignInPressed() {
+    if (!_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text($strings.alertWarningInvalidFormTitle, style: $styles.textStyles.bodyBold),
+              const Text('Por favor, revisa los campos del formulario.', softWrap: true),
+            ],
+          ),
+          backgroundColor : const Color(0xfff89406),
+          elevation       : 0,
+          behavior        : SnackBarBehavior.fixed,
+          showCloseIcon   : true,
+        ),
+      );
+      return;
+    } else {
+      _formKey.currentState!.save();
+      _signIn();
+    }
+  }
+
+  Future<void> _showServerFailedDialog(BuildContext context, String? errorMessage) async {
+    return showDialog<void>(
+      context : context,
+      builder: (BuildContext context)  => ServerFailedDialog(
+        errorMessage: errorMessage ?? 'Se produjo un error inesperado. Intenta de nuevo iniciar sesión.',
+      ),
+    );
+  }
+
   /// METHODS
+  Future<void> _signIn() async {
+    final SignInEntity credentials = SignInEntity(email: _emailController.text, password: _passwordController.text);
+    BlocProvider.of<RemoteAuthBloc>(context).add(SignIn(credentials));
+  }
+
   Future<void> _buildForgotPasswordPage() {
     return Navigator.push<void>(
       context,
@@ -55,46 +94,6 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
         },
       ),
     );
-  }
-
-  Future<void> _showErrorDialog(RemoteSignInFailure state) {
-    return showDialog<void>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const SizedBox.shrink(),
-        content: Row(
-          children: <Widget>[
-            Icon(Icons.error, color: Theme.of(context).colorScheme.error),
-            SizedBox(width: $styles.insets.xs + 2),
-            Flexible(
-              child: Text(
-                state.failure?.errorMessage ?? 'Se produjo un error inesperado. Intenta iniciar sesión de nuevo.',
-                style: $styles.textStyles.title2.copyWith(
-                  height: 1.5,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => context.pop(),
-            child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _handleSignIn() {
-    final SignInEntity objData  = SignInEntity(email: _emailController.text, password: _passwordController.text);
-    final bool isValidForm      = _formKey.currentState!.validate();
-
-    if (isValidForm) {
-      _formKey.currentState!.save();
-      BlocProvider.of<RemoteAuthBloc>(context).add(SignInSubmitted(objData));
-    }
   }
 
   @override
@@ -140,8 +139,7 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
                   //   onTap: _buildForgotPasswordPage,
                   //   child: Container(
                   //     alignment: Alignment.centerRight,
-                  //     padding:
-                  //         EdgeInsets.symmetric(vertical: $styles.insets.sm),
+                  //     padding: EdgeInsets.symmetric(vertical: $styles.insets.sm),
                   //     child: Text(
                   //       '¿Has olvidado tu contraseña?',
                   //       style: TextStyle(color: Theme.of(context).primaryColor),
@@ -149,58 +147,50 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
                   //   ),
                   // ),
 
-                  // BOTÓN PARA ENVIAR LAS CREDENCIALES:
                   BlocConsumer<RemoteAuthBloc, RemoteAuthState>(
                     listener: (BuildContext context, RemoteAuthState state) {
-                      if (state is RemoteSignInSuccess) {
-                        final SignInEntity objSignIn = SignInEntity(email: _emailController.text, password: _passwordController.text);
-                        // GUARDADO DE CREDENCIALES EN ALMACENAMIENTO LOCAL
-                        context.read<LocalAuthBloc>().add(SaveCredentials(objSignIn));
+                      if (state is RemoteAuthServerFailure) {
+                        _showServerFailedDialog(context, state.failure?.errorMessage);
+                      }
 
-                        // GUARDADO DE INFORMACIÓN DEL USUARIO EN ALMACENAMIENTO LOCAL
-                        context.read<LocalAuthBloc>().add(
-                              SaveUserInfo(
-                                id            : state.account!.id,
-                                user          : state.account!.user,
-                                expiration    : state.account!.expiration,
-                                nombre        : state.account!.nombre.toProperCase(),
-                                key           : state.account!.key,
-                                privilegies   : state.account!.privilegies,
-                                foto          : state.account!.foto,
-                              ),
-                            );
+                      if (state is RemoteAuthSuccess) {
+                        // final SignInEntity objSignIn = SignInEntity(email: _emailController.text, password: _passwordController.text);
+                        // // GUARDADO DE CREDENCIALES EN ALMACENAMIENTO LOCAL
+                        // context.read<LocalAuthBloc>().add(SaveCredentials(objSignIn));
 
-                        // GUARDADO DE SESIÓN DEL USUARIO EN ALMACENAMIENTO LOCAL
-                        context.read<LocalAuthBloc>().add(SaveUserSession(state.account!.token));
+                        // // GUARDADO DE INFORMACIÓN DEL USUARIO EN ALMACENAMIENTO LOCAL
+                        // context.read<LocalAuthBloc>().add(
+                        //       SaveUserInfo(
+                        //         id            : state.account!.id,
+                        //         user          : state.account!.user,
+                        //         expiration    : state.account!.expiration,
+                        //         nombre        : state.account!.nombre.toProperCase(),
+                        //         key           : state.account!.key,
+                        //         privilegies   : state.account!.privilegies,
+                        //         foto          : state.account!.foto,
+                        //       ),
+                        //     );
 
-                        // NAVEGAR EXITOSAMENTE AL HOMEPAGE
-                        context.go(ScreenPaths.home);
-                        settingsLogic.hasAuthenticated.value = true;
-                      } else if (state is RemoteSignInFailure) {
-                        _showErrorDialog(state);
+                        // // GUARDADO DE SESIÓN DEL USUARIO EN ALMACENAMIENTO LOCAL
+                        // context.read<LocalAuthBloc>().add(SaveUserSession(state.account!.token));
+
+                        // // NAVEGAR EXITOSAMENTE AL HOMEPAGE
+                        // context.go(ScreenPaths.home);
+                        // settingsLogic.hasAuthenticated.value = true;
                       }
                     },
                     builder: (BuildContext context, RemoteAuthState state) {
-                      if (state is RemoteSignInLoading) {
+                      if (state is RemoteAuthLoading) {
                         return FilledButton(
-                          onPressed: null,
-                          style: ButtonStyle(
-                            minimumSize: MaterialStateProperty.all(
-                              const Size(double.infinity, 48),
-                            ),
-                          ),
-                          child: const AppLoadingIndicator(width: 20, height: 20),
+                          onPressed : null,
+                          style     : ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(double.infinity, 48))),
+                          child     : const AppLoadingIndicator(width: 20, height: 20),
                         );
                       }
-
                       return FilledButton(
-                        onPressed: _handleSignIn,
-                        style: ButtonStyle(
-                          minimumSize: MaterialStateProperty.all(
-                            const Size(double.infinity, 48),
-                          ),
-                        ),
-                        child: Text($strings.signInButtonText, style: $styles.textStyles.button),
+                        onPressed : _handleSignInPressed,
+                        style     : ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(double.infinity, 48))),
+                        child     : Text($strings.signInButtonText, style: $styles.textStyles.button),
                       );
                     },
                   ),

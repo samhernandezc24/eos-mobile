@@ -12,7 +12,7 @@ part 'auth_remote_api_service.g.dart';
 abstract class AuthRemoteApiService {
   factory AuthRemoteApiService(Dio dio, {String baseUrl}) = _AuthRemoteApiService;
 
-  // SIGN IN
+  /// INICIAR SESIÓN
   @POST('/LoginTreo')
   Future<HttpResponse<AccountModel>> signIn(
     @Header(HttpHeaders.contentTypeHeader) String contentType,

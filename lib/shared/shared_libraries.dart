@@ -111,6 +111,9 @@ export 'package:go_router/go_router.dart';
 // IMAGE PICKER
 export 'package:image_picker/image_picker.dart';
 
+// INFINITE SCROLL PAGINATION
+export 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+
 // LOGGER
 export 'package:logger/logger.dart';
 

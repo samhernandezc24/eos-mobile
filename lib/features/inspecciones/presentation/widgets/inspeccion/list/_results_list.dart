@@ -15,8 +15,25 @@ class _ResultsListInspeccionState extends State<_ResultsListInspeccion> {
   // CONTROLLERS
   late ScrollController _controller;
 
+  final PagingController<int, InspeccionDataSourceEntity> _pagingController = PagingController(firstPageKey: 0);
+
   // PROPERTIES
   double _prevVelocity = -1;
+
+  // STATE
+  @override
+  void initState() {
+    super.initState();
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
+  }
+
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
+  }
 
   // EVENTS
   void _handleListScrolled() {
@@ -29,6 +46,12 @@ class _ResultsListInspeccionState extends State<_ResultsListInspeccion> {
     }
     _prevVelocity = velocity ?? _prevVelocity;
   }
+
+  // METHODS
+  Future<void> _fetchPage(int pageKey) async {
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScrollDecorator.shadow(

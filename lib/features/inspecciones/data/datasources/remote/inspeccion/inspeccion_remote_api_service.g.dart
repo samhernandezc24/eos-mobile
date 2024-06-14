@@ -60,7 +60,7 @@ class _InspeccionRemoteApiService implements InspeccionRemoteApiService {
   Future<HttpResponse<ServerResponse>> dataSource(
     String contentType,
     String token,
-    Map<String, dynamic> objData,
+    DataSource objData,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -70,7 +70,7 @@ class _InspeccionRemoteApiService implements InspeccionRemoteApiService {
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(objData);
+    _data.addAll(objData.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ServerResponse>>(Options(
       method: 'POST',

@@ -1,4 +1,4 @@
-import 'package:eos_mobile/features/auth/domain/entities/user_entity.dart';
+import 'package:eos_mobile/core/data/catalogos/user.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 /// [AccountEntity]
@@ -20,7 +20,7 @@ class AccountEntity extends Equatable {
   });
 
   final String id;
-  final UserEntity user;
+  final User user;
   final String token;
   final String? rol;
   final String? idRol;
@@ -32,5 +32,17 @@ class AccountEntity extends Equatable {
   final String key;
 
   @override
-  List<Object?> get props => [ id, user, token, rol, idRol, privilegies, expiration, action, foto, nombre, key ];
+  List<Object?> get props => [
+        id,
+        user,
+        token,
+        rol,
+        idRol,
+        privilegies,
+        expiration,
+        action,
+        foto,
+        nombre,
+        key,
+      ];
 }

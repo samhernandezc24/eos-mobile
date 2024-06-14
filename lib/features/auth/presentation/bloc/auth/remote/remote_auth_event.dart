@@ -7,13 +7,12 @@ sealed class RemoteAuthEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class LogoutRequested extends RemoteAuthEvent {}
+/// [SignInUseCase]
+class SignIn extends RemoteAuthEvent {
+  const SignIn(this.credentials);
 
-class SignInSubmitted extends RemoteAuthEvent {
-  const SignInSubmitted(this.signIn);
-
-  final SignInEntity signIn;
+  final SignInEntity credentials;
 
   @override
-  List<Object?> get props => [ signIn ];
+  List<Object?> get props => [ credentials ];
 }

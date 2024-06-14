@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:eos_mobile/core/data/catalogos/user.dart';
 import 'package:eos_mobile/core/utils/password_utils.dart';
-import 'package:eos_mobile/features/auth/data/models/user_model.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class AuthLocalSource {
@@ -44,7 +44,7 @@ class AuthLocalSource {
   /// Guarda la información del usuario autenticado en `SharedPreferences`.
   Future<void> saveUserInfo({
     required String id,
-    required UserModel user,
+    required User user,
     required DateTime expiration,
     required String nombre,
     required String key,

@@ -1,5 +1,4 @@
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
-import 'package:eos_mobile/core/data/welcome_data.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/controls/app_page_indicator.dart';
 import 'package:eos_mobile/ui/common/gradient_container.dart';
@@ -22,7 +21,7 @@ class _WelcomePageState extends State<WelcomePage> {
   static const double _textHeight           = 110;
   static const double _pageIndicatorHeight  = 55;
 
-  static List<WelcomeData> pageData = <WelcomeData>[];
+  static List<_PageData> pageData = <_PageData>[];
 
   bool get _isOnLastPage    => _currentPage.value == pageData.length - 1;
   bool get _isOnFirstPage   => _currentPage.value == 0;
@@ -65,10 +64,10 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     // Establecer los datos de la página.
-    pageData = <WelcomeData>[
-      WelcomeData($strings.welcomeTitleOne, $strings.welcomeContentOne, 'one'),
-      WelcomeData($strings.welcomeTitleTwo, $strings.welcomeContentTwo, 'two'),
-      WelcomeData($strings.welcomeTitleThree, $strings.welcomeContentThree, 'three'),
+    pageData = <_PageData>[
+      _PageData($strings.welcomeTitleOne, $strings.welcomeContentOne, 'one'),
+      _PageData($strings.welcomeTitleTwo, $strings.welcomeContentTwo, 'two'),
+      _PageData($strings.welcomeTitleThree, $strings.welcomeContentThree, 'three'),
     ];
 
     // Esta vista utiliza un PageView a pantalla completa para permitir
@@ -256,10 +255,19 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 }
 
+@immutable
+class _PageData {
+  const _PageData(this.title, this.content, this.image);
+
+  final String title;
+  final String content;
+  final String image;
+}
+
 class _Page extends StatelessWidget {
   const _Page({required this.data});
 
-  final WelcomeData data;
+  final _PageData data;
 
   @override
   Widget build(BuildContext context) {
@@ -297,7 +305,7 @@ class _Page extends StatelessWidget {
 class _PageImage extends StatelessWidget {
   const _PageImage({required this.data});
 
-  final WelcomeData data;
+  final _PageData data;
 
   @override
   Widget build(BuildContext context) {

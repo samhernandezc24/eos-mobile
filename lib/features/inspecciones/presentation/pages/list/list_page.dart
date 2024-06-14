@@ -73,13 +73,18 @@ class InspeccionListPage extends StatefulWidget with GetItStatefulWidgetMixin {
 }
 
 class _InspeccionListPageState extends State<InspeccionListPage> with GetItStateMixin {
+  // PAGINATION
+  int _pageIndex = 0;
+  int _pageSize = 25;
+  int _length = 0;
+
   // CONTROLLERS
   late final TextEditingController _searchController;
 
   // PROPERTIES
   bool isLoading = false;
 
-  List<Filter> sltFilter = [];
+  List<LabeledDropdownFormField<dynamic>> sltFilter = [];
 
   // DATES FILTER
 
@@ -182,6 +187,8 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
               lstInspeccionesEstatus  : lstInspeccionesEstatus,
               lstUsuarios             : lstUsuarios,
               hasRequerimiento        : lstHasRequerimiento,
+              onClearFilters          : _clearFilters,
+              onApplyFilters          : _applyFilters,
             ),
         transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
           const Offset begin    = Offset(1, 0);
@@ -369,11 +376,16 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     final List<Filter> arrFilters = dataSourcePersistence == null ? [] : dataSourcePersistence.filters ?? [];
 
     setState(() {
-      _selectedUnidadTipo     = DataSourceUtils.renderFilter<UnidadTipo>(arrFilters, lstUnidadesTipos, 'IdUnidadTipo', (item) => item.idUnidadTipo ?? '');
-      _selectedEstatus        = DataSourceUtils.renderFilter<InspeccionEstatus>(arrFilters, lstInspeccionesEstatus, 'IdInspeccionEstatus', (item) => item.idInspeccionEstatus ?? '');
-      _selectedRequerimiento  = DataSourceUtils.renderFilter<Requerimiento>(arrFilters, lstHasRequerimiento, 'HasRequerimiento', (item) => item.value ?? '');
-      _selectedCreatedUsuario = DataSourceUtils.renderFilter<Usuario>(arrFilters, lstUsuarios, 'IdCreatedUser', (item) => item.id ?? '');
-      _selectedUpdatedUsuario = DataSourceUtils.renderFilter<Usuario>(arrFilters, lstUsuarios, 'IdUpdatedUser', (item) => item.id ?? '');
+      _selectedUnidadTipo = DataSourceUtils.renderFilter<UnidadTipo>(arrFilters, lstUnidadesTipos, 'IdUnidadTipo', (item) => item.idUnidadTipo);
+
+      // sltFilter.add(Filter(field: 'IdUnidadTipo', value: _selectedUnidadTipo?.idUnidadTipo));
+      // _selectedUnidadTipo     = DataSourceUtils.renderFilter<UnidadTipo>(arrFilters, lstUnidadesTipos, 'IdUnidadTipo', (item) => item.idUnidadTipo);
+      // _selectedEstatus        = DataSourceUtils.renderFilter<InspeccionEstatus>(arrFilters, lstInspeccionesEstatus, 'IdInspeccionEstatus', (item) => item.idInspeccionEstatus);
+      // _selectedRequerimiento  = DataSourceUtils.renderFilter<Requerimiento>(arrFilters, lstHasRequerimiento, 'HasRequerimiento', (item) => item.value);
+      // _selectedCreatedUsuario = DataSourceUtils.renderFilter<Usuario>(arrFilters, lstUsuarios, 'IdCreatedUser', (item) => item.id);
+      // _selectedUpdatedUsuario = DataSourceUtils.renderFilter<Usuario>(arrFilters, lstUsuarios, 'IdUpdatedUser', (item) => item.id);
+
+      // print(_selectedEstatus);
     });
   }
 
@@ -394,6 +406,20 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     );
 
     BlocProvider.of<RemoteDataSourcePersistenceBloc>(context).add(UpdateDataSourcePersistence(varArgs));
+  }
+
+  void _applyFilters() {
+    Navigator.of(context).pop();
+    _updateResults(showLoading: false);
+    _buildDataSource();
+  }
+
+  void _clearFilters() {
+    Navigator.of(context).pop();
+
+    _searchController.clear();
+
+    _buildDataSource();
   }
 
   List<SearchFilter> _getSearchFilters() {
@@ -492,6 +518,10 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                   if (state is RemoteInspeccionDataSourceSuccess) {
                     setState(() {
                       lstRows = state.objResponse?.rows ?? [];
+
+                      _pageIndex  = state.objResponse?.page ?? 0;
+                      _pageSize   = state.objResponse?.length ?? 0;
+                      _length     = state.objResponse?.count ?? 0;
                     });
                   }
 
@@ -549,10 +579,8 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                     if (lstRows.isNotEmpty) {
                       return _ResultsListInspeccion(
                         lstRows           : lstRows,
-                        onDetailsPressed  : (objInspeccion) =>
-                          _handleDetailsPressed(context, objInspeccion),
-                        onCancelPressed   : (objData, objInspeccion) =>
-                            _handleCancelPressed(context, objData, objInspeccion),
+                        onDetailsPressed  : (objInspeccion) => _handleDetailsPressed(context, objInspeccion),
+                        onCancelPressed   : (objData, objInspeccion) => _handleCancelPressed(context, objData, objInspeccion),
                       );
                     } else {
                       return _buildNoDataFound(context);
@@ -595,7 +623,9 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              lstRows.isEmpty ? $strings.inspeccionSearchLabelNotFound : '${lstRows.length} resultado(s)',
+              lstRows.isEmpty
+                  ? '0 de 0 resultados'
+                  : '$_pageIndex - $_pageSize de $_length resultado(s)',
               textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false),
               style: statusStyle,
             ),
