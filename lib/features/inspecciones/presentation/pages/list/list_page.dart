@@ -14,6 +14,7 @@ import 'package:eos_mobile/core/data/data_source_persistence.dart';
 import 'package:eos_mobile/core/data/filter.dart';
 import 'package:eos_mobile/core/data/inspeccion/categoria.dart';
 import 'package:eos_mobile/core/data/inspeccion/categoria_item.dart';
+import 'package:eos_mobile/core/data/inspeccion/fichero.dart';
 import 'package:eos_mobile/core/data/inspeccion/inspeccion.dart';
 import 'package:eos_mobile/core/data/inspeccion/requerimiento.dart';
 import 'package:eos_mobile/core/data/search_filter.dart';
@@ -26,7 +27,6 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/insp
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_categoria/inspeccion_categoria_store_req_entity.dart';
-import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_fichero/inspeccion_fichero_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_store_req_entity.dart';
@@ -91,6 +91,13 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     const Requerimiento(value: true, name: 'Con requerimiento'),
     const Requerimiento(value: false, name: 'Sin requerimiento'),
   ];
+
+  // SELECTED FILTER OPTION
+  UnidadTipo? _selectedUnidadTipo;
+  InspeccionEstatus? _selectedEstatus;
+  Usuario? _selectedCreatedUsuario;
+  Usuario? _selectedUpdatedUsuario;
+  Requerimiento? _selectedRequerimiento;
 
   // SEARCH FILTERS
   List<SearchFilter> searchFilters = [];
@@ -344,7 +351,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     final varArgs = DataSource(
       search          : Globals.isValidValue(_searchController.text) ? _searchController.text : '',
       searchFilters   : DataSourceUtils.searchFilters(searchFilters),
-      filters         : const [],
+      filters         : DataSourceUtils.filters(sltFilter),
       filtersMultiple : const [],
       dateFrom        : '',
       dateTo          : '',
@@ -361,11 +368,13 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     // RECUPERACION DE DROPDOWN SIN MULTIFILTROS
     final List<Filter> arrFilters = dataSourcePersistence == null ? [] : dataSourcePersistence.filters ?? [];
 
-    // sltFilter[0].value = DataSourceUtils.renderFilter(arrFilters, lstInspeccionesEstatus, 'IdInspeccionEstatus', 'idInspeccionEstatus');
-    // sltFilter[1].value = DataSourceUtils.renderFilter(arrFilters, lstUnidadesTipos, 'IdUnidadTipo', 'idUnidadTipo');
-    // sltFilter[2].value = DataSourceUtils.renderFilter(arrFilters, lstHasRequerimiento, 'HasRequerimiento', 'value');
-    // sltFilter[3].value = DataSourceUtils.renderFilter(arrFilters, lstUsuarios, 'IdCreatedUser', 'id');
-    // sltFilter[4].value = DataSourceUtils.renderFilter(arrFilters, lstUsuarios, 'IdUpdatedUser', 'id');
+    setState(() {
+      _selectedUnidadTipo     = DataSourceUtils.renderFilter<UnidadTipo>(arrFilters, lstUnidadesTipos, 'IdUnidadTipo', (item) => item.idUnidadTipo ?? '');
+      _selectedEstatus        = DataSourceUtils.renderFilter<InspeccionEstatus>(arrFilters, lstInspeccionesEstatus, 'IdInspeccionEstatus', (item) => item.idInspeccionEstatus ?? '');
+      _selectedRequerimiento  = DataSourceUtils.renderFilter<Requerimiento>(arrFilters, lstHasRequerimiento, 'HasRequerimiento', (item) => item.value ?? '');
+      _selectedCreatedUsuario = DataSourceUtils.renderFilter<Usuario>(arrFilters, lstUsuarios, 'IdCreatedUser', (item) => item.id ?? '');
+      _selectedUpdatedUsuario = DataSourceUtils.renderFilter<Usuario>(arrFilters, lstUsuarios, 'IdUpdatedUser', (item) => item.id ?? '');
+    });
   }
 
   Future<void> _updateResults({bool showLoading = true}) async {
@@ -377,7 +386,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
       columns           : const [],
       sort              : Sort(column: selectedOption?.column, direction: selectedOption?.direction),
       displayedColumns  : const [],
-      filters           : const [],
+      filters           : DataSourceUtils.filters(sltFilter),
       filtersMultiple   : const [],
       dateOption        : '',
       dateFrom          : '',
@@ -467,10 +476,10 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                       final DataSourcePersistence? dataSourcePersistence = state.objResponse?.dataSourcePersistence;
 
                       searchFilters = dataSourcePersistence == null ? _getSearchFilters() : dataSourcePersistence.searchFilters ?? [];
-                      sortOptions   = _getSortOptions();
 
                       // FRAGMENTO NO MODIFICABLE - SORT
-                      selectedOption = dataSourcePersistence == null ? const Sort(column: '', direction: 'desc') : dataSourcePersistence.sort;
+                      sortOptions     = _getSortOptions();
+                      selectedOption  = dataSourcePersistence == null ? const Sort(column: '', direction: 'desc') : dataSourcePersistence.sort;
 
                       // FRAGMENTO NO MODIFICABLE - FILTROS
                       _renderFilters(dataSourcePersistence);

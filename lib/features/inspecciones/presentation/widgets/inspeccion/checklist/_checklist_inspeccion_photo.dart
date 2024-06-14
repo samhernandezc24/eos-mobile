@@ -11,6 +11,9 @@ class _ChecklistInspeccionPhoto extends StatefulWidget {
 }
 
 class __ChecklistInspeccionPhotoState extends State<_ChecklistInspeccionPhoto> {
+  // NOTIFIERS
+  final ValueNotifier<bool> isDialOpen = ValueNotifier<bool>(false);
+
   // PROPERTIES
   String? imageBase64             = '';
   String? unidadNumeroEconomico   = '';
@@ -22,12 +25,10 @@ class __ChecklistInspeccionPhotoState extends State<_ChecklistInspeccionPhoto> {
   int countQueueUpload  = 0;
   int countQueueTotal   = 0;
 
-  bool _isLoading       = false;
-  bool _hasServerError  = false;
   bool isSave = false;
 
   // LIST
-  List<XFile> files = <XFile>[];
+  List<Fichero> lstFicheros = [];
 
   // STATE
   @override
@@ -38,7 +39,7 @@ class __ChecklistInspeccionPhotoState extends State<_ChecklistInspeccionPhoto> {
 
   // EVENTS
   void _handleNextPressed() {
-    if (files.isEmpty) {
+    if (lstFicheros.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Column(
@@ -104,176 +105,124 @@ class __ChecklistInspeccionPhotoState extends State<_ChecklistInspeccionPhoto> {
     );
   }
 
-  Future<void> _handleTakePhotoPressed() async {
-    final XFile? photo = await imageHelper.takePhoto();
-
-    if (photo != null) {
-      final String base64Image = await Globals.fileToBase64(File(photo.path));
-      final String fileExtension = Globals.extensionFile(photo.path);
-      print(fileExtension);
-    }
-  }
-
   // METHODS
   Future<void> _getFotos() async {
     context.read<RemoteInspeccionFicheroBloc>().add(ListInspeccionFicheros(widget.objData));
   }
 
-  Future<void> _store({bool boolBegin = false}) async {
-    if (boolBegin) {
-      indexUpload = 0;
-    }
-
-    if (countQueueUpload < countQueueTotal) {
-      final InspeccionFicheroStoreReqEntity objPost = InspeccionFicheroStoreReqEntity(
-        fileBase64      : '',
-        fileExtension   : '',
-        idInspeccion    : widget.objInspeccion.idInspeccion,
-        inspeccionFolio : widget.objInspeccion.folio,
-      );
-
-      BlocProvider.of<RemoteInspeccionFicheroBloc>(context).add(StoreInspeccionFichero(objPost));
-    } else {
-      // Fotos guardadas exitosamente
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text($strings.checklistPhotoEvidenceAppBarTitle, style: $styles.textStyles.h3)),
-      body: BlocConsumer<RemoteInspeccionFicheroBloc, RemoteInspeccionFicheroState>(
-        listener: (BuildContext context, RemoteInspeccionFicheroState state) {
-          // LOADING:
-          if (state is RemoteInspeccionFicheroLoading) {
-            setState(() {
-              _isLoading      = true;
-              _hasServerError = false;
-            });
+    return PopScope(
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          if (isDialOpen.value) {
+            isDialOpen.value = false;
           }
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(title: Text($strings.checklistPhotoEvidenceAppBarTitle, style: $styles.textStyles.h3)),
+        body: BlocConsumer<RemoteInspeccionFicheroBloc, RemoteInspeccionFicheroState>(
+          listener: (BuildContext context, RemoteInspeccionFicheroState state) {
+            // SUCCESS:
+            if (state is RemoteInspeccionFicheroSuccess) {
+              setState(() {
+                // DATOS
+                unidadNumeroEconomico   = state.objResponse?.inspeccion.unidadNumeroEconomico ?? '';
+                unidadTipoName          = state.objResponse?.inspeccion.unidadTipoName        ?? '';
+                unidadNumeroSerie       = state.objResponse?.inspeccion.numeroSerie           ?? '';
+                idInspeccionEstatus     = state.objResponse?.inspeccion.idInspeccionEstatus   ?? '';
 
-          // ERRORS:
-          if (state is RemoteInspeccionFicheroServerFailedMessageList) {
-            setState(() {
-              _hasServerError = true;
-              _isLoading      = false;
-            });
-          }
+                // LIST FICHEROS
+                lstFicheros = state.objResponse?.ficheros ?? [];
+              });
+            }
+          },
+          builder: (BuildContext context, RemoteInspeccionFicheroState state) {
+            if (state is RemoteInspeccionFicheroLoading) {
+              return const Center(child: AppLoadingIndicator());
+            }
 
-          if (state is RemoteInspeccionFicheroServerFailureList) {
-            setState(() {
-              _hasServerError = true;
-              _isLoading      = false;
-            });
-          }
+            if (state is RemoteInspeccionFicheroServerFailedMessageList) {
+              return ErrorInfoContainer(
+                onPressed     : _getFotos,
+                errorMessage  : state.errorMessage,
+              );
+            }
 
-          // SUCCESS:
-          if (state is RemoteInspeccionFicheroSuccess) {
-            setState(() {
-              unidadNumeroEconomico   = state.objResponse?.inspeccion.unidadNumeroEconomico ?? '';
-              unidadTipoName          = state.objResponse?.inspeccion.unidadTipoName        ?? '';
-              unidadNumeroSerie       = state.objResponse?.inspeccion.numeroSerie           ?? '';
-              idInspeccionEstatus     = state.objResponse?.inspeccion.idInspeccionEstatus   ?? '';
+            if (state is RemoteInspeccionFicheroServerFailureList) {
+              return ErrorInfoContainer(
+                onPressed     : _getFotos,
+                errorMessage  : state.failure?.errorMessage,
+              );
+            }
 
-              _hasServerError = false;
-              _isLoading      = false;
-            });
-          }
-        },
-        builder: (BuildContext context, RemoteInspeccionFicheroState state) {
-          if (state is RemoteInspeccionFicheroLoading) {
-            return const Center(child: AppLoadingIndicator());
-          }
+            if (state is RemoteInspeccionFicheroSuccess) {
+              return Column(
+                crossAxisAlignment  : CrossAxisAlignment.stretch,
+                children            : <Widget>[
+                  Container(
+                    width   : double.infinity,
+                    padding : EdgeInsets.all($styles.insets.sm),
+                    color   : Theme.of(context).colorScheme.background,
+                    child   : Column(
+                      crossAxisAlignment  : CrossAxisAlignment.start,
+                      children            : <Widget>[
+                        Text('Número económico:', style: $styles.textStyles.bodySmall),
+                        Text('$unidadNumeroEconomico', style: $styles.textStyles.title1.copyWith(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600, height: 1.3)),
 
-          if (state is RemoteInspeccionFicheroServerFailedMessageList) {
-            return ErrorInfoContainer(
-              onPressed     : _getFotos,
-              errorMessage  : state.errorMessage,
-            );
-          }
+                        RichText(
+                          text: TextSpan(
+                            style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                            children  : <InlineSpan>[
+                              const TextSpan(text: 'Tipo de unidad'),
+                              TextSpan(text: ': $unidadTipoName'),
+                            ],
+                          ),
+                        ),
 
-          if (state is RemoteInspeccionFicheroServerFailureList) {
-            return ErrorInfoContainer(
-              onPressed     : _getFotos,
-              errorMessage  : state.failure?.errorMessage,
-            );
-          }
+                        RichText(
+                          text: TextSpan(
+                            style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                            children  : <InlineSpan>[
+                              const TextSpan(text: 'Número de serie'),
+                              TextSpan(text: ': $unidadNumeroSerie'),
+                            ],
+                          ),
+                        ),
 
-          if (state is RemoteInspeccionFicheroSuccess) {
-            return Column(
-              crossAxisAlignment  : CrossAxisAlignment.stretch,
-              children            : <Widget>[
-                Container(
-                  width   : double.infinity,
-                  padding : EdgeInsets.all($styles.insets.sm),
-                  color   : Theme.of(context).colorScheme.background,
-                  child   : Column(
-                    crossAxisAlignment  : CrossAxisAlignment.start,
-                    children            : <Widget>[
-                      Text('Número económico:', style: $styles.textStyles.bodySmall),
-                      Text('$unidadNumeroEconomico', style: $styles.textStyles.title1.copyWith(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600, height: 1.3)),
+                        const Divider(),
 
-                      RichText(
-                        text: TextSpan(
-                          style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground),
-                          children  : <InlineSpan>[
-                            const TextSpan(text: 'Tipo de unidad'),
-                            TextSpan(text: ': $unidadTipoName'),
+                        Row(
+                          children: <Widget>[
+                            FilledButton.icon(onPressed: _getFotos, icon: const Icon(Icons.refresh), label: const Text('Actualizar')),
+                            Gap($styles.insets.xs),
+                            FilledButton.icon(onPressed: () => _handleCreatePressed(context), icon: const Icon(Icons.add), label: const Text('Nuevo')),
                           ],
                         ),
-                      ),
-
-                      RichText(
-                        text: TextSpan(
-                          style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground),
-                          children  : <InlineSpan>[
-                            const TextSpan(text: 'Número de serie'),
-                            TextSpan(text: ': $unidadNumeroSerie'),
-                          ],
-                        ),
-                      ),
-
-                      RichText(
-                        text: TextSpan(
-                          style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
-                          children: <TextSpan>[
-                            TextSpan(text: $strings.settingsSuggestionsText, style: const TextStyle(fontWeight: FontWeight.w600)),
-                            TextSpan(text: ': ${$strings.checklistPhotoEvidenceBoxSuggest}'),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                if (files.isNotEmpty)
-                  Expanded(
-                    child: RepaintBoundary(
-                      child: _PhotoGrid(imageFiles: files),
-                    ),
-                  )
-                else
-                  Expanded(
-                    child: RequestDataUnavailable(
-                      title         : $strings.checklistPhotoEmptyListTitle,
-                      message       : $strings.checklistPhotoEmptyListMessage,
-                      onRefresh     : _getFotos,
+                      ],
                     ),
                   ),
-              ],
-            );
-          }
-          return const SizedBox.shrink();
-        },
+
+                  Expanded(
+                    child: lstFicheros.isNotEmpty
+                        ? RepaintBoundary(
+                            child: _PhotoGrid(lstFicheros: lstFicheros),
+                          )
+                        : RequestDataUnavailable(
+                            title         : $strings.checklistPhotoEmptyListTitle,
+                            message       : $strings.checklistPhotoEmptyListMessage,
+                            isRefreshData : false,
+                          ),
+                  ),
+                ],
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
+        bottomNavigationBar: _buildBottomAppBar(context),
       ),
-      floatingActionButton: !_isLoading && !_hasServerError
-          ? FloatingActionButton(
-              onPressed : () => _handleCreatePressed(context),
-              tooltip   : 'Agregar fotografías',
-              child     : const Icon(Icons.add_a_photo),
-            )
-          : null,
-      bottomNavigationBar: _buildBottomAppBar(context),
     );
   }
 

@@ -1,9 +1,9 @@
 part of '../../../pages/list/list_page.dart';
 
 class _PhotoGrid extends StatefulWidget {
-  const _PhotoGrid({required this.imageFiles, Key? key}) : super(key: key);
+  const _PhotoGrid({required this.lstFicheros, Key? key}) : super(key: key);
 
-  final List<XFile> imageFiles;
+  final List<Fichero> lstFicheros;
 
   @override
   State<_PhotoGrid> createState() => _PhotoGridState();
@@ -44,8 +44,8 @@ class _PhotoGridState extends State<_PhotoGrid> {
                 crossAxisCount    : (context.widthPx / 300).ceil(),
                 mainAxisSpacing   : $styles.insets.sm,
                 crossAxisSpacing  : $styles.insets.sm,
-                childCount        : widget.imageFiles.length,
-                itemBuilder       : (BuildContext context, int index) => _PhotoTile(imagePath: widget.imageFiles[index].path),
+                childCount        : widget.lstFicheros.length,
+                itemBuilder       : (BuildContext context, int index) => _PhotoTile(imagePath: widget.lstFicheros[index].path ?? ''),
               ),
             ),
           ],

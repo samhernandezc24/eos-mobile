@@ -26,6 +26,12 @@ class _FilterDataInspeccionState extends State<_FilterDataInspeccion> {
   final GlobalKey<FormFieldState<Usuario>> _createdUserKey          = GlobalKey<FormFieldState<Usuario>>();
   final GlobalKey<FormFieldState<Usuario>> _updatedUserKey          = GlobalKey<FormFieldState<Usuario>>();
 
+  // LIST
+  late List<UnidadTipo> lstUnidadesTipos;
+  late List<InspeccionEstatus> lstInspeccionesEstatus;
+  late List<Requerimiento> lstHasRequerimiento;
+  late List<Usuario> lstUsuarios;
+
   // SELECTION
   UnidadTipo? _selectedUnidadTipo;
   InspeccionEstatus? _selectedEstatus;
@@ -33,13 +39,25 @@ class _FilterDataInspeccionState extends State<_FilterDataInspeccion> {
   Usuario? _selectedCreatedUsuario;
   Usuario? _selectedUpdatedUsuario;
 
+  // STATE
+  @override
+  void initState() {
+    super.initState();
+    lstUnidadesTipos = List.from(widget.lstUnidadesTipos);
+    lstUnidadesTipos.insert(0, const UnidadTipo(idUnidadTipo: '', name: 'Seleccionar', seccion: ''));
+
+    lstInspeccionesEstatus = List.from(widget.lstInspeccionesEstatus);
+    lstInspeccionesEstatus.insert(0, const InspeccionEstatus(idInspeccionEstatus: '', name: 'Seleccionar'));
+
+    lstHasRequerimiento = List.from(widget.hasRequerimiento);
+    lstHasRequerimiento.insert(0, const Requerimiento(name: 'Seleccionar'));
+
+    lstUsuarios = List.from(widget.lstUsuarios);
+    lstUsuarios.insert(0, const Usuario(id: '', nombreCompleto: 'Seleccionar'));
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<UnidadTipo> lstUnidadesTipos               = [const UnidadTipo(idUnidadTipo: '', name: 'Seleccionar', seccion: ''), ...widget.lstUnidadesTipos];
-    final List<InspeccionEstatus> lstInspeccionesEstatus  = [const InspeccionEstatus(idInspeccionEstatus: '', name: 'Seleccionar'), ...widget.lstInspeccionesEstatus];
-    final List<Requerimiento> lstHasRequerimiento         = [const Requerimiento(name: 'Seleccionar'), ...widget.hasRequerimiento];
-    final List<Usuario> lstUsuarios                       = [const Usuario(id: '', nombreCompleto: 'Seleccionar'), ...widget.lstUsuarios];
-
     return Scaffold(
       appBar: AppBar(title: Text('Buscar por filtros', style: $styles.textStyles.h3)),
       body: SafeArea(

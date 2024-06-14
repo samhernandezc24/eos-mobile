@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:eos_mobile/core/data/data_source_persistence.dart';
 import 'package:eos_mobile/core/data/filter.dart';
 import 'package:eos_mobile/core/data/search_filter.dart';
@@ -10,15 +11,12 @@ class DataSourceUtils {
   /// Si se encuentra un filtro válido, obtiene su valor como ID. Si no, retorna null. Luego verifica
   /// si algún valor en la lista [lstValues] tiene el ID en la [key] especificada. Si encuentra una
   /// coincidencia, retorna el ID; de lo contrario, retorna null.
-  static dynamic renderFilter(List<Filter> arrFilters, List<dynamic> lstValues, String field, String key) {
-    // Encuentra el filtro que coincide con el campo dado.
-    final Filter objFilter = arrFilters.firstWhere((x) => x.field == field, orElse: () => const Filter());
+  static T? renderFilter<T>(List<Filter> arrFilters, List<T> lstValues, String field, dynamic Function(T) key) {
+    final Filter? objFilter = arrFilters.firstWhereOrNull((x) => x.field == field);
 
-    // Obtiene el id si el filtro es válido, de lo contrario establece null.
-    final String? id = Globals.isValidValue(objFilter) ? objFilter.value ?? '' : null;
+    final String? id = Globals.isValidValue(objFilter) ? objFilter?.value ?? '' : null;
 
-    // Comprueba si algún valor en lstValues tiene el id en la clave especificada.
-    return lstValues.any((a) => a[key] == id) ? id : null;
+    return lstValues.firstWhereOrNull((a) => key(a) == id);
   }
 
   static List<dynamic> renderFilterMultiple(List<dynamic> arrFiltersMultiple, List<dynamic> lstValues, String field, String key) {
@@ -50,15 +48,28 @@ class DataSourceUtils {
     return (valueDate == null || valueDate.isEmpty) ? null : DateTime.parse(valueDate);
   }
 
+  /// Filtra una lista de filtros de búsqueda para incluir solo aquellos cuya propiedad `isChecked` sea true.
+  ///
+  /// Retorna una nueva lista de [SearchFilter] que contienen solo el campo `field` de los elementos filtrados.
   static List<Filter> filters(List<Filter> sltFilter) {
-    List<Filter> lstFilters = [];
+    final List<Filter> lstFilters = [];
 
-    if (Globals.isValidValue(sltFilter)) {
-      for (var itemFilter in sltFilter) {
-        var component = itemFilter;
-        // var parent = component._parentFormField._elementRef.na
-      }
-    }
+    // if (Globals.isValidValue(sltFilter)) {
+    //   for (var itemFilter in sltFilter) {
+    //     var component = itemFilter;
+    //     // var parent = component._parentFormField._elementRef.na
+
+    //     if (Globals.isValidValue(itemFilter.value)) {
+    //       var filter = {
+    //         'field': itemFilter.field,
+    //         'value': itemFilter.value,
+    //       };
+    //       lstFilters.add(filter);
+    //     } else {
+
+    //     }
+    //   }
+    // }
 
     return lstFilters;
   }
