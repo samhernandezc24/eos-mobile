@@ -8,9 +8,7 @@ part 'remote_auth_event.dart';
 part 'remote_auth_state.dart';
 
 class RemoteAuthBloc extends Bloc<RemoteAuthEvent, RemoteAuthState> {
-  RemoteAuthBloc(this._signInUseCase) : super(RemoteAuthInitial()) {
-    on<SignIn>(onSignIn);
-  }
+  RemoteAuthBloc(this._signInUseCase) : super(RemoteAuthInitial()) { on<SignIn>(onSignIn); }
 
   // CASOS DE USO
   final SignInUseCase _signInUseCase;

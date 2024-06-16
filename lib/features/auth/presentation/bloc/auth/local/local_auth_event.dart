@@ -7,53 +7,41 @@ sealed class LocalAuthEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class LogoutRequested extends LocalAuthEvent {}
+/// [StoreCredentialsUseCase]
+class StoreCredentials extends LocalAuthEvent {
+  const StoreCredentials(this.credentials);
 
-class GetCredentials extends LocalAuthEvent {}
-
-class GetUserInfo extends LocalAuthEvent {}
-
-class GetUserSession extends LocalAuthEvent {}
-
-class RemoveCredentials extends LocalAuthEvent {}
-
-class SaveCredentials extends LocalAuthEvent {
-  const SaveCredentials(this.signIn);
-
-  final SignInEntity signIn;
+  final SignInEntity credentials;
 
   @override
-  List<Object?> get props => [ signIn ];
+  List<Object?> get props => [ credentials ];
 }
 
-class SaveUserInfo extends LocalAuthEvent {
-  const SaveUserInfo({
-    required this.id,
-    required this.user,
-    required this.expiration,
-    required this.nombre,
-    required this.key,
-    this.privilegies,
-    this.foto,
-  });
+/// [StoreUserInfoUseCase]
+class StoreUserInfo extends LocalAuthEvent {
+  const StoreUserInfo(this.objData);
 
-  final String id;
-  final User user;
-  final String? privilegies;
-  final DateTime expiration;
-  final String? foto;
-  final String nombre;
-  final String key;
+  final UserInfoEntity objData;
 
   @override
-  List<Object?> get props => [ id, user, privilegies, expiration, foto, nombre, key ];
+  List<Object?> get props => [ objData ];
 }
 
-class SaveUserSession extends LocalAuthEvent {
-  const SaveUserSession(this.token);
+/// [StoreUserSessionUseCase]
+class StoreUserSession extends LocalAuthEvent {
+  const StoreUserSession(this.token);
 
   final String token;
 
   @override
   List<Object?> get props => [ token ];
 }
+
+/// [GetCredentialsUseCase]
+class GetCredentials extends LocalAuthEvent {}
+
+/// [GetUserInfoUseCase]
+class GetUserInfo extends LocalAuthEvent {}
+
+/// [LogoutUseCase]
+class LogoutRequested extends LocalAuthEvent {}

@@ -1,18 +1,13 @@
-import 'package:eos_mobile/core/di/injection_container.dart';
-import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
-import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth_bloc.dart';
-import 'package:eos_mobile/features/auth/presentation/bloc/auth/remote/remote_auth_bloc.dart';
-import 'package:eos_mobile/features/auth/presentation/pages/forgot_password/forgot_password_page.dart';
-import 'package:eos_mobile/shared/shared_libraries.dart';
+part of '../../../pages/sign_in/sign_in_page.dart';
 
-class AuthSignInForm extends StatefulWidget {
-  const AuthSignInForm({Key? key}) : super(key: key);
+class _CreateSignInForm extends StatefulWidget {
+  const _CreateSignInForm({Key? key}) : super(key: key);
 
   @override
-  State<AuthSignInForm> createState() => _AuthSignInFormState();
+  State<_CreateSignInForm> createState() => _CreateSignInFormState();
 }
 
-class _AuthSignInFormState extends State<AuthSignInForm> {
+class _CreateSignInFormState extends State<_CreateSignInForm> {
   // GLOBAL KEY
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -36,24 +31,7 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
 
   // EVENTS
   void _handleSignInPressed() {
-    if (!_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text($strings.alertWarningInvalidFormTitle, style: $styles.textStyles.bodyBold),
-              const Text('Por favor, revisa los campos del formulario.', softWrap: true),
-            ],
-          ),
-          backgroundColor : const Color(0xfff89406),
-          elevation       : 0,
-          behavior        : SnackBarBehavior.fixed,
-          showCloseIcon   : true,
-        ),
-      );
-      return;
-    } else {
+    if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       _signIn();
     }
@@ -68,29 +46,26 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
     );
   }
 
-  /// METHODS
+  // METHODS
   Future<void> _signIn() async {
     final SignInEntity credentials = SignInEntity(email: _emailController.text, password: _passwordController.text);
     BlocProvider.of<RemoteAuthBloc>(context).add(SignIn(credentials));
   }
 
-  Future<void> _buildForgotPasswordPage() {
-    return Navigator.push<void>(
+  void _buildForgotPasswordPage() {
+    Navigator.push<void>(
       context,
       PageRouteBuilder<void>(
         transitionDuration: $styles.times.pageTransition,
-        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-          const Offset begin = Offset(0, 1);
-          const Offset end = Offset.zero;
-          const Cubic curve = Curves.ease;
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation)
+            => const ForgotPasswordPage(),
+        transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+          const Offset begin    = Offset(1, 0);
+          const Offset end      = Offset.zero;
+          const Cubic curve     = Curves.ease;
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end)
-              .chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position: animation.drive<Offset>(tween),
-            child: const ForgotPasswordPage(),
-          );
+          return SlideTransition(position: animation.drive<Offset>(tween), child: child);
         },
       ),
     );
@@ -99,14 +74,15 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<LocalAuthBloc>()..add(GetCredentials()),
+      create: (context) => sl<LocalAuthBloc>()..add(GetCredentials()),
       child: BlocConsumer<LocalAuthBloc, LocalAuthState>(
         listener: (BuildContext context, LocalAuthState state) {
-          if (state is LocalCredentialsSuccess) {
-            _emailController.text = state.credentials?['email'] ?? '';
+          if (state is LocalAuthGetCredentialsSuccess) {
+            _emailController.text     = state.credentials?.email ?? '';
+            _passwordController.text  = state.credentials?.password ?? '';
           }
         },
-        builder: (BuildContext context, LocalAuthState state) {
+        builder: (context, state) {
           return Form(
             key: _formKey,
             child: Container(
@@ -127,7 +103,7 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
                   // USUARIO / CORREO ELECTRÓNICO:
                   LabeledPasswordFormField(
                     controller      : _passwordController,
-                    label           : 'Contraseña',
+                    label           : 'Contraseña:',
                     validator       : FormValidators.passwordValidator,
                     textInputAction : TextInputAction.done,
                   ),
@@ -154,29 +130,36 @@ class _AuthSignInFormState extends State<AuthSignInForm> {
                       }
 
                       if (state is RemoteAuthSuccess) {
-                        // final SignInEntity objSignIn = SignInEntity(email: _emailController.text, password: _passwordController.text);
-                        // // GUARDADO DE CREDENCIALES EN ALMACENAMIENTO LOCAL
-                        // context.read<LocalAuthBloc>().add(SaveCredentials(objSignIn));
+                        // GUARDADO DE CREDENCIALES
+                        BlocProvider.of<LocalAuthBloc>(context).add(
+                          StoreCredentials(
+                            SignInEntity(
+                              email     : _emailController.text,
+                              password  : _passwordController.text,
+                            ),
+                          ),
+                        );
 
-                        // // GUARDADO DE INFORMACIÓN DEL USUARIO EN ALMACENAMIENTO LOCAL
-                        // context.read<LocalAuthBloc>().add(
-                        //       SaveUserInfo(
-                        //         id            : state.account!.id,
-                        //         user          : state.account!.user,
-                        //         expiration    : state.account!.expiration,
-                        //         nombre        : state.account!.nombre.toProperCase(),
-                        //         key           : state.account!.key,
-                        //         privilegies   : state.account!.privilegies,
-                        //         foto          : state.account!.foto,
-                        //       ),
-                        //     );
+                        // GUARDADO DE INFORMACION DEL USUARIO
+                        BlocProvider.of<LocalAuthBloc>(context).add(
+                          StoreUserInfo(
+                            UserInfoEntity(
+                              id          : state.objResponse?.id ?? '',
+                              user        : state.objResponse!.user,
+                              expiration  : state.objResponse!.expiration,
+                              nombre      : state.objResponse?.nombre ?? '',
+                              privilegies : state.objResponse?.privilegies ?? '',
+                              foto        : state.objResponse?.foto ?? '',
+                            ),
+                          ),
+                        );
 
-                        // // GUARDADO DE SESIÓN DEL USUARIO EN ALMACENAMIENTO LOCAL
-                        // context.read<LocalAuthBloc>().add(SaveUserSession(state.account!.token));
+                        // GUARDADO DE SESION DEL USUARIO
+                        BlocProvider.of<LocalAuthBloc>(context).add(StoreUserSession(state.objResponse?.token ?? ''));
 
-                        // // NAVEGAR EXITOSAMENTE AL HOMEPAGE
-                        // context.go(ScreenPaths.home);
-                        // settingsLogic.hasAuthenticated.value = true;
+                        // NAVEGAR AL HOME
+                        context.go(ScreenPaths.home);
+                        settingsLogic.hasAuthenticated.value = true;
                       }
                     },
                     builder: (BuildContext context, RemoteAuthState state) {

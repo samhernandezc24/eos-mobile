@@ -1,20 +1,21 @@
 import 'dart:io';
 
-import 'package:eos_mobile/core/data/catalogos/user.dart';
-import 'package:eos_mobile/features/auth/data/datasources/local/auth_local_source.dart';
+import 'package:eos_mobile/features/auth/data/datasources/local/auth_local_data_service.dart';
 import 'package:eos_mobile/features/auth/data/datasources/remote/auth_remote_api_service.dart';
 import 'package:eos_mobile/features/auth/data/models/account_model.dart';
 import 'package:eos_mobile/features/auth/data/models/sign_in_model.dart';
+import 'package:eos_mobile/features/auth/data/models/user_info_model.dart';
 import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
+import 'package:eos_mobile/features/auth/domain/entities/user_info_entity.dart';
 import 'package:eos_mobile/features/auth/domain/repositories/auth_repository.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  AuthRepositoryImpl(this._authRemoteApiService, this._authLocalSource);
+  AuthRepositoryImpl(this._authRemoteApiService, this._authLocalDataService);
 
   final AuthRemoteApiService _authRemoteApiService;
-  final AuthLocalSource _authLocalSource;
+  final AuthLocalDataService _authLocalDataService;
 
   /// INICIO DE SESIÓN
   @override
@@ -42,73 +43,39 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
-  /// GUARDAR CREDENCIALES DEL USUARIO EN LOCAL
+  /// GUARDADO DE CREDENCIALES DEL USUARIO
   @override
-  Future<void> saveCredentials(SignInEntity signIn) async {
-    return _authLocalSource.saveCredentials(signIn.email, signIn.password);
+  Future<void> storeCredentials(SignInEntity credentials) async {
+    return _authLocalDataService.storeCredentials(SignInModel.fromEntity(credentials));
   }
 
-  /// GUARDAR LA INFORMACIÓN DEL USUARIO EN LOCAL
+  /// GUARDADO DE INFORMACIÓN DE LA CUENTA DEL USUARIO
   @override
-  Future<void> saveUserInfo({
-    required String id,
-    required User user,
-    required DateTime expiration,
-    required String nombre,
-    required String key,
-    String? privilegies,
-    String? foto,
-  }) async {
-    return _authLocalSource.saveUserInfo(
-      id          : id,
-      user        : user,
-      privilegies : privilegies,
-      expiration  : expiration,
-      foto        : foto,
-      nombre      : nombre,
-      key         : key,
-    );
+  Future<void> storeUserInfo(UserInfoEntity objData) async {
+    return _authLocalDataService.storeUserInfo(UserInfoModel.fromEntity(objData));
   }
 
-  /// GUARDAR LA SESIÓN DEL USUARIO EN SECURE LOCAL
+  /// GUARDADO DE LA SESIÓN DEL USUARIO
   @override
-  Future<void> saveUserSession(String token) async {
-    return _authLocalSource.saveUserSession(token);
+  Future<void> storeUserSession(String token) async {
+    return _authLocalDataService.storeUserSession(token);
   }
 
-  /// OBTENER LAS CREDENCIALES ALMACENADAS EN LOCAL
+  /// OBTENCIÓN DE CREDENCIALES DEL USUARIO
   @override
-  Future<Map<String, String>?> getCredentials() async {
-    return _authLocalSource.getCredentials();
+  Future<SignInModel?> getCredentials() async {
+    return _authLocalDataService.getCredentials();
   }
 
-  /// OBTENER LA INFORMACIÓN DEL USUARIO ALMACENADAS EN LOCAL
+  /// OBTENCIÓN DE INFORMACIÓN DE LA CUENTA DEL USUARIO
   @override
-  Future<Map<String, String>?> getUserInfo() async {
-    return _authLocalSource.getUserInfo();
+  Future<UserInfoModel?> getUserInfo() async {
+    return _authLocalDataService.getUserInfo();
   }
 
-  ///  OBTENER LA SESIÓN DEL USUARIO ALMACENADA EN SECURE LOCAL
+  /// CIERRE DE SESIÓN DEL USUARIO
   @override
-  Future<String?> getUserSession() async {
-    return _authLocalSource.getUserSession();
-  }
-
-  /// REMOVER LAS CREDENCIALES ALMACENADAS EN LOCAL
-  @override
-  Future<void> removeCredentials() async {
-    return _authLocalSource.removeCredentials();
-  }
-
-  /// REMOVER LA INFORMACIÓN DEL USUARIO ALMACENADA EN LOCAL
-  @override
-  Future<void> removeUserInfo() async {
-    return _authLocalSource.removeUserInfo();
-  }
-
-  /// REMOVER LA SESIÓN DEL USUARIO EN SECURE LOCAL
-  @override
-  Future<void> removeUserSession() async {
-    return _authLocalSource.removeUserSession();
+  Future<void> logout() async {
+    return _authLocalDataService.logout();
   }
 }

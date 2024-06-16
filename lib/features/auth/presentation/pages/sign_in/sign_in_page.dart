@@ -1,7 +1,16 @@
-import 'package:eos_mobile/features/auth/presentation/widgets/sign_in/sign_in_form.dart';
+import 'package:eos_mobile/core/di/injection_container.dart';
+import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
+import 'package:eos_mobile/features/auth/domain/entities/user_info_entity.dart';
+import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth_bloc.dart';
+import 'package:eos_mobile/features/auth/presentation/bloc/auth/remote/remote_auth_bloc.dart';
+import 'package:eos_mobile/features/auth/presentation/pages/forgot_password/forgot_password_page.dart';
+
 import 'package:eos_mobile/shared/shared_libraries.dart';
+
 import 'package:eos_mobile/ui/common/eos_mobile_logo.dart';
 import 'package:eos_mobile/ui/common/wave_clipper.dart';
+
+part '../../widgets/sign_in/create/_create_form.dart';
 
 class AuthSignInPage extends StatefulWidget {
   const AuthSignInPage({Key? key}): super(key: key);
@@ -24,19 +33,19 @@ class _AuthSignInPageState extends State<AuthSignInPage> {
               ClipPath(
                 clipper: WaveClipper(),
                 child: Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.only(bottom: 450),
-                  color: Theme.of(context).primaryColor.withOpacity(.8),
-                  height: 220,
+                  alignment : Alignment.center,
+                  padding   : const EdgeInsets.only(bottom: 450),
+                  color     : Theme.of(context).primaryColor.withOpacity(.8),
+                  height    : 220,
                 ),
               ),
               ClipPath(
                 clipper: WaveClipper(reverse: true),
                 child: Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.only(bottom: 50),
-                  color: Theme.of(context).primaryColor.withOpacity(.6),
-                  height: 180,
+                  alignment : Alignment.center,
+                  padding   : const EdgeInsets.only(bottom: 50),
+                  color     : Theme.of(context).primaryColor.withOpacity(.6),
+                  height    : 180,
                 ),
               ),
               Column(
@@ -49,7 +58,7 @@ class _AuthSignInPageState extends State<AuthSignInPage> {
                   Gap($styles.insets.md),
 
                   // FORMULARIO DE INICIO DE SESIÓN:
-                  const AuthSignInForm(),
+                  const _CreateSignInForm(),
 
                   const Spacer(),
                 ],

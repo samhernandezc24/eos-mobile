@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:eos_mobile/core/di/injection_container.dart';
 import 'package:eos_mobile/core/utils/string_utils.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth_bloc.dart';
@@ -243,13 +241,13 @@ class AppScaffoldWithNavBar extends StatelessWidget {
   Widget _buildDrawerHeader() {
     return BlocBuilder<LocalAuthBloc, LocalAuthState>(
       builder: (BuildContext context, LocalAuthState state) {
-        if (state is LocalUserInfoSuccess) {
-          if (state.userInfo != null) {
-            final Map<String, dynamic> objUserData =
-                jsonDecode(state.userInfo!['user'] ?? '{}')
-                    as Map<String, dynamic>;
-            final String? accountName = state.userInfo!['nombre'];
-            final String? accountEmail = objUserData['email'] as String?;
+        if (state is LocalAuthGetUserInfoSuccess) {
+          final objUserInfo = state.objResponse;
+
+          if (objUserInfo != null) {
+            final accountName   = objUserInfo.nombre;
+            final accountEmail  = objUserInfo.user.email;
+
             return _buildUserAccountDrawerHeader(context, accountName, accountEmail);
           } else {
             return _buildDefaultDrawerHeader(context);

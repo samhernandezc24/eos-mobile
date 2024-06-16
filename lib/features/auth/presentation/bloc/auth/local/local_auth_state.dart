@@ -7,35 +7,37 @@ class LocalAuthState extends Equatable {
   List<Object?> get props => [];
 }
 
-class LocalAuthInitial extends LocalAuthState {}
+/// INITIAL STATE
+class LocalAuthLoading extends LocalAuthState {}
 
-class LocalCredentialsLoading extends LocalAuthState {}
+/// STORE CREDENTIALS
+class LocalAuthStoreCredentialsSuccess extends LocalAuthState {}
 
-class LocalLogoutSuccess extends LocalAuthState {}
+/// STORE USER INFO
+class LocalAuthStoreUserInfoSuccess extends LocalAuthState {}
 
-class LocalCredentialsSuccess extends LocalAuthState {
-  const LocalCredentialsSuccess(this.credentials);
+/// STORE USER SESSION
+class LocalAuthStoreUserSessionSuccess extends LocalAuthState {}
 
-  final Map<String, String>? credentials;
+/// GET CREDENTIALS
+class LocalAuthGetCredentialsSuccess extends LocalAuthState {
+  const LocalAuthGetCredentialsSuccess(this.credentials);
+
+  final SignInEntity? credentials;
 
   @override
   List<Object?> get props => [ credentials ];
 }
 
-class LocalUserInfoSuccess extends LocalAuthState {
-  const LocalUserInfoSuccess(this.userInfo);
+/// GET USER INFO
+class LocalAuthGetUserInfoSuccess extends LocalAuthState {
+  const LocalAuthGetUserInfoSuccess(this.objResponse);
 
-  final Map<String, String>? userInfo;
-
-  @override
-  List<Object?> get props => [ userInfo ];
-}
-
-class LocalUserSessionSuccess extends LocalAuthState {
-  const LocalUserSessionSuccess(this.session);
-
-  final String? session;
+  final UserInfoEntity? objResponse;
 
   @override
-  List<Object?> get props => [ session ];
+  List<Object?> get props => [ objResponse ];
 }
+
+/// LOGOUT
+class LocalAuthLogoutRequested extends LocalAuthState {}
