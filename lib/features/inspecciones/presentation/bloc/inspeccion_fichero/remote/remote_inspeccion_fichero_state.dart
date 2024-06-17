@@ -23,10 +23,10 @@ class RemoteInspeccionFicheroSuccess extends RemoteInspeccionFicheroState {
 }
 
 /// STORE
-class RemoteInspeccionFicheroStoring extends RemoteInspeccionFicheroState {}
+class RemoteInspeccionFicheroStoreLoading extends RemoteInspeccionFicheroState {}
 
-class RemoteInspeccionFicheroStored extends RemoteInspeccionFicheroState {
-  const RemoteInspeccionFicheroStored(this.objResponse);
+class RemoteInspeccionFicheroStoreSuccess extends RemoteInspeccionFicheroState {
+  const RemoteInspeccionFicheroStoreSuccess(this.objResponse);
 
   final ServerResponse? objResponse;
 

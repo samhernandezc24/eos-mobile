@@ -7,7 +7,7 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 abstract class InspeccionFicheroRepository {
   // API METHODS
   Future<DataState<InspeccionFicheroEntity>> list(InspeccionIdReqEntity objData);
-  Future<DataState<ServerResponse>> store(InspeccionFicheroStoreReqEntity objData);
+  Future<DataState<ServerResponse>> store(InspeccionFicheroStoreReqEntity objData, void Function(int, int) onProgress);
 
   // LOCAL METHODS
 }

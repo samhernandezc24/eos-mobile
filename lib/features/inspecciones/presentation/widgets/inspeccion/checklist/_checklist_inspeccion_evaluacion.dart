@@ -148,7 +148,7 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
       PageRouteBuilder<void>(
         transitionDuration: $styles.times.pageTransition,
         pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) =>
-          _ChecklistInspeccionPhoto(objData: InspeccionIdReqEntity(idInspeccion: widget.objData.idInspeccion), objInspeccion: widget.objInspeccion),
+          _ChecklistInspeccionFotos(objData: InspeccionIdReqEntity(idInspeccion: widget.objData.idInspeccion), objInspeccion: widget.objInspeccion),
         transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
           const Offset begin    = Offset(1, 0);
           const Offset end      = Offset.zero;

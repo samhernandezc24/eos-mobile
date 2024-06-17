@@ -4,14 +4,14 @@ class _InspeccionFicheroItemTile extends StatefulWidget {
   const _InspeccionFicheroItemTile({
     required this.objFile,
     required this.index,
-    required this.onOpenTap,
+    required this.onPhotoPressed,
     required this.onDeletePressed,
     Key? key,
   }) : super(key: key);
 
   final File objFile;
   final int index;
-  final void Function(File file) onOpenTap;
+  final void Function(File file) onPhotoPressed;
   final void Function(int index) onDeletePressed;
 
   @override
@@ -29,6 +29,7 @@ class _InspeccionFicheroItemTileState extends State<_InspeccionFicheroItemTile> 
     _calculateAspectRatio();
   }
 
+  // METHODS
   Future<void> _calculateAspectRatio() async {
     final bytes = await widget.objFile.readAsBytes();
     final image = img.decodeImage(bytes);
@@ -46,15 +47,23 @@ class _InspeccionFicheroItemTileState extends State<_InspeccionFicheroItemTile> 
 
   @override
   Widget build(BuildContext context) {
+    final Widget image = Image.file(widget.objFile, fit: BoxFit.cover);
+
     return AspectRatio(
       aspectRatio : aspectRatio,
       child       : ClipRRect(
         borderRadius  : BorderRadius.circular($styles.insets.xs),
-        child         : Stack(
+        child: Stack(
           children: <Widget>[
-            GestureDetector(
-              onTap : () => widget.onOpenTap(widget.objFile),
-              child : SizedBox.expand(child: Image.file(widget.objFile, fit: BoxFit.cover)),
+            AppBtn.basic(
+              onPressed: () => widget.onPhotoPressed(widget.objFile),
+              semanticLabel: 'Fotografia ${widget.index}',
+              child: Container(
+                color   : Theme.of(context).disabledColor,
+                width   : double.infinity, // forzar la imagen a rellenar toda el área
+                height  : double.infinity,
+                child   : image,
+              ),
             ),
             Positioned(
               top   : 8,

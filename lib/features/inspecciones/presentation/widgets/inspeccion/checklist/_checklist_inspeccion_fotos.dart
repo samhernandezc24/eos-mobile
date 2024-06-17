@@ -1,16 +1,16 @@
 part of '../../../pages/list/list_page.dart';
 
-class _ChecklistInspeccionPhoto extends StatefulWidget {
-  const _ChecklistInspeccionPhoto({required this.objData, required this.objInspeccion, Key? key}) : super(key: key);
+class _ChecklistInspeccionFotos extends StatefulWidget {
+  const _ChecklistInspeccionFotos({required this.objData, required this.objInspeccion, Key? key}) : super(key: key);
 
   final InspeccionIdReqEntity objData;
   final InspeccionDataSourceEntity objInspeccion;
 
   @override
-  State<_ChecklistInspeccionPhoto> createState() => __ChecklistInspeccionPhotoState();
+  State<_ChecklistInspeccionFotos> createState() => _ChecklistInspeccionFotosState();
 }
 
-class __ChecklistInspeccionPhotoState extends State<_ChecklistInspeccionPhoto> {
+class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
   // NOTIFIERS
   final ValueNotifier<bool> isDialOpen = ValueNotifier<bool>(false);
 

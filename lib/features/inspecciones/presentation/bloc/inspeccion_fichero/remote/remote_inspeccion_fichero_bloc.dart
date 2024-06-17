@@ -41,12 +41,12 @@ class RemoteInspeccionFicheroBloc extends Bloc<RemoteInspeccionFicheroEvent, Rem
   }
 
   Future<void> onStoreInspeccionFichero(StoreInspeccionFichero event, Emitter<RemoteInspeccionFicheroState> emit) async {
-    emit(RemoteInspeccionFicheroStoring());
+    emit(RemoteInspeccionFicheroStoreLoading());
 
     final objDataState = await _storeInspeccionFicheroUseCase(params: event.objData);
 
     if (objDataState is DataSuccess) {
-      emit(RemoteInspeccionFicheroStored(objDataState.data));
+      emit(RemoteInspeccionFicheroStoreSuccess(objDataState.data));
     }
 
     if (objDataState is DataFailedMessage) {

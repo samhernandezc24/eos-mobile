@@ -18,17 +18,13 @@ class InspeccionFicheroRepositoryImpl implements InspeccionFicheroRepository {
 
   /// LISTADO DE FICHEROS (FOTOGRAFÍAS) DE UNA INSPECCION
   @override
-  Future<DataState<InspeccionFicheroModel>> list(
-      InspeccionIdReqEntity objData) async {
+  Future<DataState<InspeccionFicheroModel>> list(InspeccionIdReqEntity objData) async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
 
       // Realizar la solicitud usando el token actualizado o el actual.
-      final httpResponse = await _inspeccionFicheroRemoteApiService.list(
-          'application/json',
-          'Bearer $token',
-          InspeccionIdReqModel.fromEntity(objData));
+      final httpResponse = await _inspeccionFicheroRemoteApiService.list('application/json', 'Bearer $token', InspeccionIdReqModel.fromEntity(objData));
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         final ServerResponse objResponse = httpResponse.data;
@@ -36,8 +32,7 @@ class InspeccionFicheroRepositoryImpl implements InspeccionFicheroRepository {
         if (objResponse.session!) {
           if (objResponse.action!) {
             final result = objResponse.result as Map<String, dynamic>;
-            final InspeccionFicheroModel objInspeccionFichero =
-                InspeccionFicheroModel.fromJson(result);
+            final InspeccionFicheroModel objInspeccionFichero = InspeccionFicheroModel.fromJson(result);
 
             return DataSuccess(objInspeccionFichero);
           } else {
@@ -63,8 +58,9 @@ class InspeccionFicheroRepositoryImpl implements InspeccionFicheroRepository {
     }
   }
 
+  /// GUARDADO DE FICHERO (FOTOGRAFÍA) DE UNA INSPECCION
   @override
-  Future<DataState<ServerResponse>> store(InspeccionFicheroStoreReqEntity objData) async {
+  Future<DataState<ServerResponse>> store(InspeccionFicheroStoreReqEntity objData, void Function(int sent, int total) onProgress) async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
@@ -75,15 +71,15 @@ class InspeccionFicheroRepositoryImpl implements InspeccionFicheroRepository {
         'Bearer $token',
         InspeccionFicheroStoreReqModel.fromEntity(objData),
         onSendProgress: (int sent, int total) {
-          final progress = (sent / total * 100).round();
-          print('progress: $progress');
+          onProgress(sent, total);
         },
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         final ServerResponse objResponse = httpResponse.data;
-        if (objResponse.session ?? false) {
-          if (objResponse.action ?? false) {
+
+        if (objResponse.session!) {
+          if (objResponse.action!) {
             return DataSuccess(objResponse);
           } else {
             return DataFailedMessage(objResponse.message ?? 'Error inesperado');
@@ -107,36 +103,4 @@ class InspeccionFicheroRepositoryImpl implements InspeccionFicheroRepository {
       return DataFailed(ServerException.fromDioException(ex));
     }
   }
-
-  /// GUARDADO DE FICHERO (FOTOGRAFÍA) DE UNA INSPECCION
-  // @override
-  // Future<DataState<ServerResponse>> store(InspeccionFicheroStoreReqEntity objData) async {
-  // try {
-  //   // Obtener el token localmente.
-  //   final String? token = await authTokenHelper.retrieveRefreshToken();
-
-  //   // Realizar la solicitud usando el token actualizado o el actual.
-  //   final httpResponse = await _inspeccionFicheroRemoteApiService.store(
-  //     'application/json',
-  //     'Bearer $token',
-  //     InspeccionFicheroStoreReqModel.fromEntity(objData),
-  //     onSendProgress:(int loaded, int total) {
-  //       final int progress = (loaded / total * 100).round();
-  //       print(progress);
-  //     },
-  //   );
-
-  //   if (httpResponse.response.statusCode == HttpStatus.ok) {
-  //     if (httpResponse.response.)
-  //     final ServerResponse objResponse = httpResponse.data;
-  //     if (Globals.isValidValue(objResponse)) {
-  //       if (objResponse.status == 'progress') {
-
-  //       }
-  //     }
-  //   }
-  // } catch (e) {
-
-  // }
-
 }
