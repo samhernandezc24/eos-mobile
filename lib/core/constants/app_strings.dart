@@ -70,7 +70,7 @@ class AppStrings {
 
   String disableButtonText            = 'Inhabilitar';
 
-  String leaveButtonText              = 'Salir';
+  String logoutButtonText             = 'Salir';
 
   String editButtonText               = 'Editar';
 
@@ -114,24 +114,24 @@ class AppStrings {
   String inspeccionTipoEditAppBarTitle      = 'Editar tipo de inspección';
   String inspeccionTipoEmptyListTitle       = 'Aún no hay tipos de inspecciones';
 
-  String inspectionIndexSearchTitle   = 'Buscar unidad';
-  String inspectionIndexSearchSubtitle = 'Encuentra rápidamente una unidad.';
+  String inspectionIndexSearchTitle     = 'Buscar unidad';
+  String inspectionIndexSearchSubtitle  = 'Encuentra rápidamente una unidad.';
 
   String homePageModule1              = 'Inspecciones';
   String homePageModule2              = 'Compras';
   String homePageModule3              = 'Embarques';
-  String homePageModule4              = 'Requerimientos';
-  String homePageModule5              = 'Proyectos';
-  String homePageModule6              = 'Unidades';
+  String homePageModule4              = 'Unidades';
+
+  String homeMenuConfiguracionButtonText  = 'Configuración';
+  String homeMenuAyudaButtonText          = 'Ayuda y comentarios';
+  String homeMenuInformacionButtonText    = 'Acerca de';
+  String homeMenuLogoutButtonText         = 'Cerrar sesión';
 
   String homeGoBackButtonText         = 'Volver a inicio';
   String homeMenuAboutApp             = 'EOS Mobile agiliza los procesos internos de la empresa {heavyLiftUrl}. ';
   String homeMenuAboutBuilt           = 'Construido con {flutterUrl} para ofrecer una experiencia nativa.';
   String homeMenuAboutProcess         = 'Facilita la centralización de tareas y operaciones en un único lugar, mejorando la productividad.';
   String homeMenuButtonAbout          = 'Acerca de';
-  String homeMenuButtonSettings       = 'Configuración';
-  String homeMenuButtonHelp           = 'Ayuda y comentarios';
-  String homeMenuButtonLogout         = 'Cerrar sesión';
   String homeMenuButtonNotification   = 'Notificaciones';
   String homeMenuButtonHome           = 'Inicio';
   String homeMenuButtonDashboard      = 'Dashboard';

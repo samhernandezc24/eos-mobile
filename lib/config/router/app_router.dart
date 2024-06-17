@@ -1,5 +1,4 @@
 import 'package:eos_mobile/features/actividades/presentation/pages/actividad_page.dart';
-import 'package:eos_mobile/features/auth/presentation/pages/home/home_page.dart';
 import 'package:eos_mobile/features/auth/presentation/pages/sign_in/sign_in_page.dart';
 import 'package:eos_mobile/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/pages/configuracion/inspecciones_tipos/inspecciones_tipos_page.dart';
@@ -8,6 +7,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/pages/list/list_pa
 import 'package:eos_mobile/features/inspecciones/presentation/pages/search_unidad/search_unidad_page.dart';
 import 'package:eos_mobile/features/notificaciones/presentation/pages/notificacion_page.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/pages/home/home_page.dart';
 import 'package:eos_mobile/ui/pages/not_found/not_found_page.dart';
 import 'package:eos_mobile/ui/pages/under_construction/under_construction_page.dart';
 import 'package:eos_mobile/ui/pages/welcome/welcome_page.dart';

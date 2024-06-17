@@ -1,12 +1,7 @@
-import 'package:eos_mobile/config/logic/common/platform_info.dart';
-import 'package:eos_mobile/shared/shared_libraries.dart';
-import 'package:eos_mobile/ui/common/modals/full_screen_web_view.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
-import 'package:url_launcher/url_launcher.dart';
+part of '../app_scaffold_with_navbar.dart';
 
-class AboutDialogContent extends StatelessWidget {
-  const AboutDialogContent({super.key});
+class _AboutDialogContent extends StatelessWidget {
+  const _AboutDialogContent({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

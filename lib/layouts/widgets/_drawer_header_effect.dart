@@ -1,7 +1,7 @@
-import 'package:eos_mobile/shared/shared_libraries.dart';
+part of '../app_scaffold_with_navbar.dart';
 
-class DrawerHeaderEffect extends StatelessWidget {
-  const DrawerHeaderEffect({super.key});
+class _DrawerHeaderEffect extends StatelessWidget {
+  const _DrawerHeaderEffect({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

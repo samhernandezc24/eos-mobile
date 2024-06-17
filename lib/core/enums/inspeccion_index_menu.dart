@@ -1,0 +1,1 @@
+enum InspeccionIndexMenu { configuracion }

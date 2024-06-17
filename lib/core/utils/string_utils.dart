@@ -70,22 +70,6 @@ class StringUtils {
     return result;
   }
 
-  /// Obtiene las iniciales de un valor de cadena.
-  ///
-  /// Toma un [value] que representa la cadena y devuelve las iniciales
-  /// de las primeras dos palabras del [value].
-  static String getInitials(String? value) {
-    if (value == null || value.isEmpty) return '';
-
-    final List<String> parts        = value.split(' ');
-    final StringBuffer stringBuffer = StringBuffer();
-
-    for (final part in parts.take(2)) {
-      stringBuffer.write(part[0]);
-    }
-    return stringBuffer.toString().toUpperCase();
-  }
-
   /// Genera un código númerico random para métodos de creación compartidos.
   static String generateRandomNumericCode({int length = 5}) {
     final Random random   = Random.secure();

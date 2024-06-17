@@ -142,7 +142,7 @@ class _ListTile extends StatelessWidget {
             return AlertDialog(
               title   : Text($strings.inspeccionTipoDeleteAlertTitle, style: $styles.textStyles.h3.copyWith(fontSize: 18)),
               content : RichText(
-                text: TextSpan(style: $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
+                text: TextSpan(style: $styles.textStyles.body.copyWith(color: Theme.of(context).colorScheme.onSurface),
                   children: <InlineSpan>[
                     TextSpan(text: $strings.inspeccionTipoDeleteAlertContent1),
                     TextSpan(
