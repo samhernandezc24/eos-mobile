@@ -2,11 +2,11 @@ import 'package:eos_mobile/config/logic/common/platform_info.dart';
 import 'package:eos_mobile/core/di/injection_container.dart';
 import 'package:eos_mobile/core/enums/inspeccion_index_menu.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth_bloc.dart';
-import 'package:eos_mobile/features/configuraciones/presentation/pages/index/index_page.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/eos_mobile_logo.dart';
 import 'package:eos_mobile/ui/common/modals/full_screen_web_view.dart';
+import 'package:eos_mobile/ui/pages/settings/settings_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 
@@ -174,7 +174,7 @@ class _AppScaffoldWithNavBarState extends State<AppScaffoldWithNavBar> {
               Navigator.pop(context);
               // Navegar y construir la nueva página.
               Future.delayed($styles.times.pageTransition, () {
-                Navigator.push<void>(context, MaterialPageRoute<void>(builder: (_) => const ConfiguracionesIndexPage()));
+                Navigator.push<void>(context, MaterialPageRoute<void>(builder: (_) => const SettingsPage()));
               });
             },
           ),

@@ -12,6 +12,7 @@ class _InspeccionIndexPageState extends State<InspeccionIndexPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
+        physics: const NeverScrollableScrollPhysics(),
         children: <Widget>[
           ListTile(
             onTap     : () => context.go('/home/inspecciones/list'),
