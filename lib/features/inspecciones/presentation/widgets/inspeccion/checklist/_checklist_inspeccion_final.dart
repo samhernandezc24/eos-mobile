@@ -1,9 +1,10 @@
 part of '../../../pages/list/list_page.dart';
 
 class _ChecklistInspeccionFinal extends StatefulWidget {
-  const _ChecklistInspeccionFinal({Key? key, this.inspeccion}) : super(key: key);
+  const _ChecklistInspeccionFinal({required this.objInspeccion, Key? key, this.buildDataSourceCallback}) : super(key: key);
 
-  final Inspeccion? inspeccion;
+  final InspeccionDataSourceEntity objInspeccion;
+  final VoidCallback? buildDataSourceCallback;
 
   @override
   State<_ChecklistInspeccionFinal> createState() => _ChecklistInspeccionFinalState();
@@ -92,6 +93,7 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context, $strings.acceptButtonText);  // Cerrar el dialógo
+                _store();                                           // Finalizar inspección
               },
               child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
             ),
@@ -99,6 +101,30 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
         );
       },
     );
+  }
+
+  Future<void> _showServerFailedDialog(BuildContext context, String? errorMessage) async {
+    return showDialog<void>(
+      context : context,
+      builder: (BuildContext context)  => ServerFailedDialog(
+        errorMessage: errorMessage ?? 'Se produjo un error inesperado. Intenta de nuevo finalizar la inspección.',
+      ),
+    );
+  }
+
+  // METHODS
+  Future<void> _store() async {
+    final InspeccionFinishReqEntity objPost = InspeccionFinishReqEntity(
+      idInspeccion              : widget.objInspeccion.idInspeccion,
+      fechaInspeccionFinal      : DateFormat('dd/MM/yyyy HH:mm').parse(_fechaInspeccionFinalController.text),
+      firmaVerificador          : '',
+      firmaOperador             : '',
+      fileExtensionVerificador  : 'png',
+      fileExtensionOperador     : 'png',
+      observaciones             : _observacionesController.text,
+    );
+
+    BlocProvider.of<RemoteInspeccionBloc>(context).add(FinishInspeccion(objPost));
   }
 
   @override
@@ -123,7 +149,7 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
               // OBSERVACIONES:
               LabeledTextareaFormField(
                 controller    : _observacionesController,
-                hintText      : 'Ingresa la observación presentada durante la inspección',
+                hintText      : 'Ingresa la observación presentada durante la inspección...',
                 labelText     : 'Observaciones (opcional):',
                 maxCharacters : 300,
               ),
@@ -188,9 +214,51 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
             flipIcon      : true,
           ),
           const Spacer(),
-          FilledButton(
-            onPressed : _handleFinishPressed,
-            child     : Text($strings.finishButtonText, style: $styles.textStyles.button),
+          BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
+            listener: (BuildContext context, RemoteInspeccionState state) {
+              // ERROR:
+              if (state is RemoteInspeccionServerFailedMessageFinish) {
+                _showServerFailedDialog(context, state.errorMessage);
+              }
+
+              if (state is RemoteInspeccionServerFailureFinish) {
+                _showServerFailedDialog(context, state.failure?.errorMessage);
+              }
+
+              // SUCCESS:
+              if (state is RemoteInspeccionFinishSuccess) {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+
+                ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content         : Text(state.objResponse?.message ?? 'Inspección finalizada', softWrap: true),
+                    backgroundColor : Colors.green,
+                    elevation       : 0,
+                    behavior        : SnackBarBehavior.fixed,
+                  ),
+                );
+
+                // Ejecutar callback.
+                widget.buildDataSourceCallback!();
+              }
+            },
+            builder: (BuildContext context, RemoteInspeccionState state) {
+              if (state is RemoteInspeccionFinishLoading) {
+                return const FilledButton(
+                  onPressed : null,
+                  child     : AppLoadingIndicator(width: 20, height: 20),
+                );
+              }
+
+              return FilledButton(
+                onPressed : _handleFinishPressed,
+                child     : Text($strings.finishButtonText, style: $styles.textStyles.button),
+              );
+            },
           ),
         ],
       ),

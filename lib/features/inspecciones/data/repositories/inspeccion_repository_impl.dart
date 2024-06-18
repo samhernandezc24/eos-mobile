@@ -4,9 +4,11 @@ import 'package:eos_mobile/core/data/data_source.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion/inspeccion_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_create_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_data_source_res_model.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_finish_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_id_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_index_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_store_req_model.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_finish_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_repository.dart';
@@ -183,7 +185,46 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
     }
   }
 
-  /// CANCELANDO INSPECCION
+  /// FINALIZACION DE LA INSPECCION
+  @override
+  Future<DataState<ServerResponse>> finish(InspeccionFinishReqEntity objData)  async{
+    try {
+      // Obtener el token localmente.
+      final String? token = await authTokenHelper.retrieveRefreshToken();
+
+      // Realizar la solicitud usando el token actualizado o el actual.
+      final httpResponse = await _inspeccionRemoteApiService.finish('application/json', 'Bearer $token', InspeccionFinishReqModel.fromEntity(objData));
+
+      if (httpResponse.response.statusCode == HttpStatus.ok) {
+        final ServerResponse objResponse = httpResponse.data;
+
+        if (objResponse.session!) {
+          if (objResponse.action!) {
+            return DataSuccess(objResponse);
+          } else {
+            return DataFailedMessage(objResponse.message ?? 'Error inesperado');
+          }
+        } else {
+          return DataFailedMessage(objResponse.message ?? 'Error inesperado');
+        }
+      } else {
+        return DataFailed(
+          ServerException.fromDioException(
+            DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
+          ),
+        );
+      }
+    } on DioException catch (ex) {
+      return DataFailed(ServerException.fromDioException(ex));
+    }
+  }
+
+  /// CANCELACION DE LA INSPECCION
   @override
   Future<DataState<ServerResponse>> cancel(InspeccionIdReqEntity objData) async {
     try {

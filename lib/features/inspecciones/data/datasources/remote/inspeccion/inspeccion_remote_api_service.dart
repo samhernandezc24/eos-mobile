@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/core/data/data_source.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_finish_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_id_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_store_req_model.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
@@ -41,6 +42,14 @@ abstract class InspeccionRemoteApiService {
     @Header(HttpHeaders.contentTypeHeader) String contentType,
     @Header(HttpHeaders.authorizationHeader) String token,
     @Body() InspeccionStoreReqModel objData,
+  );
+
+  /// FINALIZAR INSPECCION
+  @POST('/Finish')
+  Future<HttpResponse<ServerResponse>> finish(
+    @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Header(HttpHeaders.authorizationHeader) String token,
+    @Body() InspeccionFinishReqModel objData,
   );
 
   /// CANCELAR INSPECCION

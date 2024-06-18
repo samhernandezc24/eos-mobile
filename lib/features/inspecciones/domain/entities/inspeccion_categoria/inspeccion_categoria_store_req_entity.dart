@@ -11,13 +11,11 @@ class InspeccionCategoriaStoreReqEntity extends Equatable {
     required this.isParcial,
     required this.fechaInspeccionInicial,
     required this.categorias,
-    this.fechaInspeccionFinal,
   });
 
   final String idInspeccion;
   final bool isParcial;
   final DateTime fechaInspeccionInicial;
-  final DateTime? fechaInspeccionFinal;
   final List<Categoria> categorias;
 
   @override
@@ -25,7 +23,6 @@ class InspeccionCategoriaStoreReqEntity extends Equatable {
         idInspeccion,
         isParcial,
         fechaInspeccionInicial,
-        fechaInspeccionFinal,
         categorias,
       ];
 }

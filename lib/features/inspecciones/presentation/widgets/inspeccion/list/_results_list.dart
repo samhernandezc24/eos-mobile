@@ -1,11 +1,12 @@
 part of '../../../pages/list/list_page.dart';
 
 class _ResultsListInspeccion extends StatefulWidget {
-  const _ResultsListInspeccion({required this.lstRows, this.onDetailsPressed, this.onCancelPressed, Key? key}) : super(key: key);
+  const _ResultsListInspeccion({required this.lstRows, this.onDetailsPressed, this.onCancelPressed, Key? key, this.buildDataSourceCallback}) : super(key: key);
 
   final List<InspeccionDataSourceEntity> lstRows;
   final void Function(InspeccionDataSourceEntity)? onDetailsPressed;
   final void Function(InspeccionIdReqEntity, InspeccionDataSourceEntity)? onCancelPressed;
+  final VoidCallback? buildDataSourceCallback;
 
   @override
   State<_ResultsListInspeccion> createState() => _ResultsListInspeccionState();
@@ -68,9 +69,10 @@ class _ResultsListInspeccionState extends State<_ResultsListInspeccion> {
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     return _ResultTileInspeccion(
-                      objInspeccion     : widget.lstRows[index],
-                      onDetailsPressed  : widget.onDetailsPressed,
-                      onCancelPressed   : widget.onCancelPressed,
+                      objInspeccion           : widget.lstRows[index],
+                      onDetailsPressed        : widget.onDetailsPressed,
+                      onCancelPressed         : widget.onCancelPressed,
+                      buildDataSourceCallback : widget.buildDataSourceCallback,
                     );
                   },
                   childCount: widget.lstRows.length,

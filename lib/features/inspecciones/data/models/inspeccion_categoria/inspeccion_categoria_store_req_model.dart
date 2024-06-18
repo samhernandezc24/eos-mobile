@@ -11,12 +11,10 @@ class InspeccionCategoriaStoreReqModel extends InspeccionCategoriaStoreReqEntity
     required bool isParcial,
     required DateTime fechaInspeccionInicial,
     required List<Categoria> categorias,
-    DateTime? fechaInspeccionFinal,
   }) : super(
           idInspeccion            : idInspeccion,
           isParcial               : isParcial,
           fechaInspeccionInicial  : fechaInspeccionInicial,
-          fechaInspeccionFinal    : fechaInspeccionFinal,
           categorias              : categorias,
         );
 
@@ -27,7 +25,6 @@ class InspeccionCategoriaStoreReqModel extends InspeccionCategoriaStoreReqEntity
       idInspeccion            : jsonMap['idInspeccion'] as String,
       isParcial               : jsonMap['isParcial'] as bool,
       fechaInspeccionInicial  : DateTime.parse(jsonMap['fechaInspeccionInicial'] as String),
-      fechaInspeccionFinal    : jsonMap['fechaInspeccionFinal'] != null ? DateTime.parse(jsonMap['fechaInspeccionFinal'] as String) : null,
       categorias              : (jsonMap['categorias'] as List<dynamic>).map((item) => Categoria.fromJson(item as Map<String, dynamic>)).toList(),
     );
   }
@@ -39,7 +36,6 @@ class InspeccionCategoriaStoreReqModel extends InspeccionCategoriaStoreReqEntity
       idInspeccion            : entity.idInspeccion,
       isParcial               : entity.isParcial,
       fechaInspeccionInicial  : entity.fechaInspeccionInicial,
-      fechaInspeccionFinal    : entity.fechaInspeccionFinal,
       categorias              : entity.categorias,
     );
   }
@@ -50,7 +46,6 @@ class InspeccionCategoriaStoreReqModel extends InspeccionCategoriaStoreReqEntity
       'idInspeccion'            : idInspeccion,
       'isParcial'               : isParcial,
       'fechaInspeccionInicial'  : fechaInspeccionInicial.toIso8601String(),
-      'fechaInspeccionFinal'    : fechaInspeccionFinal?.toIso8601String(),
       'categorias'              : categorias.map((e) => e.toJson()).toList(),
     };
   }

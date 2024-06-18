@@ -1,11 +1,12 @@
 part of '../../../pages/list/list_page.dart';
 
 class _ResultTileInspeccion extends StatelessWidget {
-  const _ResultTileInspeccion({Key? key, this.objInspeccion, this.onDetailsPressed, this.onCancelPressed}) : super(key: key);
+  const _ResultTileInspeccion({Key? key, this.objInspeccion, this.onDetailsPressed, this.onCancelPressed, this.buildDataSourceCallback}) : super(key: key);
 
   final InspeccionDataSourceEntity? objInspeccion;
   final void Function(InspeccionDataSourceEntity)? onDetailsPressed;
   final void Function(InspeccionIdReqEntity, InspeccionDataSourceEntity)? onCancelPressed;
+  final VoidCallback? buildDataSourceCallback;
 
   // EVENTS
   void _handleMenuSelection(BuildContext context, InspeccionMenu item) {
@@ -39,7 +40,11 @@ class _ResultTileInspeccion extends StatelessWidget {
 
           return SlideTransition(
             position  : animation.drive<Offset>(tween),
-            child     : _ChecklistInspeccionEvaluacion(objData: objData, objInspeccion: objInspeccion!),
+            child     : _ChecklistInspeccionEvaluacion(
+              objData                 : objData,
+              objInspeccion           : objInspeccion!,
+              buildDataSourceCallback : buildDataSourceCallback,
+            ),
           );
         },
         fullscreenDialog: true,
@@ -60,6 +65,14 @@ class _ResultTileInspeccion extends StatelessWidget {
       'ea52bdfd-8af6-4f5a-b182-2b99e554eb33',
     };
     return estatusChecklist.contains(idInspeccionEstatus);
+  }
+
+  bool _showReportButton(String idInspeccionEstatus) {
+    const estatusInspeccion = {
+      'ea52bdfd-8af6-4f5a-b182-2b99e554eb34',
+      'ea52bdfd-8af6-4f5a-b182-2b99e554eb35',
+    };
+    return estatusInspeccion.contains(idInspeccionEstatus);
   }
 
   @override
@@ -122,6 +135,18 @@ class _ResultTileInspeccion extends StatelessWidget {
                 ),
               ),
             ),
+
+          if (_showReportButton(objInspeccion!.idInspeccionEstatus))
+            Positioned(
+              bottom: 0,
+              right: 4,
+              child: TextButton.icon(
+                onPressed : () {},
+                style     : ButtonStyle(foregroundColor: MaterialStateProperty.all<Color>(Colors.green)),
+                icon      : const Icon(Icons.print),
+                label     : const Text('Reporte'),
+              ),
+            ),
         ],
       ),
     );
@@ -168,9 +193,11 @@ class _ResultTileInspeccion extends StatelessWidget {
         case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb31':
           return colorScheme.onSecondaryContainer;
         case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb32':
-        case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33':
-        case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb34':
           return colorScheme.onPrimaryContainer;
+        case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33':
+          return colorScheme.onPrimaryContainer;
+        case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb34':
+          return Colors.white;
         case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb35':
           return colorScheme.onError;
         default:

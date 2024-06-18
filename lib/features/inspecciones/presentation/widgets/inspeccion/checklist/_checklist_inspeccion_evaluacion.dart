@@ -5,10 +5,12 @@ class _ChecklistInspeccionEvaluacion extends StatefulWidget {
     required this.objData,
     required this.objInspeccion,
     Key? key,
+    this.buildDataSourceCallback,
   }) : super(key: key);
 
   final InspeccionIdReqEntity objData;
   final InspeccionDataSourceEntity objInspeccion;
+  final VoidCallback? buildDataSourceCallback;
 
   @override
   State<_ChecklistInspeccionEvaluacion> createState() => _ChecklistInspeccionEvaluacionState();
@@ -76,7 +78,9 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
   }
 
   void _handleStorePressed({bool isParcial = false}) {
-    if (lstCategorias.isEmpty) {
+    final bool hasEmptyCategoriasItems = lstCategorias.any((item) => item.categoriasItems == null || item.categoriasItems!.isEmpty);
+
+    if (lstCategorias.isEmpty || hasEmptyCategoriasItems) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Column(
@@ -93,57 +97,65 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
         ),
       );
       return;
-    }
-
-    if (_fechaInspeccionInicialController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text($strings.alertWarningInvalidFormTitle, style: $styles.textStyles.bodyBold),
-              const Text('Ingresa la fecha de inspección inicial', softWrap: true),
-            ],
-          ),
-          backgroundColor : const Color(0xfff89406),
-          elevation       : 0,
-          behavior        : SnackBarBehavior.fixed,
-          showCloseIcon   : true,
-        ),
-      );
-      return;
-    }
-
-    if (!isParcial) {
-      showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title   : Text('Confirmar finalización', style: $styles.textStyles.h3.copyWith(fontSize: 18)),
-            content : Text(
-              '¿Estás seguro que deseas finalizar la evaluación?\nUna vez finalizada la evaluación no se podrán revertir los cambios.',
-              style: $styles.textStyles.body.copyWith(height: 1.4),
-            ),
-            actions : [
-              TextButton(onPressed: () => Navigator.pop(context, $strings.cancelButtonText), child: Text($strings.cancelButtonText, style: $styles.textStyles.button)),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context, $strings.acceptButtonText);  // Cerrar el dialógo
-                  _store(isParcial);                                  // Finalizar evaluación
-                },
-                child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
-              ),
-            ],
-          );
-        },
-      );
     } else {
-      _store(isParcial);
+      print('Ejecutar esto: false');
     }
+
+    // if (lstCategorias.isEmpty) {
+
+    // }
+
+    // if (_fechaInspeccionInicialController.text.isEmpty) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(
+    //       content: Column(
+    //         crossAxisAlignment: CrossAxisAlignment.start,
+    //         children: <Widget>[
+    //           Text($strings.alertWarningInvalidFormTitle, style: $styles.textStyles.bodyBold),
+    //           const Text('Ingresa la fecha de inspección inicial', softWrap: true),
+    //         ],
+    //       ),
+    //       backgroundColor : const Color(0xfff89406),
+    //       elevation       : 0,
+    //       behavior        : SnackBarBehavior.fixed,
+    //       showCloseIcon   : true,
+    //     ),
+    //   );
+    //   return;
+    // }
+
+    // if (!isParcial) {
+    //   showDialog<void>(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return AlertDialog(
+    //         title   : Text('Confirmar finalización', style: $styles.textStyles.h3.copyWith(fontSize: 18)),
+    //         content : Text(
+    //           '¿Estás seguro que deseas finalizar la evaluación?\nUna vez finalizada la evaluación no se podrán revertir los cambios.',
+    //           style: $styles.textStyles.body.copyWith(height: 1.4),
+    //         ),
+    //         actions : [
+    //           TextButton(onPressed: () => Navigator.pop(context, $strings.cancelButtonText), child: Text($strings.cancelButtonText, style: $styles.textStyles.button)),
+    //           TextButton(
+    //             onPressed: () {
+    //               Navigator.pop(context, $strings.acceptButtonText);  // Cerrar el dialógo
+    //               _store(isParcial);                                  // Finalizar evaluación
+    //             },
+    //             child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
+    //           ),
+    //         ],
+    //       );
+    //     },
+    //   );
+    // } else {
+    //   _store(isParcial);
+    // }
   }
 
   void _handleNextPressed() {
-    if (lstCategorias.isEmpty) {
+    final bool hasEmptyCategoriasItems = lstCategorias.any((item) => item.categoriasItems == null || item.categoriasItems!.isEmpty);
+
+    if (lstCategorias.isEmpty || hasEmptyCategoriasItems) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Column(
@@ -170,7 +182,11 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
         PageRouteBuilder<void>(
           transitionDuration: $styles.times.pageTransition,
           pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) =>
-            _ChecklistInspeccionFotos(objData: InspeccionIdReqEntity(idInspeccion: widget.objData.idInspeccion), objInspeccion: widget.objInspeccion),
+            _ChecklistInspeccionFotos(
+              objData                 : InspeccionIdReqEntity(idInspeccion: widget.objData.idInspeccion),
+              objInspeccion           : widget.objInspeccion,
+              buildDataSourceCallback : widget.buildDataSourceCallback,
+            ),
           transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
             const Offset begin    = Offset(1, 0);
             const Offset end      = Offset.zero;

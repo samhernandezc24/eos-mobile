@@ -41,8 +41,8 @@ class AppStrings {
   String circleButtonsSemanticClose         = 'Cerrar';
 
   String checklistAppBarTitle               = 'Evaluar unidad';
-  String checklistAlertSaveMessage          = 'No se puede guardar parcialmente o finalizar una evaluación que no cuenta con categorías';
-  String checklistAlertNextPageMessage      = 'No se puede avanzar a la etapa siguiente, debido a que la evaluación no cuenta con categorías';
+  String checklistAlertSaveMessage          = 'No se puede guardar parcialmente o finalizar una evaluación que no cuenta con categorías o preguntas';
+  String checklistAlertNextPageMessage      = 'No se puede avanzar a la etapa siguiente, debido a que la evaluación no cuenta con categorías o preguntas';
   String checklistPhotoAlertNextPageMessage = 'No se puede avanzar a la etapa final, sin antes haber cargado las evidencias fotográficas';
   String checklistDrawSignatureAppBarTitle  = 'Dibujar firma';
   String checklistDrawSignatureBoxSuggest   = 'Dibuja tu firma en el espacio rectangular con bordes punteados, de preferencia en el centro del espacio rectangular.';

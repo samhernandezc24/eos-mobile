@@ -159,6 +159,25 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
       return;
     }
 
+    if (lstInspeccionesTipos.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text($strings.alertWarningAttentionTitle, style: $styles.textStyles.bodyBold),
+              const Text('No se puede guardar la nueva inspección debido a que no se selecciono el tipo de inspección', softWrap: true),
+            ],
+          ),
+          backgroundColor : const Color(0xfff89406),
+          elevation       : 0,
+          behavior        : SnackBarBehavior.fixed,
+          showCloseIcon   : true,
+        ),
+      );
+      return;
+    }
+
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -166,7 +185,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text($strings.alertWarningInvalidFormTitle, style: $styles.textStyles.bodyBold),
-              const Text('Por favor, revisa los campos del formulario.', softWrap: true),
+              const Text('Por favor, revisa los campos del formulario', softWrap: true),
             ],
           ),
           backgroundColor : const Color(0xfff89406),

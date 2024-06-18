@@ -24,6 +24,7 @@ import 'package:eos_mobile/core/data/sort.dart';
 import 'package:eos_mobile/core/enums/inspeccion_menu.dart';
 
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_finish_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_categoria/inspeccion_categoria_store_req_entity.dart';
@@ -234,6 +235,8 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                 _buildRichText(context, 'Modelo', objInspeccion.modelo ?? ''),
                 _buildRichText(context, 'Número de serie', objInspeccion.numeroSerie ?? ''),
                 _buildRichText(context, 'Fecha programada', objInspeccion.fechaProgramadaNatural),
+                if (objInspeccion.idInspeccionEstatus == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb34')
+                  _buildRichText(context, 'Fecha de finalización', objInspeccion.fechaInspeccionFinalNatural ?? ''),
                 _buildRichText(context, 'Estatus', objInspeccion.inspeccionEstatusName),
                 _buildRichText(context, 'Base', objInspeccion.baseName ?? ''),
                 _buildRichText(context, 'Locación', objInspeccion.locacion),
@@ -579,9 +582,10 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                   if (state is RemoteInspeccionDataSourceSuccess) {
                     if (lstRows.isNotEmpty) {
                       return _ResultsListInspeccion(
-                        lstRows           : lstRows,
-                        onDetailsPressed  : (objInspeccion) => _handleDetailsPressed(context, objInspeccion),
-                        onCancelPressed   : (objData, objInspeccion) => _handleCancelPressed(context, objData, objInspeccion),
+                        lstRows                 : lstRows,
+                        onDetailsPressed        : (objInspeccion) => _handleDetailsPressed(context, objInspeccion),
+                        onCancelPressed         : (objData, objInspeccion) => _handleCancelPressed(context, objData, objInspeccion),
+                        buildDataSourceCallback : _buildDataSource,
                       );
                     } else {
                       return _buildNoDataFound(context);

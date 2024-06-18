@@ -5,10 +5,12 @@ class _ChecklistInspeccionFotos extends StatefulWidget {
     required this.objData,
     required this.objInspeccion,
     Key? key,
+    this.buildDataSourceCallback,
   }) : super(key: key);
 
   final InspeccionIdReqEntity objData;
   final InspeccionDataSourceEntity objInspeccion;
+  final VoidCallback? buildDataSourceCallback;
 
   @override
   State<_ChecklistInspeccionFotos> createState() => _ChecklistInspeccionFotosState();
@@ -88,7 +90,8 @@ class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
         context,
         PageRouteBuilder<void>(
           transitionDuration: $styles.times.pageTransition,
-          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) => const _ChecklistInspeccionFinal(),
+          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) =>
+              _ChecklistInspeccionFinal(objInspeccion: widget.objInspeccion, buildDataSourceCallback: widget.buildDataSourceCallback),
           transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
             const Offset begin    = Offset(1, 0);
             const Offset end      = Offset.zero;
