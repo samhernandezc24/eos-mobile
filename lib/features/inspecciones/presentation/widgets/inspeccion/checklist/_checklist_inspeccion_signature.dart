@@ -37,33 +37,6 @@ class _ChecklistInspeccionSignatureState extends State<_ChecklistInspeccionSigna
                     ],
                   ),
                 ),
-                // Gap($styles.insets.sm),
-                // Row(
-                //   mainAxisAlignment   : MainAxisAlignment.center,
-                //   children            : <Widget>[
-                //     GestureDetector(
-                //       onTap: (){},
-                //       child: Column(
-                //         children: [
-                //           const Icon(Icons.undo),
-                //           Gap($styles.insets.xxs),
-                //           const Text('Rehacer'),
-                //         ],
-                //       ),
-                //     ),
-                //     Gap($styles.insets.md),
-                //     GestureDetector(
-                //       onTap: (){},
-                //       child: Column(
-                //         children: [
-                //           const Icon(Icons.redo),
-                //           Gap($styles.insets.xxs),
-                //           const Text('Deshacer'),
-                //         ],
-                //       ),
-                //     ),
-                //   ],
-                // ),
               ],
             ),
           ),
@@ -103,7 +76,10 @@ class _ChecklistInspeccionSignatureState extends State<_ChecklistInspeccionSigna
         children  : <Widget>[
           FilledButton(
             onPressed : _handleClearPressed,
-            style     : ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).disabledColor)),
+            style     : ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFFF4FAFF)),
+              foregroundColor: MaterialStateProperty.all<Color>(const Color(0xFF233876)),
+            ),
             child     : Text($strings.clearButtonText, style: $styles.textStyles.button),
           ),
           const Spacer(),

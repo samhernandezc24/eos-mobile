@@ -42,6 +42,10 @@ class ListAPI {
   /// Endpoint: InspeccionesFicheros
   static const String inspeccionesFicheros = '$_apiBaseUrl/api/Inspecciones/Ficheros';
 
+  static String inspeccionFicheroPath(String imagePath) {
+    return '$_apiBaseUrl/Ficheros/InspeccionesFicheros/$imagePath';
+  }
+
   /// API.Inspecciones
   ///
   /// Endpoint: InspeccionesTipos

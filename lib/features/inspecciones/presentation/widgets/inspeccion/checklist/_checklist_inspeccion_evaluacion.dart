@@ -143,23 +143,46 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
   }
 
   void _handleNextPressed() {
-    Navigator.push<void>(
-      context,
-      PageRouteBuilder<void>(
-        transitionDuration: $styles.times.pageTransition,
-        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) =>
-          _ChecklistInspeccionFotos(objData: InspeccionIdReqEntity(idInspeccion: widget.objData.idInspeccion), objInspeccion: widget.objInspeccion),
-        transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
-          const Offset begin    = Offset(1, 0);
-          const Offset end      = Offset.zero;
-          const Cubic curve     = Curves.ease;
-          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+    if (lstCategorias.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text($strings.settingsAttentionText, style: $styles.textStyles.bodyBold),
+              Text(
+                $strings.checklistAlertNextPageMessage,
+                style     : $styles.textStyles.bodySmall.copyWith(height: 1.3),
+                softWrap  : true,
+              ),
+            ],
+          ),
+          backgroundColor : const Color(0xfff89406),
+          elevation       : 0,
+          behavior        : SnackBarBehavior.fixed,
+          showCloseIcon   : true,
+        ),
+      );
+      return;
+    } else {
+      Navigator.push<void>(
+        context,
+        PageRouteBuilder<void>(
+          transitionDuration: $styles.times.pageTransition,
+          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) =>
+            _ChecklistInspeccionFotos(objData: InspeccionIdReqEntity(idInspeccion: widget.objData.idInspeccion), objInspeccion: widget.objInspeccion),
+          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+            const Offset begin    = Offset(1, 0);
+            const Offset end      = Offset.zero;
+            const Cubic curve     = Curves.ease;
+            final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-          return SlideTransition(position: animation.drive<Offset>(tween), child: child);
-        },
-        fullscreenDialog: true,
-      ),
-    );
+            return SlideTransition(position: animation.drive<Offset>(tween), child: child);
+          },
+          fullscreenDialog: true,
+        ),
+      );
+    }
   }
 
   void _showProgressDialog(BuildContext context) {

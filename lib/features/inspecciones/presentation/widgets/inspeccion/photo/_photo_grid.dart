@@ -1,9 +1,10 @@
 part of '../../../pages/list/list_page.dart';
 
 class _PhotoGrid extends StatefulWidget {
-  const _PhotoGrid({required this.lstFicheros, Key? key}) : super(key: key);
+  const _PhotoGrid({required this.ficheros, required this.onPressed, Key? key}) : super(key: key);
 
-  final List<Fichero> lstFicheros;
+  final List<Fichero> ficheros;
+  final void Function(Fichero) onPressed;
 
   @override
   State<_PhotoGrid> createState() => _PhotoGridState();
@@ -39,13 +40,19 @@ class _PhotoGridState extends State<_PhotoGrid> {
           scrollBehavior  : ScrollConfiguration.of(context).copyWith(scrollbars: false),
           slivers         : <Widget>[
             SliverPadding(
-              padding : EdgeInsets.all($styles.insets.sm).copyWith(bottom: $styles.insets.offset * 1.5),
+              padding : EdgeInsets.all($styles.insets.sm).copyWith(bottom: $styles.insets.offset),
               sliver  : SliverMasonryGrid.count(
                 crossAxisCount    : (context.widthPx / 300).ceil(),
                 mainAxisSpacing   : $styles.insets.sm,
                 crossAxisSpacing  : $styles.insets.sm,
-                childCount        : widget.lstFicheros.length,
-                itemBuilder       : (BuildContext context, int index) => _PhotoTile(imagePath: widget.lstFicheros[index].path ?? ''),
+                childCount        : widget.ficheros.length,
+                itemBuilder       : (BuildContext context, int index) {
+                  return Image.network(
+                    'http://otc.cablesdelgolfo.com/Ficheros/InspeccionesItemsFotos/C6B71E48865D288A4CC414E74096309C.jpg',
+                    fit: BoxFit.cover,
+                  );
+                },
+                // itemBuilder       : (BuildContext context, int index) => _PhotoTile(imagePath: widget.ficheros[index].path ?? ''),
               ),
             ),
           ],

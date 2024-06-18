@@ -59,6 +59,25 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
   }
 
   void _handleFinishPressed() {
+    if (_fechaInspeccionFinalController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text($strings.alertWarningInvalidFormTitle, style: $styles.textStyles.bodyBold),
+              const Text('Ingresa la fecha de inspección final', softWrap: true),
+            ],
+          ),
+          backgroundColor : const Color(0xfff89406),
+          elevation       : 0,
+          behavior        : SnackBarBehavior.fixed,
+          showCloseIcon   : true,
+        ),
+      );
+      return;
+    }
+
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {

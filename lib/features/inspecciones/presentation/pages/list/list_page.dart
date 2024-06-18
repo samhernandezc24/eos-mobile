@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
+import 'package:eos_mobile/core/constants/list_api.dart';
 
 import 'package:eos_mobile/core/data/catalogos/base.dart';
 import 'package:eos_mobile/core/data/catalogos/inspeccion_estatus.dart';
@@ -21,7 +22,6 @@ import 'package:eos_mobile/core/data/search_filter.dart';
 import 'package:eos_mobile/core/data/sort.dart';
 
 import 'package:eos_mobile/core/enums/inspeccion_menu.dart';
-import 'package:eos_mobile/core/network/data/upload_response.dart';
 
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_req_entity.dart';
