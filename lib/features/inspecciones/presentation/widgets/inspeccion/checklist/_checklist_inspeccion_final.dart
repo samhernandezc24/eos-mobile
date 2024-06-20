@@ -60,6 +60,25 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
   }
 
   void _handleFinishPressed() {
+    if (widget.objInspeccion.evaluado == false) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text($strings.settingsAttentionText, style: $styles.textStyles.bodyBold),
+              const Text('No se puede finalizar la inspección debido a que no se ha concluido la evaluación de la unidad', softWrap: true),
+            ],
+          ),
+          backgroundColor : const Color(0xfff89406),
+          elevation       : 0,
+          behavior        : SnackBarBehavior.fixed,
+          showCloseIcon   : true,
+        ),
+      );
+      return;
+    }
+
     if (_fechaInspeccionFinalController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

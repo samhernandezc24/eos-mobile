@@ -3,6 +3,7 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 class DateTextFormField extends StatelessWidget {
   const DateTextFormField({
     required this.controller,
+    required this.onChanged,
     Key? key,
     this.hintText,
     this.focusNode,
@@ -13,6 +14,7 @@ class DateTextFormField extends StatelessWidget {
   final String? hintText;
   final VoidCallback? onPickDatePressed;
   final FocusNode? focusNode;
+  final void Function(String) onChanged;
 
   Future<DateTime?> _handleSelectDatePressed(BuildContext context) async {
     final DateTime currentDate = DateTime.now();
@@ -28,7 +30,11 @@ class DateTextFormField extends StatelessWidget {
     if (pickedDate != null) {
       final day   = pickedDate.day.toString().padLeft(2, '0');
       final month = pickedDate.month.toString().padLeft(2, '0');
-      controller.text = '$day/$month/${pickedDate.year}';
+      final formattedDate = '$day/$month/${pickedDate.year}';
+
+      controller.text = formattedDate;
+
+      onChanged(formattedDate);
     }
 
     return null;
@@ -78,6 +84,7 @@ class DateTextFormField extends StatelessWidget {
                 hintText        : hintText ?? '',
               ),
               focusNode         : focusNode,
+              onChanged         : onChanged,
               readOnly          : true,
               keyboardType      : TextInputType.text,
               textAlignVertical : TextAlignVertical.top,

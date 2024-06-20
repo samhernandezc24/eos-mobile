@@ -32,6 +32,28 @@ class CategoriaItem extends Equatable {
   /// Serialización de la estructura del modelo a formato JSON.
   Map<String, dynamic> toJson() => _$CategoriaItemToJson(this);
 
+  CategoriaItem copyWith({
+    String? idCategoriaItem,
+    String? name,
+    String? idFormularioTipo,
+    String? formularioTipoName,
+    String? formularioValor,
+    String? value,
+    String? observaciones,
+    bool? noAplica,
+  }) {
+    return CategoriaItem(
+      idCategoriaItem: idCategoriaItem ?? this.idCategoriaItem,
+      name: name ?? this.name,
+      idFormularioTipo: idFormularioTipo ?? this.idFormularioTipo,
+      formularioTipoName: formularioTipoName ?? this.formularioTipoName,
+      formularioValor: formularioValor ?? this.formularioValor,
+      value: value ?? this.value,
+      observaciones: observaciones ?? this.observaciones,
+      noAplica: noAplica ?? this.noAplica,
+    );
+  }
+
   @override
   List<Object?> get props => [
         idCategoriaItem,

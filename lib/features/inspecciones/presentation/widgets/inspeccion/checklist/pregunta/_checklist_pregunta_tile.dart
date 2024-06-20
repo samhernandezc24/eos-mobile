@@ -3,62 +3,83 @@ part of '../../../../pages/list/list_page.dart';
 class _ChecklistPreguntaTile extends StatefulWidget {
   const _ChecklistPreguntaTile({
     required this.categoria,
-    required this.selectedItems,
     required this.onChange,
     Key? key,
     this.evaluado,
   }) : super(key: key);
 
   final Categoria categoria;
-  final Map<String, String> selectedItems;
   final bool? evaluado;
-  final void Function(Map<String, String>) onChange;
+  final void Function(int, String) onChange;
 
   @override
   State<_ChecklistPreguntaTile> createState() => _ChecklistPreguntaTileState();
 }
 
 class _ChecklistPreguntaTileState extends State<_ChecklistPreguntaTile> {
-  // SELECCION DE VALORES
-  late Map<String, String> _selectedItems;
+  // PROPERTIES
+  late List<CategoriaItem> lstCategoriasItems;
+  late Map<String, TextEditingController> _textControllers;
+  late Map<String, TextEditingController> _dateControllers;
+  late Map<String, TextEditingController> _timeControllers;
+  late Map<String, TextEditingController> _integerControllers;
+  late Map<String, TextEditingController> _decimalControllers;
 
   // STATE
   @override
   void initState() {
     super.initState();
-    _selectedItems = Map<String, String>.from(widget.selectedItems);
-  }
+    lstCategoriasItems = List.from(widget.categoria.categoriasItems ?? []);
 
-  @override
-  void didUpdateWidget(_ChecklistPreguntaTile oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.selectedItems != oldWidget.selectedItems) {
-      setState(() {
-        _selectedItems = Map<String, String>.from(widget.selectedItems);
-      });
+    _textControllers      = {};
+    _dateControllers      = {};
+    _timeControllers      = {};
+    _integerControllers   = {};
+    _decimalControllers   = {};
+
+    for (final item in lstCategoriasItems) {
+      if (item.idCategoriaItem != null) {
+        _textControllers[item.idCategoriaItem!]     = TextEditingController(text: item.value);
+        _dateControllers[item.idCategoriaItem!]     = TextEditingController(text: item.value);
+        _timeControllers[item.idCategoriaItem!]     = TextEditingController(text: item.value);
+        _integerControllers[item.idCategoriaItem!]  = TextEditingController(text: item.value);
+        _decimalControllers[item.idCategoriaItem!]  = TextEditingController(text: item.value);
+      }
     }
   }
 
+  @override
+  void dispose() {
+    for (final controller in _textControllers.values) {
+      controller.dispose();
+    }
+    for (final controller in _dateControllers.values) {
+      controller.dispose();
+    }
+    for (final controller in _timeControllers.values) {
+      controller.dispose();
+    }
+    for (final controller in _integerControllers.values) {
+      controller.dispose();
+    }
+    for (final controller in _decimalControllers.values) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
   // EVENTS
-  void _handleSelectRadioChange(String option, String id) {
+  void _updateItemValue(int index, String newValue) {
     setState(() {
-      _selectedItems[id] = option;
-      widget.onChange(_selectedItems);
+      final item = lstCategoriasItems[index];
+      lstCategoriasItems[index] = item.copyWith(value: newValue);
     });
+    widget.onChange(index, newValue);
   }
 
   // METHODS
   int _preguntasRespondidas() {
-    final int preguntasRespondidas = widget.categoria.categoriasItems?.where((item) => item.value != null && item.value!.isNotEmpty).length ?? 0;
-    return preguntasRespondidas;
-  }
-
-  String? _getMassiveOption() {
-    final values = widget.categoria.categoriasItems?.map((item) => _selectedItems[item.idCategoriaItem]).toSet();
-    if (values != null && values.length == 1) {
-      return values.first;
-    }
-    return null;
+    return lstCategoriasItems.where((item) => item.value != null && item.value!.isNotEmpty).length;
   }
 
   @override
@@ -66,27 +87,22 @@ class _ChecklistPreguntaTileState extends State<_ChecklistPreguntaTile> {
     final int totalPreguntas        = widget.categoria.categoriasItems?.length ?? 0;
     final int preguntasRespondidas  = _preguntasRespondidas();
 
-    final List<String> massiveOptions   = widget.categoria.categoriasItems?.isNotEmpty ?? false
-        ? widget.categoria.categoriasItems!.first.formularioValor?.split(',') ?? []
-        : [];
-    final String? selectedMassiveOption = _getMassiveOption();
-
     return Card(
-      elevation   : 3,
-      margin      : EdgeInsets.only(bottom: $styles.insets.sm),
-      shape       : RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
-      child       : ExpansionTile(
+      elevation : 3,
+      margin    : EdgeInsets.only(bottom: $styles.insets.sm),
+      shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
+      child     : ExpansionTile(
         leading: Container(
           padding: EdgeInsets.symmetric(vertical: $styles.insets.xxs, horizontal: $styles.insets.xs),
           decoration: BoxDecoration(
             color         : Theme.of(context).indicatorColor,
             borderRadius  : BorderRadius.circular($styles.corners.md),
           ),
-          child: Text('1 / $totalPreguntas', style: $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onPrimary)),
+          child: Text('$preguntasRespondidas / $totalPreguntas', style: $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onPrimary)),
         ),
         title: Text('${widget.categoria.name}', style: $styles.textStyles.h4),
         children: <Widget>[
-          if (widget.categoria.categoriasItems != null && widget.categoria.categoriasItems!.isNotEmpty)
+          if (lstCategoriasItems.isNotEmpty)
             Column(
               children: <Widget>[
                 // APLICAR CAMBIO MASIVO A OPCIONES MULTIPLES
@@ -96,37 +112,22 @@ class _ChecklistPreguntaTileState extends State<_ChecklistPreguntaTile> {
                       Text('Aplicar a todos a:', style: $styles.textStyles.h4),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: massiveOptions.map((option) => Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Radio(
-                              value       : option,
-                              groupValue  : selectedMassiveOption,
-                              onChanged   : (String? value) {
-                                setState(() {
-                                  for (final CategoriaItem item in widget.categoria.categoriasItems ?? []) {
-                                    _handleSelectRadioChange(option, item.idCategoriaItem!);
-                                  }
-                                });
-                              },
-                            ),
-                            Text(option, style: $styles.textStyles.body),
-                          ],
-                        ),
-                      ).toList(),
+                        children: <Widget>[
+                          // MOSTRAR LOS RADIOS PRINCIPALES DE LA LISTA SEPARADA POR COMAS DE FORMULARIOS VALORES
+                        ],
                       ),
                     ],
                   ),
 
-                // ITEMS
                 ListView.builder(
                   shrinkWrap  : true,
                   physics     : const NeverScrollableScrollPhysics(),
-                  itemCount   : widget.categoria.categoriasItems?.length,
+                  itemCount   : lstCategoriasItems.length,
                   itemBuilder : (BuildContext context, int index) {
+                    final CategoriaItem item = lstCategoriasItems[index];
                     return Padding(
                       padding : EdgeInsets.only(bottom: $styles.insets.sm),
-                      child   : _buildCategoriaItemPregunta(widget.categoria.categoriasItems![index], index),
+                      child   : _buildCategoriaItemPregunta(item, index),
                     );
                   },
                 ),
@@ -157,6 +158,7 @@ class _ChecklistPreguntaTileState extends State<_ChecklistPreguntaTile> {
     switch (item.idFormularioTipo) {
       // PREGUNTA ABIERTA:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb31':
+        final TextEditingController controller = _textControllers[item.idCategoriaItem!]!;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -175,11 +177,25 @@ class _ChecklistPreguntaTileState extends State<_ChecklistPreguntaTile> {
             // FORMULARIO VALORES:
             Padding(
               padding: EdgeInsets.fromLTRB($styles.insets.sm, 0, $styles.insets.sm, $styles.insets.sm),
-              child: TextFormField(
-                decoration      : const InputDecoration(contentPadding: Globals.kDefaultContentPadding),
-                keyboardType    : TextInputType.text,
-                textInputAction : TextInputAction.next,
-              ),
+              child: !widget.evaluado!
+                  ? TextFormField(
+                      controller      : controller,
+                      decoration      : const InputDecoration(contentPadding: Globals.kDefaultContentPadding),
+                      keyboardType    : TextInputType.text,
+                      textInputAction : TextInputAction.next,
+                      onChanged       : (newValue) {
+                        _updateItemValue(index, newValue);
+                      },
+                    )
+                  : RichText(
+                      text: TextSpan(
+                        style: $styles.textStyles.body.copyWith(color: Theme.of(context).colorScheme.onSurface, height: 1.3),
+                        children: <TextSpan>[
+                          const TextSpan(text: 'Respuesta', style: TextStyle(fontWeight: FontWeight.w600)),
+                          TextSpan(text: ': ${item.value}'),
+                        ],
+                      ),
+                    ),
             ),
           ],
         );
@@ -203,23 +219,24 @@ class _ChecklistPreguntaTileState extends State<_ChecklistPreguntaTile> {
             ),
             // FORMULARIO VALORES:
             Row(
-              children: lstOptions.map((option) => Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Radio<String>(
-                    value       : option,
-                    groupValue  : _selectedItems[item.idCategoriaItem] ?? '',
-                    onChanged   : !widget.evaluado! ? (String? value) {
-                      setState(() {
-                        _selectedItems[item.idCategoriaItem!] = value!;
-                        widget.onChange(_selectedItems);
-                      });
-                    } : null,
-                  ),
-                  Text(option, style: $styles.textStyles.body),
-                ],
-              ),
-            ).toList(),
+              children: lstOptions.map((option) {
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Radio<String>(
+                      value       : option,
+                      groupValue  : item.value ?? '',
+                      onChanged   : !widget.evaluado! ? (value) {
+                        setState(() {
+                          lstCategoriasItems[index] = item.copyWith(value: value);
+                        });
+                        _updateItemValue(index, value ?? '');
+                      } : null,
+                    ),
+                    Text(option, style: $styles.textStyles.body),
+                  ],
+                );
+              }).toList(),
             ),
           ],
         );
@@ -249,19 +266,18 @@ class _ChecklistPreguntaTileState extends State<_ChecklistPreguntaTile> {
               padding: EdgeInsets.fromLTRB($styles.insets.sm, 0, $styles.insets.sm, $styles.insets.sm),
               child: DropdownButtonFormField<String>(
                 decoration  : const InputDecoration(contentPadding: Globals.kDefaultContentPadding, hintText: 'Seleccionar opción'),
-                items       : lstOptions.map((opt) {
-                  return DropdownMenuItem<String>(value: opt, child: Text(opt));
+                items       : lstOptions.map((option) {
+                  return DropdownMenuItem<String>(value: option, child: Text(option));
                 }).toList(),
-                value       : _selectedItems[item.idCategoriaItem],
-                onChanged   : (String? value) {
+                value       : item.value,
+                onChanged   : !widget.evaluado! ? (String? value) {
                   setState(() {
-                    if (value == 'Seleccionar') {
-                      _selectedItems.remove(item.idCategoriaItem);
-                    } else {
-                      _selectedItems[item.idCategoriaItem!] = value!;
+                    if (value != 'Seleccionar') {
+                      lstCategoriasItems[index] = item.copyWith(value: value);
+                      _updateItemValue(index, value ?? '');
                     }
                   });
-                },
+                } : null,
               ),
             ),
           ],
@@ -269,6 +285,7 @@ class _ChecklistPreguntaTileState extends State<_ChecklistPreguntaTile> {
 
       // FECHA:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb34':
+        final TextEditingController controller = _dateControllers[item.idCategoriaItem!]!;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -287,13 +304,24 @@ class _ChecklistPreguntaTileState extends State<_ChecklistPreguntaTile> {
             // FORMULARIO VALORES:
             Padding(
               padding : EdgeInsets.fromLTRB($styles.insets.sm, 0, $styles.insets.sm, $styles.insets.sm),
-              child   : DateTextFormField(controller: TextEditingController()),
+              child   : !widget.evaluado!
+                  ? DateTextFormField(
+                      controller  : controller,
+                      onChanged   : (newValue) => setState(() => _updateItemValue(index, newValue)),
+                    )
+                  : TextFormField(
+                      controller  : controller,
+                      decoration  : const InputDecoration(contentPadding: Globals.kDefaultContentPadding, prefixIcon: Icon(Icons.calendar_month)),
+                      readOnly    : true,
+                      textAlign   : TextAlign.end,
+                    ),
             ),
           ],
         );
 
       // HORA:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb35':
+        final TextEditingController controller = _timeControllers[item.idCategoriaItem!]!;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -312,13 +340,24 @@ class _ChecklistPreguntaTileState extends State<_ChecklistPreguntaTile> {
             // FORMULARIO VALORES:
             Padding(
               padding : EdgeInsets.fromLTRB($styles.insets.sm, 0, $styles.insets.sm, $styles.insets.sm),
-              child   : TimeTextFormField(controller: TextEditingController()),
+              child   : !widget.evaluado!
+                  ? TimeTextFormField(
+                      controller  : controller,
+                      onChanged   : (newValue) => setState(() => _updateItemValue(index, newValue)),
+                    )
+                  : TextFormField(
+                      controller  : controller,
+                      decoration  : const InputDecoration(contentPadding: Globals.kDefaultContentPadding, prefixIcon: Icon(Icons.schedule)),
+                      readOnly    : true,
+                      textAlign   : TextAlign.end,
+                    ),
             ),
           ],
         );
 
       // NUMERO ENTERO:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb36':
+        final TextEditingController controller = _integerControllers[item.idCategoriaItem!]!;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -337,19 +376,31 @@ class _ChecklistPreguntaTileState extends State<_ChecklistPreguntaTile> {
             // FORMULARIO VALORES:
             Padding(
               padding: EdgeInsets.fromLTRB($styles.insets.sm, 0, $styles.insets.sm, $styles.insets.sm),
-              child: TextFormField(
-                decoration      : const InputDecoration(contentPadding: Globals.kDefaultContentPadding, hintText: '0'),
-                keyboardType    : TextInputType.number,
-                textAlign       : TextAlign.end,
-                textInputAction : TextInputAction.next,
-                inputFormatters : [ FilteringTextInputFormatter.digitsOnly ],
-              ),
+              child: !widget.evaluado!
+                  ? TextFormField(
+                      controller      : controller,
+                      decoration      : const InputDecoration(contentPadding: Globals.kDefaultContentPadding, hintText: '0'),
+                      keyboardType    : TextInputType.number,
+                      textAlign       : TextAlign.end,
+                      textInputAction : TextInputAction.next,
+                      inputFormatters : [ FilteringTextInputFormatter.digitsOnly ],
+                      onChanged       : (newValue) {
+                        _updateItemValue(index, newValue);
+                      },
+                    )
+                  : TextFormField(
+                      controller  : controller,
+                      decoration  : const InputDecoration(contentPadding: Globals.kDefaultContentPadding, prefixIcon: Icon(Icons.numbers)),
+                      readOnly    : true,
+                      textAlign   : TextAlign.end,
+                    ),
             ),
           ],
         );
 
       // NUMERO DECIMAL:
       case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb37':
+        final TextEditingController controller = _decimalControllers[item.idCategoriaItem!]!;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -368,12 +419,23 @@ class _ChecklistPreguntaTileState extends State<_ChecklistPreguntaTile> {
             // FORMULARIO VALORES:
             Padding(
               padding: EdgeInsets.fromLTRB($styles.insets.sm, 0, $styles.insets.sm, $styles.insets.sm),
-              child: TextFormField(
-                decoration      : const InputDecoration(contentPadding: Globals.kDefaultContentPadding, hintText: '0.00'),
-                keyboardType    : TextInputType.number,
-                textAlign       : TextAlign.end,
-                textInputAction : TextInputAction.next,
-              ),
+              child: !widget.evaluado!
+                  ? TextFormField(
+                      controller      : controller,
+                      decoration      : const InputDecoration(contentPadding: Globals.kDefaultContentPadding, hintText: '0.00'),
+                      keyboardType    : TextInputType.number,
+                      textAlign       : TextAlign.end,
+                      textInputAction : TextInputAction.next,
+                      onChanged       : (newValue) {
+                        _updateItemValue(index, newValue);
+                      },
+                    )
+                  : TextFormField(
+                      controller  : controller,
+                      decoration  : const InputDecoration(contentPadding: Globals.kDefaultContentPadding, prefixIcon: Icon(Icons.numbers)),
+                      readOnly    : true,
+                      textAlign   : TextAlign.end,
+                    ),
             ),
           ],
         );

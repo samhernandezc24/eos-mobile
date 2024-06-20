@@ -52,7 +52,6 @@ part '../../widgets/inspeccion/checklist/_checklist_inspeccion_final.dart';
 part '../../widgets/inspeccion/checklist/_checklist_inspeccion_fotos.dart';
 part '../../widgets/inspeccion/checklist/_checklist_inspeccion_signature.dart';
 part '../../widgets/inspeccion/checklist/pregunta/_checklist_pregunta_tile.dart';
-
 part '../../widgets/inspeccion/create/_create_form.dart';
 part '../../widgets/inspeccion/create/_search_input.dart';
 part '../../widgets/inspeccion/filter/_filter_data.dart';
@@ -639,7 +638,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
             Row(
               children: <Widget>[
                 IconButton(onPressed: _buildDataSource, icon: const Icon(Icons.refresh), tooltip: 'Actualizar lista'),
-                IconButton(onPressed: _handleFiltersPressed, icon: const Icon(Icons.filter_list), tooltip: 'Filtros'),
+                // IconButton(onPressed: _handleFiltersPressed, icon: const Icon(Icons.filter_list), tooltip: 'Filtros'),
                 IconButton(onPressed: () => _handleSortPressed(context), icon: const Icon(Icons.format_line_spacing), tooltip: 'Ordenar'),
               ],
             ),

@@ -3,6 +3,7 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 class TimeTextFormField extends StatelessWidget {
   const TimeTextFormField({
     required this.controller,
+    required this.onChanged,
     Key? key,
     this.hintText,
     this.focusNode,
@@ -13,6 +14,7 @@ class TimeTextFormField extends StatelessWidget {
   final String? hintText;
   final VoidCallback? onPickTimePressed;
   final FocusNode? focusNode;
+  final void Function(String) onChanged;
 
   Future<TimeOfDay?> _handleSelecTimeOfDayPressed(BuildContext context) async {
     final TimeOfDay currentTime = TimeOfDay.now();
@@ -26,7 +28,11 @@ class TimeTextFormField extends StatelessWidget {
     if (pickedTime != null) {
       final hour   = pickedTime.hour.toString().padLeft(2, '0');
       final minute = pickedTime.minute.toString().padLeft(2, '0');
-      controller.text = '$hour:$minute';
+      final formattedTime = '$hour:$minute';
+
+      controller.text = formattedTime;
+
+      onChanged(formattedTime);
     }
 
     return null;
@@ -76,6 +82,7 @@ class TimeTextFormField extends StatelessWidget {
                 hintText        : hintText ?? '',
               ),
               focusNode         : focusNode,
+              onChanged         : onChanged,
               readOnly          : true,
               keyboardType      : TextInputType.text,
               textAlignVertical : TextAlignVertical.top,

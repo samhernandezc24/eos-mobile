@@ -255,45 +255,6 @@ class __ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEva
     BlocProvider.of<RemoteInspeccionCategoriaBloc>(context).add(StoreInspeccionCategoria(objPost));
   }
 
-  List<Categoria> _handleUpdatePreguntas(List<Categoria> categorias, Map<String, String> selectedItems) {
-    return categorias.map((categoria) {
-      final lstCategoriasItemsUpdate = categoria.categoriasItems?.map((item) {
-        final newValue = selectedItems[item.idCategoriaItem];
-        return newValue != null
-            ? CategoriaItem(
-                idCategoriaItem     : item.idCategoriaItem,
-                name                : item.name,
-                idFormularioTipo    : item.idFormularioTipo,
-                formularioTipoName  : item.formularioTipoName,
-                formularioValor     : item.formularioValor,
-                value               : newValue,
-                observaciones       : item.observaciones,
-                noAplica            : item.noAplica,
-              )
-            : item;
-      }).toList();
-
-      return Categoria(
-        idCategoria     : categoria.idCategoria,
-        name            : categoria.name,
-        totalItems      : categoria.totalItems,
-        categoriasItems : lstCategoriasItemsUpdate,
-      );
-    }).toList();
-  }
-
-  Map<String, String> _getSelectedItems(Categoria categoria) {
-    final Map<String, String> initialItems = {};
-    for (final categoria in lstCategorias) {
-      for (final CategoriaItem item in categoria.categoriasItems ?? []) {
-        if (item.idFormularioTipo == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb32') {
-          initialItems[item.idCategoriaItem!] = item.value ?? '';
-        }
-      }
-    }
-    return initialItems;
-  }
-
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -438,13 +399,10 @@ class __ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEva
                             itemCount   : lstCategorias.length,
                             itemBuilder : (BuildContext context, int index) {
                               return _ChecklistPreguntaTile(
-                                categoria     : lstCategorias[index],
-                                selectedItems : _getSelectedItems(lstCategorias[index]),
-                                evaluado      : isEvaluado,
-                                onChange      : (newValues) {
-                                  setState(() {
-                                    lstCategorias = _handleUpdatePreguntas(lstCategorias, newValues);
-                                  });
+                                categoria   : lstCategorias[index],
+                                evaluado    : isEvaluado,
+                                onChange    : (itemIndex, newValue) {
+                                  lstCategorias[index].categoriasItems![itemIndex] = lstCategorias[index].categoriasItems![itemIndex].copyWith(value: newValue);
                                 },
                               );
                             },
