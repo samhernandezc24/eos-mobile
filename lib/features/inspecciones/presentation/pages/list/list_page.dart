@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
-import 'package:eos_mobile/core/constants/list_api.dart';
 
 import 'package:eos_mobile/core/data/catalogos/base.dart';
 import 'package:eos_mobile/core/data/catalogos/inspeccion_estatus.dart';
@@ -40,6 +39,8 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_fi
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/ui/common/controls/date_text_form_field.dart';
+import 'package:eos_mobile/ui/common/controls/time_text_form_field.dart';
 import 'package:eos_mobile/ui/common/shimmer_loading.dart';
 
 import 'package:image/image.dart' as img;
@@ -50,7 +51,8 @@ part '../../widgets/inspeccion/checklist/_checklist_inspeccion_evaluacion.dart';
 part '../../widgets/inspeccion/checklist/_checklist_inspeccion_final.dart';
 part '../../widgets/inspeccion/checklist/_checklist_inspeccion_fotos.dart';
 part '../../widgets/inspeccion/checklist/_checklist_inspeccion_signature.dart';
-part '../../widgets/inspeccion/checklist/_checklist_tile.dart';
+part '../../widgets/inspeccion/checklist/pregunta/_checklist_pregunta_tile.dart';
+
 part '../../widgets/inspeccion/create/_create_form.dart';
 part '../../widgets/inspeccion/create/_search_input.dart';
 part '../../widgets/inspeccion/filter/_filter_data.dart';

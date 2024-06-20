@@ -6,7 +6,7 @@ part 'categoria.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Categoria extends Equatable {
-  const Categoria({this.idCategoria, this.name, this.categoriasItems});
+  const Categoria({this.idCategoria, this.name, this.totalItems, this.categoriasItems});
 
   /// Constructor factory para crear una nueva instancia de [Categoria]
   /// a partir de un mapa. Pasa el mapa al constructor generado `_$CategoriaFromJson()`.
@@ -14,11 +14,12 @@ class Categoria extends Equatable {
 
   final String? idCategoria;
   final String? name;
+  final int? totalItems;
   final List<CategoriaItem>? categoriasItems;
 
   /// Serialización de la estructura del modelo a formato JSON.
   Map<String, dynamic> toJson() => _$CategoriaToJson(this);
 
   @override
-  List<Object?> get props => [ idCategoria, name, categoriasItems ];
+  List<Object?> get props => [ idCategoria, name, totalItems, categoriasItems ];
 }

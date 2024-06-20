@@ -40,9 +40,12 @@ class AppStrings {
   String circleButtonsSemanticBack          = 'Volver';
   String circleButtonsSemanticClose         = 'Cerrar';
 
+  String checklistFinishAlertContent1       = 'Una vez finalizada la evaluación no se podrán revertir los cambios.\n';
+  String checklistFinishAlertContent2       = '¿Estás seguro de querer finalizar la evaluación?';
+
   String checklistAppBarTitle               = 'Evaluar unidad';
   String checklistAlertSaveMessage          = 'No se puede guardar parcialmente o finalizar una evaluación que no cuenta con categorías o preguntas';
-  String checklistAlertNextPageMessage      = 'No se puede avanzar a la etapa siguiente, debido a que la evaluación no cuenta con categorías o preguntas';
+  String checklistAlertNextPageMessage      = 'No se puede avanzar a la etapa siguiente, debido a que la evaluación no ha sido configurada correctamente';
   String checklistPhotoAlertNextPageMessage = 'No se puede avanzar a la etapa final, sin antes haber cargado las evidencias fotográficas';
   String checklistDrawSignatureAppBarTitle  = 'Dibujar firma';
   String checklistDrawSignatureBoxSuggest   = 'Dibuja tu firma en el espacio rectangular con bordes punteados, de preferencia en el centro del espacio rectangular.';
@@ -52,11 +55,12 @@ class AppStrings {
   String checklistPhotoEmptyListMessage     = 'Captura las evidencias fotográficas de todas las áreas importantes de la unidad para su inspección.';
   String checklistPhotoAddEmptyListTitle    = 'Aún no hay fotografías';
   String checklistPhotoAddEmptyListMessage  = 'Intenta tomar fotografías dando clic en el ícono de la cámara o selecciona de la galería.';
-  String checklistEmptyTitle                = 'Aún no hay categorías';
+  String checklistEmptyListTitle            = 'Aún no hay categorías';
+  String checklistEmptyListMessage          = 'Intenta configurar las categorías y preguntas para la evaluación de la unidad.';
   String checklistFinishAppBarTitle         = 'Finalizar inspección';
   String checklistFinishSignatureButtonText = 'Dibujar firma';
   String checklistFinishImportantMessage    = 'Soy testigo de la inspección realizada al equipo que tengo a mi cargo y se me informo específicamente de cada punto a considerar para su atención correctiva.';
-  String checklistListMessage               = 'Intenta configurar las categorías y preguntas para la evaluación de la unidad.';
+  String checklistAlertInvalidDateMessage   = 'Ingresa la fecha de inspección inicial';
 
   String checklistModalBottomSheetTitle     = '¿Quieres terminar la inspección más tarde?';
 

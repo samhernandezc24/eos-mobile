@@ -41,12 +41,12 @@ class RemoteInspeccionCategoriaBloc extends Bloc<RemoteInspeccionCategoriaEvent,
   }
 
   Future<void> onStoreInspeccionCategoria(StoreInspeccionCategoria event, Emitter<RemoteInspeccionCategoriaState> emit) async {
-    emit(RemoteInspeccionCategoriaStoring());
+    emit(RemoteInspeccionCategoriaStoreLoading());
 
     final objDataState = await _storeInspeccionCategoriaUseCase(params: event.objData);
 
     if (objDataState is DataSuccess) {
-      emit(RemoteInspeccionCategoriaStored(objDataState.data));
+      emit(RemoteInspeccionCategoriaStoreSuccess(objDataState.data));
     }
 
     if (objDataState is DataFailedMessage) {

@@ -13,74 +13,122 @@ class _ChecklistInspeccionEvaluacion extends StatefulWidget {
   final VoidCallback? buildDataSourceCallback;
 
   @override
-  State<_ChecklistInspeccionEvaluacion> createState() => _ChecklistInspeccionEvaluacionState();
+  State<_ChecklistInspeccionEvaluacion> createState() => __ChecklistInspeccionEvaluacionState();
 }
 
-class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEvaluacion> {
+class __ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEvaluacion> {
   // CONTROLLERS
   late final TextEditingController _fechaInspeccionInicialController;
 
   // PROPERTIES
-  bool _serverError = false;
-  bool _isLoading   = false;
-
   Inspeccion? objInspeccion;
+  bool isEvaluado       = false;
+  bool _hasServerError  = false;
+  bool _isLoading       = false;
 
-  List<Categoria> lstCategorias = <Categoria>[];
+  // LIST
+  List<Categoria> lstCategorias = [];
 
   // STATE
   @override
   void initState() {
     super.initState();
     _fechaInspeccionInicialController = TextEditingController();
-    _getPreguntas();
+
+    getPreguntas();
   }
 
   @override
   void dispose() {
-    super.dispose();
     _fechaInspeccionInicialController.dispose();
+    super.dispose();
   }
 
   // EVENTS
-  void _handleDidPopPressed(BuildContext context) {
+  void _showOnPopModalBottomSheet(BuildContext context) {
     showModalBottomSheet<void>(
-      context : context,
-      builder : (BuildContext context) {
-        return Column(
-          mainAxisSize  : MainAxisSize.min,
-          children      : <Widget>[
-            Padding(
-              padding : EdgeInsets.symmetric(vertical: $styles.insets.sm),
-              child   : Center(child: Text($strings.checklistModalBottomSheetTitle, style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600))),
+      context: context,
+      builder: (BuildContext context) => Column(
+        mainAxisSize  : MainAxisSize.min,
+        children      : <Widget>[
+          Padding(
+            padding : EdgeInsets.symmetric(vertical: $styles.insets.sm),
+            child   : Center(
+              child: Text($strings.checklistModalBottomSheetTitle, style: $styles.textStyles.title2.copyWith(fontWeight: FontWeight.w600)),
             ),
-            ListTile(
-              leading   : const Icon(Icons.arrow_back),
-              iconColor : Theme.of(context).colorScheme.error,
-              title     : const Text('Salir de la inspección'),
-              textColor : Theme.of(context).colorScheme.error,
-              onTap     : () {
-                Navigator.of(context).pop();        // Cerrar modal bottom
-                  Navigator.of(context).pop();      // Cerrar página
-              },
-            ),
-            ListTile(
-              leading   : const Icon(Icons.check),
-              iconColor : Theme.of(context).colorScheme.primary,
-              title     : const Text('Continuar inspección'),
-              textColor : Theme.of(context).colorScheme.primary,
-              onTap     : () => Navigator.of(context).pop(),
-            ),
-          ],
-        );
-      },
+          ),
+          ListTile(
+            leading : const Icon(Icons.arrow_back),
+            title   : const Text('Salir de la inspección'),
+            onTap   : () {
+              Navigator.of(context).pop();          // Cerrar ModalBottomSheet
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.of(context).pop();        // Cerrar Modal
+                widget.buildDataSourceCallback!();  // Ejecutar callback
+              });
+            },
+          ),
+          ListTile(
+            leading   : const Icon(Icons.check),
+            title     : const Text('Continuar inspección'),
+            iconColor : Theme.of(context).primaryColor,
+            textColor : Theme.of(context).primaryColor,
+            onTap     : () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
     );
   }
 
-  void _handleStorePressed({bool isParcial = false}) {
-    final bool hasEmptyCategoriasItems = lstCategorias.any((item) => item.categoriasItems == null || item.categoriasItems!.isEmpty);
+  void _handleNextPressed() {
+    final bool isEmptyCategoriasItems = lstCategorias.any((item) => item.categoriasItems == null || item.categoriasItems!.isEmpty);
 
-    if (lstCategorias.isEmpty || hasEmptyCategoriasItems) {
+    if (lstCategorias.isEmpty || isEmptyCategoriasItems) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text($strings.settingsAttentionText, style: $styles.textStyles.bodyBold),
+              Text($strings.checklistAlertNextPageMessage, softWrap: true),
+            ],
+          ),
+          backgroundColor : const Color(0xfff89406),
+          elevation       : 0,
+          behavior        : SnackBarBehavior.fixed,
+          showCloseIcon   : true,
+        ),
+      );
+      return;
+    }
+
+    Navigator.push<void>(
+      context,
+      PageRouteBuilder<void>(
+        transitionDuration: $styles.times.pageTransition,
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) =>
+          _ChecklistInspeccionFotos(
+            objData                 : InspeccionIdReqEntity(idInspeccion: widget.objData.idInspeccion),
+            objInspeccion           : widget.objInspeccion,
+            buildDataSourceCallback : widget.buildDataSourceCallback,
+          ),
+        transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+          const Offset begin    = Offset(1, 0);
+          const Offset end      = Offset.zero;
+          const Cubic curve     = Curves.ease;
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(position: animation.drive<Offset>(tween), child: child);
+        },
+        fullscreenDialog: true,
+      ),
+    );
+  }
+
+  void _handleStorePressed(BuildContext context, {bool isParcial = false}) {
+    final bool isEmptyCategoriasItems = lstCategorias.any((item) => item.categoriasItems == null || item.categoriasItems!.isEmpty);
+
+    if (lstCategorias.isEmpty || isEmptyCategoriasItems) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Column(
@@ -97,76 +145,16 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
         ),
       );
       return;
-    } else {
-      print('Ejecutar esto: false');
     }
 
-    // if (lstCategorias.isEmpty) {
-
-    // }
-
-    // if (_fechaInspeccionInicialController.text.isEmpty) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: Column(
-    //         crossAxisAlignment: CrossAxisAlignment.start,
-    //         children: <Widget>[
-    //           Text($strings.alertWarningInvalidFormTitle, style: $styles.textStyles.bodyBold),
-    //           const Text('Ingresa la fecha de inspección inicial', softWrap: true),
-    //         ],
-    //       ),
-    //       backgroundColor : const Color(0xfff89406),
-    //       elevation       : 0,
-    //       behavior        : SnackBarBehavior.fixed,
-    //       showCloseIcon   : true,
-    //     ),
-    //   );
-    //   return;
-    // }
-
-    // if (!isParcial) {
-    //   showDialog<void>(
-    //     context: context,
-    //     builder: (BuildContext context) {
-    //       return AlertDialog(
-    //         title   : Text('Confirmar finalización', style: $styles.textStyles.h3.copyWith(fontSize: 18)),
-    //         content : Text(
-    //           '¿Estás seguro que deseas finalizar la evaluación?\nUna vez finalizada la evaluación no se podrán revertir los cambios.',
-    //           style: $styles.textStyles.body.copyWith(height: 1.4),
-    //         ),
-    //         actions : [
-    //           TextButton(onPressed: () => Navigator.pop(context, $strings.cancelButtonText), child: Text($strings.cancelButtonText, style: $styles.textStyles.button)),
-    //           TextButton(
-    //             onPressed: () {
-    //               Navigator.pop(context, $strings.acceptButtonText);  // Cerrar el dialógo
-    //               _store(isParcial);                                  // Finalizar evaluación
-    //             },
-    //             child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
-    //           ),
-    //         ],
-    //       );
-    //     },
-    //   );
-    // } else {
-    //   _store(isParcial);
-    // }
-  }
-
-  void _handleNextPressed() {
-    final bool hasEmptyCategoriasItems = lstCategorias.any((item) => item.categoriasItems == null || item.categoriasItems!.isEmpty);
-
-    if (lstCategorias.isEmpty || hasEmptyCategoriasItems) {
+    if (_fechaInspeccionInicialController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text($strings.settingsAttentionText, style: $styles.textStyles.bodyBold),
-              Text(
-                $strings.checklistAlertNextPageMessage,
-                style     : $styles.textStyles.bodySmall.copyWith(height: 1.3),
-                softWrap  : true,
-              ),
+              Text($strings.alertWarningInvalidFormTitle, style: $styles.textStyles.bodyBold),
+              Text($strings.checklistAlertInvalidDateMessage, softWrap: true),
             ],
           ),
           backgroundColor : const Color(0xfff89406),
@@ -176,29 +164,50 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
         ),
       );
       return;
-    } else {
-      Navigator.push<void>(
-        context,
-        PageRouteBuilder<void>(
-          transitionDuration: $styles.times.pageTransition,
-          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) =>
-            _ChecklistInspeccionFotos(
-              objData                 : InspeccionIdReqEntity(idInspeccion: widget.objData.idInspeccion),
-              objInspeccion           : widget.objInspeccion,
-              buildDataSourceCallback : widget.buildDataSourceCallback,
-            ),
-          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
-            const Offset begin    = Offset(1, 0);
-            const Offset end      = Offset.zero;
-            const Cubic curve     = Curves.ease;
-            final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-            return SlideTransition(position: animation.drive<Offset>(tween), child: child);
-          },
-          fullscreenDialog: true,
-        ),
-      );
     }
+
+    if (!isParcial) {
+      showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Finalizar', style: $styles.textStyles.h3.copyWith(fontSize: 18, height: 1.3)),
+            content: RichText(
+              text: TextSpan(style: $styles.textStyles.body.copyWith(color: Theme.of(context).colorScheme.onSurface, height: 1.3),
+                children: <InlineSpan>[
+                  TextSpan(text: $strings.checklistFinishAlertContent1),
+                  TextSpan(text: $strings.checklistFinishAlertContent2),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed : () => Navigator.pop(context, $strings.cancelButtonText),
+                child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
+              ),
+              TextButton(
+                onPressed : () {
+                  Navigator.of(context).pop();  // Cerrar AlertDialog
+                  _store(isParcial);            // Finalizar InspeccionEvaluacion
+                },
+                child     : Text($strings.acceptButtonText, style: $styles.textStyles.button),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      _store(isParcial);
+    }
+  }
+
+  Future<void> _showServerFailedDialog(BuildContext context, String? errorMessage) async {
+    return showDialog<void>(
+      context : context,
+      builder: (BuildContext context)  => ServerFailedDialog(
+        errorMessage: errorMessage ?? 'Se produjo un error inesperado.',
+      ),
+    );
   }
 
   void _showProgressDialog(BuildContext context) {
@@ -230,17 +239,8 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
     );
   }
 
-  Future<void> _showServerFailedDialog(BuildContext context, String? errorMessage) async {
-    return showDialog<void>(
-      context : context,
-      builder: (BuildContext context)  => ServerFailedDialog(
-        errorMessage: errorMessage ?? 'Se produjo un error inesperado. Intenta de nuevo guardar la evaluación.',
-      ),
-    );
-  }
-
   // METHODS
-  Future<void> _getPreguntas() async {
+  Future<void> getPreguntas() async {
     context.read<RemoteInspeccionCategoriaBloc>().add(GetPreguntas(widget.objData));
   }
 
@@ -255,50 +255,52 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
     BlocProvider.of<RemoteInspeccionCategoriaBloc>(context).add(StoreInspeccionCategoria(objPost));
   }
 
-  List<Categoria> _updateCategoriasItems(List<Categoria> categorias, Map<String, String> selectedValues) {
+  List<Categoria> _handleUpdatePreguntas(List<Categoria> categorias, Map<String, String> selectedItems) {
     return categorias.map((categoria) {
-      final updatedItems = categoria.categoriasItems?.map((item) {
-        final newValue = selectedValues[item.idCategoriaItem];
+      final lstCategoriasItemsUpdate = categoria.categoriasItems?.map((item) {
+        final newValue = selectedItems[item.idCategoriaItem];
         return newValue != null
-          ? CategoriaItem(
-              idCategoriaItem     : item.idCategoriaItem,
-              name                : item.name,
-              idFormularioTipo    : item.idFormularioTipo,
-              formularioTipoName  : item.formularioTipoName,
-              formularioValor     : item.formularioValor,
-              value               : newValue,
-              observaciones       : item.observaciones,
-              noAplica            : false,
-            )
-          : item;
+            ? CategoriaItem(
+                idCategoriaItem     : item.idCategoriaItem,
+                name                : item.name,
+                idFormularioTipo    : item.idFormularioTipo,
+                formularioTipoName  : item.formularioTipoName,
+                formularioValor     : item.formularioValor,
+                value               : newValue,
+                observaciones       : item.observaciones,
+                noAplica            : item.noAplica,
+              )
+            : item;
       }).toList();
+
       return Categoria(
         idCategoria     : categoria.idCategoria,
         name            : categoria.name,
-        categoriasItems : updatedItems,
+        totalItems      : categoria.totalItems,
+        categoriasItems : lstCategoriasItemsUpdate,
       );
     }).toList();
   }
 
-  Map<String, String> _getSelectedValues(Categoria categoria) {
-    final Map<String, String> initialValues = {};
+  Map<String, String> _getSelectedItems(Categoria categoria) {
+    final Map<String, String> initialItems = {};
     for (final categoria in lstCategorias) {
       for (final CategoriaItem item in categoria.categoriasItems ?? []) {
         if (item.idFormularioTipo == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb32') {
-          initialValues[item.idCategoriaItem!] = item.value ?? '';
+          initialItems[item.idCategoriaItem!] = item.value ?? '';
         }
       }
     }
-    return initialValues;
+    return initialItems;
   }
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+      onPopInvoked: (bool didPop) {
         if (!didPop) {
-          _handleDidPopPressed(context);
+          _showOnPopModalBottomSheet(context);
         }
       },
       child: Scaffold(
@@ -312,22 +314,16 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
               });
             }
 
-            if (state is RemoteInspeccionCategoriaStoring) {
+            if (state is RemoteInspeccionCategoriaStoreLoading) {
               _showProgressDialog(context);
             }
 
-            // ERRORS:
-            if (state is RemoteInspeccionCategoriaServerFailedMessageGetPreguntas) {
+            // ERROR:
+            if (state is RemoteInspeccionCategoriaServerFailedMessageGetPreguntas ||
+                state is RemoteInspeccionCategoriaServerFailureGetPreguntas) {
               setState(() {
-                _serverError = true;
-                _isLoading   = false;
-              });
-            }
-
-            if (state is RemoteInspeccionCategoriaServerFailureGetPreguntas) {
-              setState(() {
-                _serverError = true;
-                _isLoading   = false;
+                _hasServerError = true;
+                _isLoading      = false;
               });
             }
 
@@ -335,7 +331,9 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
               Navigator.of(context).pop();
 
               _showServerFailedDialog(context, state.errorMessage);
-              _getPreguntas();
+
+              // Actualizando UI.
+              getPreguntas();
 
               setState(() {
                 _isLoading = false;
@@ -346,7 +344,9 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
               Navigator.of(context).pop();
 
               _showServerFailedDialog(context, state.failure?.errorMessage);
-              _getPreguntas();
+
+              // Actualizando UI.
+              getPreguntas();
 
               setState(() {
                 _isLoading = false;
@@ -356,11 +356,12 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
             // SUCCESS:
             if (state is RemoteInspeccionCategoriaGetPreguntasSuccess) {
               setState(() {
-                _serverError  = false;
-                _isLoading    = false;
+                _isLoading      = false;
+                _hasServerError = false;
 
-                objInspeccion = state.objResponse?.inspeccion;
-                lstCategorias = state.objResponse?.categorias ?? [];
+                objInspeccion   = state.objResponse?.inspeccion;
+                lstCategorias   = state.objResponse?.categorias ?? [];
+                isEvaluado      = objInspeccion?.evaluado ?? false;
 
                 if (objInspeccion?.fechaInspeccionInicial != null) {
                   _fechaInspeccionInicialController.text = DateFormat('dd/MM/yyyy HH:mm').format(objInspeccion!.fechaInspeccionInicial!);
@@ -368,41 +369,45 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
               });
             }
 
-            if (state is RemoteInspeccionCategoriaStored) {
+            if (state is RemoteInspeccionCategoriaStoreSuccess) {
               Navigator.of(context).pop();
 
               ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 SnackBar(
-                  content         : Text(state.objResponse?.message ?? 'Evaluación parcial', softWrap: true),
+                  content         : Text(state.objResponse?.message ?? 'Evaluado', softWrap: true),
                   backgroundColor : Colors.green,
                   elevation       : 0,
                   behavior        : SnackBarBehavior.fixed,
                 ),
               );
 
-              _getPreguntas();
+              // Actualizando UI.
+              getPreguntas();
 
               setState(() {
-                _serverError  = false;
-                _isLoading    = false;
+                _hasServerError = false;
+                _isLoading      = false;
               });
             }
           },
           builder: (BuildContext context, RemoteInspeccionCategoriaState state) {
+            // LOADING:
             if (state is RemoteInspeccionCategoriaGetPreguntasLoading) {
               return const Center(child: AppLoadingIndicator());
             }
 
+            // ERROR:
             if (state is RemoteInspeccionCategoriaServerFailedMessageGetPreguntas) {
-              return ErrorInfoContainer(onPressed: _getPreguntas, errorMessage: state.errorMessage);
+              return ErrorInfoContainer(onPressed: getPreguntas, errorMessage: state.errorMessage);
             }
 
             if (state is RemoteInspeccionCategoriaServerFailureGetPreguntas) {
-              return ErrorInfoContainer(onPressed: _getPreguntas, errorMessage: state.failure?.errorMessage);
+              return ErrorInfoContainer(onPressed: getPreguntas, errorMessage: state.failure?.errorMessage);
             }
 
+            // SUCCESS:
             if (state is RemoteInspeccionCategoriaGetPreguntasSuccess) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -410,22 +415,21 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
                   // FECHA INSPECCION INICIAL:
                   Padding(
                     padding : EdgeInsets.all($styles.insets.sm),
-                    child   : objInspeccion?.evaluado ?? false
-                    ? LabeledTextFormField(
-                        controller  : _fechaInspeccionInicialController,
-                        label       : 'Fecha de inspección inicial:',
-                        isReadOnly  : true,
-                        textAlign   : TextAlign.end,
-                      )
-                    : LabeledDateTimeTextFormField(
-                        controller  : _fechaInspeccionInicialController,
-                        hintText    : 'dd/mm/aaaa hh:mm',
-                        label       : '* Fecha de inspección inicial:',
-                      ),
+                    child   : isEvaluado
+                        ? LabeledTextFormField(
+                            controller  : _fechaInspeccionInicialController,
+                            label       : 'Fecha de inspección inicial:',
+                            isReadOnly  : true,
+                            textAlign   : TextAlign.end,
+                          )
+                        : LabeledDateTimeTextFormField(
+                            controller  : _fechaInspeccionInicialController,
+                            label       : '* Fecha de inspección inicial:',
+                          ),
                   ),
 
-                  // DATOS GENERALES DE LA EVALUACIÓN:
-                  _buildInspeccionDetails(context, objInspeccion),
+                  // DATOS GENERALES DE LA INSPECCIÓN:
+                  _buildInspeccionEvaluacionDetails(context),
 
                   // LISTADO DE CATEGORIAS:
                   Expanded(
@@ -433,106 +437,110 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
                         ? ListView.builder(
                             itemCount   : lstCategorias.length,
                             itemBuilder : (BuildContext context, int index) {
-                              return _ChecklistTile(
-                                categoria               : lstCategorias[index],
-                                selectedValues          : _getSelectedValues(lstCategorias[index]),
-                                isEvaluado              : objInspeccion?.evaluado ?? false,
-                                onSelectedValuesChanged : (newValues) {
+                              return _ChecklistPreguntaTile(
+                                categoria     : lstCategorias[index],
+                                selectedItems : _getSelectedItems(lstCategorias[index]),
+                                evaluado      : isEvaluado,
+                                onChange      : (newValues) {
                                   setState(() {
-                                    lstCategorias = _updateCategoriasItems(lstCategorias, newValues);
+                                    lstCategorias = _handleUpdatePreguntas(lstCategorias, newValues);
                                   });
                                 },
                               );
                             },
                           )
-                        : RequestDataUnavailable(title: $strings.checklistEmptyTitle, message: $strings.checklistListMessage, isRefreshData: false),
+                        : RequestDataUnavailable(
+                            title         : $strings.checklistEmptyListTitle,
+                            message       : $strings.checklistEmptyListMessage,
+                            isRefreshData : false,
+                          ),
                   ),
                 ],
               );
             }
+
+            // DEFAULT:
             return const SizedBox.shrink();
           },
         ),
-        bottomNavigationBar: !_serverError && !_isLoading ? _buildBottomAppBar() : null,
+        bottomNavigationBar: _isLoading || _hasServerError ? const SizedBox.shrink() :  _buildBottomAppBar(context),
       ),
     );
   }
 
-  Widget _buildInspeccionDetails(BuildContext context, Inspeccion? inspeccion) {
+  Widget _buildInspeccionEvaluacionDetails(BuildContext context) {
     return Card(
-      elevation : 3,
-      shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
-      margin    : EdgeInsets.only(bottom: $styles.insets.sm),
-      child     : ExpansionTile(
-        leading   : Icon(Icons.check_circle, color: Theme.of(context).indicatorColor),
-        title     : Text('DATOS GENERALES', style: $styles.textStyles.h4),
-        children  : <Widget>[
+      elevation   : 3,
+      shape       : RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
+      margin      : EdgeInsets.only(bottom: $styles.insets.sm),
+      child       : ExpansionTile(
+        initiallyExpanded : true,
+        leading           : Icon(Icons.check_circle, color: Theme.of(context).indicatorColor),
+        title             : Text('DATOS GENERALES', style: $styles.textStyles.h4),
+        children          : <Widget>[
           Container(
-            width   : double.infinity,
-            padding : EdgeInsets.all($styles.insets.sm),
             color   : Theme.of(context).colorScheme.background,
+            padding : EdgeInsets.all($styles.insets.sm),
+            width   : double.infinity,
             child   : Column(
-              crossAxisAlignment  : CrossAxisAlignment.start,
-              children            : <Widget>[
-                Text('Número económico:', style: $styles.textStyles.bodySmall),
-                Text(inspeccion?.unidadNumeroEconomico ?? '', style: $styles.textStyles.title1.copyWith(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600, height: 1.3)),
-
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text('Número económico', style: $styles.textStyles.bodySmall),
+                Text(
+                  objInspeccion?.unidadNumeroEconomico ?? '',
+                  style: $styles.textStyles.title1.copyWith(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600, height: 1.3),
+                ),
                 RichText(
                   text: TextSpan(
                     style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground),
                     children  : <InlineSpan>[
-                      const TextSpan(text: 'Folio inspección'),
-                      TextSpan(text: ': ${inspeccion?.folio ?? ''}'),
+                      const TextSpan(text: 'Folio'),
+                      TextSpan(text: ': ${objInspeccion?.folio}'),
                     ],
                   ),
                 ),
-
                 RichText(
                   text: TextSpan(
                     style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground),
                     children  : <InlineSpan>[
                       const TextSpan(text: 'Tipo de inspección'),
-                      TextSpan(text: ': ${inspeccion?.inspeccionTipoName ?? ''}'),
+                      TextSpan(text: ': ${objInspeccion?.inspeccionTipoName}'),
                     ],
                   ),
                 ),
-
                 RichText(
                   text: TextSpan(
                     style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground),
                     children  : <InlineSpan>[
                       const TextSpan(text: 'Tipo de unidad'),
-                      TextSpan(text: ': ${inspeccion?.unidadTipoName ?? ''}'),
+                      TextSpan(text: ': ${objInspeccion?.unidadTipoName}'),
                     ],
                   ),
                 ),
-
                 RichText(
                   text: TextSpan(
                     style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground),
                     children  : <InlineSpan>[
                       const TextSpan(text: 'Marca'),
-                      TextSpan(text: ': ${inspeccion?.unidadMarcaName ?? ''}'),
+                      TextSpan(text: ': ${objInspeccion?.unidadMarcaName}'),
                     ],
                   ),
                 ),
-
                 RichText(
                   text: TextSpan(
                     style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground),
                     children  : <InlineSpan>[
                       const TextSpan(text: 'Número de serie'),
-                      TextSpan(text: ': ${inspeccion?.numeroSerie ?? ''}'),
+                      TextSpan(text: ': ${objInspeccion?.numeroSerie}'),
                     ],
                   ),
                 ),
-
                 RichText(
                   text: TextSpan(
                     style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground),
                     children  : <InlineSpan>[
                       const TextSpan(text: 'Locación'),
-                      TextSpan(text: ': ${inspeccion?.locacion ?? ''}'),
+                      TextSpan(text: ': ${objInspeccion?.locacion}'),
                     ],
                   ),
                 ),
@@ -544,18 +552,18 @@ class _ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEval
     );
   }
 
-  Widget _buildBottomAppBar() {
+  Widget _buildBottomAppBar(BuildContext context) {
     return BottomAppBar(
       height: 70,
-      child : Row(
+      child: Row(
         children: <Widget>[
           FilledButton(
-            onPressed : objInspeccion?.evaluado ?? false ? null : () => _handleStorePressed(isParcial: true),
+            onPressed : !isEvaluado ? () => _handleStorePressed(context, isParcial: true) : null,
             child     : Text($strings.saveButtonText, style: $styles.textStyles.button),
           ),
           Gap($styles.insets.sm),
           FilledButton(
-            onPressed : objInspeccion?.evaluado ?? false ? null : () => _handleStorePressed(),
+            onPressed : !isEvaluado ? () => _handleStorePressed(context) : null,
             child     : Text($strings.finishButtonText, style: $styles.textStyles.button),
           ),
           const Spacer(),

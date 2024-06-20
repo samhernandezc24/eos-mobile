@@ -23,10 +23,10 @@ class RemoteInspeccionCategoriaGetPreguntasSuccess extends RemoteInspeccionCateg
 }
 
 /// STORE
-class RemoteInspeccionCategoriaStoring extends RemoteInspeccionCategoriaState {}
+class RemoteInspeccionCategoriaStoreLoading extends RemoteInspeccionCategoriaState {}
 
-class RemoteInspeccionCategoriaStored extends RemoteInspeccionCategoriaState {
-  const RemoteInspeccionCategoriaStored(this.objResponse);
+class RemoteInspeccionCategoriaStoreSuccess extends RemoteInspeccionCategoriaState {
+  const RemoteInspeccionCategoriaStoreSuccess(this.objResponse);
 
   final ServerResponse? objResponse;
 
