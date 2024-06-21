@@ -1,31 +1,23 @@
 part of '../../../pages/list/list_page.dart';
 
 class _CreateInspeccionFicheroForm extends StatefulWidget {
-  const _CreateInspeccionFicheroForm({required this.objInspeccion, Key? key, this.buildFicheroDataCallback}) : super(key: key);
+  const _CreateInspeccionFicheroForm({Key? key, this.buildFicheroDataCallback}) : super(key: key);
 
   final VoidCallback? buildFicheroDataCallback;
-  final InspeccionDataSourceEntity objInspeccion;
 
   @override
   State<_CreateInspeccionFicheroForm> createState() => _CreateInspeccionFicheroFormState();
 }
 
 class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroForm> {
-  // REGISTROS ITEMS
-  // final UploadResponse uploadResponse = const UploadResponse(status: '', uploadProgress: '', message: '', boolFinalize: false, boolInitial: true, boolSuccess: true);
-  List<_InspeccionFicheroItemTile> items = [];
+  // PROPERTIES
+  bool _isPhotoUploading = false;
 
-  List<dynamic> lstQueueUpload  = [];
-  int _indexUpload              = 0;
-  int _countQueueUpload         = 0;
-  int _countQueueTotal          = 0;
-
-  final List<File> _files = <File>[];
-
-  bool _isSave = false;
+  // LIST
+  final List<File> _files = [];
 
   // EVENTS
-  void _handleDidPopPressed(BuildContext context) {
+  void _showDidPopDialog(BuildContext context) {
     showDialog<void>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -38,7 +30,7 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();             // Cerrar dialog
+              Navigator.of(context).pop();            // Cerrar dialog
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 Navigator.of(context).pop();          // Cerrar página
                 widget.buildFicheroDataCallback!();   // Ejecutar callback
@@ -51,209 +43,122 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
     );
   }
 
-  void _handleStorePressed() {
-    if (_files.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text($strings.alertWarningAttentionTitle, style: $styles.textStyles.bodyBold),
-              const Text('No se ha cargado ninguna foto', softWrap: true),
-            ],
-          ),
-          backgroundColor : const Color(0xfff89406),
-          elevation       : 0,
-          behavior        : SnackBarBehavior.fixed,
-          showCloseIcon   : true,
-        ),
-      );
-      return;
-    }
-
-    _loading();
-
-    _store(boolBegin: true);
-  }
-
   Future<void> _handleTakePhotoPressed() async {
-    final XFile? file = await imageHelper.takePhoto();
-    if (file != null) {
+    if (_isPhotoUploading) return;
+
+    setState(() {
+      _isPhotoUploading = true;
+    });
+
+    try {
+      final XFile? photo = await imageHelper.takePhoto();
+      if (photo != null) {
+        final File file = File(photo.path);
+        setState(() {
+          _files.add(file);
+        });
+      }
+    } finally {
       setState(() {
-        _files.add(File(file.path));
+        _isPhotoUploading = false;
       });
     }
   }
 
-  Future<void> _handleSelectPhotosPressed() async {
-    final List<XFile> lstFiles = await imageHelper.pickImagesFromGallery();
-    if (lstFiles.isNotEmpty) {
+  Future<void> _handlePickPhotosPressed() async {
+    if (_isPhotoUploading) return;
+
+    setState(() {
+      _isPhotoUploading = true;
+    });
+
+    try {
+      final List<XFile> photos = await imageHelper.pickImagesFromGallery(multiple: true);
       setState(() {
-        _files.addAll(lstFiles.map((file) => File(file.path)));
+        _files.addAll(photos.map((photo) => File(photo.path)));
+      });
+    } finally {
+      setState(() {
+        _isPhotoUploading = false;
       });
     }
   }
 
-  void _handlePhotoPressed(File file) {
-    Navigator.push<void>(
-      context,
-      PageRouteBuilder<void>(
-        transitionDuration: $styles.times.pageTransition,
-        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-          return FadeTransition(
-            opacity   : animation,
-            child     : Scaffold(
-              appBar: AppBar(title: Text('Fotografía', style: $styles.textStyles.h3)),
-              body: Center(
-                child: Image.file(file),
-              ),
-            ),
-          );
-        },
-        fullscreenDialog: true,
-      ),
-    );
+  void _handleStorePressed() {
+
   }
 
-  void _handleDeletePhotoPressed(int index) {
-    if (!_isSave) {
-      setState(() {
-        _files.removeAt(index);
-      });
-    }
-  }
+  void _handleDeletePressed() {
 
-  Future<void> _showServerFailedDialog(BuildContext context, String? errorMessage) async {
-    return showDialog<void>(
-      context : context,
-      builder: (BuildContext context)  => ServerFailedDialog(
-        errorMessage: errorMessage ?? 'Se produjo un error inesperado. Intenta de nuevo cargas las fotografías.',
-      ),
-    );
   }
 
   // METHODS
-  void _loading({bool value = true}) {
-    if (value) {
-      setState(() {
-        _isSave = true;
-      });
-    } else {
-      setState(() {
-        _isSave = false;
-      });
-    }
-  }
-
-  Future<void> _store({bool boolBegin = false}) async {
-    if (boolBegin) {
-      setState(() {
-        _indexUpload    = 0;
-        lstQueueUpload  = [];
-      });
-
-      for (int index = 0; index < _files.length; index++) {
-        final objUpload = _files[index];
-        lstQueueUpload.add(objUpload);
-        _countQueueTotal++;
-      }
-    }
-
-    if (_countQueueUpload < _countQueueTotal) {
-      final objUpload = lstQueueUpload[_indexUpload];
-
-      final InspeccionFicheroStoreReqEntity objPost = InspeccionFicheroStoreReqEntity(
-        fileBase64      : objUpload.toString(),
-        fileExtension   : objUpload.toString(),
-        idInspeccion    : widget.objInspeccion.idInspeccion,
-        inspeccionFolio : widget.objInspeccion.folio,
-      );
-
-      BlocProvider.of<RemoteInspeccionFicheroBloc>(context).add(StoreInspeccionFichero(objPost));
-    } else {
-      if (lstQueueUpload.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text($strings.alertWarningAttentionTitle, style: $styles.textStyles.bodyBold),
-                const Text('Foto(s) guardadas exitosamente', softWrap: true),
-              ],
-            ),
-            backgroundColor : const Color(0xfff89406),
-            elevation       : 0,
-            behavior        : SnackBarBehavior.fixed,
-            showCloseIcon   : true,
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text($strings.alertWarningAttentionTitle, style: $styles.textStyles.bodyBold),
-                const Text('Algunas fotos no pudieron ser guardadas', softWrap: true),
-              ],
-            ),
-            backgroundColor : const Color(0xfff89406),
-            elevation       : 0,
-            behavior        : SnackBarBehavior.fixed,
-            showCloseIcon   : true,
-          ),
-        );
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+    final Widget content = GestureDetector(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all($styles.insets.xs * 1.5),
+            child: _buildStatusText(context),
+          ),
+          Expanded(
+            child: RepaintBoundary(
+              child: _files.isNotEmpty
+                  ? _InspeccionFicheroItemGrid(files: _files)
+                  : RequestDataUnavailable(
+                      title         : $strings.checklistPhotoAddEmptyListTitle,
+                      message       : $strings.checklistPhotoAddEmptyListMessage,
+                      isRefreshData : false,
+                    ),
+            ),
+          ),
+        ],
+      ),
+    );
+
     return PopScope(
       canPop: false,
-      onPopInvoked: (bool didPop) {
-        if (!didPop) {
-          _handleDidPopPressed(context);
-        }
-      },
+      onPopInvoked: (bool didPop) { if (!didPop) { _showDidPopDialog(context); } },
       child: Scaffold(
         appBar: AppBar(title: Text($strings.checklistPhotoAddAppBarTitle, style: $styles.textStyles.h3)),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        body: Stack(
           children: <Widget>[
-            Expanded(
-              child: _files.isNotEmpty
-                  ? RepaintBoundary(
-                      child: CustomScrollView(
-                        scrollBehavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-                        slivers: [
-                          SliverPadding(
-                            padding: EdgeInsets.all($styles.insets.sm),
-                            sliver: SliverMasonryGrid.count(
-                              crossAxisCount    : (context.widthPx / 300).ceil(),
-                              crossAxisSpacing  : $styles.insets.sm,
-                              mainAxisSpacing   : $styles.insets.sm,
-                              childCount        : _files.length,
-                              itemBuilder       : (BuildContext context, int index) {
-                                return _InspeccionFicheroItemTile(
-                                  objFile         : _files[index],
-                                  index           : index,
-                                  onPhotoPressed  : _handlePhotoPressed,
-                                  onDeletePressed : _handleDeletePhotoPressed,
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : RequestDataUnavailable(title: $strings.checklistPhotoAddEmptyListTitle, message: $strings.checklistPhotoAddEmptyListMessage, isRefreshData: false),
-            ),
+            Positioned.fill(child: ColoredBox(color: Theme.of(context).colorScheme.background, child: content)),
           ],
         ),
         bottomNavigationBar: _buildBottomAppBar(context),
       ),
     );
+  }
+
+  Widget _buildStatusText(BuildContext context) {
+    final TextStyle statusStyle = $styles.textStyles.body.copyWith(color: Theme.of(context).colorScheme.onBackground);
+    if (_files.isNotEmpty) {
+      final int totalSizeBytes  = _files.fold(0, (sum, file) => sum + Globals.getFileSize(file));
+      final String readableSize = Globals.getReadableFileSizeFromBytes(totalSizeBytes);
+
+      return MergeSemantics(
+        child: StaticTextScale(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Fotografías: ${_files.length} / 10; Tamaño total: $readableSize;',
+                style               : statusStyle,
+                textAlign           : TextAlign.center,
+                textHeightBehavior  : const TextHeightBehavior(applyHeightToFirstAscent: false),
+              ),
+              Gap($styles.insets.sm),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return const SizedBox.shrink();
   }
 
   Widget _buildBottomAppBar(BuildContext context) {
@@ -267,54 +172,14 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
             tooltip   : 'Tomar fotografía',
           ),
           IconButton(
-            onPressed : _handleSelectPhotosPressed,
+            onPressed : _handlePickPhotosPressed,
             icon      : const Icon(Icons.photo_library),
-            tooltip   : 'Cargar fotografías',
+            tooltip   : 'Galería',
           ),
           const Spacer(),
-          BlocConsumer<RemoteInspeccionFicheroBloc, RemoteInspeccionFicheroState>(
-            listener: (BuildContext context, RemoteInspeccionFicheroState state) {
-              // ERROR:
-              if (state is RemoteInspeccionFicheroServerFailedMessageStore) {
-                _showServerFailedDialog(context, state.errorMessage);
-              }
-
-              if (state is RemoteInspeccionFicheroServerFailureStore) {
-                _showServerFailedDialog(context, state.failure?.errorMessage);
-              }
-
-              // SUCCESS:
-              if (state is RemoteInspeccionFicheroStoreSuccess) {
-                Navigator.of(context).pop();
-
-                ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(
-                  SnackBar(
-                    content         : Text(state.objResponse?.message ?? 'Nuevas fotografías', softWrap: true),
-                    backgroundColor : Colors.green,
-                    elevation       : 0,
-                    behavior        : SnackBarBehavior.fixed,
-                  ),
-                );
-
-                // Ejecutar callback.
-                widget.buildFicheroDataCallback!();
-              }
-            },
-            builder: (BuildContext context, RemoteInspeccionFicheroState state) {
-              if (state is RemoteInspeccionFicheroStoreLoading) {
-                return const FilledButton(
-                  onPressed : null,
-                  child     : AppLoadingIndicator(width: 20, height: 20),
-                );
-              }
-
-              return FilledButton(
-                onPressed: _files.isNotEmpty ? _handleStorePressed : null,
-                child: Text($strings.saveButtonText, style: $styles.textStyles.button),
-              );
-            },
+          FilledButton(
+            onPressed : _files.isNotEmpty ? () {} : null,
+            child     : Text($strings.saveButtonText, style: $styles.textStyles.button),
           ),
         ],
       ),

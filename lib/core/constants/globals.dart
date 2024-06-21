@@ -7,10 +7,7 @@ class Globals {
   Globals._();
 
   /// Padding por defecto para el contenido en un contenedor (ej. InputDecoration).
-  static const EdgeInsets kDefaultContentPadding = EdgeInsets.symmetric(
-    horizontal: 10.2,
-    vertical: 13.2,
-  );
+  static const EdgeInsets kDefaultContentPadding = EdgeInsets.symmetric(horizontal: 10.2, vertical: 13.2);
 
   /// Verifica si [argObject] es non-nullable.
   ///
@@ -45,6 +42,16 @@ class Globals {
     return base64Image;
   }
 
+  /// Obtiene el tamaño de un archivo en bytes.
+  ///
+  /// Retorna el tamaño del archivo si es válido, de lo contrario retorna 0.
+  static int getFileSize(File file) {
+    if (isValidValue(file) && file.existsSync()) {
+      return file.lengthSync();
+    }
+    return 0;
+  }
+
   /// Obtiene la extensión de un archivo a partir de su [path].
   ///
   /// Retorna la extensión del archivo si es válida, de lo contrario retorna una cadena vacía.
@@ -57,6 +64,19 @@ class Globals {
       }
     }
     return objReturn;
+  }
+
+  static String getReadableFileSizeFromBytes(int sizeInBytes) {
+    const List<String> units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    int l     = 0;
+    double n  = sizeInBytes.toDouble();
+
+    while (n >= 1024 && l < units.length - 1) {
+      n /= 1024;
+      l++;
+    }
+
+    return '${n.toStringAsFixed(n < 10 && l > 0 ? 1 : 0)} ${units[l]}';
   }
 
   /// Retorna las iniciales de las dos primeras palabras del [value] dado.

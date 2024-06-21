@@ -265,7 +265,20 @@ class __ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEva
         }
       },
       child: Scaffold(
-        appBar: AppBar(title: Text($strings.checklistAppBarTitle, style: $styles.textStyles.h3)),
+        appBar: AppBar(
+          title: Text(
+            isEvaluado ? 'Evaluado' : $strings.checklistAppBarTitle,
+            style: $styles.textStyles.h3,
+          ),
+          actions: <Widget>[
+            if (isEvaluado)
+              IconButton(
+                onPressed : (){},
+                icon      : const Icon(Icons.check_circle, color: Colors.green),
+                tooltip   : 'Evaluación finalizada',
+              ),
+          ],
+        ),
         body: BlocConsumer<RemoteInspeccionCategoriaBloc, RemoteInspeccionCategoriaState>(
           listener: (BuildContext context, RemoteInspeccionCategoriaState state) {
             // LOADING:
@@ -406,9 +419,6 @@ class __ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEva
                                     lstCategorias[index].categoriasItems![itemIndex] = updatedItem;
                                   });
                                 },
-                                // onChange    : (itemIndex, newValue) {
-                                //   lstCategorias[index].categoriasItems![itemIndex] = lstCategorias[index].categoriasItems![itemIndex].copyWith(value: newValue);
-                                // },
                               );
                             },
                           )
@@ -454,7 +464,7 @@ class __ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEva
                 ),
                 RichText(
                   text: TextSpan(
-                    style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                    style     : $styles.textStyles.body.copyWith(color: Theme.of(context).colorScheme.onBackground),
                     children  : <InlineSpan>[
                       const TextSpan(text: 'Folio'),
                       TextSpan(text: ': ${objInspeccion?.folio}'),

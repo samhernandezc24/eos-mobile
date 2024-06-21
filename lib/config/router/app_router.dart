@@ -91,13 +91,6 @@ final GoRouter appRouter = GoRouter(
                       useFade: true,
                       parentKey: _rootNavigatorKey,
                     ),
-                    // AppRoute('conrequerimiento', 'home.inspecciones.conRequerimiento', (_) => const InspeccionUnidadConRequerimientoPage(), useFade: true),
-                    // AppRoute(
-                    //   'sinrequerimiento',
-                    //   'home.inspecciones.sinRequerimiento', (_) => const InspeccionUnidadSinRequerimientoPage(),
-                    //   useFade: true,
-                    //   parentKey: _rootNavigatorKey,
-                    // ),
                     AppRoute('searchunidad', 'home.inspecciones.searchUnidad', (_) => const InspeccionSearchUnidadPage(), useFade: true),
                   ],
                   useFade: true,

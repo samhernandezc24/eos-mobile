@@ -18,44 +18,45 @@ class _ChecklistInspeccionFotos extends StatefulWidget {
 
 class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
   // PROPERTIES
-  String? unidadNumeroEconomico   = '';
-  String? unidadTipoName          = '';
-  String? unidadNumeroSerie       = '';
-  String? idInspeccionEstatus     = '';
+  String? unidadNumeroEconomico = '';
+  String? unidadTipoName        = '';
+  String? unidadNumeroSerie     = '';
+  String? idInspeccionEstatus   = '';
+
+  bool _hasServerError = false;
 
   // LIST
   List<Fichero> lstFicheros = [];
-
-  // STATE
-  @override
-  void initState() {
-    super.initState();
-    _getFotos();
-  }
 
   bool get isDisabled {
     return idInspeccionEstatus == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb34' ||
            idInspeccionEstatus == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb35';
   }
 
+  // STATE
+  @override
+  void initState() {
+    super.initState();
+    getFotos();
+  }
+
   // EVENTS
-  void _handleRefreshPressed() => _getFotos();
+  void _handleRefreshPressed() => getFotos();
 
   void _handleCreatePressed(BuildContext context) {
     Navigator.push<void>(
       context,
       PageRouteBuilder<void>(
-        transitionDuration: $styles.times.pageTransition,
         pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-          const Offset begin    = Offset(0, 1);
-          const Offset end      = Offset.zero;
-          const Cubic curve     = Curves.ease;
+          const Offset begin  = Offset(0, 1);
+          const Offset end    = Offset.zero;
+          const Cubic curve   = Curves.ease;
 
           final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
 
           return SlideTransition(
             position  : animation.drive<Offset>(tween),
-            child     : _CreateInspeccionFicheroForm(buildFicheroDataCallback: _getFotos, objInspeccion: widget.objInspeccion),
+            child     : _CreateInspeccionFicheroForm(buildFicheroDataCallback: getFotos),
           );
         },
         fullscreenDialog: true,
@@ -106,48 +107,37 @@ class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
     }
   }
 
-  void _handlePhotoPressed(Fichero objData) {
-    Navigator.push<void>(
-      context,
-      PageRouteBuilder<void>(
-        transitionDuration: $styles.times.pageTransition,
-        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
-          return FadeTransition(
-            opacity   : animation,
-            child     : Scaffold(
-              appBar: AppBar(title: Text('Fotografía', style: $styles.textStyles.h3)),
-              body: Center(
-                child: Image.network(
-                  'http://otc.cablesdelgolfo.com/Ficheros/InspeccionesItemsFotos/C6B71E48865D288A4CC414E74096309C.jpg',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          );
-        },
-        fullscreenDialog: true,
-      ),
-    );
-  }
-
   // METHODS
-  Future<void> _getFotos() async {
+  Future<void> getFotos() async {
     context.read<RemoteInspeccionFicheroBloc>().add(ListInspeccionFicheros(widget.objData));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text($strings.checklistPhotoEvidenceAppBarTitle, style: $styles.textStyles.h3)),
-      body: BlocConsumer<RemoteInspeccionFicheroBloc, RemoteInspeccionFicheroState>(
+    final Widget content = GestureDetector(
+      onTap : FocusManager.instance.primaryFocus?.unfocus,
+      child : BlocConsumer<RemoteInspeccionFicheroBloc, RemoteInspeccionFicheroState>(
         listener: (BuildContext context, RemoteInspeccionFicheroState state) {
+          // ERROR:
+          if (state is RemoteInspeccionFicheroServerFailedMessageList ||
+              state is RemoteInspeccionFicheroServerFailureList) {
+            setState(() {
+              _hasServerError = true;
+            });
+          }
+
+          // SUCCESS:
           if (state is RemoteInspeccionFicheroSuccess) {
             setState(() {
+              // STATE
+              _hasServerError = false;
+
               // DATOS
-              unidadNumeroEconomico   = state.objResponse?.inspeccion.unidadNumeroEconomico   ?? '';
-              unidadTipoName          = state.objResponse?.inspeccion.unidadTipoName          ?? '';
-              unidadNumeroSerie       = state.objResponse?.inspeccion.numeroSerie             ?? '';
-              idInspeccionEstatus     = state.objResponse?.inspeccion.idInspeccionEstatus     ?? '';
+              unidadNumeroEconomico = state.objResponse?.inspeccion.unidadNumeroEconomico   ?? '';
+              unidadTipoName        = state.objResponse?.inspeccion.unidadTipoName          ?? '';
+              unidadNumeroSerie     = state.objResponse?.inspeccion.numeroSerie             ?? '';
+              idInspeccionEstatus   = state.objResponse?.inspeccion.idInspeccionEstatus     ?? '';
+
 
               // LIST FOTOS
               lstFicheros = state.objResponse?.ficheros ?? [];
@@ -160,11 +150,11 @@ class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
           }
 
           if (state is RemoteInspeccionFicheroServerFailedMessageList) {
-            return ErrorInfoContainer(onPressed: _getFotos, errorMessage: state.errorMessage);
+            return ErrorInfoContainer(onPressed: getFotos, errorMessage: state.errorMessage);
           }
 
           if (state is RemoteInspeccionFicheroServerFailureList) {
-            return ErrorInfoContainer(onPressed: _getFotos, errorMessage: state.failure?.errorMessage);
+            return ErrorInfoContainer(onPressed: getFotos, errorMessage: state.failure?.errorMessage);
           }
 
           if (state is RemoteInspeccionFicheroSuccess) {
@@ -172,24 +162,23 @@ class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Container(
-                  color   : Theme.of(context).colorScheme.background,
-                  padding : EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, 0),
-                  child   : _buildInspeccionDetails(context),
+                  padding: EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.sm, $styles.insets.sm, $styles.insets.xs),
+                  child: _buildInspeccionDetails(context),
                 ),
+                const Divider(),
                 Container(
-                  color   : Theme.of(context).colorScheme.background,
-                  padding : EdgeInsets.all($styles.insets.xs * 1.5),
-                  child   : _buildActionButtons(),
+                  padding: EdgeInsets.symmetric(horizontal: $styles.insets.xs * 1.5, vertical: $styles.insets.xs),
+                  child: _buildActionButtons(),
                 ),
                 Expanded(
                   child: RepaintBoundary(
-                    child: lstFicheros.isEmpty
-                        ? RequestDataUnavailable(
+                    child: lstFicheros.isNotEmpty
+                        ? const _ChecklistFotosGrid()
+                        : RequestDataUnavailable(
                             title         : $strings.checklistPhotoEmptyListTitle,
                             message       : $strings.checklistPhotoEmptyListMessage,
                             isRefreshData : false,
-                          )
-                        : _PhotoGrid(ficheros: lstFicheros, onPressed: _handlePhotoPressed),
+                          ),
                   ),
                 ),
               ],
@@ -197,6 +186,15 @@ class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
           }
           return const SizedBox.shrink();
         },
+      ),
+    );
+
+    return Scaffold(
+      appBar: AppBar(title: Text($strings.checklistPhotoEvidenceAppBarTitle, style: $styles.textStyles.h3)),
+      body: Stack(
+        children: <Widget>[
+          Positioned.fill(child: ColoredBox(color: Theme.of(context).colorScheme.background, child: content)),
+        ],
       ),
       bottomNavigationBar: _buildBottomAppBar(context),
     );
@@ -209,11 +207,7 @@ class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
         Text('Número económico:', style: $styles.textStyles.bodySmall),
         Text(
           '$unidadNumeroEconomico',
-          style: $styles.textStyles.title1.copyWith(
-            color       : Theme.of(context).primaryColor,
-            fontWeight  : FontWeight.w600,
-            height      : 1.3,
-          ),
+          style: $styles.textStyles.title1.copyWith(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600, height: 1.3),
         ),
         RichText(
           text: TextSpan(
@@ -243,13 +237,13 @@ class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
         FilledButton.icon(
           onPressed : !isDisabled ? _handleRefreshPressed : null,
           icon      : const Icon(Icons.refresh),
-          label     : const Text('Actualizar'),
+          label     : Text($strings.refreshButtonText, style: $styles.textStyles.button),
         ),
         Gap($styles.insets.sm),
         FilledButton.icon(
           onPressed : !isDisabled ? () => _handleCreatePressed(context) : null,
           icon      : const Icon(Icons.add),
-          label     : const Text('Nuevo'),
+          label     : Text('Nuevo', style: $styles.textStyles.button),
         ),
       ],
     );
@@ -257,19 +251,19 @@ class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
 
   Widget _buildBottomAppBar(BuildContext context) {
     return BottomAppBar(
-      height  : 70,
-      child   : Row(
-        children  : <Widget>[
+      height: 70,
+      child: Row(
+        children: <Widget>[
           CircleIconButton(
             icon          : AppIcons.next_large,
-            onPressed     : () => Navigator.pop(context),
+            onPressed     : () =>  Navigator.of(context).pop(),
             semanticLabel : $strings.prevButtonText,
             flipIcon      : true,
           ),
           const Spacer(),
           CircleIconButton(
             icon          : AppIcons.next_large,
-            onPressed     : () => _handleNextPressed(context),
+            onPressed     : !_hasServerError ? () => _handleNextPressed(context) : null,
             semanticLabel : $strings.nextButtonText,
           ),
         ],
