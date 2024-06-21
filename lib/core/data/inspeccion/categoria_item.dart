@@ -43,14 +43,14 @@ class CategoriaItem extends Equatable {
     bool? noAplica,
   }) {
     return CategoriaItem(
-      idCategoriaItem: idCategoriaItem ?? this.idCategoriaItem,
-      name: name ?? this.name,
-      idFormularioTipo: idFormularioTipo ?? this.idFormularioTipo,
-      formularioTipoName: formularioTipoName ?? this.formularioTipoName,
-      formularioValor: formularioValor ?? this.formularioValor,
-      value: value ?? this.value,
-      observaciones: observaciones ?? this.observaciones,
-      noAplica: noAplica ?? this.noAplica,
+      idCategoriaItem     : idCategoriaItem     ?? this.idCategoriaItem,
+      name                : name                ?? this.name,
+      idFormularioTipo    : idFormularioTipo    ?? this.idFormularioTipo,
+      formularioTipoName  : formularioTipoName  ?? this.formularioTipoName,
+      formularioValor     : formularioValor     ?? this.formularioValor,
+      value               : value               ?? this.value,
+      observaciones       : observaciones       ?? this.observaciones,
+      noAplica            : noAplica            ?? this.noAplica,
     );
   }
 

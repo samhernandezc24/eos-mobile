@@ -401,9 +401,14 @@ class __ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEva
                               return _ChecklistPreguntaTile(
                                 categoria   : lstCategorias[index],
                                 evaluado    : isEvaluado,
-                                onChange    : (itemIndex, newValue) {
-                                  lstCategorias[index].categoriasItems![itemIndex] = lstCategorias[index].categoriasItems![itemIndex].copyWith(value: newValue);
+                                onChange    : (itemIndex, updatedItem) {
+                                  setState(() {
+                                    lstCategorias[index].categoriasItems![itemIndex] = updatedItem;
+                                  });
                                 },
+                                // onChange    : (itemIndex, newValue) {
+                                //   lstCategorias[index].categoriasItems![itemIndex] = lstCategorias[index].categoriasItems![itemIndex].copyWith(value: newValue);
+                                // },
                               );
                             },
                           )
@@ -432,7 +437,6 @@ class __ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEva
       shape       : RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
       margin      : EdgeInsets.only(bottom: $styles.insets.sm),
       child       : ExpansionTile(
-        initiallyExpanded : true,
         leading           : Icon(Icons.check_circle, color: Theme.of(context).indicatorColor),
         title             : Text('DATOS GENERALES', style: $styles.textStyles.h4),
         children          : <Widget>[

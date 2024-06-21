@@ -63,7 +63,7 @@ class DateTextFormField extends StatelessWidget {
                   color           : Colors.white,
                   icon            : AppIcons.close,
                   iconSize        : $styles.insets.sm,
-                  onPressed       : () { controller.clear(); },
+                  onPressed       : () { controller.clear(); onChanged(''); },
                   semanticLabel   : 'Borrar fecha',
                   size            : $styles.insets.md,
                 ),
