@@ -6,6 +6,9 @@ export 'dart:math';
 // DIO (HTTP)
 export 'package:dio/dio.dart';
 
+// DOTTED BORDER
+export 'package:dotted_border/dotted_border.dart';
+
 // CONFIGURATION
 export 'package:eos_mobile/config/logic/app_logic.dart';
 export 'package:eos_mobile/config/logic/settings_logic.dart';

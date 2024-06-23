@@ -1,9 +1,16 @@
 part of '../../../pages/list/list_page.dart';
 
 class _InspeccionFicheroItemGrid extends StatefulWidget {
-  const _InspeccionFicheroItemGrid({required this.files, Key? key}) : super(key: key);
+  const _InspeccionFicheroItemGrid({
+    required this.files,
+    required this.onImagePressed,
+    required this.onDeletePressed,
+    Key? key,
+  }) : super(key: key);
 
   final List<File> files;
+  final void Function(List<File> files, int index) onImagePressed;
+  final void Function(int index) onDeletePressed;
 
   @override
   State<_InspeccionFicheroItemGrid> createState() => _InspeccionFicheroItemGridState();
@@ -45,8 +52,14 @@ class _InspeccionFicheroItemGridState extends State<_InspeccionFicheroItemGrid> 
                 mainAxisSpacing   : $styles.insets.sm,
                 crossAxisSpacing  : $styles.insets.sm,
                 childCount        : widget.files.length,
-                itemBuilder       : (context, index) =>
-                    _InspeccionFicheroItemTile(objFile: widget.files[index], index: index),
+                itemBuilder       : (BuildContext context, int index) =>
+                    _InspeccionFicheroItemTile(
+                      objFile         : widget.files[index],
+                      files           : widget.files,
+                      index           : index,
+                      onImagePressed  : widget.onImagePressed,
+                      onDeletePressed : widget.onDeletePressed,
+                    ),
               ),
             ),
           ],

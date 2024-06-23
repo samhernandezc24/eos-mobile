@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dotted_border/dotted_border.dart';
+import 'package:eos_mobile/config/logic/common/image_upload_queue.dart';
 
 import 'package:eos_mobile/core/data/catalogos/base.dart';
 import 'package:eos_mobile/core/data/catalogos/inspeccion_estatus.dart';
@@ -40,9 +40,10 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/controls/date_text_form_field.dart';
 import 'package:eos_mobile/ui/common/controls/time_text_form_field.dart';
+import 'package:eos_mobile/ui/common/modals/full_screen_image_preview.dart';
 import 'package:eos_mobile/ui/common/shimmer_loading.dart';
 
-import 'package:image/image.dart' as img;
+// import 'package:image/image.dart' as img;
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 

@@ -86,25 +86,25 @@ class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
         ),
       );
       return;
-    } else {
-      Navigator.push<void>(
-        context,
-        PageRouteBuilder<void>(
-          transitionDuration: $styles.times.pageTransition,
-          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) =>
-              _ChecklistInspeccionFinal(objInspeccion: widget.objInspeccion, buildDataSourceCallback: widget.buildDataSourceCallback),
-          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
-            const Offset begin    = Offset(1, 0);
-            const Offset end      = Offset.zero;
-            const Cubic curve     = Curves.ease;
-            final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-            return SlideTransition(position: animation.drive<Offset>(tween), child: child);
-          },
-          fullscreenDialog: true,
-        ),
-      );
     }
+
+    Navigator.push<void>(
+      context,
+      PageRouteBuilder<void>(
+        transitionDuration: $styles.times.pageTransition,
+        pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) =>
+            _ChecklistInspeccionFinal(objInspeccion: widget.objInspeccion, buildDataSourceCallback: widget.buildDataSourceCallback),
+        transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+          const Offset begin    = Offset(1, 0);
+          const Offset end      = Offset.zero;
+          const Cubic curve     = Curves.ease;
+          final Animatable<Offset> tween = Tween<Offset>(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(position: animation.drive<Offset>(tween), child: child);
+        },
+        fullscreenDialog: true,
+      ),
+    );
   }
 
   // METHODS
@@ -137,7 +137,6 @@ class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
               unidadTipoName        = state.objResponse?.inspeccion.unidadTipoName          ?? '';
               unidadNumeroSerie     = state.objResponse?.inspeccion.numeroSerie             ?? '';
               idInspeccionEstatus   = state.objResponse?.inspeccion.idInspeccionEstatus     ?? '';
-
 
               // LIST FOTOS
               lstFicheros = state.objResponse?.ficheros ?? [];

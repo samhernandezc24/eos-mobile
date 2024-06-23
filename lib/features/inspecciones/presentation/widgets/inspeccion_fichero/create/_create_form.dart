@@ -13,6 +13,8 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
   // PROPERTIES
   bool _isPhotoUploading = false;
 
+  final ImageUploadQueue _imageQueue = ImageUploadQueue();
+
   // LIST
   final List<File> _files = [];
 
@@ -54,45 +56,108 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
       final XFile? photo = await imageHelper.takePhoto();
       if (photo != null) {
         final File file = File(photo.path);
-        setState(() {
-          _files.add(file);
-        });
+        _imageQueue.enqueue(file);
+        if (mounted) {
+          setState(() {
+            _files.add(file);
+          });
+        }
       }
     } finally {
-      setState(() {
-        _isPhotoUploading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isPhotoUploading = false;
+        });
+      }
     }
   }
 
   Future<void> _handlePickPhotosPressed() async {
     if (_isPhotoUploading) return;
 
-    setState(() {
-      _isPhotoUploading = true;
-    });
+    if (mounted) {
+      setState(() {
+        _isPhotoUploading = true;
+      });
+    }
 
     try {
       final List<XFile> photos = await imageHelper.pickImagesFromGallery(multiple: true);
-      setState(() {
-        _files.addAll(photos.map((photo) => File(photo.path)));
-      });
+      if (mounted) {
+        for (final photo in photos) {
+          final File file = File(photo.path);
+          _imageQueue.enqueue(file);
+        }
+        setState(() {
+          _files.addAll(photos.map((photo) => File(photo.path)));
+        });
+      }
     } finally {
-      setState(() {
-        _isPhotoUploading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isPhotoUploading = false;
+        });
+      }
     }
   }
 
-  void _handleStorePressed() {
-
+  void _handleImagePressed(List<File> files, int index) {
+    Navigator.push<void>(context, MaterialPageRoute<void>(builder: (_) => FullScreenImagePreview(imageFiles: files, initialIndex: index)));
   }
 
-  void _handleDeletePressed() {
+  void _handleStorePressed() {
+    if (_files.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text($strings.alertWarningAttentionTitle, style: $styles.textStyles.bodyBold),
+              const Text('No se ha cargado ninguna foto', softWrap: true),
+            ],
+          ),
+          backgroundColor : const Color(0xfff89406),
+          elevation       : 0,
+          behavior        : SnackBarBehavior.fixed,
+          showCloseIcon   : true,
+        ),
+      );
+      return;
+    }
 
+    _store(boolBegin: true);
+  }
+
+  void _handleDeletePressed(int index) {
+    setState(() {
+      _files.removeAt(index);
+    });
+  }
+
+  Future<void> _showServerFailedDialog(BuildContext context, String? errorMessage) async {
+    return showDialog<void>(
+      context : context,
+      builder: (BuildContext context)  => ServerFailedDialog(
+        errorMessage: errorMessage ?? 'Se produjo un error inesperado. Intenta de nuevo cargar las fotografías.',
+      ),
+    );
   }
 
   // METHODS
+  // Future<void> _processImageQueue() async {
+  //   while (!_imageQueue.isEmpty) {
+  //     final File? file = _imageQueue.dequeue();
+  //     try {
+  //       await _store(file!);
+  //     } catch (e) {
+  //       print('Error uploading image: $e');
+  //     }
+  //   }
+  // }
+
+  Future<void> _store({bool boolBegin = false}) async {
+    print('cargando fotografias');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +172,11 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
           Expanded(
             child: RepaintBoundary(
               child: _files.isNotEmpty
-                  ? _InspeccionFicheroItemGrid(files: _files)
+                  ? _InspeccionFicheroItemGrid(
+                      files           : _files,
+                      onImagePressed  : _handleImagePressed,
+                      onDeletePressed : _handleDeletePressed,
+                    )
                   : RequestDataUnavailable(
                       title         : $strings.checklistPhotoAddEmptyListTitle,
                       message       : $strings.checklistPhotoAddEmptyListMessage,
@@ -135,7 +204,7 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
   }
 
   Widget _buildStatusText(BuildContext context) {
-    final TextStyle statusStyle = $styles.textStyles.body.copyWith(color: Theme.of(context).colorScheme.onBackground);
+    final TextStyle statusStyle = $styles.textStyles.body.copyWith(color: Theme.of(context).colorScheme.onBackground, height: 1.3);
     if (_files.isNotEmpty) {
       final int totalSizeBytes  = _files.fold(0, (sum, file) => sum + Globals.getFileSize(file));
       final String readableSize = Globals.getReadableFileSizeFromBytes(totalSizeBytes);
@@ -145,11 +214,13 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
-                'Fotografías: ${_files.length} / 10; Tamaño total: $readableSize;',
-                style               : statusStyle,
-                textAlign           : TextAlign.center,
-                textHeightBehavior  : const TextHeightBehavior(applyHeightToFirstAscent: false),
+              Expanded(
+                child: Text(
+                  'Fotografías: ${_files.length} / 10; Tamaño total: $readableSize;',
+                  style               : statusStyle,
+                  textAlign           : TextAlign.center,
+                  textHeightBehavior  : const TextHeightBehavior(applyHeightToFirstAscent: false),
+                ),
               ),
               Gap($styles.insets.sm),
             ],
@@ -178,7 +249,7 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
           ),
           const Spacer(),
           FilledButton(
-            onPressed : _files.isNotEmpty ? () {} : null,
+            onPressed : _files.isNotEmpty ? _handleStorePressed : null,
             child     : Text($strings.saveButtonText, style: $styles.textStyles.button),
           ),
         ],

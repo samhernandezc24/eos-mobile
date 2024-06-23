@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class Globals {
   Globals._();
