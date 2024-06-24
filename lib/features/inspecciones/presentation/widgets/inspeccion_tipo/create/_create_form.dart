@@ -69,6 +69,7 @@ class _CreateInspeccionTipoFormState extends State<_CreateInspeccionTipoForm> {
             controller  : _codigoController,
             label       : '* Código:',
             isReadOnly  : true,
+            isEnabled   : false,
             validator   : FormValidators.textValidator,
           ),
 
@@ -81,6 +82,7 @@ class _CreateInspeccionTipoFormState extends State<_CreateInspeccionTipoForm> {
             label           : '* Nombre:',
             validator       : FormValidators.textValidator,
             textInputAction : TextInputAction.done,
+            hintText        : 'Ingresa el nombre',
           ),
 
           Gap($styles.insets.lg),

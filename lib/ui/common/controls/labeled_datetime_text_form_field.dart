@@ -8,6 +8,7 @@ class LabeledDateTimeTextFormField extends StatelessWidget {
     this.hintText,
     this.textInputAction  = TextInputAction.next,
     this.autoFocus        = false,
+    this.isEnabled        = true,
     this.focusNode,
     this.onPickDatePressed,
   }) : super(key: key);
@@ -16,6 +17,7 @@ class LabeledDateTimeTextFormField extends StatelessWidget {
   final String label;
   final String? hintText;
   final bool autoFocus;
+  final bool isEnabled;
   final TextInputAction textInputAction;
   final VoidCallback? onPickDatePressed;
   final FocusNode? focusNode;
@@ -57,7 +59,9 @@ class LabeledDateTimeTextFormField extends StatelessWidget {
         Container(
           height: 50,
           decoration: BoxDecoration(
-            color         : Theme.of(context).inputDecorationTheme.fillColor,
+            color         : isEnabled
+                ? Theme.of(context).inputDecorationTheme.fillColor?.withOpacity(0.3)
+                : Theme.of(context).inputDecorationTheme.fillColor,
             borderRadius  : BorderRadius.circular($styles.insets.xxs),
             border        : Border.all(color: Theme.of(context).colorScheme.primary, width: 1.6),
           ),
@@ -88,6 +92,10 @@ class LabeledDateTimeTextFormField extends StatelessWidget {
                   controller        : controller,
                   decoration        : InputDecoration(
                     isDense         : true,
+                    fillColor       : isEnabled
+                        ? Theme.of(context).inputDecorationTheme.fillColor?.withOpacity(0)
+                        : Theme.of(context).inputDecorationTheme.fillColor,
+                    filled          : true,
                     contentPadding  : EdgeInsets.all($styles.insets.xs),
                     hintStyle       : TextStyle(color: Theme.of(context).hintColor),
                     prefixStyle     : TextStyle(color: Theme.of(context).colorScheme.onSurface),

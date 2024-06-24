@@ -68,6 +68,18 @@ class RemoteUnidadListLoaded extends RemoteUnidadState {
   List<Object?> get props => [ objResponse ];
 }
 
+/// PREDICTIVE
+class RemoteUnidadPredictiveLoading extends RemoteUnidadState {}
+
+class RemoteUnidadPredictiveLoaded extends RemoteUnidadState {
+  const RemoteUnidadPredictiveLoaded(this.objResponse);
+
+  final List<UnidadPredictiveListEntity>? objResponse;
+
+  @override
+  List<Object?> get props => [ objResponse ];
+}
+
 /// SERVER FAILED MESSAGE
 class RemoteUnidadServerFailedMessage extends RemoteUnidadState {
   const RemoteUnidadServerFailedMessage(this.errorMessage);
@@ -105,6 +117,15 @@ class RemoteUnidadServerFailedMessageList extends RemoteUnidadState {
   List<Object?> get props => [ errorMessage ];
 }
 
+class RemoteUnidadServerFailedMessagePredictive extends RemoteUnidadState {
+  const RemoteUnidadServerFailedMessagePredictive(this.errorMessage);
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [ errorMessage ];
+}
+
 /// SERVER FAILURE
 class RemoteUnidadServerFailure extends RemoteUnidadState {
   const RemoteUnidadServerFailure(this.failure);
@@ -135,6 +156,15 @@ class RemoteUnidadServerFailureStore extends RemoteUnidadState {
 
 class RemoteUnidadServerFailureList extends RemoteUnidadState {
   const RemoteUnidadServerFailureList(this.failure);
+
+  final ServerException? failure;
+
+  @override
+  List<Object?> get props => [ failure ];
+}
+
+class RemoteUnidadServerFailurePredictive extends RemoteUnidadState {
+  const RemoteUnidadServerFailurePredictive(this.failure);
 
   final ServerException? failure;
 

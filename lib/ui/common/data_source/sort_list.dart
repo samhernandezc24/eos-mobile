@@ -49,8 +49,8 @@ class _SortListState extends State<SortList> {
       'Folio: (Z - A)',
       'Fecha programada: más recientes',
       'Fecha programada: más antiguos',
-      'Fecha: más recientes',
-      'Fecha: más antiguos',
+      'Fecha creación: más recientes',
+      'Fecha creación: más antiguos',
     ];
   }
 

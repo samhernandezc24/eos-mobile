@@ -12,6 +12,7 @@ class LabeledTextFormField extends StatelessWidget {
     this.textAlign        = TextAlign.start,
     this.autoFocus        = false,
     this.isReadOnly       = false,
+    this.isEnabled        = true,
     this.onTap,
   }) : super(key: key);
 
@@ -21,6 +22,7 @@ class LabeledTextFormField extends StatelessWidget {
   final String? hintText;
   final bool isReadOnly;
   final bool autoFocus;
+  final bool isEnabled;
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
   final FormFieldValidator<String>? validator;
@@ -40,6 +42,10 @@ class LabeledTextFormField extends StatelessWidget {
           autofocus         : autoFocus,
           controller        : controller,
           decoration        : InputDecoration(
+            fillColor       : isEnabled
+                ? Theme.of(context).inputDecorationTheme.fillColor?.withOpacity(0.3)
+                : Theme.of(context).inputDecorationTheme.fillColor,
+            filled          : true,
             contentPadding  : Globals.kDefaultContentPadding,
             hintText        : hintText ?? '',
           ),

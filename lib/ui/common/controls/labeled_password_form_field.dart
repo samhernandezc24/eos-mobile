@@ -10,6 +10,7 @@ class LabeledPasswordFormField extends StatefulWidget {
     this.textInputAction  = TextInputAction.next,
     this.isPassword       = true,
     this.autoFocus        = false,
+    this.isEnabled        = true,
     this.isReadOnly       = false,
   }) : super(key: key);
 
@@ -17,6 +18,7 @@ class LabeledPasswordFormField extends StatefulWidget {
   final String label;
   final String? hintText;
   final bool isPassword;
+  final bool isEnabled;
   final bool isReadOnly;
   final bool autoFocus;
   final TextInputAction textInputAction;
@@ -43,7 +45,10 @@ class _LabeledPasswordFormFieldState extends State<LabeledPasswordFormField> {
           autovalidateMode  : AutovalidateMode.onUserInteraction,
           autofocus         : widget.autoFocus,
           controller        : widget.controller,
+          enabled           : widget.isEnabled,
           decoration        : InputDecoration(
+            fillColor       : Theme.of(context).inputDecorationTheme.fillColor?.withOpacity(0.4),
+            filled          : true,
             contentPadding  : Globals.kDefaultContentPadding,
             hintText        : widget.hintText ?? '',
             suffixIcon      : widget.isPassword

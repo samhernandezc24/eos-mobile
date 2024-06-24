@@ -35,3 +35,13 @@ class StoreUnidad extends RemoteUnidadEvent {
 
 /// [ListUnidadUseCase]
 class ListUnidades extends RemoteUnidadEvent {}
+
+/// [PredictiveUnidadUseCase]
+class PredictiveUnidades extends RemoteUnidadEvent {
+  const PredictiveUnidades(this.varArgs);
+
+  final Predictive varArgs;
+
+  @override
+  List<Object?> get props => [ varArgs ];
+}

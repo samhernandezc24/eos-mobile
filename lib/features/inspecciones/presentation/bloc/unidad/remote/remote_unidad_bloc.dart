@@ -1,12 +1,15 @@
+import 'package:eos_mobile/core/data/predictive.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_create_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_data_source_res_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_index_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_predictive_list_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/create_unidad_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/data_source_unidad_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/index_unidad_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/list_unidad_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/predictive_unidad_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/store_unidad_usecase.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
@@ -21,12 +24,14 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
     this._createUnidadUseCase,
     this._storeUnidadUseCase,
     this._listUnidadUseCase,
+    this._predictiveUnidadUseCase,
   ) : super(RemoteUnidadInitialState()) {
     on<FetchUnidadInit>(onFetchUnidadInit);
     on<FetchUnidadDataSource>(onFetchUnidadDataSource);
     on<FetchUnidadCreate>(onFetchUnidadCreate);
     on<StoreUnidad>(onStoreUnidad);
     on<ListUnidades>(onListUnidades);
+    on<PredictiveUnidades>(onPredictiveUnidades);
   }
 
   // Casos de uso
@@ -35,6 +40,7 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
   final CreateUnidadUseCase _createUnidadUseCase;
   final StoreUnidadUseCase _storeUnidadUseCase;
   final ListUnidadUseCase _listUnidadUseCase;
+  final PredictiveUnidadUseCase _predictiveUnidadUseCase;
 
   Future<void> onFetchUnidadInit(FetchUnidadInit event, Emitter<RemoteUnidadState> emit) async {
     emit(RemoteUnidadLoading());
@@ -123,6 +129,24 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
 
     if (objDataState is DataFailed) {
       emit(RemoteUnidadServerFailure(objDataState.serverException));
+    }
+  }
+
+  Future<void> onPredictiveUnidades(PredictiveUnidades event, Emitter<RemoteUnidadState> emit) async {
+    emit(RemoteUnidadPredictiveLoading());
+
+    final objDataState = await _predictiveUnidadUseCase(params: event.varArgs);
+
+    if (objDataState is DataSuccess) {
+      emit(RemoteUnidadPredictiveLoaded(objDataState.data));
+    }
+
+    if (objDataState is DataFailedMessage) {
+      emit(RemoteUnidadServerFailedMessagePredictive(objDataState.errorMessage));
+    }
+
+    if (objDataState is RemoteUnidadServerFailureStore) {
+      emit(RemoteUnidadServerFailurePredictive(objDataState.serverException));
     }
   }
 }

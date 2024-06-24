@@ -283,7 +283,7 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
             children: <Widget>[
               Expanded(
                 child: Text(
-                  'Fotografías: ${_files.length} / 10; Tamaño total: $readableSize;',
+                  'Fotografías: ${_files.length}; Tamaño total: $readableSize;',
                   style               : statusStyle,
                   textAlign           : TextAlign.center,
                   textHeightBehavior  : const TextHeightBehavior(applyHeightToFirstAscent: false),

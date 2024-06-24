@@ -8,6 +8,7 @@ class LabeledDropdownFormField<T> extends StatelessWidget {
     this.hintText,
     this.onChanged,
     this.value,
+    this.isEnabled = true,
     this.itemBuilder,
     this.validator,
   }) : super(key: key);
@@ -16,6 +17,7 @@ class LabeledDropdownFormField<T> extends StatelessWidget {
   final String? hintText;
   final List<T> items;
   final T? value;
+  final bool isEnabled;
   final ValueChanged<T?>? onChanged;
   final Widget Function(T)? itemBuilder;
   final FormFieldValidator<T>? validator;
@@ -32,6 +34,7 @@ class LabeledDropdownFormField<T> extends StatelessWidget {
         DropdownButtonFormField<T>(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration  : InputDecoration(
+            fillColor       : Theme.of(context).inputDecorationTheme.fillColor?.withOpacity(0.3),
             contentPadding  : Globals.kDefaultContentPadding,
             hintText        : hintText ?? 'Seleccionar',
           ),

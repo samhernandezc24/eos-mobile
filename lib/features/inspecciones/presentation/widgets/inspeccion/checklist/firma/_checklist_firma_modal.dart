@@ -1,17 +1,21 @@
-part of '../../../pages/list/list_page.dart';
+part of '../../../../pages/list/list_page.dart';
 
-class _ChecklistInspeccionSignature extends StatefulWidget {
-  const _ChecklistInspeccionSignature({Key? key}) : super(key: key);
+class _ChecklistFirmaModal extends StatefulWidget {
+  const _ChecklistFirmaModal({Key? key}) : super(key: key);
 
   @override
-  State<_ChecklistInspeccionSignature> createState() => _ChecklistInspeccionSignatureState();
+  State<_ChecklistFirmaModal> createState() => __ChecklistFirmaModalState();
 }
 
-class _ChecklistInspeccionSignatureState extends State<_ChecklistInspeccionSignature> {
+class __ChecklistFirmaModalState extends State<_ChecklistFirmaModal> {
   // GLOBAL KEY
   final GlobalKey<SfSignaturePadState> _signaturePadKey = GlobalKey<SfSignaturePadState>();
 
   // EVENTS
+  Future<void> _handleStorePressed() async {
+
+  }
+
   void _handleClearPressed() {
     _signaturePadKey.currentState!.clear();
   }
@@ -23,42 +27,41 @@ class _ChecklistInspeccionSignatureState extends State<_ChecklistInspeccionSigna
       body: Column(
         children: <Widget>[
           Container(
+            color   : Theme.of(context).colorScheme.background,
             width   : double.infinity,
             padding : EdgeInsets.all($styles.insets.sm),
-            color   : Theme.of(context).colorScheme.background,
             child   : Column(
-              children: [
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
                 RichText(
                   text: TextSpan(
-                    style: $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
-                    children: <TextSpan>[
+                    style     : $styles.textStyles.label.copyWith(color: Theme.of(context).colorScheme.onBackground),
+                    children  : <TextSpan>[
                       TextSpan(text: $strings.settingsSuggestionsText, style: const TextStyle(fontWeight: FontWeight.w600)),
-                      TextSpan(text: ': ${$strings.checklistDrawSignatureBoxSuggest}'),
+                      TextSpan(text: ': ${ $strings.checklistDrawSignatureBoxSuggest}'),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-
           Gap($styles.insets.sm),
-
           Padding(
-            padding: EdgeInsets.all($styles.insets.sm),
-            child: SizedBox(
-              height: 300,
-              width: double.infinity,
-              child: DottedBorder(
-                color: Theme.of(context).primaryColor,
-                strokeWidth: 3,
-                dashPattern: const [5, 4],
-                borderType: BorderType.RRect,
-                child: SfSignaturePad(
+            padding : EdgeInsets.all($styles.insets.sm),
+            child   : SizedBox(
+              width   : double.infinity,
+              height  : 300,
+              child   : DottedBorder(
+                color       : Theme.of(context).primaryColor,
+                strokeWidth : 3,
+                dashPattern : const [5, 4],
+                borderType  : BorderType.RRect,
+                child       : SfSignaturePad(
                   key                 : _signaturePadKey,
                   minimumStrokeWidth  : 1,
                   maximumStrokeWidth  : 3,
-                  strokeColor         : Colors.blue,
                   backgroundColor     : Theme.of(context).canvasColor,
+                  strokeColor         : Colors.blue,
                 ),
               ),
             ),
@@ -71,9 +74,9 @@ class _ChecklistInspeccionSignatureState extends State<_ChecklistInspeccionSigna
 
   Widget _buildBottomAppBar(BuildContext context) {
     return BottomAppBar(
-      height  : 70,
-      child   : Row(
-        children  : <Widget>[
+      height: 70,
+      child: Row(
+        children: <Widget>[
           FilledButton(
             onPressed : _handleClearPressed,
             style     : ButtonStyle(
@@ -83,7 +86,10 @@ class _ChecklistInspeccionSignatureState extends State<_ChecklistInspeccionSigna
             child     : Text($strings.clearButtonText, style: $styles.textStyles.button),
           ),
           const Spacer(),
-          FilledButton(onPressed: () {}, child: Text($strings.saveButtonText, style: $styles.textStyles.button)),
+          FilledButton(
+            onPressed : _handleStorePressed,
+            child     : Text($strings.saveButtonText, style: $styles.textStyles.button),
+          ),
         ],
       ),
     );

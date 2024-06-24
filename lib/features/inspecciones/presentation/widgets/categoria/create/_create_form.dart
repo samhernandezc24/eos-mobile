@@ -69,6 +69,7 @@ class _CreateCategoriaFormState extends State<_CreateCategoriaForm> {
           LabeledTextFormField(
             autoFocus       : true,
             controller      : _nameController,
+            hintText        : 'Ingresa el nombre',
             label           : '* Nombre:',
             validator       : FormValidators.textValidator,
             textInputAction : TextInputAction.done,

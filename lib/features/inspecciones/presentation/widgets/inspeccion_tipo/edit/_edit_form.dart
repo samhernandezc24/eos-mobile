@@ -71,6 +71,7 @@ class _EditInspeccionTipoFormState extends State<_EditInspeccionTipoForm> {
           LabeledTextFormField(
             controller  : _codigoController,
             label       : '* Código:',
+            isEnabled   : false,
             isReadOnly  : true,
             validator   : FormValidators.textValidator,
           ),

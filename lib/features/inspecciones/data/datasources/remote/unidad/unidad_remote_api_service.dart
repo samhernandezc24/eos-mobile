@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:eos_mobile/core/constants/list_api.dart';
+import 'package:eos_mobile/core/data/predictive.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_store_req_model.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:retrofit/retrofit.dart';
@@ -26,13 +27,6 @@ abstract class UnidadRemoteApiService {
     @Body() Map<String, dynamic> objData,
   );
 
-  /// LISTADO DE UNIDADES
-  @POST('/List')
-  Future<HttpResponse<ServerResponse>> list(
-    @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Header(HttpHeaders.authorizationHeader) String token,
-  );
-
   /// CARGAR INFORMACIÓN PARA CREAR UNA UNIDAD
   @POST('/Create')
   Future<HttpResponse<ServerResponse>> create(
@@ -46,5 +40,20 @@ abstract class UnidadRemoteApiService {
     @Header(HttpHeaders.contentTypeHeader) String contentType,
     @Header(HttpHeaders.authorizationHeader) String token,
     @Body() UnidadStoreReqModel objData,
+  );
+
+  /// LISTADO DE UNIDADES
+  @POST('/List')
+  Future<HttpResponse<ServerResponse>> list(
+    @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Header(HttpHeaders.authorizationHeader) String token,
+  );
+
+  /// PREDICTIVO DE UNIDADES
+  @POST('/Predictive')
+  Future<HttpResponse<ServerResponse>> predictive(
+    @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Header(HttpHeaders.authorizationHeader) String token,
+    @Body() Predictive varArgs,
   );
 }

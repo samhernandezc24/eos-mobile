@@ -121,7 +121,7 @@ class _SearchInputUnidad extends StatelessWidget {
     return Container(
       height: 50,
       decoration: BoxDecoration(
-        color         : Theme.of(context).inputDecorationTheme.fillColor,
+        color         : Theme.of(context).inputDecorationTheme.fillColor?.withOpacity(0.3),
         borderRadius  : BorderRadius.circular($styles.insets.xxs),
         border        : Border.all(color: Theme.of(context).colorScheme.primary, width: 1.6),
       ),
@@ -139,6 +139,8 @@ class _SearchInputUnidad extends StatelessWidget {
               textAlignVertical : TextAlignVertical.top,
               decoration        : InputDecoration(
                 isDense         : true,
+                fillColor       : Theme.of(context).inputDecorationTheme.fillColor?.withOpacity(0),
+                filled          : true,
                 contentPadding  : EdgeInsets.all($styles.insets.xs),
                 labelStyle      : TextStyle(color: Theme.of(context).colorScheme.onSurface),
                 hintStyle       : TextStyle(color: Theme.of(context).hintColor),

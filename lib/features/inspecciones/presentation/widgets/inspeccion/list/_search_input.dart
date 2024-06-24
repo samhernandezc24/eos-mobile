@@ -30,7 +30,7 @@ class _SearchInputInspeccion extends StatelessWidget {
         child: Container(
           height: $styles.insets.xl,
           decoration: BoxDecoration(
-            color         : Theme.of(context).inputDecorationTheme.fillColor,
+            color         : Theme.of(context).inputDecorationTheme.fillColor?.withOpacity(0.3),
             border        : Border.all(color: Theme.of(context).primaryColor, width: 1.6),
             borderRadius  : BorderRadius.circular($styles.insets.xxs),
           ),
@@ -79,6 +79,8 @@ class _SearchInputInspeccion extends StatelessWidget {
         textInputAction   : TextInputAction.search,
         decoration        : InputDecoration(
           isDense         : true,
+          fillColor       : Theme.of(context).inputDecorationTheme.fillColor?.withOpacity(0),
+          filled          : true,
           contentPadding  : EdgeInsets.all($styles.insets.xs),
           labelStyle      : TextStyle(color: Theme.of(context).colorScheme.onSurface),
           hintStyle       : TextStyle(color: Theme.of(context).hintColor),

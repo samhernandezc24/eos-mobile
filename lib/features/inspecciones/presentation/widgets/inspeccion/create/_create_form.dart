@@ -35,6 +35,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
   List<InspeccionTipoEntity> lstInspeccionesTipos             = [];
   List<UnidadCapacidadMedida> lstUnidadesCapacidadesMedidas   = [];
   List<UnidadEntity> lstUnidades                              = [];
+  List<UnidadPredictiveListEntity> lstRows                    = [];
 
   // SELECTED
   UnidadInspeccion? _selectedSearchUnidad;
@@ -435,6 +436,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                         LabeledTextFormField(
                           controller  : _unidadNumeroEconomicoController,
                           isReadOnly  : true,
+                          isEnabled   : false,
                           label       : '* Número económico:',
                           validator   : FormValidators.textValidator,
                         ),
@@ -445,6 +447,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                         LabeledTextFormField(
                           controller  : _unidadTipoNameController,
                           isReadOnly  : true,
+                          isEnabled   : false,
                           label       : '* Tipo de unidad:',
                           validator   : FormValidators.textValidator,
                         ),
@@ -470,6 +473,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                               child: LabeledTextFormField(
                                 controller  : _unidadMarcaNameController,
                                 isReadOnly  : true,
+                                isEnabled   : false,
                                 label       : '* Marca:',
                                 validator   : FormValidators.textValidator,
                               ),
@@ -479,6 +483,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                               child: LabeledTextFormField(
                                 controller  : _unidadModeloController,
                                 isReadOnly  : true,
+                                isEnabled   : false,
                                 label       : '* Modelo:',
                                 validator   : FormValidators.textValidator,
                               ),
@@ -495,6 +500,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                               child: LabeledTextFormField(
                                 controller  : _unidadPlacaTipoNameController,
                                 isReadOnly  : true,
+                                isEnabled   : false,
                                 label       : 'Tipo de placa:',
                               ),
                             ),
@@ -503,6 +509,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                               child: LabeledTextFormField(
                                 controller  : _unidadPlacaController,
                                 isReadOnly  : true,
+                                isEnabled   : false,
                                 label       : 'Placa:',
                               ),
                             ),
@@ -518,6 +525,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                               child: LabeledTextFormField(
                                 controller  : _unidadNumeroSerieController,
                                 isReadOnly  : true,
+                                isEnabled   : false,
                                 label       : 'Número de serie:',
                               ),
                             ),
@@ -526,6 +534,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                               child: LabeledTextFormField(
                                 controller  : _unidadAnioEquipoController,
                                 isReadOnly  : true,
+                                isEnabled   : false,
                                 label       : 'Año del equipo:',
                               ),
                             ),
@@ -538,6 +547,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                         LabeledTextFormField(
                           controller  : _unidadBaseNameController,
                           isReadOnly  : true,
+                          isEnabled   : false,
                           label       : '* Base:',
                           validator   : FormValidators.textValidator,
                         ),
@@ -582,6 +592,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                               child: LabeledTextFormField(
                                 controller    : _unidadCapacidadMedidaNameController,
                                 isReadOnly    : true,
+                                isEnabled     : false,
                                 label         : '* Tipo de capacidad:',
                                 validator     : FormValidators.textValidator,
                               ),

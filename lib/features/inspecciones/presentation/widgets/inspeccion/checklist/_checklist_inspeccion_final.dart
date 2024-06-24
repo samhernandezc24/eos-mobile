@@ -51,7 +51,7 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
 
           return SlideTransition(
             position  : animation.drive<Offset>(tween),
-            child     : const _ChecklistInspeccionSignature(),
+            child     : const _ChecklistFirmaModal(),
           );
         },
         fullscreenDialog: true,
