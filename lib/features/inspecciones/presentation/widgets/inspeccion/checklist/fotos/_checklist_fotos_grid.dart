@@ -4,11 +4,13 @@ class _ChecklistFotosGrid extends StatefulWidget {
   const _ChecklistFotosGrid({
     required this.ficheros,
     required this.onImagePressed,
+    required this.onDeletePressed,
     Key? key,
   }) : super(key: key);
 
   final List<Fichero> ficheros;
   final void Function(List<Fichero> ficheros, int index) onImagePressed;
+  final void Function(InspeccionFicheroIdReqEntity idInspeccionFichero) onDeletePressed;
 
   @override
   State<_ChecklistFotosGrid> createState() => _ChecklistFotosGridState();
@@ -56,6 +58,7 @@ class _ChecklistFotosGridState extends State<_ChecklistFotosGrid> {
                       ficheros        : widget.ficheros,
                       index           : index,
                       onImagePressed  : widget.onImagePressed,
+                      onDeletePressed : widget.onDeletePressed,
                     ),
               ),
             ),

@@ -50,6 +50,9 @@ class AppStrings {
   String checklistDrawSignatureAppBarTitle  = 'Dibujar firma';
   String checklistDrawSignatureBoxSuggest   = 'Dibuja tu firma en el espacio rectangular con bordes punteados, de preferencia en el centro del espacio rectangular.';
   String checklistPhotoEvidenceAppBarTitle  = 'Fotos de evidencia';
+  String checklistPhotoDeleteAlertTitle     = '¿Eliminar fotografía?';
+  String checklistPhotoDeleteAlertContent1  = 'Se eliminará la fotografía de la inspección.\n';
+  String checklistPhotoDeleteAlertContent2  = '¿Estás seguro de querer realizar esa acción?';
   String checklistPhotoAddAppBarTitle       = 'Cargar evidencias fotográficas';
   String checklistPhotoEmptyListTitle       = 'Aún no hay fotografías';
   String checklistPhotoEmptyListMessage     = 'Captura las evidencias fotográficas de todas las áreas importantes de la unidad para su inspección.';

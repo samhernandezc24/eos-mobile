@@ -26,3 +26,13 @@ class StoreInspeccionFichero extends RemoteInspeccionFicheroEvent {
   @override
   List<Object?> get props => [ objData ];
 }
+
+/// [DeleteInspeccionFicheroUseCase]
+class DeleteInspeccionFichero extends RemoteInspeccionFicheroEvent {
+  const DeleteInspeccionFichero(this.objData);
+
+  final InspeccionFicheroIdReqEntity objData;
+
+  @override
+  List<Object?> get props => [ objData ];
+}

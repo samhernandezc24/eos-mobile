@@ -34,6 +34,18 @@ class RemoteInspeccionFicheroStoreSuccess extends RemoteInspeccionFicheroState {
   List<Object?> get props => [];
 }
 
+/// DELETE
+class RemoteInspeccionFicheroDeleteLoading extends RemoteInspeccionFicheroState {}
+
+class RemoteInspeccionFicheroDeleteSuccess extends RemoteInspeccionFicheroState {
+  const RemoteInspeccionFicheroDeleteSuccess(this.objResponse);
+
+  final ServerResponse? objResponse;
+
+  @override
+  List<Object?> get props => [];
+}
+
 /// SERVER FAILED MESSAGE
 class RemoteInspeccionFicheroServerFailedMessageList extends RemoteInspeccionFicheroState {
   const RemoteInspeccionFicheroServerFailedMessageList(this.errorMessage);
@@ -53,6 +65,15 @@ class RemoteInspeccionFicheroServerFailedMessageStore extends RemoteInspeccionFi
   List<Object?> get props => [ errorMessage ];
 }
 
+class RemoteInspeccionFicheroServerFailedMessageDelete extends RemoteInspeccionFicheroState {
+  const RemoteInspeccionFicheroServerFailedMessageDelete(this.errorMessage);
+
+  final String? errorMessage;
+
+  @override
+  List<Object?> get props => [ errorMessage ];
+}
+
 /// SERVER FAILURE
 class RemoteInspeccionFicheroServerFailureList extends RemoteInspeccionFicheroState {
   const RemoteInspeccionFicheroServerFailureList(this.failure);
@@ -65,6 +86,15 @@ class RemoteInspeccionFicheroServerFailureList extends RemoteInspeccionFicheroSt
 
 class RemoteInspeccionFicheroServerFailureStore extends RemoteInspeccionFicheroState {
   const RemoteInspeccionFicheroServerFailureStore(this.failure);
+
+  final ServerException? failure;
+
+  @override
+  List<Object?> get props => [ failure ];
+}
+
+class RemoteInspeccionFicheroServerFailureDelete extends RemoteInspeccionFicheroState {
+  const RemoteInspeccionFicheroServerFailureDelete(this.failure);
 
   final ServerException? failure;
 

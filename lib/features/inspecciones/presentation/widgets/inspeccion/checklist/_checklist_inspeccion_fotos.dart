@@ -64,6 +64,36 @@ class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
     );
   }
 
+  Future<void> _handleDeletePressed(InspeccionFicheroIdReqEntity objData) async {
+    await showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title   : Text($strings.checklistPhotoDeleteAlertTitle, style: $styles.textStyles.h3.copyWith(fontSize: 18)),
+          content : RichText(
+            text: TextSpan(
+              style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, height: 1.5),
+              children  : <InlineSpan>[
+                TextSpan(text: $strings.checklistPhotoDeleteAlertContent1),
+                TextSpan(text: $strings.checklistPhotoDeleteAlertContent2),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed : () => Navigator.pop(context, $strings.cancelButtonText),
+              child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
+            ),
+            TextButton(
+              onPressed : () => context.read<RemoteInspeccionFicheroBloc>().add(DeleteInspeccionFichero(objData)),
+              child     : Text($strings.deleteButtonText, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _handleImagePressed(List<Fichero> ficheros, int index) {
     Navigator.push<void>(context, MaterialPageRoute<void>(builder: (_) => _ChecklistFotosDetails(lstFicheros: ficheros, initialIndex: index)));
   }
@@ -111,6 +141,44 @@ class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
     );
   }
 
+  Future<void> _showServerFailedDialog(BuildContext context, String? errorMessage) async {
+    return showDialog<void>(
+      context : context,
+      builder: (BuildContext context)  => ServerFailedDialog(
+        errorMessage: errorMessage ?? 'Se produjo un error inesperado.',
+      ),
+    );
+  }
+
+  void _showProgressDialog(BuildContext context) {
+    showDialog<void>(
+      context             : context,
+      barrierDismissible  : false,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
+          elevation : 0,
+          child     : Container(
+            padding : EdgeInsets.all($styles.insets.xs),
+            child   : Column(
+              mainAxisSize  : MainAxisSize.min,
+              children      : <Widget>[
+                Container(
+                  margin  : EdgeInsets.symmetric(vertical: $styles.insets.sm),
+                  child   : const AppLoadingIndicator(),
+                ),
+                Container(
+                  margin  : EdgeInsets.only(bottom: $styles.insets.xs),
+                  child   : Text($strings.appProcessingData, style: $styles.textStyles.bodyBold, textAlign: TextAlign.center),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   // METHODS
   Future<void> getFotos() async {
     context.read<RemoteInspeccionFicheroBloc>().add(ListInspeccionFicheros(widget.objData));
@@ -122,12 +190,35 @@ class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
       onTap : FocusManager.instance.primaryFocus?.unfocus,
       child : BlocConsumer<RemoteInspeccionFicheroBloc, RemoteInspeccionFicheroState>(
         listener: (BuildContext context, RemoteInspeccionFicheroState state) {
+          // LOADING:
+          if (state is RemoteInspeccionFicheroDeleteLoading) {
+            _showProgressDialog(context);
+          }
+
           // ERROR:
           if (state is RemoteInspeccionFicheroServerFailedMessageList ||
               state is RemoteInspeccionFicheroServerFailureList) {
             setState(() {
               _hasServerError = true;
             });
+          }
+
+          if (state is RemoteInspeccionFicheroServerFailedMessageDelete) {
+            Navigator.of(context).pop();
+
+            _showServerFailedDialog(context, state.errorMessage);
+
+            // Actualizando las fotografías.
+            getFotos();
+          }
+
+          if (state is RemoteInspeccionFicheroServerFailureDelete) {
+            Navigator.of(context).pop();
+
+            _showServerFailedDialog(context, state.failure?.errorMessage);
+
+            // Actualizando las fotografías.
+            getFotos();
           }
 
           // SUCCESS:
@@ -145,6 +236,25 @@ class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
               // LIST FOTOS
               lstFicheros = state.objResponse?.ficheros ?? [];
             });
+          }
+
+          if (state is RemoteInspeccionFicheroDeleteSuccess) {
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+
+            ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(
+                content         : Text(state.objResponse?.message ?? 'Foto eliminada', softWrap: true),
+                backgroundColor : Colors.green,
+                behavior        : SnackBarBehavior.fixed,
+                elevation       : 0,
+              ),
+            );
+
+            // Actualizando las fotografías.
+            getFotos();
           }
         },
         builder: (BuildContext context, RemoteInspeccionFicheroState state) {
@@ -179,6 +289,7 @@ class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
                         ? _ChecklistFotosGrid(
                             ficheros        : lstFicheros,
                             onImagePressed  : _handleImagePressed,
+                            onDeletePressed : _handleDeletePressed,
                           )
                         : RequestDataUnavailable(
                             title         : $strings.checklistPhotoEmptyListTitle,

@@ -6,6 +6,7 @@ class _ChecklistFotosTile extends StatelessWidget {
     required this.ficheros,
     required this.index,
     required this.onImagePressed,
+    required this.onDeletePressed,
     Key? key,
   }) : super(key: key);
 
@@ -13,6 +14,7 @@ class _ChecklistFotosTile extends StatelessWidget {
   final List<Fichero> ficheros;
   final int index;
   final void Function(List<Fichero> ficheros, int index) onImagePressed;
+  final void Function(InspeccionFicheroIdReqEntity idInspeccionFichero) onDeletePressed;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +57,9 @@ class _ChecklistFotosTile extends StatelessWidget {
               right : 8,
               child : IconButton(
                 color     : Colors.red[400],
-                onPressed : () {},
+                onPressed : () => onDeletePressed(
+                  InspeccionFicheroIdReqEntity(idInspeccionFichero: objFichero.idInspeccionFichero ?? ''),
+                ),
                 icon      : const Icon(Icons.delete),
                 tooltip   : 'Eliminar',
               ),

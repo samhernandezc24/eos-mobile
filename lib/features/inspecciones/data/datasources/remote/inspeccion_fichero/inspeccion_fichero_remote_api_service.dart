@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_id_req_model.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/inspeccion_fichero/inspeccion_fichero_id_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion_fichero/inspeccion_fichero_store_req_model.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:retrofit/retrofit.dart';
@@ -28,4 +29,12 @@ abstract class InspeccionFicheroRemoteApiService {
     @Body() InspeccionFicheroStoreReqModel objData, {
     @SendProgress() ProgressCallback? onSendProgress,
   });
+
+  /// ELIMINAR FICHERO (FOTOGRAFÍA) DE UNA INSPECCION
+  @POST('/Delete')
+  Future<HttpResponse<ServerResponse>> delete(
+    @Header(HttpHeaders.contentTypeHeader) String contentType,
+    @Header(HttpHeaders.authorizationHeader) String token,
+    @Body() InspeccionFicheroIdReqModel objData,
+  );
 }

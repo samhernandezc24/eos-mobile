@@ -1,6 +1,8 @@
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_fichero/inspeccion_fichero_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_fichero/inspeccion_fichero_id_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_fichero/inspeccion_fichero_store_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_fichero/delete_inspeccion_fichero_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_fichero/list_inspeccion_fichero_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_fichero/store_inspeccion_fichero_usecase.dart';
 
@@ -13,14 +15,17 @@ class RemoteInspeccionFicheroBloc extends Bloc<RemoteInspeccionFicheroEvent, Rem
   RemoteInspeccionFicheroBloc(
     this._listInspeccionFicheroUseCase,
     this._storeInspeccionFicheroUseCase,
+    this._deleteInspeccionFicheroUseCase,
   ) : super(RemoteInspeccionFicheroInitial()) {
     on<ListInspeccionFicheros>(onListInspeccionFicheros);
     on<StoreInspeccionFichero>(onStoreInspeccionFichero);
+    on<DeleteInspeccionFichero>(onDeleteInspeccionFichero);
   }
 
   // Casos de uso
   final ListInspeccionFicheroUseCase _listInspeccionFicheroUseCase;
   final StoreInspeccionFicheroUseCase _storeInspeccionFicheroUseCase;
+  final DeleteInspeccionFicheroUseCase _deleteInspeccionFicheroUseCase;
 
   Future<void> onListInspeccionFicheros(ListInspeccionFicheros event, Emitter<RemoteInspeccionFicheroState> emit) async {
     emit(RemoteInspeccionFicheroLoading());
@@ -55,6 +60,24 @@ class RemoteInspeccionFicheroBloc extends Bloc<RemoteInspeccionFicheroEvent, Rem
 
     if (objDataState is DataFailed) {
       emit(RemoteInspeccionFicheroServerFailureStore(objDataState.serverException));
+    }
+  }
+
+  Future<void> onDeleteInspeccionFichero(DeleteInspeccionFichero event, Emitter<RemoteInspeccionFicheroState> emit) async {
+    emit(RemoteInspeccionFicheroDeleteLoading());
+
+    final objDataState = await _deleteInspeccionFicheroUseCase(params: event.objData);
+
+    if (objDataState is DataSuccess) {
+      emit(RemoteInspeccionFicheroDeleteSuccess(objDataState.data));
+    }
+
+    if (objDataState is DataFailedMessage) {
+      emit(RemoteInspeccionFicheroServerFailedMessageDelete(objDataState.errorMessage));
+    }
+
+    if (objDataState is DataFailed) {
+      emit(RemoteInspeccionFicheroServerFailureDelete(objDataState.serverException));
     }
   }
 }
