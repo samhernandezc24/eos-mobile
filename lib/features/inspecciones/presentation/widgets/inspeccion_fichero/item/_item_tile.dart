@@ -26,7 +26,7 @@ class _InspeccionFicheroItemTile extends StatelessWidget {
     );
 
     return AspectRatio(
-      aspectRatio: (1 == 0) ? (index % 10) / 15 + 0.6 : max(0.5, 1),
+      aspectRatio: (1.0 == 0) ? (index % 10) / 15 + 0.6 : max(0.5, 1),
       child: ClipRRect(
         borderRadius: BorderRadius.circular($styles.insets.xs),
         child: Stack(
@@ -35,7 +35,7 @@ class _InspeccionFicheroItemTile extends StatelessWidget {
               onPressed     : () => onImagePressed(files, index),
               semanticLabel : 'Fotografía $index',
               child: Container(
-                color   : Theme.of(context).disabledColor,
+                color   : Colors.grey,
                 width   : double.infinity,
                 height  : double.infinity,
                 child   : image,
@@ -50,7 +50,7 @@ class _InspeccionFicheroItemTile extends StatelessWidget {
               ),
             ),
             Positioned(
-              top   : 8,
+              top   : 0,
               right : 8,
               child : IconButton(
                 color     : Colors.red[400],

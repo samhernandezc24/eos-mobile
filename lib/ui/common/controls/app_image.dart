@@ -1,7 +1,6 @@
 import 'package:eos_mobile/config/logic/common/retry_image.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/image_fade.dart';
-
 import 'package:flutter/foundation.dart';
 
 class AppImage extends StatefulWidget {
@@ -50,10 +49,10 @@ class _AppImageState extends State<AppImage> {
     super.didUpdateWidget(oldWidget);
   }
 
-  // EVENTS
+  // METHODS
   void _updateImage() {
     if (widget.image == _sourceImage) return;
-    _sourceImage = widget.image;
+    _sourceImage  = widget.image;
     _displayImage = _capImageSize(_addRetry(_sourceImage));
   }
 
@@ -65,24 +64,22 @@ class _AppImageState extends State<AppImage> {
       alignment       : widget.alignment,
       duration        : widget.duration ?? $styles.times.fast,
       syncDuration    : widget.syncDuration ?? 0.ms,
-      loadingBuilder  : (_, value, __) {
-        if (!widget.distractor && !widget.progress) return const SizedBox.shrink();
+      loadingBuilder  : (_, value, ___) {
+        if (!widget.distractor && !widget.progress) return const SizedBox();
         return Center(child: AppLoadingIndicator(value: widget.progress ? value : null, color: widget.color));
       },
       errorBuilder: (_, __) => Container(
         padding   : EdgeInsets.all($styles.insets.xs),
         alignment : Alignment.center,
-        child     : LayoutBuilder(
-          builder: (_, constraints) {
-            final double size = min(constraints.biggest.width, constraints.biggest.height);
-            if (size < 16) return const SizedBox.shrink();
-            return Icon(
-              Icons.image_not_supported,
-              color : Theme.of(context).primaryColor,
-              size  : min(size, $styles.insets.lg),
-            );
-          },
-        ),
+        child     : LayoutBuilder(builder: (_, constraints) {
+          final double size = min(constraints.biggest.width, constraints.biggest.height);
+          if (size < 16) return const SizedBox();
+          return Icon(
+            Icons.image_not_supported,
+            color : Colors.white.withOpacity(0.1),
+            size  : min(size, $styles.insets.lg),
+          );
+        }),
       ),
     );
   }

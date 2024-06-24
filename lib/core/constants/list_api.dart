@@ -3,9 +3,13 @@ import 'package:flutter/foundation.dart';
 class ListAPI {
   ListAPI._();
 
-  static const String _releaseModeUrl  = 'http://35.193.90.143:7000';
-  static const String _debugModeUrl    = 'http://10.0.2.2:7000';
-  static const String _apiBaseUrl      = kReleaseMode ? _releaseModeUrl : _debugModeUrl;
+  static const String _releaseModeApiUrl  = 'http://35.193.90.143:7000';
+  static const String _debugModeApiUrl    = 'http://10.0.2.2:7000';
+  static const String _releaseModeAppUrl  = 'http://eos.heavy-lift.com.mx';
+  static const String _debugModeAppUrl    = 'http://172.20.192.35';
+
+  static const String _apiBaseUrl         = kReleaseMode ? _releaseModeApiUrl : _debugModeApiUrl;
+  static const String _appBaseUrl         = kReleaseMode ? _releaseModeAppUrl : _debugModeAppUrl;
 
   /// API.Account
   ///
@@ -43,7 +47,7 @@ class ListAPI {
   static const String inspeccionesFicheros = '$_apiBaseUrl/api/Inspecciones/Ficheros';
 
   static String inspeccionFicheroPath(String imagePath) {
-    return '$_apiBaseUrl/Ficheros/InspeccionesFicheros/$imagePath';
+    return '$_appBaseUrl/Ficheros/InspeccionesFicheros/$imagePath';
   }
 
   /// API.Inspecciones

@@ -56,12 +56,16 @@ class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
 
           return SlideTransition(
             position  : animation.drive<Offset>(tween),
-            child     : _CreateInspeccionFicheroForm(buildFicheroDataCallback: getFotos),
+            child     : _CreateInspeccionFicheroForm(objInspeccion: widget.objInspeccion, buildFicheroDataCallback: getFotos),
           );
         },
         fullscreenDialog: true,
       ),
     );
+  }
+
+  void _handleImagePressed(List<Fichero> ficheros, int index) {
+    Navigator.push<void>(context, MaterialPageRoute<void>(builder: (_) => _ChecklistFotosDetails(lstFicheros: ficheros, initialIndex: index)));
   }
 
   void _handleNextPressed(BuildContext context) {
@@ -172,7 +176,10 @@ class _ChecklistInspeccionFotosState extends State<_ChecklistInspeccionFotos> {
                 Expanded(
                   child: RepaintBoundary(
                     child: lstFicheros.isNotEmpty
-                        ? const _ChecklistFotosGrid()
+                        ? _ChecklistFotosGrid(
+                            ficheros        : lstFicheros,
+                            onImagePressed  : _handleImagePressed,
+                          )
                         : RequestDataUnavailable(
                             title         : $strings.checklistPhotoEmptyListTitle,
                             message       : $strings.checklistPhotoEmptyListMessage,

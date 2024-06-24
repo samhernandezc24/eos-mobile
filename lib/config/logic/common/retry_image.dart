@@ -52,11 +52,20 @@ class RetryImage extends ImageProvider<Object> {
   @override
   ImageStreamCompleter loadImage(Object key, ImageDecoderCallback decode) {
     final _DelegatingImageStreamCompleter completer   = _DelegatingImageStreamCompleter();
-    ImageStreamCompleter completerToWrap              = imageProvider.loadImage(key, decode);
+    _loadWithRetry(completer, key, decode);
+    return completer;
+  }
+
+  void _loadWithRetry(
+    _DelegatingImageStreamCompleter completer,
+    Object key,
+    ImageDecoderCallback decode, {
+    int retryCount = 0,
+    Duration delay = const Duration(milliseconds: 250),
+  }) {
+    final ImageStreamCompleter completerToWrap = imageProvider.loadImage(key, decode);
     late ImageStreamListener listener;
 
-    Duration duration = const Duration(milliseconds: 250);
-    int count = 1;
     listener = ImageStreamListener(
       (ImageInfo image, bool synchronousCall) {
         completer.addImage(image);
@@ -64,25 +73,21 @@ class RetryImage extends ImageProvider<Object> {
       onChunk: completer._reportChunkEvent,
       onError: (Object exception, StackTrace? stackTrace) {
         completerToWrap.removeListener(listener);
-        if (count > maxRetries) {
+        if (retryCount >= maxRetries) {
           completer.reportError(exception: exception, stack: stackTrace);
           return;
         }
-        Future<void>.delayed(duration).then((void v) {
-          duration *= 2;
-          completerToWrap = imageProvider.loadImage(key, decode);
-          count += 1;
-          completerToWrap.addListener(listener);
+        Future<void>.delayed(delay).then((_) {
+          _loadWithRetry(completer, key, decode, retryCount: retryCount + 1, delay: delay * 2);
         });
       },
     );
+
     completerToWrap.addListener(listener);
 
     completer.addOnLastListenerRemovedCallback(() {
       completerToWrap.removeListener(listener);
     });
-
-    return completer;
   }
 
   @override

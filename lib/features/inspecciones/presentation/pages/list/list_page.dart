@@ -1,7 +1,6 @@
 import 'dart:io';
 
-import 'package:eos_mobile/config/logic/common/image_upload_queue.dart';
-
+import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/core/data/catalogos/base.dart';
 import 'package:eos_mobile/core/data/catalogos/inspeccion_estatus.dart';
 import 'package:eos_mobile/core/data/catalogos/unidad_capacidad_medida.dart';
@@ -27,6 +26,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/insp
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_categoria/inspeccion_categoria_store_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_fichero/inspeccion_fichero_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_store_req_entity.dart';
@@ -45,13 +45,17 @@ import 'package:eos_mobile/ui/common/shimmer_loading.dart';
 
 // import 'package:image/image.dart' as img;
 import 'package:intl/intl.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 part '../../widgets/inspeccion/checklist/_checklist_inspeccion_evaluacion.dart';
 part '../../widgets/inspeccion/checklist/_checklist_inspeccion_final.dart';
 part '../../widgets/inspeccion/checklist/_checklist_inspeccion_fotos.dart';
 part '../../widgets/inspeccion/checklist/_checklist_inspeccion_signature.dart';
+part '../../widgets/inspeccion/checklist/fotos/_checklist_fotos_details.dart';
 part '../../widgets/inspeccion/checklist/fotos/_checklist_fotos_grid.dart';
+part '../../widgets/inspeccion/checklist/fotos/_checklist_fotos_tile.dart';
 part '../../widgets/inspeccion/checklist/pregunta/_checklist_pregunta_tile.dart';
 
 part '../../widgets/inspeccion/create/_create_form.dart';
@@ -62,9 +66,6 @@ part '../../widgets/inspeccion/filter/_filter_data.dart';
 part '../../widgets/inspeccion/list/_results_list.dart';
 part '../../widgets/inspeccion/list/_result_tile.dart';
 part '../../widgets/inspeccion/list/_search_input.dart';
-
-part '../../widgets/inspeccion/photo/_photo_grid.dart';
-part '../../widgets/inspeccion/photo/_photo_tile.dart';
 
 part '../../widgets/inspeccion_fichero/create/_create_form.dart';
 part '../../widgets/inspeccion_fichero/item/_item_grid.dart';
@@ -109,11 +110,11 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   ];
 
   // SELECTED FILTER OPTION
-  UnidadTipo? _selectedUnidadTipo;
-  InspeccionEstatus? _selectedEstatus;
-  Usuario? _selectedCreatedUsuario;
-  Usuario? _selectedUpdatedUsuario;
-  Requerimiento? _selectedRequerimiento;
+  // UnidadTipo? _selectedUnidadTipo;
+  // InspeccionEstatus? _selectedEstatus;
+  // Usuario? _selectedCreatedUsuario;
+  // Usuario? _selectedUpdatedUsuario;
+  // Requerimiento? _selectedRequerimiento;
 
   // SEARCH FILTERS
   List<SearchFilter> searchFilters = [];
@@ -389,7 +390,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     final List<Filter> arrFilters = dataSourcePersistence == null ? [] : dataSourcePersistence.filters ?? [];
 
     setState(() {
-      _selectedUnidadTipo = DataSourceUtils.renderFilter<UnidadTipo>(arrFilters, lstUnidadesTipos, 'IdUnidadTipo', (item) => item.idUnidadTipo);
+      // _selectedUnidadTipo = DataSourceUtils.renderFilter<UnidadTipo>(arrFilters, lstUnidadesTipos, 'IdUnidadTipo', (item) => item.idUnidadTipo);
 
       // sltFilter.add(Filter(field: 'IdUnidadTipo', value: _selectedUnidadTipo?.idUnidadTipo));
       // _selectedUnidadTipo     = DataSourceUtils.renderFilter<UnidadTipo>(arrFilters, lstUnidadesTipos, 'IdUnidadTipo', (item) => item.idUnidadTipo);

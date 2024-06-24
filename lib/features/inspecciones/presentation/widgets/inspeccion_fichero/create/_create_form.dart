@@ -1,8 +1,13 @@
 part of '../../../pages/list/list_page.dart';
 
 class _CreateInspeccionFicheroForm extends StatefulWidget {
-  const _CreateInspeccionFicheroForm({Key? key, this.buildFicheroDataCallback}) : super(key: key);
+  const _CreateInspeccionFicheroForm({
+    required this.objInspeccion,
+    Key? key,
+    this.buildFicheroDataCallback,
+  }) : super(key: key);
 
+  final InspeccionDataSourceEntity objInspeccion;
   final VoidCallback? buildFicheroDataCallback;
 
   @override
@@ -10,13 +15,18 @@ class _CreateInspeccionFicheroForm extends StatefulWidget {
 }
 
 class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroForm> {
-  // PROPERTIES
-  bool _isPhotoUploading = false;
-
-  final ImageUploadQueue _imageQueue = ImageUploadQueue();
+  // REGISTROS ITEMS
+  List<File> _lstQueueUpload    = [];
+  int _indexUpload               = 0;
+  int _countQueueUpload          = 0;
+  int _countQueueTotal           = 0;
 
   // LIST
   final List<File> _files = [];
+
+  // PROPERTIES
+  bool _isPhotoUploading  = false;
+  bool _isSave            = false;
 
   // EVENTS
   void _showDidPopDialog(BuildContext context) {
@@ -55,11 +65,9 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
     try {
       final XFile? photo = await imageHelper.takePhoto();
       if (photo != null) {
-        final File file = File(photo.path);
-        _imageQueue.enqueue(file);
         if (mounted) {
           setState(() {
-            _files.add(file);
+            _files.add(File(photo.path));
           });
         }
       }
@@ -82,12 +90,8 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
     }
 
     try {
-      final List<XFile> photos = await imageHelper.pickImagesFromGallery(multiple: true);
+      final List<XFile> photos = await imageHelper.pickPhotos(multiple: true);
       if (mounted) {
-        for (final photo in photos) {
-          final File file = File(photo.path);
-          _imageQueue.enqueue(file);
-        }
         setState(() {
           _files.addAll(photos.map((photo) => File(photo.path)));
         });
@@ -103,6 +107,12 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
 
   void _handleImagePressed(List<File> files, int index) {
     Navigator.push<void>(context, MaterialPageRoute<void>(builder: (_) => FullScreenImagePreview(imageFiles: files, initialIndex: index)));
+  }
+
+  void _handleDeletePressed(int index) {
+    setState(() {
+      _files.removeAt(index);
+    });
   }
 
   void _handleStorePressed() {
@@ -125,13 +135,8 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
       return;
     }
 
+    _loading();
     _store(boolBegin: true);
-  }
-
-  void _handleDeletePressed(int index) {
-    setState(() {
-      _files.removeAt(index);
-    });
   }
 
   Future<void> _showServerFailedDialog(BuildContext context, String? errorMessage) async {
@@ -144,19 +149,81 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
   }
 
   // METHODS
-  // Future<void> _processImageQueue() async {
-  //   while (!_imageQueue.isEmpty) {
-  //     final File? file = _imageQueue.dequeue();
-  //     try {
-  //       await _store(file!);
-  //     } catch (e) {
-  //       print('Error uploading image: $e');
-  //     }
-  //   }
-  // }
+  void _loading({bool value = true}) {
+    if (value) {
+      setState(() {
+        _isSave = true;
+      });
+    } else {
+      setState(() {
+        _isSave = false;
+      });
+    }
+  }
 
   Future<void> _store({bool boolBegin = false}) async {
-    print('cargando fotografias');
+    if (boolBegin) {
+      _indexUpload                  = 0;
+      final List<File> arrUploads   = List<File>.from(_files);
+
+      _lstQueueUpload = [];
+
+      for (int index = 0; index < arrUploads.length; index++) {
+        final objUpload = arrUploads[index];
+
+        _lstQueueUpload.add(objUpload);
+
+        _countQueueTotal++;
+      }
+    }
+
+    if (_countQueueUpload < _countQueueTotal) {
+      final File objUpload        = _lstQueueUpload[_indexUpload];
+      final String fileBase64     = await Globals.fileToBase64(objUpload);
+      final String fileExtension  = Globals.extensionFile(objUpload.path);
+
+      final InspeccionFicheroStoreReqEntity objPost = InspeccionFicheroStoreReqEntity(
+        fileBase64      : fileBase64,
+        fileExtension   : fileExtension,
+        idInspeccion    : widget.objInspeccion.idInspeccion,
+        inspeccionFolio : widget.objInspeccion.folio,
+      );
+
+      BlocProvider.of<RemoteInspeccionFicheroBloc>(context).add(StoreInspeccionFichero(objPost));
+    } else {
+      if (_lstQueueUpload.isEmpty) {
+        Navigator.of(context).pop();
+
+        ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(
+            content         : Text('Fotos guardadas exitosamente', softWrap: true),
+            backgroundColor : Colors.green,
+            elevation       : 0,
+            behavior        : SnackBarBehavior.fixed,
+          ),
+        );
+
+        // Ejecutar callback.
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          widget.buildFicheroDataCallback!();
+        });
+      } else {
+        ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content         : const Text('Algunas fotos no pudieron ser guardadas', softWrap: true),
+            backgroundColor : Theme.of(context).colorScheme.error,
+            elevation       : 0,
+            behavior        : SnackBarBehavior.fixed,
+          ),
+        );
+
+        _loading(value: false);
+      }
+    }
   }
 
   @override
@@ -248,9 +315,28 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
             tooltip   : 'Galería',
           ),
           const Spacer(),
-          FilledButton(
-            onPressed : _files.isNotEmpty ? _handleStorePressed : null,
-            child     : Text($strings.saveButtonText, style: $styles.textStyles.button),
+          BlocConsumer<RemoteInspeccionFicheroBloc, RemoteInspeccionFicheroState>(
+            listener: (BuildContext context, RemoteInspeccionFicheroState state) {
+              if (state is RemoteInspeccionFicheroServerFailedMessageStore) {
+                _showServerFailedDialog(context, state.errorMessage);
+              }
+
+              if (state is RemoteInspeccionFicheroServerFailureStore) {
+                _showServerFailedDialog(context, state.failure?.errorMessage);
+              }
+            },
+            builder: (BuildContext context, RemoteInspeccionFicheroState state) {
+              if (state is RemoteInspeccionFicheroStoreLoading) {
+                return const FilledButton(
+                  onPressed : null,
+                  child     : AppLoadingIndicator(width: 20, height: 20),
+                );
+              }
+              return FilledButton(
+                onPressed : _files.isNotEmpty && !_isPhotoUploading ? _handleStorePressed : null,
+                child     : Text($strings.saveButtonText, style: $styles.textStyles.button),
+              );
+            },
           ),
         ],
       ),

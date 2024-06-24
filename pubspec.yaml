@@ -15,8 +15,14 @@ dependencies:
   # Estado de gestión de aplicaciones Flutter basado en el patrón BLoC
   bloc: ^8.1.3
 
+  # Plugin de Flutter para guardar imágenes de la red en la caché
+  cached_network_image: ^3.3.1
+
   # Plugin de Flutter para acceder a la cámara
   camera: ^0.10.5+9
+
+  # Funciones y clases de utilidad al estilo de dart:collection para facilitar el trabajo con colecciones
+  collection: ^1.18.0
 
   # Verifica el estado de la conexión a Internet
   connectivity_plus: ^5.0.2
@@ -60,6 +66,9 @@ dependencies:
   # Manejo de modos de visualización en Flutter
   flutter_displaymode: ^0.6.0
 
+  # Plugin de Flutter para comprimir la imagen como un plugin nativo
+  flutter_image_compress: ^2.3.0
+
   # Plugin para cambiar los íconos de la aplicación Flutter
   flutter_launcher_icons: ^0.13.1
 
@@ -89,6 +98,9 @@ dependencies:
 
   # Internacionalización, formateo de fechas, números, etc
   intl: ^0.19.0
+
+  # Plugin para cargar, guardar y manipular imágenes en una variedad de formatos de archivo de imagen
+  image: ^4.2.0
 
   # Recortar una imagen
   image_cropper: ^5.0.1
@@ -126,6 +138,9 @@ dependencies:
   # Obtiene ubicaciones de uso común en los sitemas de archivos
   path_provider: ^2.1.2
 
+  # Widget de imagen/contenido ampliable para Flutter
+  photo_view: ^0.15.0
+
   # Generador de código para cliente Dio
   retrofit: ^4.1.0
 
@@ -149,12 +164,9 @@ dependencies:
 
   # Widget WebView en Android e iOS
   webview_flutter: ^4.5.0
-  multi_select_flutter: ^4.1.3
+
   rxdart: ^0.27.7
-  image: ^4.2.0
-  collection: ^1.18.0
   infinite_scroll_pagination: ^4.0.0
-  photo_view: ^0.15.0
 
 dev_dependencies:
   flutter_test:
