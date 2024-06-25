@@ -63,7 +63,7 @@ class LabeledDateTimeTextFormField extends StatelessWidget {
                 ? Theme.of(context).inputDecorationTheme.fillColor?.withOpacity(0.3)
                 : Theme.of(context).inputDecorationTheme.fillColor,
             borderRadius  : BorderRadius.circular($styles.insets.xxs),
-            border        : Border.all(color: Theme.of(context).colorScheme.primary, width: 1.6),
+            border        : Border.all(color: Theme.of(context).colorScheme.primary),
           ),
           child: Row(
             children: <Widget>[

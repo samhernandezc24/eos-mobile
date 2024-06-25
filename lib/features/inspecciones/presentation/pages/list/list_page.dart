@@ -10,12 +10,14 @@ import 'package:eos_mobile/core/data/catalogos/unidad_tipo.dart';
 import 'package:eos_mobile/core/data/catalogos/usuario.dart';
 import 'package:eos_mobile/core/data/data_source.dart';
 import 'package:eos_mobile/core/data/data_source_persistence.dart';
+import 'package:eos_mobile/core/data/date_filter.dart';
 import 'package:eos_mobile/core/data/filter.dart';
 import 'package:eos_mobile/core/data/inspeccion/categoria.dart';
 import 'package:eos_mobile/core/data/inspeccion/categoria_item.dart';
 import 'package:eos_mobile/core/data/inspeccion/fichero.dart';
 import 'package:eos_mobile/core/data/inspeccion/inspeccion.dart';
 import 'package:eos_mobile/core/data/inspeccion/requerimiento.dart';
+import 'package:eos_mobile/core/data/predictive.dart';
 import 'package:eos_mobile/core/data/search_filter.dart';
 import 'package:eos_mobile/core/data/sort.dart';
 

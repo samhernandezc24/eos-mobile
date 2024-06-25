@@ -14,6 +14,9 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // CONTROLLERS
+  late final TextEditingController _searchUnidadInventarioController;
+  late final TextEditingController _searchUnidadTemporalController;
+
   late final TextEditingController _fechaProgramadaController;
   late final TextEditingController _unidadNumeroEconomicoController;
   late final TextEditingController _unidadTipoNameController;
@@ -46,6 +49,8 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
   @override
   void initState() {
     super.initState();
+    _searchUnidadInventarioController     = TextEditingController();
+    _searchUnidadTemporalController       = TextEditingController();
     _fechaProgramadaController            = TextEditingController();
     _unidadNumeroEconomicoController      = TextEditingController();
     _unidadTipoNameController             = TextEditingController();
@@ -68,6 +73,8 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
 
   @override
   void dispose() {
+    _searchUnidadInventarioController.dispose();
+    _searchUnidadTemporalController.dispose();
     _fechaProgramadaController.dispose();
     _unidadNumeroEconomicoController.dispose();
     _unidadTipoNameController.dispose();
@@ -357,46 +364,51 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
 
                         // BUSCAR UNIDAD A INSPECCIONAR:
                         if (_selectedSearchUnidad == UnidadInspeccion.temporal)
-                          BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
-                            builder: (BuildContext context, RemoteUnidadState state) {
-                              // LOADING:
-                              if (state is RemoteUnidadListLoading) {
-                                return const Center(child: AppLoadingIndicator(width: 20, height: 20));
-                              }
-
-                              // ERROR:
-                              if (state is RemoteUnidadServerFailedMessageList) {
-                                return ErrorBoxContainer(
-                                  errorMessage  : state.errorMessage ?? 'Se produjo un error al cargar el listado de unidades.',
-                                  onPressed     : _getUnidadesList,
-                                );
-
-                              }
-
-                              if (state is RemoteUnidadServerFailureList) {
-                                return ErrorBoxContainer(
-                                  errorMessage  : state.failure?.errorMessage ?? 'Se produjo un error al cargar el listado de unidades.',
-                                  onPressed     : _getUnidadesList,
-                                );
-                              }
-
-                              // SUCCESS:
-                              if (state is RemoteUnidadListLoaded) {
-                                lstUnidades = state.objResponse ?? [];
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    _SearchInputUnidad(
-                                      onSelected      : _handleSearchSubmitted,
-                                      unidades        : lstUnidades,
-                                      cleanTextFields : _clearFormFields,
-                                    ),
-                                  ],
-                                );
-                              }
-                              return const SizedBox.shrink();
-                            },
+                          _SearchInputUnidadTemporal(
+                            controller      : _searchUnidadInventarioController,
+                            onSelected      : (_){},
+                            clearTextFields : _clearFormFields,
                           ),
+                          // BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
+                          //   builder: (BuildContext context, RemoteUnidadState state) {
+                          //     // LOADING:
+                          //     if (state is RemoteUnidadListLoading) {
+                          //       return const Center(child: AppLoadingIndicator(width: 20, height: 20));
+                          //     }
+
+                          //     // ERROR:
+                          //     if (state is RemoteUnidadServerFailedMessageList) {
+                          //       return ErrorBoxContainer(
+                          //         errorMessage  : state.errorMessage ?? 'Se produjo un error al cargar el listado de unidades.',
+                          //         onPressed     : _getUnidadesList,
+                          //       );
+
+                          //     }
+
+                          //     if (state is RemoteUnidadServerFailureList) {
+                          //       return ErrorBoxContainer(
+                          //         errorMessage  : state.failure?.errorMessage ?? 'Se produjo un error al cargar el listado de unidades.',
+                          //         onPressed     : _getUnidadesList,
+                          //       );
+                          //     }
+
+                          //     // SUCCESS:
+                          //     if (state is RemoteUnidadListLoaded) {
+                          //       lstUnidades = state.objResponse ?? [];
+                          //       return Column(
+                          //         crossAxisAlignment: CrossAxisAlignment.start,
+                          //         children: <Widget>[
+                          //           _SearchInputUnidad(
+                          //             onSelected      : _handleSearchSubmitted,
+                          //             unidades        : lstUnidades,
+                          //             cleanTextFields : _clearFormFields,
+                          //           ),
+                          //         ],
+                          //       );
+                          //     }
+                          //     return const SizedBox.shrink();
+                          //   },
+                          // ),
 
                          // NUEVA UNIDAD TEMPORAL:
                         AnimatedSwitcher(

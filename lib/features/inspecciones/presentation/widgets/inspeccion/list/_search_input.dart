@@ -28,7 +28,7 @@ class _SearchInputInspeccion extends StatelessWidget {
     return LayoutBuilder(
       builder: (ctx, constraints) => Center(
         child: Container(
-          height: $styles.insets.xl,
+          height: 50,
           decoration: BoxDecoration(
             color         : Theme.of(context).inputDecorationTheme.fillColor?.withOpacity(0.3),
             border        : Border.all(color: Theme.of(context).primaryColor, width: 1.6),
