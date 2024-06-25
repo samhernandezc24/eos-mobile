@@ -11,8 +11,8 @@ class DateFilter extends Equatable {
   /// a partir de un mapa. Pasa el mapa al constructor generado `_$DateFilterFromJson()`.
   factory DateFilter.fromJson(Map<String, dynamic> json) => _$DateFilterFromJson(json);
 
-  final DateTime? dateStart;
-  final DateTime? dateEnd;
+  final String? dateStart;
+  final String? dateEnd;
 
   /// Serialización de la estructura del modelo a formato JSON.
   Map<String, dynamic> toJson() => _$DateFilterToJson(this);

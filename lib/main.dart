@@ -54,14 +54,14 @@ class MainApp extends StatelessWidget with GetItMixin {
         BlocProvider<RemoteUnidadBloc>(create: (BuildContext context) => sl<RemoteUnidadBloc>()..add(ListUnidades())),
       ],
       child: MaterialApp.router(
-        title: $strings.defaultAppName,
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme($styles),
-        darkTheme: AppTheme.darkTheme($styles),
-        themeMode: ThemeMode.light,
-        routeInformationProvider: appRouter.routeInformationProvider,
-        routeInformationParser: appRouter.routeInformationParser,
-        routerDelegate: appRouter.routerDelegate,
+        title                       : $strings.defaultAppName,
+        debugShowCheckedModeBanner  : false,
+        theme                       : AppTheme.lightTheme($styles),
+        darkTheme                   : AppTheme.darkTheme($styles),
+        themeMode                   : ThemeMode.light,
+        routeInformationProvider    : appRouter.routeInformationProvider,
+        routeInformationParser      : appRouter.routeInformationParser,
+        routerDelegate              : appRouter.routerDelegate,
       ),
     );
   }

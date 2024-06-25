@@ -1,5 +1,5 @@
 import 'package:eos_mobile/core/data/date_filter.dart';
-import 'package:eos_mobile/core/data/search_filter.dart';
+import 'package:eos_mobile/core/data/search_filter_predictive.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -14,7 +14,7 @@ class Predictive extends Equatable {
   factory Predictive.fromJson(Map<String, dynamic> json) => _$PredictiveFromJson(json);
 
   final String? search;
-  final List<SearchFilter>? searchFilters;
+  final List<SearchFilterPredictive>? searchFilters;
   final Map<String, dynamic>? filters;
   final Map<String, dynamic>? columns;
   final DateFilter? dateFilters;

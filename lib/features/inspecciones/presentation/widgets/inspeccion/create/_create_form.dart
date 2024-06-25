@@ -34,6 +34,9 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
   late final TextEditingController _unidadHorometroController;
   late final TextEditingController _locacionController;
 
+  // PROPERTIES
+  String? idUnidad = '';
+
   // LIST
   List<InspeccionTipoEntity> lstInspeccionesTipos             = [];
   List<UnidadCapacidadMedida> lstUnidadesCapacidadesMedidas   = [];
@@ -42,7 +45,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
 
   // SELECTED
   UnidadInspeccion? _selectedSearchUnidad;
-  UnidadEntity? _selectedUnidad;
+  UnidadPredictiveListEntity? _selectedUnidad;
   InspeccionTipoEntity? _selectedInspeccionTipo;
 
   // STATE
@@ -140,10 +143,49 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
     );
   }
 
-  void _handleSearchSubmitted(UnidadEntity? value) {
+  // void _handleSearchSubmitted(UnidadEntity? value) {
+  //   setState(() {
+  //     _selectedUnidad = value;
+  //     _fillFormFields(value);
+  //   });
+  // }
+
+  void _handleSearchSubmitted(String query) {
+    lstRows = [];
+
+    if (!Globals.isValidStringValue(query)) {
+      return;
+    }
+
+    final List<SearchFilterPredictive> lstSearchFilters = [];
+
+    lstSearchFilters.add(const SearchFilterPredictive(field: 'NumeroEconomico'));
+    lstSearchFilters.add(const SearchFilterPredictive(field: 'NumeroSerie'));
+    lstSearchFilters.add(const SearchFilterPredictive(field: 'UnidadTipoName'));
+
+    final Predictive varArgs = Predictive(
+      search            : query,
+      searchFilters     : lstSearchFilters,
+      filters           : const {},
+      columns           : const {},
+      dateFilters       : const DateFilter(dateStart: '', dateEnd: ''),
+    );
+
+    BlocProvider.of<RemoteUnidadBloc>(context).add(PredictiveUnidades(varArgs));
+  }
+
+  void _handleSelectedPressed(UnidadPredictiveListEntity event) {
+    idUnidad = '';
+
+    if (event.idUnidad == '') {
+      return;
+    }
+
+    lstRows = [];
+
     setState(() {
-      _selectedUnidad = value;
-      _fillFormFields(value);
+      _selectedUnidad = event;
+      _fillFormFields(event);
     });
   }
 
@@ -260,7 +302,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
     BlocProvider.of<RemoteInspeccionBloc>(context).add(StoreInspeccion(objPost));
   }
 
-  void _fillFormFields(UnidadEntity? value) {
+  void _fillFormFields(UnidadPredictiveListEntity? value) {
     _unidadNumeroEconomicoController.text       = value?.numeroEconomico            ?? '';
     _unidadTipoNameController.text              = value?.unidadTipoName             ?? '';
     _unidadMarcaNameController.text             = value?.unidadMarcaName            ?? '';
@@ -362,55 +404,80 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
 
                         Gap($styles.insets.xs),
 
-                        // BUSCAR UNIDAD A INSPECCIONAR:
                         if (_selectedSearchUnidad == UnidadInspeccion.temporal)
-                          _SearchInputUnidadTemporal(
-                            controller      : _searchUnidadInventarioController,
-                            onSelected      : (_){},
-                            clearTextFields : _clearFormFields,
+                          // PREDICTIVO DE UNIDADES
+                          PredictiveSearchInput(
+                            // controller: _searchUnidadTemporalController,
+                            // onSubmit: _handleSearchSubmitted,
                           ),
+                          // PredictiveSearchInput<RemoteUnidadBloc, RemoteUnidadEvent, RemoteUnidadState, UnidadPredictiveListEntity>(
+                          //   controller  : _searchUnidadTemporalController,
+                          //   onSubmit    : _handleSearchSubmitted,
+                          //   onSelected  : _handleSelectedPressed,
+                          //   builder     : (BuildContext context, RemoteUnidadState state) {
+                          //     // LOADING
+                          //     if (state is RemoteUnidadPredictiveLoading) {
+                          //       return const AppLinearIndicator();
+                          //     }
+
+                          //     // ERROR
+
+                          //     // SUCCESS
+                          //     if (state is RemoteUnidadPredictiveLoaded) {
+                          //       lstRows = state.objResponse ?? [];
+                          //       print(lstRows);
+                          //     }
+
+                          //     return const SizedBox.shrink();
+                          //   },
+                          // ),
+                          // PredictiveSearchInput<RemoteUnidadBloc, RemoteUnidadState>(
+                          //   controller : _searchUnidadTemporalController,
+                          //   onSubmit: _handleSearchSubmitted,
+                          //   onSelected: _handleSelectedPressed,
+                          //   clearFormFields: _clearFormFields,
+                          //   loadingBuilder: (state) => const AppLinearIndicator(),
+                          //   errorBuilder: (state) {
+
+                          //   },
+                          //   successBuilder: (state) {
+
+                          //   },
+                          // ),
+
+                          // // BUSCAR UNIDAD A INSPECCIONAR:
+                          // _SearchInputUnidadTemporal(
+                          //   controller      : _searchUnidadInventarioController,
+                          //   onSubmit        : _handleSearchSubmitted,
+                          //   clearFormFields : _clearFormFields,
+                          // ),
+                          // // LISTA DE RESULTADOS DEL PREDICTIVO:
                           // BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
                           //   builder: (BuildContext context, RemoteUnidadState state) {
-                          //     // LOADING:
-                          //     if (state is RemoteUnidadListLoading) {
-                          //       return const Center(child: AppLoadingIndicator(width: 20, height: 20));
+                          //     // LOADING
+                          //     if (state is RemoteUnidadPredictiveLoading) {
+                          //       return const AppLinearIndicator();
                           //     }
 
-                          //     // ERROR:
-                          //     if (state is RemoteUnidadServerFailedMessageList) {
-                          //       return ErrorBoxContainer(
-                          //         errorMessage  : state.errorMessage ?? 'Se produjo un error al cargar el listado de unidades.',
-                          //         onPressed     : _getUnidadesList,
-                          //       );
+                          //     // ERROR
+                          //     if (state is RemoteUnidadServerFailedMessagePredictive) {
 
                           //     }
 
-                          //     if (state is RemoteUnidadServerFailureList) {
-                          //       return ErrorBoxContainer(
-                          //         errorMessage  : state.failure?.errorMessage ?? 'Se produjo un error al cargar el listado de unidades.',
-                          //         onPressed     : _getUnidadesList,
-                          //       );
+                          //     if (state is RemoteUnidadServerFailurePredictive) {
+
                           //     }
 
-                          //     // SUCCESS:
-                          //     if (state is RemoteUnidadListLoaded) {
-                          //       lstUnidades = state.objResponse ?? [];
-                          //       return Column(
-                          //         crossAxisAlignment: CrossAxisAlignment.start,
-                          //         children: <Widget>[
-                          //           _SearchInputUnidad(
-                          //             onSelected      : _handleSearchSubmitted,
-                          //             unidades        : lstUnidades,
-                          //             cleanTextFields : _clearFormFields,
-                          //           ),
-                          //         ],
-                          //       );
+                          //     // SUCCESS
+                          //     if (state is RemoteUnidadPredictiveLoaded) {
+                          //       lstRows = state.objResponse ?? [];
+                          //       return _ResultsPredictiveList(lstUnidades: lstRows);
                           //     }
                           //     return const SizedBox.shrink();
                           //   },
                           // ),
 
-                         // NUEVA UNIDAD TEMPORAL:
+                        // NUEVA UNIDAD TEMPORAL:
                         AnimatedSwitcher(
                           duration: $styles.times.medium,
                           transitionBuilder: (Widget child, Animation<double> animation) {

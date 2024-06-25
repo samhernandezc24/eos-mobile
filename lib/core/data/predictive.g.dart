@@ -9,7 +9,8 @@ part of 'predictive.dart';
 Predictive _$PredictiveFromJson(Map<String, dynamic> json) => Predictive(
       search: json['search'] as String?,
       searchFilters: (json['searchFilters'] as List<dynamic>?)
-          ?.map((e) => SearchFilter.fromJson(e as Map<String, dynamic>))
+          ?.map(
+              (e) => SearchFilterPredictive.fromJson(e as Map<String, dynamic>))
           .toList(),
       filters: json['filters'] as Map<String, dynamic>?,
       columns: json['columns'] as Map<String, dynamic>?,

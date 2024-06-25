@@ -56,6 +56,7 @@ export 'package:eos_mobile/styles/app_styles.dart';
 // COMMON ELEMENTS
 export 'package:eos_mobile/ui/common/app_scroll_behavior.dart';
 export 'package:eos_mobile/ui/common/controls/app_image.dart';
+export 'package:eos_mobile/ui/common/controls/app_linear_indicator.dart';
 export 'package:eos_mobile/ui/common/controls/app_loading_indicator.dart';
 export 'package:eos_mobile/ui/common/controls/buttons.dart';
 export 'package:eos_mobile/ui/common/controls/circle_buttons.dart';

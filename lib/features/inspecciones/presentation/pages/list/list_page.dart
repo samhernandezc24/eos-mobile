@@ -19,6 +19,7 @@ import 'package:eos_mobile/core/data/inspeccion/inspeccion.dart';
 import 'package:eos_mobile/core/data/inspeccion/requerimiento.dart';
 import 'package:eos_mobile/core/data/predictive.dart';
 import 'package:eos_mobile/core/data/search_filter.dart';
+import 'package:eos_mobile/core/data/search_filter_predictive.dart';
 import 'package:eos_mobile/core/data/sort.dart';
 
 import 'package:eos_mobile/core/enums/inspeccion_menu.dart';
@@ -45,6 +46,7 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/controls/date_text_form_field.dart';
 import 'package:eos_mobile/ui/common/controls/time_text_form_field.dart';
 import 'package:eos_mobile/ui/common/modals/full_screen_image_preview.dart';
+import 'package:eos_mobile/ui/common/predictive/predictive_search_input.dart';
 import 'package:eos_mobile/ui/common/shimmer_loading.dart';
 
 import 'package:intl/intl.dart';
@@ -62,7 +64,7 @@ part '../../widgets/inspeccion/checklist/fotos/_checklist_fotos_tile.dart';
 part '../../widgets/inspeccion/checklist/pregunta/_checklist_pregunta_tile.dart';
 
 part '../../widgets/inspeccion/create/_create_form.dart';
-part '../../widgets/inspeccion/create/predictive/_search_input.dart';
+part '../../widgets/inspeccion/create/predictive/_results_list.dart';
 part '../../widgets/inspeccion/create/_search_input.dart';
 
 part '../../widgets/inspeccion/filter/_filter_data.dart';
