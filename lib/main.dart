@@ -58,7 +58,7 @@ class MainApp extends StatelessWidget with GetItMixin {
         debugShowCheckedModeBanner  : false,
         theme                       : AppTheme.lightTheme($styles),
         darkTheme                   : AppTheme.darkTheme($styles),
-        themeMode                   : ThemeMode.light,
+        themeMode                   : ThemeMode.dark,
         routeInformationProvider    : appRouter.routeInformationProvider,
         routeInformationParser      : appRouter.routeInformationParser,
         routerDelegate              : appRouter.routerDelegate,

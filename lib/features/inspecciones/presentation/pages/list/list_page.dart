@@ -552,18 +552,24 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
 
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
                     ScaffoldMessenger.of(context)
-                    ..hideCurrentSnackBar()
-                    ..showSnackBar(
-                      SnackBar(
-                        content         : Text(state.objResponse?.message ?? 'Inspección cancelada', softWrap: true),
-                        backgroundColor : Colors.green,
-                        elevation       : 0,
-                        behavior        : SnackBarBehavior.fixed,
-                      ),
-                    );
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            state.objResponse?.message ?? 'Inspección cancelada',
+                            softWrap: true,
+                            style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer),
+                          ),
+                          backgroundColor: Colors.green,
+                          elevation: 0,
+                          behavior: SnackBarBehavior.fixed,
+                        ),
+                      );
 
-                    _buildDataSource(); // Actualizar listado
+                      _buildDataSource(); // Actualizar listado
+                    });
                   }
                 },
                 builder: (BuildContext context, RemoteInspeccionState state) {
