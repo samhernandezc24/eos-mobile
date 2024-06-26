@@ -77,6 +77,11 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_ca
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_fichero/remote/remote_inspeccion_fichero_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
+import 'package:eos_mobile/features/unidades/data/datasources/remote/unidad/unidad_eos_remote_api_service.dart';
+import 'package:eos_mobile/features/unidades/data/repositories/unidad_eos_repository_impl.dart';
+import 'package:eos_mobile/features/unidades/domain/repositories/unidad_eos_repository.dart';
+import 'package:eos_mobile/features/unidades/domain/usecases/unidad/predictive_eos_unidad_usecase.dart';
+import 'package:eos_mobile/features/unidades/presentation/bloc/unidad/remote/remote_unidad_eos_bloc.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
@@ -117,6 +122,7 @@ Future<void> initializeDependencies() async {
 
   // U
   sl.registerSingleton<UnidadRemoteApiService>(UnidadRemoteApiService(sl()));
+  sl.registerSingleton<UnidadEOSRemoteApiService>(UnidadEOSRemoteApiService(sl()));
 
   /// ==================== REPOSITORIOS ==================== ///
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
@@ -128,6 +134,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<InspeccionFicheroRepository>(InspeccionFicheroRepositoryImpl(sl()));
   sl.registerSingleton<InspeccionTipoRepository>(InspeccionTipoRepositoryImpl(sl()));
   sl.registerSingleton<UnidadRepository>(UnidadRepositoryImpl(sl()));
+  sl.registerSingleton<UnidadEOSRepository>(UnidadEOSRepositoryImpl(sl()));
 
   /// ==================== CASOS DE USO ==================== ///
   // C
@@ -165,6 +172,7 @@ Future<void> initializeDependencies() async {
 
   // P
   sl.registerSingleton<PredictiveUnidadUseCase>(PredictiveUnidadUseCase(sl()));
+  sl.registerSingleton<PredictiveEOSUnidadUseCase>(PredictiveEOSUnidadUseCase(sl()));
 
   // S
   sl.registerSingleton<SignInUseCase>(SignInUseCase(sl()));
@@ -200,4 +208,5 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<RemoteInspeccionFicheroBloc>(() => RemoteInspeccionFicheroBloc(sl(), sl(), sl()));
   sl.registerFactory<RemoteInspeccionTipoBloc>(() => RemoteInspeccionTipoBloc(sl(), sl(), sl(), sl()));
   sl.registerFactory<RemoteUnidadBloc>(() => RemoteUnidadBloc(sl(), sl(), sl(), sl(), sl(), sl()));
+  sl.registerFactory<RemoteUnidadEOSBloc>(() => RemoteUnidadEOSBloc(sl()));
 }

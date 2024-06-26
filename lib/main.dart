@@ -12,6 +12,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_ca
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_fichero/remote/remote_inspeccion_fichero_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
+import 'package:eos_mobile/features/unidades/presentation/bloc/unidad/remote/remote_unidad_eos_bloc.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -52,13 +53,14 @@ class MainApp extends StatelessWidget with GetItMixin {
         BlocProvider<RemoteInspeccionFicheroBloc>(create: (BuildContext context) => sl<RemoteInspeccionFicheroBloc>()),
         BlocProvider<RemoteInspeccionTipoBloc>(create: (BuildContext context) => sl<RemoteInspeccionTipoBloc>()..add(ListInspeccionesTipos())),
         BlocProvider<RemoteUnidadBloc>(create: (BuildContext context) => sl<RemoteUnidadBloc>()..add(ListUnidades())),
+        BlocProvider<RemoteUnidadEOSBloc>(create: (BuildContext context) => sl<RemoteUnidadEOSBloc>()),
       ],
       child: MaterialApp.router(
         title                       : $strings.defaultAppName,
         debugShowCheckedModeBanner  : false,
         theme                       : AppTheme.lightTheme($styles),
         darkTheme                   : AppTheme.darkTheme($styles),
-        themeMode                   : ThemeMode.dark,
+        themeMode                   : ThemeMode.light,
         routeInformationProvider    : appRouter.routeInformationProvider,
         routeInformationParser      : appRouter.routeInformationParser,
         routerDelegate              : appRouter.routerDelegate,

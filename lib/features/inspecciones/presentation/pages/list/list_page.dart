@@ -23,7 +23,6 @@ import 'package:eos_mobile/core/data/search_filter_predictive.dart';
 import 'package:eos_mobile/core/data/sort.dart';
 
 import 'package:eos_mobile/core/enums/inspeccion_menu.dart';
-import 'package:eos_mobile/core/enums/predictive_options_view_open_direction.dart';
 
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_finish_req_entity.dart';
@@ -42,14 +41,15 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/re
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_categoria/remote/remote_inspeccion_categoria_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_fichero/remote/remote_inspeccion_fichero_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/create/predictive/_predictive_options.dart';
+import 'package:eos_mobile/features/unidades/domain/entities/unidad/unidad_eos_predictive_list_entity.dart';
+import 'package:eos_mobile/features/unidades/presentation/bloc/unidad/remote/remote_unidad_eos_bloc.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/controls/date_text_form_field.dart';
 import 'package:eos_mobile/ui/common/controls/time_text_form_field.dart';
 import 'package:eos_mobile/ui/common/modals/full_screen_image_preview.dart';
 import 'package:eos_mobile/ui/common/shimmer_loading.dart';
-
-import 'package:flutter/scheduler.dart';
 
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
@@ -66,9 +66,7 @@ part '../../widgets/inspeccion/checklist/fotos/_checklist_fotos_tile.dart';
 part '../../widgets/inspeccion/checklist/pregunta/_checklist_pregunta_tile.dart';
 
 part '../../widgets/inspeccion/create/_create_form.dart';
-part '../../widgets/inspeccion/create/predictive/_results_list.dart';
 part '../../widgets/inspeccion/create/predictive/_search_input.dart';
-part '../../widgets/inspeccion/create/_search_input.dart';
 
 part '../../widgets/inspeccion/filter/_filter_data.dart';
 
@@ -292,7 +290,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
 
           return SlideTransition(
             position  : animation.drive<Offset>(tween),
-            child     : _CreateInspeccionForm(buildDataSourceCallback: _buildDataSource),
+            child     : _CreateInspeccionForm(onFinish: _buildDataSource),
           );
         },
         fullscreenDialog: true,

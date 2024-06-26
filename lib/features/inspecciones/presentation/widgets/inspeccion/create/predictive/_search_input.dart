@@ -1,14 +1,16 @@
 part of '../../../../pages/list/list_page.dart';
 
-class _SearchUnidadTemporalInput extends StatelessWidget {
-  const _SearchUnidadTemporalInput({
+class _SearchUnidadInput extends StatelessWidget {
+  const _SearchUnidadInput({
     required this.controller,
     required this.onSubmit,
+    required this.onClearField,
     Key? key,
   }) : super(key: key);
 
   final TextEditingController controller;
   final void Function(String) onSubmit;
+  final VoidCallback onClearField;
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +63,7 @@ class _SearchUnidadTemporalInput extends StatelessWidget {
                   onPressed       : () {
                     controller.clear();   // Limpia el campo de búsqueda
                     onSubmit('');         // Limpia la consulta
+                    onClearField();       // Limpia los elementos de control
                   },
                 ),
               ),

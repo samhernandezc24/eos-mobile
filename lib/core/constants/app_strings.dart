@@ -80,6 +80,10 @@ class AppStrings {
 
   String logoutButtonText             = 'Salir';
 
+  // E
+  String exitConfirmationDialogTitle    = '¿Estás seguro que deseas salir?';
+  String exitConfirmationDialogMessage  = 'Podrías perder la información que no se ha guardado. ¿Estás seguro de querer realizar esa acción?';
+
   String editButtonText               = 'Editar';
 
   String emptyListMessage             = 'Intenta actualizar el listado para sincronizar los últimos cambios del servidor.';
@@ -166,6 +170,7 @@ class AppStrings {
   String searchInputHintText          = 'Buscar...';
   String searchInputSemanticClear     = 'Limpiar Búsqueda';
   String searchInputSuggestionsTitle  = 'Sugerencias';
+  String searchInputResultsTitle      = 'Resultados';
 
   // U
   String unidadCreateAppBarTitle      = 'Nueva unidad';

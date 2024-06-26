@@ -34,7 +34,7 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
     on<PredictiveUnidades>(onPredictiveUnidades);
   }
 
-  // Casos de uso
+  // CASOS DE USO
   final IndexUnidadUseCase _indexUnidadUseCase;
   final DataSourceUnidadUseCase _dataSourceUnidadUseCase;
   final CreateUnidadUseCase _createUnidadUseCase;
@@ -109,7 +109,7 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
       emit(RemoteUnidadServerFailedMessageStore(objDataState.errorMessage));
     }
 
-    if (objDataState is RemoteUnidadServerFailureStore) {
+    if (objDataState is DataFailed) {
       emit(RemoteUnidadServerFailureStore(objDataState.serverException));
     }
   }
@@ -145,7 +145,7 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
       emit(RemoteUnidadServerFailedMessagePredictive(objDataState.errorMessage));
     }
 
-    if (objDataState is RemoteUnidadServerFailureStore) {
+    if (objDataState is DataFailed) {
       emit(RemoteUnidadServerFailurePredictive(objDataState.serverException));
     }
   }

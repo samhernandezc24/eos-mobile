@@ -21,7 +21,7 @@ export 'package:eos_mobile/core/constants/globals.dart';
 
 // CORE: ENUMS
 export 'package:eos_mobile/core/enums/app_icons.dart';
-export 'package:eos_mobile/core/enums/unidad_inspeccion.dart';
+export 'package:eos_mobile/core/enums/inspeccion_unidad_select_option.dart';
 export 'package:eos_mobile/core/enums/universal_platform_type.dart';
 
 // CORE: EXTENSIONS
