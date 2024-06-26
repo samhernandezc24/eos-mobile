@@ -11,7 +11,8 @@ class _CreateInspeccionForm extends StatefulWidget {
 
 class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
   // GLOBAL KEY
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey   = GlobalKey<FormState>();
+  final LayerLink _optionsLayerLink     = LayerLink();
 
   // CONTROLLERS
   late final TextEditingController _searchUnidadInventarioController;
@@ -36,6 +37,8 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
 
   // PROPERTIES
   String? idUnidad = '';
+  bool _userHideOptions                 = false;
+  bool _floatingOptionsUpdateScheduled  = false;
 
   // LIST
   List<InspeccionTipoEntity> lstInspeccionesTipos             = [];
@@ -47,6 +50,15 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
   UnidadInspeccion? _selectedSearchUnidad;
   UnidadPredictiveListEntity? _selectedUnidad;
   InspeccionTipoEntity? _selectedInspeccionTipo;
+
+  // El OverlayEntry que contiene las opciones.
+  OverlayEntry? _floatingOptions;
+
+  // True si el estado indica que las opciones deben ser visibles.
+  bool get _shouldShowOptions {
+    return !_userHideOptions && lstRows.isNotEmpty;
+    // return !_userHideOptions && _focusNode.hasFocus && _selection == null && _options.isNotEmpty;
+  }
 
   // STATE
   @override
@@ -142,13 +154,6 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
       ),
     );
   }
-
-  // void _handleSearchSubmitted(UnidadEntity? value) {
-  //   setState(() {
-  //     _selectedUnidad = value;
-  //     _fillFormFields(value);
-  //   });
-  // }
 
   void _handleSearchSubmitted(String query) {
     lstRows = [];
@@ -248,6 +253,67 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
     } else {
       _formKey.currentState!.save();
       _store();
+    }
+  }
+
+  void _updateOverlay() {
+    if (SchedulerBinding.instance.schedulerPhase == SchedulerPhase.persistentCallbacks) {
+      if (!_floatingOptionsUpdateScheduled) {
+        _floatingOptionsUpdateScheduled = true;
+        SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
+            _floatingOptionsUpdateScheduled = false;
+            _updateOverlay();
+        });
+      }
+      return;
+    }
+
+    _floatingOptions?.remove();
+    _floatingOptions?.dispose();
+    if (_shouldShowOptions) {
+      final OverlayEntry newFloatingOptions = OverlayEntry(
+        builder: (BuildContext context) {
+          return CompositedTransformFollower(
+            link: _optionsLayerLink,
+            showWhenUnlinked: false,
+            // targetAnchor: switch (PredictiveOptionsViewOpenDirection) {
+            //   PredictiveOptionsViewOpenDirection.up     => Alignment.topLeft,
+            //   PredictiveOptionsViewOpenDirection.down   => Alignment.bottomLeft,
+            // },
+            // followerAnchor: switch (PredictiveOptionsViewOpenDirection) {
+            //   PredictiveOptionsViewOpenDirection.up     => Alignment.bottomLeft,
+            //   PredictiveOptionsViewOpenDirection.down   => Alignment.topLeft,
+            // },
+            child: Builder(
+              builder: (BuildContext context) {
+                return Material(
+                  elevation: 3,
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    itemCount: lstRows.length,
+                    itemBuilder: (context, index) {
+                      final unidad = lstRows[index];
+                      return ListTile(
+                        title: Text(unidad.numeroEconomico),
+                        onTap: () {
+                          // Handle item tap
+                          _searchUnidadTemporalController.text = unidad.numeroEconomico;
+                          // _hideOverlay();
+                        },
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      );
+      Overlay.of(context, rootOverlay: true, debugRequiredFor: widget).insert(newFloatingOptions);
+      _floatingOptions = newFloatingOptions;
+    } else {
+      _floatingOptions = null;
     }
   }
 
@@ -404,78 +470,41 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
 
                         Gap($styles.insets.xs),
 
-                        if (_selectedSearchUnidad == UnidadInspeccion.temporal)
-                          // PREDICTIVO DE UNIDADES
-                          PredictiveSearchInput(
-                            // controller: _searchUnidadTemporalController,
-                            // onSubmit: _handleSearchSubmitted,
+                        if (_selectedSearchUnidad == UnidadInspeccion.inventario)...[
+                          // BUSCADOR DE UNIDADES INVENTARIO (PREDICTIVO):
+                          _SearchUnidadTemporalInput(
+                            controller  : _searchUnidadInventarioController,
+                            onSubmit    : _handleSearchSubmitted,
                           ),
-                          // PredictiveSearchInput<RemoteUnidadBloc, RemoteUnidadEvent, RemoteUnidadState, UnidadPredictiveListEntity>(
-                          //   controller  : _searchUnidadTemporalController,
-                          //   onSubmit    : _handleSearchSubmitted,
-                          //   onSelected  : _handleSelectedPressed,
-                          //   builder     : (BuildContext context, RemoteUnidadState state) {
-                          //     // LOADING
-                          //     if (state is RemoteUnidadPredictiveLoading) {
-                          //       return const AppLinearIndicator();
-                          //     }
+                        ] else ...[
+                          // BUSCADOR DE UNIDADES TEMPORALES (PREDICTIVO):
+                          _SearchUnidadTemporalInput(
+                            controller  : _searchUnidadTemporalController,
+                            onSubmit    : _handleSearchSubmitted,
+                          ),
 
-                          //     // ERROR
+                          BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
+                            builder: (BuildContext context, RemoteUnidadState state) {
+                              if (state is RemoteUnidadPredictiveLoading) {
+                                return const AppLinearIndicator();
+                              }
 
-                          //     // SUCCESS
-                          //     if (state is RemoteUnidadPredictiveLoaded) {
-                          //       lstRows = state.objResponse ?? [];
-                          //       print(lstRows);
-                          //     }
+                              if (state is RemoteUnidadPredictiveLoaded) {
+                                lstRows = state.objResponse ?? [];
 
-                          //     return const SizedBox.shrink();
-                          //   },
-                          // ),
-                          // PredictiveSearchInput<RemoteUnidadBloc, RemoteUnidadState>(
-                          //   controller : _searchUnidadTemporalController,
-                          //   onSubmit: _handleSearchSubmitted,
-                          //   onSelected: _handleSelectedPressed,
-                          //   clearFormFields: _clearFormFields,
-                          //   loadingBuilder: (state) => const AppLinearIndicator(),
-                          //   errorBuilder: (state) {
-
-                          //   },
-                          //   successBuilder: (state) {
-
-                          //   },
-                          // ),
-
-                          // // BUSCAR UNIDAD A INSPECCIONAR:
-                          // _SearchInputUnidadTemporal(
-                          //   controller      : _searchUnidadInventarioController,
-                          //   onSubmit        : _handleSearchSubmitted,
-                          //   clearFormFields : _clearFormFields,
-                          // ),
-                          // // LISTA DE RESULTADOS DEL PREDICTIVO:
-                          // BlocBuilder<RemoteUnidadBloc, RemoteUnidadState>(
-                          //   builder: (BuildContext context, RemoteUnidadState state) {
-                          //     // LOADING
-                          //     if (state is RemoteUnidadPredictiveLoading) {
-                          //       return const AppLinearIndicator();
-                          //     }
-
-                          //     // ERROR
-                          //     if (state is RemoteUnidadServerFailedMessagePredictive) {
-
-                          //     }
-
-                          //     if (state is RemoteUnidadServerFailurePredictive) {
-
-                          //     }
-
-                          //     // SUCCESS
-                          //     if (state is RemoteUnidadPredictiveLoaded) {
-                          //       lstRows = state.objResponse ?? [];
-                          //       return _ResultsPredictiveList(lstUnidades: lstRows);
-                          //     }
-                          //     return const SizedBox.shrink();
-                          //   },
-                          // ),
+                                if (lstRows.isNotEmpty) {
+                                  return _ResultsPredictiveOptions(
+                                    options: lstRows,
+                                    onSelected: _handleSelectedPressed,
+                                  );
+                                } else {
+                                  return const SizedBox.shrink();
+                                }
+                              }
+                              return const SizedBox.shrink();
+                            },
+                          ),
+                        ],
 
                         // NUEVA UNIDAD TEMPORAL:
                         AnimatedSwitcher(
@@ -500,7 +529,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                               : const SizedBox.shrink(),
                         ),
 
-                        Gap($styles.insets.xs),
+                        Gap($styles.insets.sm),
 
                         // FECHA PROGRAMADA:
                         LabeledDateTimeTextFormField(

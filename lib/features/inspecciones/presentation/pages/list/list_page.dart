@@ -23,6 +23,7 @@ import 'package:eos_mobile/core/data/search_filter_predictive.dart';
 import 'package:eos_mobile/core/data/sort.dart';
 
 import 'package:eos_mobile/core/enums/inspeccion_menu.dart';
+import 'package:eos_mobile/core/enums/predictive_options_view_open_direction.dart';
 
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_finish_req_entity.dart';
@@ -46,8 +47,9 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/controls/date_text_form_field.dart';
 import 'package:eos_mobile/ui/common/controls/time_text_form_field.dart';
 import 'package:eos_mobile/ui/common/modals/full_screen_image_preview.dart';
-import 'package:eos_mobile/ui/common/predictive/predictive_search_input.dart';
 import 'package:eos_mobile/ui/common/shimmer_loading.dart';
+
+import 'package:flutter/scheduler.dart';
 
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
@@ -65,6 +67,7 @@ part '../../widgets/inspeccion/checklist/pregunta/_checklist_pregunta_tile.dart'
 
 part '../../widgets/inspeccion/create/_create_form.dart';
 part '../../widgets/inspeccion/create/predictive/_results_list.dart';
+part '../../widgets/inspeccion/create/predictive/_search_input.dart';
 part '../../widgets/inspeccion/create/_search_input.dart';
 
 part '../../widgets/inspeccion/filter/_filter_data.dart';
