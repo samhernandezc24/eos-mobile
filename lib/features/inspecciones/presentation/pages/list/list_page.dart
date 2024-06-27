@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/core/data/catalogos/base.dart';
@@ -51,6 +52,7 @@ import 'package:eos_mobile/ui/common/predictive/predictive_search_field.dart';
 import 'package:eos_mobile/ui/common/shimmer_loading.dart';
 
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';

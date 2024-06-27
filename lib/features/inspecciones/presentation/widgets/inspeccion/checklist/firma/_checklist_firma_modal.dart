@@ -1,7 +1,10 @@
 part of '../../../../pages/list/list_page.dart';
 
 class _ChecklistFirmaModal extends StatefulWidget {
-  const _ChecklistFirmaModal({Key? key}) : super(key: key);
+  const _ChecklistFirmaModal({required this.onFirmaSaved, required this.role, Key? key}) : super(key: key);
+
+  final void Function(File) onFirmaSaved;
+  final String role;
 
   @override
   State<_ChecklistFirmaModal> createState() => __ChecklistFirmaModalState();
@@ -13,7 +16,17 @@ class __ChecklistFirmaModalState extends State<_ChecklistFirmaModal> {
 
   // EVENTS
   Future<void> _handleStorePressed() async {
+    final image = await _signaturePadKey.currentState!.toImage(pixelRatio: 3);
+    final byteData = await image.toByteData(format: ImageByteFormat.png);
+    final bytes = byteData!.buffer.asUint8List();
 
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/firma_${widget.role}.png');
+
+    await file.writeAsBytes(bytes);
+
+    widget.onFirmaSaved(file);
+    Navigator.pop(context);
   }
 
   void _handleClearPressed() {

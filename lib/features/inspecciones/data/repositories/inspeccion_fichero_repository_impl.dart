@@ -62,7 +62,7 @@ class InspeccionFicheroRepositoryImpl implements InspeccionFicheroRepository {
 
   /// GUARDADO DE FICHERO (FOTOGRAFÍA) DE UNA INSPECCION
   @override
-  Future<DataState<ServerResponse>> store(InspeccionFicheroStoreReqEntity objData, void Function(int sent, int total) onProgress) async {
+  Future<DataState<ServerResponse>> store(InspeccionFicheroStoreReqEntity objData) async {
     try {
       // Obtener el token localmente.
       final String? token = await authTokenHelper.retrieveRefreshToken();
@@ -72,9 +72,6 @@ class InspeccionFicheroRepositoryImpl implements InspeccionFicheroRepository {
         'application/json',
         'Bearer $token',
         InspeccionFicheroStoreReqModel.fromEntity(objData),
-        onSendProgress: (int sent, int total) {
-          onProgress(sent, total);
-        },
       );
 
       if (httpResponse.response.statusCode == HttpStatus.ok) {

@@ -14,8 +14,10 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
   // CONTROLLERS
   late final TextEditingController _fechaInspeccionFinalController;
   late final TextEditingController _observacionesController;
-  late final TextEditingController _nombreOperadorController;
-  late final TextEditingController _nombreVerificadorController;
+
+  // PROPERTIES
+  late bool _hasOperadorFirma;
+  late bool _hasVerificadorFirma;
 
   // STATE
   @override
@@ -23,21 +25,22 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
     super.initState();
     _fechaInspeccionFinalController = TextEditingController();
     _observacionesController        = TextEditingController();
-    _nombreOperadorController       = TextEditingController();
-    _nombreVerificadorController    = TextEditingController();
+
+    _hasOperadorFirma = false;
+    _hasVerificadorFirma = false;
+
+    _checkSignatureExist();
   }
 
   @override
   void dispose() {
     _fechaInspeccionFinalController.dispose();
     _observacionesController.dispose();
-    _nombreOperadorController.dispose();
-    _nombreVerificadorController.dispose();
     super.dispose();
   }
 
   // EVENTS
-  void _handleDrawSignaturePressed(BuildContext context) {
+  void _handleCreatePressed(BuildContext context, String role) {
     Navigator.push<void>(
       context,
       PageRouteBuilder<void>(
@@ -51,7 +54,12 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
 
           return SlideTransition(
             position  : animation.drive<Offset>(tween),
-            child     : const _ChecklistFirmaModal(),
+            child     : _ChecklistFirmaModal(
+              onFirmaSaved: (File firmaFile) {
+                _saveSignature(role, firmaFile);
+              },
+              role: role,
+            ),
           );
         },
         fullscreenDialog: true,
@@ -122,6 +130,32 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
     );
   }
 
+  void _saveSignature(String type, File firmaFile) {
+    setState(() {
+      if (type == 'operador') {
+        _hasOperadorFirma = true;
+      } else if (type == 'verificador') {
+        _hasVerificadorFirma = true;
+      }
+    });
+  }
+
+  Future<void> _handleClearFirma(String role) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/firma_$role.png');
+    // ignore: avoid_slow_async_io
+    if (await file.exists()) {
+      await file.delete();
+      setState(() {
+        if (role == 'operador') {
+          _hasOperadorFirma = false;
+        } else if (role == 'verificador') {
+          _hasVerificadorFirma = false;
+        }
+      });
+    }
+  }
+
   Future<void> _showServerFailedDialog(BuildContext context, String? errorMessage) async {
     return showDialog<void>(
       context : context,
@@ -133,17 +167,42 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
 
   // METHODS
   Future<void> _store() async {
+    final File verificadorFile  = await _getFirmaFile('verificador');
+    final File operadorFile     = await _getFirmaFile('operador');
+
+    final String verificadorFileBase64    = await Globals.fileToBase64(verificadorFile);
+    final String verificadorFileExtension = Globals.extensionFile(verificadorFile.path);
+
+    final String operadorFileBase64       = await Globals.fileToBase64(operadorFile);
+    final String operadorFileExtension    = Globals.extensionFile(operadorFile.path);
+
     final InspeccionFinishReqEntity objPost = InspeccionFinishReqEntity(
       idInspeccion              : widget.objInspeccion.idInspeccion,
       fechaInspeccionFinal      : DateFormat('dd/MM/yyyy HH:mm').parse(_fechaInspeccionFinalController.text),
-      firmaVerificador          : '',
-      firmaOperador             : '',
-      fileExtensionVerificador  : 'png',
-      fileExtensionOperador     : 'png',
+      firmaVerificador          : verificadorFileBase64,
+      firmaOperador             : operadorFileBase64,
+      fileExtensionVerificador  : verificadorFileExtension,
+      fileExtensionOperador     : operadorFileExtension,
       observaciones             : _observacionesController.text,
     );
 
     BlocProvider.of<RemoteInspeccionBloc>(context).add(FinishInspeccion(objPost));
+  }
+
+  Future<void> _checkSignatureExist() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final operadorFile = File('${dir.path}/firma_operador.png');
+    final verificadorFile = File('${dir.path}/firma_verificador.png');
+
+    setState(() {
+      _hasOperadorFirma = operadorFile.existsSync();
+      _hasVerificadorFirma = verificadorFile.existsSync();
+    });
+  }
+
+  Future<File> _getFirmaFile(String role) async {
+    final dir = await getApplicationDocumentsDirectory();
+    return File('${dir.path}/firma_$role.png');
   }
 
   @override
@@ -176,48 +235,50 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
               Gap($styles.insets.sm),
 
               // FIRMAS:
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text('Firma del operador *:', style: $styles.textStyles.label),
-                  Gap($styles.insets.sm),
-                  Container(
-                    padding : EdgeInsets.all($styles.insets.sm),
-                    color   : Theme.of(context).colorScheme.background,
-                    child   : Center(
-                      child: FilledButton(
-                        onPressed : () => _handleDrawSignaturePressed(context),
-                        child     : Text($strings.checklistFinishSignatureButtonText, style: $styles.textStyles.button),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
+              _buildFirmaFieldArea(context, 'operador', '* Firma del operador:'),
               Gap($styles.insets.sm),
-
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text('Firma del verificador *:', style: $styles.textStyles.label),
-                  Gap($styles.insets.sm),
-                  Container(
-                    padding : EdgeInsets.all($styles.insets.sm),
-                    color   : Theme.of(context).colorScheme.background,
-                    child   : Center(
-                      child: FilledButton(
-                        onPressed : () => _handleDrawSignaturePressed(context),
-                        child     : Text($strings.checklistFinishSignatureButtonText, style: $styles.textStyles.button),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              _buildFirmaFieldArea(context, 'verificador', '* Firma del verificador:'),
             ],
           ),
         ),
       ),
       bottomNavigationBar: _buildBottomAppBar(),
+    );
+  }
+
+  Widget _buildFirmaFieldArea(BuildContext context, String role, String label) {
+    final bool hasFirma = role == 'operador' ? _hasOperadorFirma : _hasVerificadorFirma;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(label, style: $styles.textStyles.label),
+        Gap($styles.insets.sm),
+        Container(
+          padding : EdgeInsets.all($styles.insets.sm),
+          color   : Theme.of(context).colorScheme.background,
+          child   : Center(
+            child: hasFirma
+                ? GestureDetector(
+                    onTap: () => _handleClearFirma(role),
+                    child: FutureBuilder<File>(
+                      future: _getFirmaFile(role),
+                      builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                          return Image.file(snapshot.data!);
+                        } else {
+                          return const AppLoadingIndicator();
+                        }
+                      },
+                    ),
+                  )
+                : FilledButton(
+                    onPressed: () => _handleCreatePressed(context, role),
+                    child: Text($strings.checklistFinishSignatureButtonText, style: $styles.textStyles.button),
+                  ),
+          ),
+        ),
+      ],
     );
   }
 

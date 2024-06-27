@@ -4,11 +4,11 @@ class _CreateInspeccionFicheroForm extends StatefulWidget {
   const _CreateInspeccionFicheroForm({
     required this.objInspeccion,
     Key? key,
-    this.buildFicheroDataCallback,
+    this.onFinish,
   }) : super(key: key);
 
   final InspeccionDataSourceEntity objInspeccion;
-  final VoidCallback? buildFicheroDataCallback;
+  final VoidCallback? onFinish;
 
   @override
   State<_CreateInspeccionFicheroForm> createState() => _CreateInspeccionFicheroFormState();
@@ -29,29 +29,31 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
   bool _isSave            = false;
 
   // EVENTS
-  void _showDidPopDialog(BuildContext context) {
+  void _handleDidPopPressed(BuildContext context) {
     showDialog<void>(
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: const SizedBox.shrink(),
-        content: Text('¿Estás seguro que deseas salir?', style: $styles.textStyles.bodySmall.copyWith(fontSize: 16)),
-        actions: <Widget>[
-          TextButton(
-            onPressed : () => Navigator.pop(context, $strings.cancelButtonText),
-            child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();            // Cerrar dialog
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.of(context).pop();          // Cerrar página
-                widget.buildFicheroDataCallback!();   // Ejecutar callback
-              });
-            },
-            child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
-          ),
-        ],
-      ),
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text($strings.exitConfirmationDialogTitle, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600)),
+          content: Text($strings.exitConfirmationDialogMessage, style: $styles.textStyles.body.copyWith(height: 1.3)),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, $strings.cancelButtonText),
+              child: Text($strings.cancelButtonText, style: $styles.textStyles.button),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();    // Cerrar dialog
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.of(context).pop();  // Cerrar ventana
+                  widget.onFinish!();           // Ejecutar callback de actualización
+                });
+              },
+              child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -190,8 +192,15 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
       );
 
       BlocProvider.of<RemoteInspeccionFicheroBloc>(context).add(StoreInspeccionFichero(objPost));
+
+      _lstQueueUpload.removeAt(_indexUpload);
+      _files.removeAt(_indexUpload);
+      _countQueueUpload++;
+      await _store();
     } else {
-      if (_lstQueueUpload.isEmpty) {
+      final int countUploadComplete = _lstQueueUpload.length;
+
+      if (countUploadComplete == 0) {
         Navigator.of(context).pop();
 
         ScaffoldMessenger.of(context)
@@ -207,7 +216,7 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
 
         // Ejecutar callback.
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          widget.buildFicheroDataCallback!();
+          widget.onFinish!();
         });
       } else {
         ScaffoldMessenger.of(context)
@@ -257,7 +266,7 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (bool didPop) { if (!didPop) { _showDidPopDialog(context); } },
+      onPopInvoked: (bool didPop) => !didPop ? _handleDidPopPressed(context) : null,
       child: Scaffold(
         appBar: AppBar(title: Text($strings.checklistPhotoAddAppBarTitle, style: $styles.textStyles.h3)),
         body: Stack(

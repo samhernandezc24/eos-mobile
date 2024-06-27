@@ -200,7 +200,7 @@ class _ResultTileInspeccion extends StatelessWidget {
           return colorScheme.onPrimaryContainer;
         // EVALUACIÓN
         case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb32':
-          return colorScheme.onPrimaryContainer;
+          return colorScheme.onPrimary;
         // POR FINALIZAR
         case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33':
           return colorScheme.onPrimary;

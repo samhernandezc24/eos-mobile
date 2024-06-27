@@ -10,6 +10,6 @@ class StoreInspeccionFicheroUseCase implements UseCase<DataState<ServerResponse>
 
   @override
   Future<DataState<ServerResponse>> call({required InspeccionFicheroStoreReqEntity params}) {
-    return _inspeccionFicheroRepository.store(params, (sent, total) { });
+    return _inspeccionFicheroRepository.store(params);
   }
 }
