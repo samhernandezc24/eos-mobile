@@ -1,43 +1,38 @@
 part of '../../../../pages/list/list_page.dart';
 
-class _SearchUnidadInput extends StatelessWidget {
-  const _SearchUnidadInput({
+class _SearchUnidad extends StatelessWidget {
+  const _SearchUnidad({
     required this.lstRows,
     required this.onSubmit,
     required this.onSelected,
     required this.onClearField,
-    required this.boolError,
     Key? key,
     this.boolSearch,
-    this.errorMessage,
   }) : super(key: key);
 
-  final Iterable<UnidadPredictiveListEntity> lstRows;
+  final List<UnidadPredictiveListEntity> lstRows;
   final void Function(UnidadPredictiveListEntity) onSelected;
   final void Function(String) onSubmit;
   final VoidCallback onClearField;
   final bool? boolSearch;
-  final bool boolError;
-  final String? errorMessage;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (ctx, constraints) => Center(
         child: PredictiveSearchField<UnidadPredictiveListEntity>(
-          displayStringForOption  : (data) => data.numeroEconomico,
-          onSelected              : onSelected,
-          optionsViewBuilder      : (context, onSelected, results) =>
+          options: lstRows,
+          displayStringForOption: (data) => data.numeroEconomico,
+          onSelected: onSelected,
+          optionsViewBuilder: (context, onSelected, results) =>
               _buildSuggestionsView(context, onSelected, lstRows, constraints),
-          fieldViewBuilder        : _buildInput,
-          lstRows                 : lstRows,
-          boolError               : boolError,
+          fieldViewBuilder: _buildInput,
         ),
       ),
     );
   }
 
-  Widget _buildSuggestionsView(BuildContext context, void Function(UnidadPredictiveListEntity) onSelected, Iterable<UnidadPredictiveListEntity> results, BoxConstraints constraints) {
+  Widget _buildSuggestionsView(BuildContext context, void Function(UnidadPredictiveListEntity) onSelected, List<UnidadPredictiveListEntity> results, BoxConstraints constraints) {
     final List<Widget> items = results.map((item) => _buildSuggestion(context, item, () => onSelected(item))).toList();
     items.insert(0, _buildSuggestionTitle(context));
     return Stack(

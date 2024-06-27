@@ -447,7 +447,11 @@ class __ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEva
       shape       : RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
       margin      : EdgeInsets.only(bottom: $styles.insets.sm),
       child       : ExpansionTile(
-        leading           : Icon(Icons.check_circle, color: Theme.of(context).indicatorColor),
+        leading       :  Container(
+          padding     : EdgeInsets.symmetric(vertical: $styles.insets.xxs, horizontal: $styles.insets.xs),
+          decoration  : BoxDecoration(color: Colors.green, borderRadius  : BorderRadius.circular($styles.corners.md)),
+          child       : Icon(Icons.check_circle, color: Colors.green[100]),
+        ),
         title             : Text('DATOS GENERALES', style: $styles.textStyles.h4),
         children          : <Widget>[
           Container(

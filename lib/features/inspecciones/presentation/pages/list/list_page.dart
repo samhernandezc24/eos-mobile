@@ -32,7 +32,6 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_cate
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_fichero/inspeccion_fichero_id_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_fichero/inspeccion_fichero_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
-import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_predictive_list_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/data_source_persistence/remote_data_source_persistence_bloc.dart';
@@ -48,7 +47,7 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/controls/date_text_form_field.dart';
 import 'package:eos_mobile/ui/common/controls/time_text_form_field.dart';
 import 'package:eos_mobile/ui/common/modals/full_screen_image_preview.dart';
-import 'package:eos_mobile/ui/common/predictive/predictive_search_input.dart';
+import 'package:eos_mobile/ui/common/predictive/predictive_search_field.dart';
 import 'package:eos_mobile/ui/common/shimmer_loading.dart';
 
 import 'package:intl/intl.dart';
@@ -66,7 +65,8 @@ part '../../widgets/inspeccion/checklist/fotos/_checklist_fotos_tile.dart';
 part '../../widgets/inspeccion/checklist/pregunta/_checklist_pregunta_tile.dart';
 
 part '../../widgets/inspeccion/create/_create_form.dart';
-part '../../widgets/inspeccion/create/predictive/_search_input.dart';
+part '../../widgets/inspeccion/create/predictive/_search_unidad.dart';
+part '../../widgets/inspeccion/create/predictive/_search_unidad_eos.dart';
 
 part '../../widgets/inspeccion/filter/_filter_data.dart';
 

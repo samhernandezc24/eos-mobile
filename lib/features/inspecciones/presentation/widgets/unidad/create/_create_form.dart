@@ -1,9 +1,7 @@
 part of '../../../pages/list/list_page.dart';
 
 class _CreateUnidadForm extends StatefulWidget {
-  const _CreateUnidadForm({Key? key, this.buildSearchUnidadCallback}) : super(key: key);
-
-  final VoidCallback? buildSearchUnidadCallback;
+  const _CreateUnidadForm({Key? key}) : super(key: key);
 
   @override
   State<_CreateUnidadForm> createState() => _CreateUnidadFormState();
@@ -76,27 +74,26 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
   // EVENTS
   void _handleDidPopPressed(BuildContext context) {
     showDialog<void>(
-      context : context,
-      builder : (BuildContext context) => AlertDialog(
-        title   : const SizedBox.shrink(),
-        content : Text('¿Estás seguro que deseas salir?', style: $styles.textStyles.bodySmall.copyWith(fontSize: 16)),
-        actions : <Widget>[
-          TextButton(
-            onPressed : () => Navigator.pop(context, $strings.cancelButtonText),
-            child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();            // Cerrar dialog
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.of(context).pop();          // Cerrar página
-                widget.buildSearchUnidadCallback!();  // Ejecutar callback
-              });
-            },
-            child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
-          ),
-        ],
-      ),
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text($strings.exitConfirmationDialogTitle, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600)),
+          content: Text($strings.exitConfirmationDialogMessage, style: $styles.textStyles.body.copyWith(height: 1.3)),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, $strings.cancelButtonText),
+              child: Text($strings.cancelButtonText, style: $styles.textStyles.button),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();  // Cerrar dialog
+                Navigator.of(context).pop();  // Cerrar página
+              },
+              child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -219,7 +216,6 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
                       children: <Widget>[
                         // UNIDAD NUMERO ECONOMICO:
                         LabeledTextFormField(
-                          autoFocus   : true,
                           controller  : _unidadNumeroEconomicoController,
                           hintText    : 'Ingrese número económico',
                           label       : '* Número económico:',
@@ -433,7 +429,7 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
                 );
 
                 // Ejecutar callback.
-                widget.buildSearchUnidadCallback!();
+                // widget.buildSearchUnidadCallback!();
               }
             },
             builder: (BuildContext context, RemoteUnidadState state) {

@@ -1,8 +1,10 @@
 import 'package:eos_mobile/ui/common/predictive/widgets/raw_predictive.dart';
+
 import 'package:flutter/material.dart';
 
 class PredictiveSearchField<T extends Object> extends StatelessWidget {
   const PredictiveSearchField({
+    required this.options,
     super.key,
     this.displayStringForOption     = RawPredictive.defaultStringForOption,
     this.fieldViewBuilder           = _defaultFieldViewBuilder,
@@ -18,6 +20,7 @@ class PredictiveSearchField<T extends Object> extends StatelessWidget {
   final PredictiveOptionsViewBuilder<T>? optionsViewBuilder;
   final PredictiveOptionsViewOpenDirection optionsViewOpenDirection;
   final double optionsMaxHeight;
+  final List<T> options;
 
   static Widget _defaultFieldViewBuilder(BuildContext context, TextEditingController textEditingController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
     return _PredictiveSearchInput(
@@ -30,8 +33,10 @@ class PredictiveSearchField<T extends Object> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RawPredictive<T>(
+      options                   : options,
       fieldViewBuilder          : fieldViewBuilder,
       optionsViewOpenDirection  : optionsViewOpenDirection,
+      onSelected                : onSelected,
       optionsViewBuilder        : optionsViewBuilder ?? (BuildContext context, PredictiveOnSelected<T> onSelected, List<T> options) {
         return _PredictiveOptions<T>(
           displayStringForOption  : displayStringForOption,

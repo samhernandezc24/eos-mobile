@@ -175,10 +175,10 @@ class _ResultTileInspeccion extends StatelessWidget {
       switch (idInspeccionEstatus) {
         // POR EVALUAR
         case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb31':
-          return const Color(0xFFFFD700);
+          return const Color(0xFFFFA500);
         // EVALUACIÓN
         case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb32':
-          return const Color(0xFFFFA500);
+          return colorScheme.primary;
         // POR FINALIZAR
         case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33':
           return colorScheme.primary;
@@ -232,28 +232,6 @@ class _ResultTileInspeccion extends StatelessWidget {
       }
     }
 
-    Color getIconColor() {
-      switch (idInspeccionEstatus) {
-        // POR EVALUAR
-        case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb31':
-          return colorScheme.onPrimaryContainer;
-        // EVALUACIÓN
-        case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb32':
-          return colorScheme.onPrimaryContainer;
-        // POR FINALIZAR
-        case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33':
-          return colorScheme.onPrimary;
-        // FINALIZADO
-        case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb34':
-          return colorScheme.onPrimaryContainer;
-        // CANCELADO
-        case 'ea52bdfd-8af6-4f5a-b182-2b99e554eb35':
-          return colorScheme.onError;
-        default:
-          return colorScheme.primary;
-      }
-    }
-
     return DefaultTextColor(
       color: getTextColor(),
       child: Column(
@@ -271,7 +249,7 @@ class _ResultTileInspeccion extends StatelessWidget {
                 Text(DateFormat('dd').format(objInspeccion.fechaProgramada).toUpperCase(), style: $styles.textStyles.h3),
                 Divider(color: getTextColor(), thickness: 1.5),
                 Gap($styles.insets.xxs),
-                Icon(getEstatusIcon(), color: getIconColor()),
+                Icon(getEstatusIcon(), color: getTextColor()),
                 Gap($styles.insets.xxs),
                 Text(
                   objInspeccion.inspeccionEstatusName.toProperCase(),

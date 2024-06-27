@@ -153,15 +153,41 @@ class _ChecklistPreguntaTileState extends State<_ChecklistPreguntaTile> {
       margin    : EdgeInsets.only(bottom: $styles.insets.sm),
       shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
       child     : ExpansionTile(
-        leading: Container(
-          padding     : EdgeInsets.symmetric(vertical: $styles.insets.xxs, horizontal: $styles.insets.xs),
-          decoration  : BoxDecoration(color: Theme.of(context).indicatorColor, borderRadius  : BorderRadius.circular($styles.corners.md)),
-          child       : Text('$preguntasRespondidas / $totalPreguntas', style: $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onPrimary)),
-        ),
-        title: Text('${widget.categoria.name}', style: $styles.textStyles.h4),
-        children: _buildChildrenPreguntas(),
+        leading   : _buildPreguntaEstatus(preguntasRespondidas, totalPreguntas),
+        title     : Text('${widget.categoria.name}', style: $styles.textStyles.h4),
+        children  : _buildChildrenPreguntas(),
       ),
     );
+  }
+
+  Widget _buildPreguntaEstatus(int preguntasRespondidas, int totalPreguntas) {
+    final bool noAplica = lstCategoriasItems.every((item) => item.noAplica ?? false);
+
+    if (noAplica) {
+      return Container(
+        padding     : EdgeInsets.symmetric(vertical: $styles.insets.xxs, horizontal: $styles.insets.xs),
+        decoration  : BoxDecoration(color: Theme.of(context).colorScheme.error, borderRadius  : BorderRadius.circular($styles.corners.md)),
+        child       : Text('N / A', style: $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onError)),
+      );
+    } else if (preguntasRespondidas == 0) {
+      return Container(
+        padding     : EdgeInsets.symmetric(vertical: $styles.insets.xxs, horizontal: $styles.insets.xs),
+        decoration  : BoxDecoration(color: Theme.of(context).colorScheme.error, borderRadius  : BorderRadius.circular($styles.corners.md)),
+        child       : Text('$preguntasRespondidas / $totalPreguntas', style: $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onError)),
+      );
+    } else if (preguntasRespondidas == totalPreguntas) {
+      return Container(
+        padding     : EdgeInsets.symmetric(vertical: $styles.insets.xxs, horizontal: $styles.insets.xs),
+        decoration  : BoxDecoration(color: Colors.green, borderRadius  : BorderRadius.circular($styles.corners.md)),
+        child       : Icon(Icons.check_circle, color: Colors.green[100]),
+      );
+    } else {
+      return Container(
+        padding     : EdgeInsets.symmetric(vertical: $styles.insets.xxs, horizontal: $styles.insets.xs),
+        decoration  : BoxDecoration(color: Theme.of(context).primaryColor, borderRadius  : BorderRadius.circular($styles.corners.md)),
+        child       : Text('$preguntasRespondidas / $totalPreguntas', style: $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onPrimary)),
+      );
+    }
   }
 
   List<Widget> _buildChildrenPreguntas() {
