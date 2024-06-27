@@ -41,7 +41,6 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion/re
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_categoria/remote/remote_inspeccion_categoria_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_fichero/remote/remote_inspeccion_fichero_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/widgets/inspeccion/create/predictive/_predictive_options.dart';
 import 'package:eos_mobile/features/unidades/domain/entities/unidad/unidad_eos_predictive_list_entity.dart';
 import 'package:eos_mobile/features/unidades/presentation/bloc/unidad/remote/remote_unidad_eos_bloc.dart';
 
@@ -49,6 +48,7 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/controls/date_text_form_field.dart';
 import 'package:eos_mobile/ui/common/controls/time_text_form_field.dart';
 import 'package:eos_mobile/ui/common/modals/full_screen_image_preview.dart';
+import 'package:eos_mobile/ui/common/predictive/predictive_search_input.dart';
 import 'package:eos_mobile/ui/common/shimmer_loading.dart';
 
 import 'package:intl/intl.dart';

@@ -1,116 +1,149 @@
-// import 'package:eos_mobile/core/enums/predictive_options_view_open_direction.dart';
-// import 'package:eos_mobile/shared/shared_libraries.dart';
-// import 'package:eos_mobile/ui/common/predictive/widgets/predictive.dart';
-// import 'package:flutter/scheduler.dart';
+import 'package:eos_mobile/ui/common/predictive/widgets/predictive.dart';
 
-// class PredictiveSearchInput<T extends Object> extends StatelessWidget {
-//   /// Creates an instance of [PredictiveSearchInput]
-//   const PredictiveSearchInput({
-//     // required this.controller,
-//     // required this.onSubmit,
-//     Key? key,
-//     this.displayStringForOption   = RawPredictive.defaultStringForOption,
-//     this.fieldViewBuilder         = _defaultFieldViewBuilder,
-//     this.onSelected,
-//     this.optionsMaxHeight         = 200.0,
-//     this.optionsViewBuilder,
-//     this.optionsViewOpenDirection = PredictiveViewOpenDirection.down,
-//   }) : super(key: key);
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
-//   // final TextEditingController controller;
-//   // final void Function(String) onSubmit;
-//   final PredictiveOptionToString<T> displayStringForOption;
-//   final PredictiveFieldViewBuilder fieldViewBuilder;
-//   final PredictiveOnSelected<T>? onSelected;
-//   final PredictiveOptionsViewBuilder<T>? optionsViewBuilder;
-//   final PredictiveViewOpenDirection optionsViewOpenDirection;
+class PredictiveSearchField<T extends Object> extends StatelessWidget {
+  const PredictiveSearchField({
+    required this.lstRows,
+    Key? key,
+    this.displayStringForOption             = RawPredictive.defaultStringForOption,
+    this.fieldViewBuilder                   = _defaultFieldViewBuilder,
+    this.onSelected,
+    this.optionsMaxHeight                   = 200.0,
+    this.optionsViewBuilder,
+    this.predictiveOptionsViewOpenDirection = PredictiveOptionsViewOpenDirection.down,
+    this.boolError,
+    this.initialValue,
+  }) : super(key: key);
 
-//   /// La altura máxima utilizada para el widget de lista de opciones por defecto.
-//   ///
-//   /// Cuando [optionsViewBuilder] es `null`, esta propiedad establece la altura máxima
-//   /// que puede ocupar el widget de opciones.
-//   ///
-//   /// El valor por defecto es 200.
-//   final double optionsMaxHeight;
+  final PredictiveOptionToString<T> displayStringForOption;
+  final PredictiveFieldViewBuilder fieldViewBuilder;
+  final PredictiveOptions<T> lstRows;
+  final PredictiveOnSelected<T>? onSelected;
+  final PredictiveOptionsViewBuilder<T>? optionsViewBuilder;
+  final PredictiveOptionsViewOpenDirection predictiveOptionsViewOpenDirection;
+  final double optionsMaxHeight;
+  final bool? boolError;
+  final TextEditingValue? initialValue;
 
-//   static Widget _defaultFieldViewBuilder(BuildContext context, TextEditingController textController, FocusNode focusNode, VoidCallback onSubmit) {
-//     return _PredictiveTextField(
-//       focusNode      : focusNode,
-//       textController : textController,
-//       onSubmit       : onSubmit,
-//     );
-//   }
+  static Widget _defaultFieldViewBuilder(
+    BuildContext context,
+    TextEditingController textEditingController,
+    FocusNode focusNode,
+    VoidCallback onFieldSubmitted,
+  ) {
+    return _PredictiveInputField(
+      focusNode             : focusNode,
+      textEditingController : textEditingController,
+      onFieldSubmitted      : onFieldSubmitted,
+    );
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return RawPredictive<T>(
-//       displayStringForOption    : displayStringForOption,
-//       fieldViewBuilder          : fieldViewBuilder,
-//       optionsViewOpenDirection  : optionsViewOpenDirection,
-//       optionsViewBuilder        : optionsViewBuilder ?? (BuildContext context, PredictiveOnSelected<T> onSelected, Iterable<T> options) {
-//         return _PredictiveOptions<T>(
-//           displayStringForOption  : displayStringForOption,
-//           onSelected              : onSelected,
-//           options                 : options,
-//           maxOptionsHeight        : optionsMaxHeight,
-//         );
-//       },
-//       onSelected: onSelected,
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return RawPredictive<T>(
+      displayStringForOption  : displayStringForOption,
+      fieldViewBuilder        : fieldViewBuilder,
+      initialValue            : initialValue,
+      optionsViewBuilder      : optionsViewBuilder ?? (BuildContext context, PredictiveOnSelected<T> onSelected) {
+        return _PredictiveOptions<T>(
+          displayStringForOption  : displayStringForOption,
+          onSelected              : onSelected,
+          options                 : lstRows,
+          maxOptionsHeight        : optionsMaxHeight,
+        );
+      },
+      // optionsViewBuilder      : optionsViewBuilder ?? (BuildContext context, PredictiveOnSelected<T> onSelected, Iterable<T> options) {
+      //   return _PredictiveOptions<T>(
+      //     displayStringForOption  : displayStringForOption,
+      //     onSelected              : onSelected,
+      //     options                 : options,
+      //     maxOptionsHeight        : optionsMaxHeight,
+      //   );
+      // },
+      onSelected             : onSelected,
+      lstRows                : lstRows,
+    );
+  }
+}
 
-// // Las opciones por defecto del Predictive.
-// class _PredictiveOptions<T extends Object> extends StatelessWidget {
-//   const _PredictiveOptions({
-//     required this.displayStringForOption,
-//     required this.onSelected,
-//     required this.options,
-//     required this.maxOptionsHeight,
-//     Key? key,
-//   }) : super(key: key);
+// El campo de texto por defecto de PredictiveSearchField estilo Material.
+class _PredictiveInputField extends StatelessWidget {
+  const _PredictiveInputField({
+    required this.focusNode,
+    required this.textEditingController,
+    required this.onFieldSubmitted,
+    Key? key,
+  }) : super(key: key);
 
-//   final PredictiveOptionToString<T> displayStringForOption;
-//   final PredictiveOnSelected<T> onSelected;
-//   final Iterable<T> options;
-//   final double maxOptionsHeight;
+  final FocusNode focusNode;
+  final VoidCallback onFieldSubmitted;
+  final TextEditingController textEditingController;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Align(
-//       alignment: Alignment.topLeft,
-//       child: Material(
-//         elevation: 3,
-//         child: ConstrainedBox(
-//           constraints: BoxConstraints(maxHeight: maxOptionsHeight),
-//           child: ListView.builder(
-//             padding     : EdgeInsets.zero,
-//             shrinkWrap  : true,
-//             itemCount   : options.length,
-//             itemBuilder : (BuildContext context, int index) {
-//               final T option = options.elementAt(index);
-//               return InkWell(
-//                 onTap: () => onSelected(option),
-//                 child: Builder(
-//                   builder: (BuildContext context) {
-//                     final bool highlight = PredictiveHighlightOption.of(context) == index;
-//                     if (highlight) {
-//                       SchedulerBinding.instance.addPersistentFrameCallback((Duration timeStamp) {
-//                           Scrollable.ensureVisible(context, alignment: 0.5);
-//                       });
-//                     }
-//                     return Container(
-//                       color: highlight ? Theme.of(context).focusColor : null,
-//                       padding: EdgeInsets.all($styles.insets.sm),
-//                       child: Text(displayStringForOption(option)),
-//                     );
-//                   },
-//                 ),
-//               );
-//             },
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller        : textEditingController,
+      focusNode         : focusNode,
+      onFieldSubmitted  : (String value) {
+        onFieldSubmitted();
+      },
+    );
+  }
+}
+
+// Las opciones por defecto de PredictiveSearchField estilo Material.
+class _PredictiveOptions<T extends Object> extends StatelessWidget {
+  const _PredictiveOptions({
+    required this.displayStringForOption,
+    required this.onSelected,
+    required this.options,
+    required this.maxOptionsHeight,
+    Key? key,
+  }) : super(key: key);
+
+  final PredictiveOptionToString<T> displayStringForOption;
+  final PredictiveOnSelected<T> onSelected;
+  final Iterable<T> options;
+  final double maxOptionsHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Material(
+        elevation: 4,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: maxOptionsHeight),
+          child: ListView.builder(
+            itemBuilder: (BuildContext context, int index) {
+              final T option = options.elementAt(index);
+              return InkWell(
+                onTap: () => onSelected(option),
+                child: Builder(
+                  builder: (BuildContext context) {
+                    final bool highlight = PredictiveHighlightedOption.of(context) == index;
+                    if (highlight) {
+                      SchedulerBinding.instance.addPostFrameCallback(
+                        (Duration timeStamp) {
+                          Scrollable.ensureVisible(context, alignment: 0.5);
+                        },
+                        debugLabel: 'PredictiveOptions.ensureVisible',
+                      );
+                    }
+                    return Container(
+                      color   : highlight ? Theme.of(context).focusColor : null,
+                      padding : const EdgeInsets.all(16),
+                      child   : Text(displayStringForOption(option)),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
