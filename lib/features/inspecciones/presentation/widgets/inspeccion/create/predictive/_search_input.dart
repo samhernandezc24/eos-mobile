@@ -6,8 +6,10 @@ class _SearchUnidadInput extends StatelessWidget {
     required this.onSubmit,
     required this.onSelected,
     required this.onClearField,
+    required this.boolError,
     Key? key,
     this.boolSearch,
+    this.errorMessage,
   }) : super(key: key);
 
   final Iterable<UnidadPredictiveListEntity> lstRows;
@@ -15,6 +17,8 @@ class _SearchUnidadInput extends StatelessWidget {
   final void Function(String) onSubmit;
   final VoidCallback onClearField;
   final bool? boolSearch;
+  final bool boolError;
+  final String? errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +27,11 @@ class _SearchUnidadInput extends StatelessWidget {
         child: PredictiveSearchField<UnidadPredictiveListEntity>(
           displayStringForOption  : (data) => data.numeroEconomico,
           onSelected              : onSelected,
-          optionsViewBuilder      : (context, onSelected) =>
+          optionsViewBuilder      : (context, onSelected, results) =>
               _buildSuggestionsView(context, onSelected, lstRows, constraints),
           fieldViewBuilder        : _buildInput,
           lstRows                 : lstRows,
+          boolError               : boolError,
         ),
       ),
     );

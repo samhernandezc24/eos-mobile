@@ -1,39 +1,26 @@
-import 'package:eos_mobile/ui/common/predictive/widgets/predictive.dart';
-
+import 'package:eos_mobile/ui/common/predictive/widgets/raw_predictive.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 class PredictiveSearchField<T extends Object> extends StatelessWidget {
   const PredictiveSearchField({
-    required this.lstRows,
-    required this.boolError,
-    Key? key,
-    this.displayStringForOption             = RawPredictive.defaultStringForOption,
-    this.fieldViewBuilder                   = _defaultFieldViewBuilder,
+    super.key,
+    this.displayStringForOption     = RawPredictive.defaultStringForOption,
+    this.fieldViewBuilder           = _defaultFieldViewBuilder,
     this.onSelected,
-    this.optionsMaxHeight                   = 200.0,
+    this.optionsMaxHeight           = 200.0,
     this.optionsViewBuilder,
-    this.predictiveOptionsViewOpenDirection = PredictiveOptionsViewOpenDirection.down,
-    this.initialValue,
-  }) : super(key: key);
+    this.optionsViewOpenDirection   = PredictiveOptionsViewOpenDirection.down,
+  });
 
   final PredictiveOptionToString<T> displayStringForOption;
   final PredictiveFieldViewBuilder fieldViewBuilder;
-  final PredictiveOptions<T> lstRows;
   final PredictiveOnSelected<T>? onSelected;
   final PredictiveOptionsViewBuilder<T>? optionsViewBuilder;
-  final PredictiveOptionsViewOpenDirection predictiveOptionsViewOpenDirection;
+  final PredictiveOptionsViewOpenDirection optionsViewOpenDirection;
   final double optionsMaxHeight;
-  final bool boolError;
-  final TextEditingValue? initialValue;
 
-  static Widget _defaultFieldViewBuilder(
-    BuildContext context,
-    TextEditingController textEditingController,
-    FocusNode focusNode,
-    VoidCallback onFieldSubmitted,
-  ) {
-    return _PredictiveInputField(
+  static Widget _defaultFieldViewBuilder(BuildContext context, TextEditingController textEditingController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
+    return _PredictiveSearchInput(
       focusNode             : focusNode,
       textEditingController : textEditingController,
       onFieldSubmitted      : onFieldSubmitted,
@@ -43,32 +30,27 @@ class PredictiveSearchField<T extends Object> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RawPredictive<T>(
-      displayStringForOption  : displayStringForOption,
-      fieldViewBuilder        : fieldViewBuilder,
-      initialValue            : initialValue,
-      optionsViewBuilder      : optionsViewBuilder ?? (BuildContext context, PredictiveOnSelected<T> onSelected, Iterable<T> options) {
+      fieldViewBuilder          : fieldViewBuilder,
+      optionsViewOpenDirection  : optionsViewOpenDirection,
+      optionsViewBuilder        : optionsViewBuilder ?? (BuildContext context, PredictiveOnSelected<T> onSelected, List<T> options) {
         return _PredictiveOptions<T>(
           displayStringForOption  : displayStringForOption,
           onSelected              : onSelected,
-          options                 : lstRows,
+          options                 : options,
           maxOptionsHeight        : optionsMaxHeight,
         );
       },
-      onSelected             : onSelected,
-      lstRows                : lstRows,
-      boolError               : boolError,
     );
   }
 }
 
 // El campo de texto por defecto de PredictiveSearchField estilo Material.
-class _PredictiveInputField extends StatelessWidget {
-  const _PredictiveInputField({
+class _PredictiveSearchInput extends StatelessWidget {
+  const _PredictiveSearchInput({
     required this.focusNode,
     required this.textEditingController,
     required this.onFieldSubmitted,
-    Key? key,
-  }) : super(key: key);
+  });
 
   final FocusNode focusNode;
   final VoidCallback onFieldSubmitted;
@@ -79,9 +61,7 @@ class _PredictiveInputField extends StatelessWidget {
     return TextFormField(
       controller        : textEditingController,
       focusNode         : focusNode,
-      onFieldSubmitted  : (String value) {
-        onFieldSubmitted();
-      },
+      onFieldSubmitted  : (String value) => onFieldSubmitted(),
     );
   }
 }
@@ -93,12 +73,12 @@ class _PredictiveOptions<T extends Object> extends StatelessWidget {
     required this.onSelected,
     required this.options,
     required this.maxOptionsHeight,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final PredictiveOptionToString<T> displayStringForOption;
   final PredictiveOnSelected<T> onSelected;
-  final Iterable<T> options;
+  final List<T> options;
   final double maxOptionsHeight;
 
   @override
@@ -110,23 +90,16 @@ class _PredictiveOptions<T extends Object> extends StatelessWidget {
         child: ConstrainedBox(
           constraints: BoxConstraints(maxHeight: maxOptionsHeight),
           child: ListView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            itemCount: options.length,
             itemBuilder: (BuildContext context, int index) {
               final T option = options.elementAt(index);
               return InkWell(
                 onTap: () => onSelected(option),
                 child: Builder(
                   builder: (BuildContext context) {
-                    final bool highlight = PredictiveHighlightedOption.of(context) == index;
-                    if (highlight) {
-                      SchedulerBinding.instance.addPostFrameCallback(
-                        (Duration timeStamp) {
-                          Scrollable.ensureVisible(context, alignment: 0.5);
-                        },
-                        debugLabel: 'PredictiveOptions.ensureVisible',
-                      );
-                    }
                     return Container(
-                      color   : highlight ? Theme.of(context).focusColor : null,
                       padding : const EdgeInsets.all(16),
                       child   : Text(displayStringForOption(option)),
                     );

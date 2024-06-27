@@ -18,7 +18,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
   // PROPERTIES
   InspeccionUnidadSelectOption _inspeccionUnidadSelectOption = InspeccionUnidadSelectOption.inventario;
 
-  String errorMessage   = '';
+  String _errorMessage  = '';
   bool _hasServerError  = false;
   bool _isLoading       = false;
 
@@ -207,7 +207,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
               setState(() {
                 _hasServerError = true;
                 _isLoading      = false;
-                errorMessage    = state.errorMessage ?? 'Error inesperado';
+                _errorMessage   = state.errorMessage ?? 'Error inesperado';
               });
             }
 
@@ -215,7 +215,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
               setState(() {
                 _hasServerError = true;
                 _isLoading      = false;
-                errorMessage    = state.failure?.errorMessage ?? 'Error inesperado';
+                _errorMessage   = state.failure?.errorMessage ?? 'Error inesperado';
               });
             }
 
@@ -230,9 +230,10 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
             }
           },
           child: _SearchUnidadInput(
-            // boolError     : _hasServerError,
-            lstRows       : lstUnidades,
+            boolError     : _hasServerError,
             boolSearch    : _isLoading,
+            errorMessage  : _errorMessage,
+            lstRows       : lstUnidades,
             onSubmit      : _handleUnidadSearchSubmitted,
             onSelected    : (_){},
             onClearField  : (){},

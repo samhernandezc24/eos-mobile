@@ -17,7 +17,7 @@ typedef PredictiveOnSelected<T extends Object> = void Function(T option);
 typedef PredictiveOptionsViewBuilder<T extends Object> = Widget Function(
   BuildContext context,
   PredictiveOnSelected<T> onSelected,
-  // Iterable<T> options,
+  Iterable<T> options,
 );
 
 /// El tipo de callback del PredictiveSearchField que devuelve el widget que
@@ -53,6 +53,7 @@ class RawPredictive<T extends Object> extends StatefulWidget {
   const RawPredictive({
     required this.optionsViewBuilder,
     required this.lstRows,
+    required this.boolError,
     Key? key,
     this.predictiveOptionsViewOpenDirection   = PredictiveOptionsViewOpenDirection.down,
     this.displayStringForOption               = defaultStringForOption,
@@ -61,7 +62,18 @@ class RawPredictive<T extends Object> extends StatefulWidget {
     this.onSelected,
     this.textEditingController,
     this.initialValue,
-  }) : super(key: key);
+    this.errorMessage,
+  }) : assert(
+         fieldViewBuilder != null
+            || (key != null && focusNode != null && textEditingController != null),
+         'Pasa un fieldViewBuilder, o crea un campo separado y pasa el FocusNode, TextEditingController, y una clave. Utiliza la key con RawPredictive.onFieldSubmitted.',
+        ),
+       assert((focusNode == null) == (textEditingController == null), 'textEditingController y initialValue no pueden ser null.'),
+       assert(
+          !(textEditingController != null && initialValue != null),
+          'textEditingController y initialValue no pueden definirse simultáneamente.',
+        ),
+       super(key: key);
 
   final PredictiveFieldViewBuilder? fieldViewBuilder;
   final FocusNode? focusNode;
@@ -72,6 +84,8 @@ class RawPredictive<T extends Object> extends StatefulWidget {
   final PredictiveOptions<T> lstRows;
   final TextEditingController? textEditingController;
   final TextEditingValue? initialValue;
+  final bool boolError;
+  final String? errorMessage;
 
   /// La manera por defecto de convertir una opción en una cadena en
   /// [displayStringForOption].
@@ -108,7 +122,6 @@ class _RawPredictiveState<T extends Object> extends State<RawPredictive<T>> {
   Iterable<T> _options = Iterable<T>.empty();
 
   bool _userHideOptions                 = false;
-  bool _hasError                        = false;
   bool _floatingOptionsUpdateScheduled  = false;
 
   final ValueNotifier<int> _highlightedOptionIndex = ValueNotifier<int>(0);
@@ -120,7 +133,7 @@ class _RawPredictiveState<T extends Object> extends State<RawPredictive<T>> {
 
   // True si el estado indica que las opciones deben ser visibles.
   bool get _shouldShowOptions {
-    return !_userHideOptions && _focusNode.hasFocus && _selection == null && _options.isNotEmpty;
+    return !_userHideOptions && _focusNode.hasFocus && _selection == null && (_options.isNotEmpty || widget.boolError);
   }
 
   // STATE
@@ -163,16 +176,6 @@ class _RawPredictiveState<T extends Object> extends State<RawPredictive<T>> {
   }
 
   // EVENTS
-  Future<void> _on() async {
-  }
-  void _updateOptions(Iterable<T> newOptions) {
-    setState(() {
-      _options          = newOptions;
-      _userHideOptions  = false;
-    });
-    _updateActions();
-    _updateOverlay();
-  }
 
   // Se llama cuando cambia el FocusNode del campo.
   void _onChangedFocus() {
@@ -184,8 +187,15 @@ class _RawPredictiveState<T extends Object> extends State<RawPredictive<T>> {
 
   // Llamado desde fieldViewBuilder cuando el usuario envía el campo.
   void _onFieldSubmitted() {
-    if (_options.isEmpty || _userHideOptions) { return; }
-    _select(_options.elementAt(_highlightedOptionIndex.value));
+    _updateOptions(widget.lstRows);
+    _updateHighlight(_highlightedOptionIndex.value);
+    _updateActions();
+    _updateOverlay();
+  }
+
+  void _updateOptions(Iterable<T> newOptions) {
+    _options = newOptions;
+    _userHideOptions = false;
   }
 
   // METHODS
@@ -290,15 +300,11 @@ class _RawPredictiveState<T extends Object> extends State<RawPredictive<T>> {
               PredictiveOptionsViewOpenDirection.down => Alignment.topLeft,
             },
             child: TextFieldTapRegion(
-              child: PredictiveHighlightedOption(
-                highlightedIndexNotifier: _highlightedOptionIndex,
+              child: AutocompleteHighlightedOption(
+                highlightIndexNotifier: _highlightedOptionIndex,
                 child: Builder(
                   builder: (BuildContext context) {
-                    if (_hasError) {
-                      return const Text('Error');
-                    }
-                    return widget.optionsViewBuilder(context, _select);
-                    // return widget.optionsViewBuilder(context, _select, _options);
+                    return widget.optionsViewBuilder(context, _select, _options);
                   },
                 ),
               ),
