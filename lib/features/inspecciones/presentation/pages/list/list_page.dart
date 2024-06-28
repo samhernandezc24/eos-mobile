@@ -557,14 +557,10 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                       ..hideCurrentSnackBar()
                       ..showSnackBar(
                         SnackBar(
-                          content: Text(
-                            state.objResponse?.message ?? 'Inspección cancelada',
-                            softWrap: true,
-                            style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer),
-                          ),
-                          backgroundColor: Colors.green,
-                          elevation: 0,
-                          behavior: SnackBarBehavior.fixed,
+                          content         : Text(state.objResponse?.message ?? 'Inspección cancelada', softWrap: true),
+                          backgroundColor : Colors.green,
+                          elevation       : 0,
+                          behavior        : SnackBarBehavior.fixed,
                         ),
                       );
 
