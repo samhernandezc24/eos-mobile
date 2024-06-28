@@ -1,1 +1,0 @@
-enum ViewFormControl { list, tree }

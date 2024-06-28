@@ -3,25 +3,6 @@ import 'dart:math';
 class StringUtils {
   static const _digits = '0123456789';
 
-  /// Verifica si una cadena es nula o está vacía.
-  static bool isEmpty(String? s) {
-    return s == null || s.trim().isEmpty;
-  }
-
-  /// Verifica si una cadena no está vacía.
-  static bool isNotEmpty(String? s) => !isEmpty(s);
-
-  /// Verifica si una cadena parece ser una URL válida.
-  ///
-  /// El regex utilizado puede no cubrir todos los casos posibles de
-  /// URLs válidas.
-  static bool isLink(String str) {
-    final RegExp urlRegex = RegExp(
-      r'^(https?:\/\/)?([\w\d_-]+)\.([\w\d_\.-]+)\/?\??([^#\n\r]*)?#?([^\n\r]*)',
-    );
-    return urlRegex.hasMatch(str);
-  }
-
   /// Trunca una cadena a una longitud máxima y agrega puntos suspensivos si es
   /// necesario.
   ///
@@ -29,16 +10,6 @@ class StringUtils {
   /// seguida de puntos suspensivos.
   static String truncateWithEllipsis(int maxLength, String myString) {
     return (myString.length <= maxLength) ? myString : '${myString.substring(0, maxLength)}...';
-  }
-
-  /// Convierte un mapa en una cadena de texto, donde cada par clave-valor se concatena
-  /// en formato "clave: valor".
-  ///
-  /// Si [map] es null, devuelve una cadena vacía.
-  static String printMap(Map<String, dynamic>? map) {
-    String str = '';
-    map?.forEach((key, value) => str += '$key: ${value.toString}, ');
-    return str;
   }
 
   /// Capitaliza la primera letra de la cadena y convierte el resto de la
