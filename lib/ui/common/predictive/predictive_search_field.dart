@@ -4,57 +4,53 @@ import 'package:flutter/material.dart';
 
 class PredictiveSearchField<T extends Object> extends StatelessWidget {
   const PredictiveSearchField({
-    required this.options,
     super.key,
-    this.displayStringForOption     = RawPredictive.defaultStringForOption,
-    this.fieldViewBuilder           = _defaultFieldViewBuilder,
+    this.fieldViewBuilder         = _defaultFieldViewBuilder,
     this.onSelected,
-    this.optionsMaxHeight           = 200.0,
+    this.optionsMaxHeight         = 200.0,
     this.optionsViewBuilder,
-    this.optionsViewOpenDirection   = PredictiveOptionsViewOpenDirection.down,
+    this.optionsViewOpenDirection = PredictiveOptionsViewOpenDirection.down,
+    this.initialValue,
   });
 
-  final PredictiveOptionToString<T> displayStringForOption;
   final PredictiveFieldViewBuilder fieldViewBuilder;
   final PredictiveOnSelected<T>? onSelected;
   final PredictiveOptionsViewBuilder<T>? optionsViewBuilder;
   final PredictiveOptionsViewOpenDirection optionsViewOpenDirection;
   final double optionsMaxHeight;
-  final List<T> options;
+  final TextEditingValue? initialValue;
 
   static Widget _defaultFieldViewBuilder(BuildContext context, TextEditingController textEditingController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
-    return _PredictiveSearchInput(
+    return _PredictiveField(
       focusNode             : focusNode,
-      textEditingController : textEditingController,
       onFieldSubmitted      : onFieldSubmitted,
+      textEditingController : textEditingController,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return RawPredictive<T>(
-      options                   : options,
-      fieldViewBuilder          : fieldViewBuilder,
-      optionsViewOpenDirection  : optionsViewOpenDirection,
-      onSelected                : onSelected,
-      optionsViewBuilder        : optionsViewBuilder ?? (BuildContext context, PredictiveOnSelected<T> onSelected, List<T> options) {
+      fieldViewBuilder: fieldViewBuilder,
+      initialValue: initialValue,
+      optionsViewOpenDirection: optionsViewOpenDirection,
+      optionsViewBuilder: optionsViewBuilder ?? (BuildContext context, PredictiveOnSelected<T> onSelected, List<T> options) {
         return _PredictiveOptions<T>(
-          displayStringForOption  : displayStringForOption,
-          onSelected              : onSelected,
-          options                 : options,
-          maxOptionsHeight        : optionsMaxHeight,
+          onSelected        : onSelected,
+          maxOptionsHeight  : optionsMaxHeight,
         );
       },
+      onSelected: onSelected,
     );
   }
 }
 
 // El campo de texto por defecto de PredictiveSearchField estilo Material.
-class _PredictiveSearchInput extends StatelessWidget {
-  const _PredictiveSearchInput({
+class _PredictiveField extends StatelessWidget {
+  const _PredictiveField({
     required this.focusNode,
-    required this.textEditingController,
     required this.onFieldSubmitted,
+    required this.textEditingController,
   });
 
   final FocusNode focusNode;
@@ -64,9 +60,11 @@ class _PredictiveSearchInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller        : textEditingController,
-      focusNode         : focusNode,
-      onFieldSubmitted  : (String value) => onFieldSubmitted(),
+      controller: textEditingController,
+      focusNode: focusNode,
+      onFieldSubmitted: (String value) {
+        onFieldSubmitted();
+      },
     );
   }
 }
@@ -74,16 +72,12 @@ class _PredictiveSearchInput extends StatelessWidget {
 // Las opciones por defecto de PredictiveSearchField estilo Material.
 class _PredictiveOptions<T extends Object> extends StatelessWidget {
   const _PredictiveOptions({
-    required this.displayStringForOption,
     required this.onSelected,
-    required this.options,
     required this.maxOptionsHeight,
     super.key,
   });
 
-  final PredictiveOptionToString<T> displayStringForOption;
   final PredictiveOnSelected<T> onSelected;
-  final List<T> options;
   final double maxOptionsHeight;
 
   @override
@@ -94,27 +88,55 @@ class _PredictiveOptions<T extends Object> extends StatelessWidget {
         elevation: 4,
         child: ConstrainedBox(
           constraints: BoxConstraints(maxHeight: maxOptionsHeight),
-          child: ListView.builder(
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            itemCount: options.length,
-            itemBuilder: (BuildContext context, int index) {
-              final T option = options.elementAt(index);
-              return InkWell(
-                onTap: () => onSelected(option),
-                child: Builder(
-                  builder: (BuildContext context) {
-                    return Container(
-                      padding : const EdgeInsets.all(16),
-                      child   : Text(displayStringForOption(option)),
-                    );
-                  },
-                ),
-              );
-            },
-          ),
         ),
       ),
     );
   }
 }
+
+// class _PredictiveOptions<T extends Object> extends StatelessWidget {
+//   const _PredictiveOptions({
+//     required this.displayStringForOption,
+//     required this.onSelected,
+//     required this.options,
+//     required this.maxOptionsHeight,
+//     super.key,
+//   });
+
+//   final PredictiveOptionToString<T> displayStringForOption;
+//   final PredictiveOnSelected<T> onSelected;
+//   final List<T> options;
+//   final double maxOptionsHeight;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Align(
+//       alignment: Alignment.topLeft,
+//       child: Material(
+//         elevation: 4,
+//         child: ConstrainedBox(
+//           constraints: BoxConstraints(maxHeight: maxOptionsHeight),
+//           child: ListView.builder(
+//             padding: EdgeInsets.zero,
+//             shrinkWrap: true,
+//             itemCount: options.length,
+//             itemBuilder: (BuildContext context, int index) {
+//               final T option = options.elementAt(index);
+//               return InkWell(
+//                 onTap: () => onSelected(option),
+//                 child: Builder(
+//                   builder: (BuildContext context) {
+//                     return Container(
+//                       padding : const EdgeInsets.all(16),
+//                       child   : Text(displayStringForOption(option)),
+//                     );
+//                   },
+//                 ),
+//               );
+//             },
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

@@ -71,10 +71,10 @@ class RemoteInspeccionFinishSuccess extends RemoteInspeccionState {
 }
 
 /// CANCEL
-class RemoteInspeccionCanceling extends RemoteInspeccionState {}
+class RemoteInspeccionCancelLoading extends RemoteInspeccionState {}
 
-class RemoteInspeccionCanceledSuccess extends RemoteInspeccionState {
-  const RemoteInspeccionCanceledSuccess(this.objResponse);
+class RemoteInspeccionCancelSuccess extends RemoteInspeccionState {
+  const RemoteInspeccionCancelSuccess(this.objResponse);
 
   final ServerResponse? objResponse;
 

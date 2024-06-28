@@ -48,7 +48,6 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 import 'package:eos_mobile/ui/common/controls/date_text_form_field.dart';
 import 'package:eos_mobile/ui/common/controls/time_text_form_field.dart';
 import 'package:eos_mobile/ui/common/modals/full_screen_image_preview.dart';
-import 'package:eos_mobile/ui/common/predictive/predictive_search_field.dart';
 import 'package:eos_mobile/ui/common/shimmer_loading.dart';
 
 import 'package:intl/intl.dart';
@@ -103,7 +102,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   late final TextEditingController _searchController;
 
   // PROPERTIES
-  bool isLoading = false;
+  bool _isLoading = false;
 
   List<LabeledDropdownFormField<dynamic>> sltFilter = [];
 
@@ -117,13 +116,6 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
     const Requerimiento(value: true, name: 'Con requerimiento'),
     const Requerimiento(value: false, name: 'Sin requerimiento'),
   ];
-
-  // SELECTED FILTER OPTION
-  // UnidadTipo? _selectedUnidadTipo;
-  // InspeccionEstatus? _selectedEstatus;
-  // Usuario? _selectedCreatedUsuario;
-  // Usuario? _selectedUpdatedUsuario;
-  // Requerimiento? _selectedRequerimiento;
 
   // SEARCH FILTERS
   List<SearchFilter> searchFilters = [];
@@ -396,7 +388,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
 
   void _renderFilters(DataSourcePersistence? dataSourcePersistence) {
     // RECUPERACION DE DROPDOWN SIN MULTIFILTROS
-    final List<Filter> arrFilters = dataSourcePersistence == null ? [] : dataSourcePersistence.filters ?? [];
+    // final List<Filter> arrFilters = dataSourcePersistence == null ? [] : dataSourcePersistence.filters ?? [];
 
     setState(() {
       // _selectedUnidadTipo = DataSourceUtils.renderFilter<UnidadTipo>(arrFilters, lstUnidadesTipos, 'IdUnidadTipo', (item) => item.idUnidadTipo);
@@ -413,7 +405,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
   }
 
   Future<void> _updateResults({bool showLoading = true}) async {
-    if (showLoading) { setState(() => isLoading = true); }
+    if (showLoading) { setState(() => _isLoading = true); }
 
     final varArgs = DataSourcePersistence(
       table             : 'Inspecciones',
@@ -496,7 +488,13 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
               child     : BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
                 listener: (BuildContext context, RemoteInspeccionState state) {
                   // LOADING:
-                  if (state is RemoteInspeccionCanceling) {
+                  if (state is RemoteInspeccionIndexLoading) {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                  }
+
+                  if (state is RemoteInspeccionCancelLoading) {
                     _showProgressDialog(context);
                   }
 
@@ -516,6 +514,8 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                   // SUCCESS:
                   if (state is RemoteInspeccionIndexSuccess) {
                     setState(() {
+                      _isLoading = false;
+
                       // FRAGMENTO MODIFICABLE - LISTAS
                       lstUnidadesTipos        = state.objResponse?.unidadesTipos         ?? [];
                       lstInspeccionesEstatus  = state.objResponse?.inspeccionesEstatus   ?? [];
@@ -548,7 +548,7 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
                     });
                   }
 
-                  if (state is RemoteInspeccionCanceledSuccess) {
+                  if (state is RemoteInspeccionCancelSuccess) {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
 
@@ -637,11 +637,13 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed : () => _handleCreatePressed(context),
-        tooltip   : 'Nueva inspección',
-        child     : const Icon(Icons.add),
-      ),
+      floatingActionButton: !_isLoading
+          ? FloatingActionButton(
+              onPressed : () => _handleCreatePressed(context),
+              tooltip   : 'Nueva inspección',
+              child     : const Icon(Icons.add),
+            )
+          : null,
     );
   }
 

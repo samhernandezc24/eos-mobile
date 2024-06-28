@@ -1,8 +1,9 @@
 part of '../../../../pages/list/list_page.dart';
 
-class _SearchUnidad extends StatelessWidget {
+class _SearchUnidad extends StatefulWidget {
   const _SearchUnidad({
-    required this.lstRows,
+    required this.controller,
+    required this.results,
     required this.onSubmit,
     required this.onSelected,
     required this.onClearField,
@@ -10,72 +11,73 @@ class _SearchUnidad extends StatelessWidget {
     this.boolSearch,
   }) : super(key: key);
 
-  final List<UnidadPredictiveListEntity> lstRows;
+  final TextEditingController controller;
+  final List<UnidadPredictiveListEntity> results;
   final void Function(UnidadPredictiveListEntity) onSelected;
   final void Function(String) onSubmit;
   final VoidCallback onClearField;
   final bool? boolSearch;
 
   @override
+  State<_SearchUnidad> createState() => _SearchUnidadState();
+}
+
+class _SearchUnidadState extends State<_SearchUnidad> {
+  // PROPERTIES
+  bool _showSuggestions = false;
+
+  @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (ctx, constraints) => Center(
-        child: PredictiveSearchField<UnidadPredictiveListEntity>(
-          options: lstRows,
-          displayStringForOption: (data) => data.numeroEconomico,
-          onSelected: onSelected,
-          optionsViewBuilder: (context, onSelected, results) =>
-              _buildSuggestionsView(context, onSelected, lstRows, constraints),
-          fieldViewBuilder: _buildInput,
+        child: Column(
+          children: <Widget>[
+            _buildInput(context, widget.controller),
+            if (_showSuggestions && widget.results.isNotEmpty) _buildSuggestionsView(context, widget.onSelected, widget.results, constraints),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildSuggestionsView(BuildContext context, void Function(UnidadPredictiveListEntity) onSelected, List<UnidadPredictiveListEntity> results, BoxConstraints constraints) {
-    final List<Widget> items = results.map((item) => _buildSuggestion(context, item, () => onSelected(item))).toList();
+    final List<Widget> items = results.map((item) => _buildSuggestion(context, item, () {
+      onSelected(item);
+      setState(() {
+        _showSuggestions = false;
+      });
+    })).toList();
     items.insert(0, _buildSuggestionTitle(context));
-    return Stack(
-      children: <Widget>[
-        ExcludeSemantics(
-          child: AppBtn.basic(
-            onPressed     : FocusManager.instance.primaryFocus!.unfocus,
-            semanticLabel : '',
-            child         : const SizedBox.expand(),
-          ),
-        ),
-        TopLeft(
-          child: Container(
-            margin: EdgeInsets.only(top: $styles.insets.xxs),
-            width: constraints.maxWidth,
-            decoration: BoxDecoration(
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color       : Colors.black.withOpacity(0.25),
-                  blurRadius  : 4,
-                  offset      : const Offset(0, 4),
-                ),
-              ],
+    return TopLeft(
+      child: Container(
+        margin: EdgeInsets.only(top: $styles.insets.xxs),
+        width: constraints.maxWidth,
+        decoration: BoxDecoration(
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color       : Colors.black.withOpacity(0.25),
+              blurRadius  : 4,
+              offset      : const Offset(0, 4),
             ),
-            child: Container(
-              padding: EdgeInsets.all($styles.insets.xs),
-              decoration: BoxDecoration(
-                color         : Theme.of(context).colorScheme.surface.withOpacity(0.92),
-                border        : Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.3)),
-                borderRadius  : BorderRadius.circular($styles.insets.xs),
-              ),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 200),
-                child: ListView(
-                  padding     : EdgeInsets.all($styles.insets.xs),
-                  shrinkWrap  : true,
-                  children    : items,
-                ),
-              ),
+          ],
+        ),
+        child: Container(
+          padding: EdgeInsets.all($styles.insets.xs),
+          decoration: BoxDecoration(
+            color         : Theme.of(context).colorScheme.surface.withOpacity(0.92),
+            border        : Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.3)),
+            borderRadius  : BorderRadius.circular($styles.insets.xs),
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 200),
+            child: ListView(
+              padding     : EdgeInsets.all($styles.insets.xs),
+              shrinkWrap  : true,
+              children    : items,
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 
@@ -117,7 +119,7 @@ class _SearchUnidad extends StatelessWidget {
     );
   }
 
-  Widget _buildInput(BuildContext context, TextEditingController textController, FocusNode focusNode, _) {
+  Widget _buildInput(BuildContext context, TextEditingController textController) {
     return Column(
       children: <Widget>[
         Container(
@@ -133,7 +135,18 @@ class _SearchUnidad extends StatelessWidget {
               const Icon(Icons.search),
               Expanded(
                 child: TextField(
-                  onSubmitted       : onSubmit,
+                  onSubmitted       : (value) {
+                    if (value.isNotEmpty) {
+                      widget.onSubmit(value);
+                      setState(() {
+                        _showSuggestions = true;
+                      });
+                    } else {
+                      setState(() {
+                        _showSuggestions = false;
+                      });
+                    }
+                  },
                   controller        : textController,
                   style             : TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   textAlignVertical : TextAlignVertical.top,
@@ -167,9 +180,12 @@ class _SearchUnidad extends StatelessWidget {
                       semanticLabel   : $strings.searchInputSemanticClear,
                       size            : $styles.insets.md,
                       onPressed       : () {
-                        textController.clear();   // Limpia el campo de búsqueda
-                        onSubmit('');             // Limpia la consulta
-                        onClearField();           // Limpia los elementos de control
+                        textController.clear();         // Limpia el campo de búsqueda
+                        widget.onSubmit('');            // Limpia la consulta
+                        widget.onClearField();          // Limpia los elementos de control
+                        setState(() {
+                          _showSuggestions = false;
+                        });
                       },
                     ),
                   ),
@@ -179,7 +195,7 @@ class _SearchUnidad extends StatelessWidget {
           ),
         ),
 
-        if (boolSearch ?? false) const AppLinearIndicator(),
+        if (widget.boolSearch ?? false) const AppLinearIndicator(),
       ],
     );
   }

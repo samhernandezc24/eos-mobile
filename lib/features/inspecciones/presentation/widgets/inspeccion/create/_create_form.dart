@@ -14,6 +14,8 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // CONTROLLERS
+  late final TextEditingController _searchUnidadController;
+  late final TextEditingController _searchUnidadEOSController;
   late final TextEditingController _fechaProgramadaController;
   late final TextEditingController _unidadNumeroEconomicoController;
   late final TextEditingController _unidadTipoNameController;
@@ -53,6 +55,8 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
   @override
   void initState() {
     super.initState();
+    _searchUnidadController               = TextEditingController();
+    _searchUnidadEOSController            = TextEditingController();
     _fechaProgramadaController            = TextEditingController();
     _unidadNumeroEconomicoController      = TextEditingController();
     _unidadTipoNameController             = TextEditingController();
@@ -73,6 +77,8 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
 
   @override
   void dispose() {
+    _searchUnidadController.dispose();
+    _searchUnidadEOSController.dispose();
     _fechaProgramadaController.dispose();
     _unidadNumeroEconomicoController.dispose();
     _unidadTipoNameController.dispose();
@@ -648,9 +654,10 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
           Checkbox(value: isSelected, onChanged : _onChangeSelectOption),
           Text(
             isSelected
-                ? 'Buscador de unidades inventario'
-                : 'Buscador de unidades temporales',
+                ? 'Buscar unidades inventario'
+                : 'Buscar unidades temporales',
             style: $styles.textStyles.body,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
@@ -681,16 +688,18 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
               setState(() {
                 _hasServerError = true;
                 _isLoading      = false;
-                _errorMessage   = state.errorMessage ?? 'Error inesperado';
               });
+
+              _showServerFailedDialog(context, state.errorMessage);
             }
 
             if (state is RemoteUnidadServerFailurePredictive) {
               setState(() {
                 _hasServerError = true;
                 _isLoading      = false;
-                _errorMessage   = state.failure?.errorMessage ?? 'Error inesperado';
               });
+
+              _showServerFailedDialog(context, state.failure?.errorMessage);
             }
 
             // SUCCESS
@@ -704,7 +713,8 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
             }
           },
           child: _SearchUnidad(
-            lstRows       : lstUnidades,
+            controller    : _searchUnidadController,
+            results       : lstUnidades,
             onSubmit      : _handleUnidadSearchSubmitted,
             onSelected    : _handleSelectedUnidad,
             onClearField  : _clearFormFields,
@@ -756,7 +766,8 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
             }
           },
           child: _SearchUnidadEOS(
-            lstRows       : lstUnidadesEOS,
+            controller    : _searchUnidadEOSController,
+            results       : lstUnidadesEOS,
             onSubmit      : _handleUnidadEOSSearchSubmitted,
             onSelected    : _handleSelectedUnidadEOS,
             onClearField  : _clearFormFields,

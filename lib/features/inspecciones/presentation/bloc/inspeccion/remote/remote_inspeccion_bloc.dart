@@ -135,12 +135,12 @@ class RemoteInspeccionBloc extends Bloc<RemoteInspeccionEvent, RemoteInspeccionS
   }
 
   Future<void> onCancelInspeccion(CancelInspeccion event, Emitter<RemoteInspeccionState> emit) async {
-    emit(RemoteInspeccionCanceling());
+    emit(RemoteInspeccionCancelLoading());
 
     final objDataState = await _cancelInspeccionUseCase(params: event.objData);
 
     if (objDataState is DataSuccess) {
-      emit(RemoteInspeccionCanceledSuccess(objDataState.data));
+      emit(RemoteInspeccionCancelSuccess(objDataState.data));
     }
 
     if (objDataState is DataFailedMessage) {
