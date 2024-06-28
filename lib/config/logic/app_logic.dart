@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
@@ -13,18 +14,16 @@ class AppLogic {
   /// El router lo utilizará para evitar redirecciones durante el bootstrap.
   bool isBootstrapComplete = false;
 
-  /// Indica qué orientaciones permitirá la aplicación por defecto.
-  /// Sólo afecta a dispositivos Android/iOS.
-  ///
-  /// Por defecto tanto horizontal como vertical.
-  List<Axis> supportedOrientations = <Axis>[Axis.vertical, Axis.horizontal];
+  /// Indica las orientaciones que permitirá la aplicación por defecto.
+  /// Sólo afecta a dispositivos Android / iOS.
+  /// Por defecto tanto horizontal(hz) como vertical(vt).
+  List<Axis> supportedOrientations = <Axis>[ Axis.vertical, Axis.horizontal ];
 
-  /// Permitir que una vista anule las orientaciones actualmente soportadas.
-  ///
-  /// Si una vista establece esta anulación, es responsable de retornarla a null
-  /// cuando termine.
+  /// Permitir que una vista anule (override) las orientaciones actualmente soportadas.
+  /// Si una vista establece este override, es responsable de retornarla a null cuando
+  /// termine.
   List<Axis>? _supportedOrientationsOverride;
-  // ignore: avoid_setters_without_getters
+  List<Axis>? get supportedOrientationsOverride => _supportedOrientationsOverride;
   set supportedOrientationsOverride(List<Axis>? value) {
     if (_supportedOrientationsOverride != value) {
       _supportedOrientationsOverride = value;
@@ -32,76 +31,65 @@ class AppLogic {
     }
   }
 
-  /// Inicializa la aplicación y toda la lógica de negocio.
+  /// Inicializa la aplicación y todos los actores principales.
+  /// Carga las configuraciones iniciales de la aplicación, arranca
+  /// los servicios, etc.
   Future<void> bootstrap() async {
-    $logger.d('Bootstrap start...🚀');
+    $logger.d('Inicializando bootstrap...🚀');
 
-    // Ajustar la frecuencia de refresh deseada al máximo posible
-    // (el sistema operativo puede ignorar esto).
+    // Ajustar la tasa de actualización deseada al máximo posible (el OS puede ignorar esto).
     if (!kIsWeb && PlatformInfo.isAndroid) {
       await FlutterDisplayMode.setHighRefreshRate();
     }
 
-    // Configuraciones (Settings):
+    // SETTINGS
     await settingsLogic.load();
 
     // Marcar bootstrap como completado.
     isBootstrapComplete = true;
 
-    // Cargar vista inicial (sustituir la vista inicial vacía que está cubierta
-    // por una pantalla de inicio nativa).
-    final bool showWelcomePage        = settingsLogic.hasCompletedOnboarding.value == false;
-    final bool isNotAuthenticated     = settingsLogic.hasAuthenticated.value == false;
+    // PROPERTIES
+    final bool showWelcomePage      = settingsLogic.hasCompletedOnboarding.value == false;
+    final bool isNotAuthenticated   = settingsLogic.hasAuthenticated.value == false;
 
+    // Cargar vista inicial (reemplazar la vista inicial vacía el cual está cubierta por una
+    // pantalla de splash nativa).
     if (showWelcomePage) {
       appRouter.go(ScreenPaths.welcome);
     } else {
-      if (isNotAuthenticated) {
-        appRouter.go(initialDeeplink ?? ScreenPaths.authSignIn);
-      } else {
-        appRouter.go(initialDeeplink ?? ScreenPaths.home);
-      }
+      appRouter.go(initialDeeplink ?? (isNotAuthenticated ? ScreenPaths.authSignIn : ScreenPaths.home));
     }
   }
 
-  Future<T?> showFullscreenDialogRoute<T>(BuildContext context, Widget child, {bool transparent = false}) async {
+  Future<T?> showFullScreenDialogRoute<T>(BuildContext context, Widget child, {bool transparent = false}) async {
     return Navigator.of(context).push<T>(
       PageRoutesUtils.dialog<T>(child, duration: $styles.times.pageTransition),
     );
   }
 
-  /// Evento de llamado desde la capa UI una vez se ha obtenido un MediaQuery.
+  /// Evento que será llamado desde la capa de presentación una vez se haya obtenido un [MediaQuery].
   void handleAppSizeChanged(Size appSize) {
-    /// Desactivar la disposición horizontal en formatos pequeños.
+    // Desactivar la disposición horizontal en formatos pequeños.
     final bool isSmall    = display.size.shortestSide / display.devicePixelRatio < 600;
-    supportedOrientations = isSmall ? <Axis>[Axis.vertical] : <Axis>[Axis.vertical, Axis.horizontal];
+    supportedOrientations = isSmall ? <Axis>[ Axis.vertical ] : <Axis>[ Axis.vertical, Axis.horizontal ];
     _updateSystemOrientation();
     _appSize = appSize;
   }
 
   Display get display => PlatformDispatcher.instance.displays.first;
 
-  bool shouldUseNavRail() => _appSize.width > _appSize.height && _appSize.height > 250;
+  bool shouldUserNavRail() => _appSize.width > _appSize.height && _appSize.height > 250;
 
   void _updateSystemOrientation() {
     final List<Axis> lstAxis = _supportedOrientationsOverride ?? supportedOrientations;
     // debugPrint('updateDeviceOrientation, supportedAxis: $lstAxis');
     final List<DeviceOrientation> orientations = <DeviceOrientation>[];
-
     if (lstAxis.contains(Axis.vertical)) {
-      orientations.addAll([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ]);
+      orientations.addAll([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     }
-
     if (lstAxis.contains(Axis.horizontal)) {
-       orientations.addAll([
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.landscapeRight,
-      ]);
+      orientations.addAll([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
     }
-
     SystemChrome.setPreferredOrientations(orientations);
   }
 }

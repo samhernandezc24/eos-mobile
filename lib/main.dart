@@ -12,6 +12,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_ca
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_fichero/remote/remote_inspeccion_fichero_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
+import 'package:eos_mobile/features/settings/presentation/bloc/local/local_settings_bloc.dart';
 import 'package:eos_mobile/features/unidades/presentation/bloc/unidad/remote/remote_unidad_eos_bloc.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
@@ -39,11 +40,13 @@ Future<void> main() async {
 /// global `appRouter`, una instancia de [GoRouter].
 class MainApp extends StatelessWidget with GetItMixin {
   MainApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<LocalAuthBloc>(create: (BuildContext context) => sl<LocalAuthBloc>()),
+        BlocProvider<LocalSettingsBloc>(create: (BuildContext context) => sl<LocalSettingsBloc>()),
         BlocProvider<RemoteAuthBloc>(create: (BuildContext context) => sl<RemoteAuthBloc>()),
         BlocProvider<RemoteCategoriaBloc>(create: (BuildContext context) => sl<RemoteCategoriaBloc>()),
         BlocProvider<RemoteCategoriaItemBloc>(create: (BuildContext context) => sl<RemoteCategoriaItemBloc>()),

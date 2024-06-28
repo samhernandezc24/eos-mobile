@@ -1,21 +1,25 @@
 import 'dart:convert';
 
-import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class JsonPrefsFile {
   JsonPrefsFile(this.name);
   final String name;
 
-  /// Carga los datos almacenados con la clave proporcionada desde `SharedPreferences`.
+  /// Evento que se encarga de cargar los datos almacenados en `SharedPreferences` con la key `name`.
+  ///
+  /// Retorna el mapa decodificado.
   Future<Map<String, dynamic>> load() async {
-    final String? p = (await SharedPreferences.getInstance()).getString(name);
-    debugPrint('Cargado: $p');
-    return Map<String, dynamic>.from(jsonDecode(p ?? '{}') as Map<String, dynamic>);
+    final String? prefs = (await SharedPreferences.getInstance()).getString(name);
+    // debugPrint('Cargado: $prefs');
+    return Map<String, dynamic>.from(jsonDecode(prefs ?? '{}') as Map<String, dynamic>);
   }
 
-  /// Guarda los datos proporcionados en forma de mapa con la clave especifica en `SharedPreferences`.
+  /// Evento que se encarga de guardar los datos proporcionados en `data` en `SharedPreferences`.
+  ///
+  /// Almacena la cadena JSON codificada bajo la clave `name` en `SharedPreferences`.
   Future<void> save(Map<String, dynamic> data) async {
-    debugPrint('Guardando $data');
+    // debugPrint('Guardando $data');
     await (await SharedPreferences.getInstance()).setString(name, jsonEncode(data));
   }
 }

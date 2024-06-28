@@ -6,8 +6,45 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 class Globals {
   Globals._();
 
-  /// Padding por defecto para el contenido en un contenedor (ej. InputDecoration).
+  /// Padding por defecto para el contenido en un contenedor.
+  ///
+  /// Ejemplo:
+  /// ```dart
+  /// InputDecoration(
+  ///   contentPadding: Globals.kDefaultContentPadding,
+  /// )
+  /// ```
   static const EdgeInsets kDefaultContentPadding = EdgeInsets.symmetric(horizontal: 10.2, vertical: 13.2);
+
+  /// Verifica si la cadena [str] es un link válido.
+  ///
+  /// Retorna true si la cadena cumple con el formato de URL estándar,
+  /// incluyendo protocolo opcional (http o https), dominio y ruta.
+  ///
+  /// Ejemplos válidos:
+  ///   - https://www.example.com
+  ///   - http://subdomain.example.com/path?query=param#fragment
+  ///
+  /// Retorna false si la cadena no cumple con el formato esperado.
+  static bool isLink(String str) =>
+      str.contains(RegExp(r'^(https?:\/\/)?([\w\d_-]+)\.([\w\d_\.-]+)\/?\??([^#\n\r]*)?#?([^\n\r]*)'));
+
+  /// Convierte un mapa de tipo `Map<String, dyamic>` a una cadena formateada.
+  ///
+  /// Retorna una cadena que representa el contenido del mapa, donde cada para key-value se
+  /// representa en el formato 'key: value, '. Si el mapa es null, retorna una cadena vacía.
+  ///
+  /// Ejemplo:
+  /// ```dart
+  /// Map<String, dynamic> jsonMap = {'key1': 'value1', 'key2' : 2};
+  /// String formattedString = printMap(jsonMap);
+  /// print(formattedString); // Output: 'key1: value1, key2: 2, '
+  /// ```
+  static String printMap(Map<String, dynamic>? map) {
+    String str = '';
+    map?.forEach((key, value) => str += '$key: ${value.toString}, ');
+    return str;
+  }
 
   /// Verifica si [argObject] es non-nullable.
   ///

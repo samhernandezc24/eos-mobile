@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:flutter/material.dart';
 
 class Throttler {
   Throttler(this.interval);

@@ -9,7 +9,6 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   // PROPERTIES
-  bool _isDarkModeEnabled                 = false;
   bool _isAutoUpdateEnabled               = true;
   bool _isRecenUpdateNotificationEnabled  = false;
 
@@ -42,20 +41,16 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(title: Text('Configuración general', style: $styles.textStyles.h3)),
       body: ListView(
         children: <Widget>[
-          // CAMBIAR TEMA DE LA APP:
+          // CAMBIAR TEMA DE LA APP
           SwitchListTile(
             title     : Text($strings.settingsThemeAppTitle),
             subtitle  : Text($strings.settingsThemeAppSubtitle),
             secondary : const Icon(Icons.dark_mode),
-            value     : _isDarkModeEnabled,
-            onChanged : (bool value) {
-              setState(() {
-                _isDarkModeEnabled = value;
-              });
-            },
+            value     : false,
+            onChanged : (_){},
           ),
 
-          // AUTO-UPDATE:
+          // AUTO-UPDATE
           SwitchListTile(
             title     : Text($strings.settingsUpdateAppTitle),
             subtitle  : Text($strings.settingsUpdateAppSubtitle),
@@ -72,7 +67,7 @@ class _SettingsPageState extends State<SettingsPage> {
             },
           ),
 
-          // NOTIFICACIONES DE NUEVAS ACTUALIZACIONES:
+          // NOTIFICACIONES DE NUEVAS ACTUALIZACIONES
           SwitchListTile(
             title     : Text($strings.settingsRecentUpdateTitle),
             subtitle  : Text($strings.settingsRecentUpdateSubtitle),

@@ -77,6 +77,12 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_ca
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_fichero/remote/remote_inspeccion_fichero_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/inspeccion_tipo/remote/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/unidad/remote/remote_unidad_bloc.dart';
+import 'package:eos_mobile/features/settings/data/datasources/local/settings_local_data_service.dart';
+import 'package:eos_mobile/features/settings/data/repositories/settings_repository_impl.dart';
+import 'package:eos_mobile/features/settings/domain/repository/settings_repository.dart';
+import 'package:eos_mobile/features/settings/domain/usecases/get_theme_mode_usecase.dart';
+import 'package:eos_mobile/features/settings/domain/usecases/set_theme_mode_usecase.dart';
+import 'package:eos_mobile/features/settings/presentation/bloc/local/local_settings_bloc.dart';
 import 'package:eos_mobile/features/unidades/data/datasources/remote/unidad/unidad_eos_remote_api_service.dart';
 import 'package:eos_mobile/features/unidades/data/repositories/unidad_eos_repository_impl.dart';
 import 'package:eos_mobile/features/unidades/domain/repositories/unidad_eos_repository.dart';
@@ -120,19 +126,34 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<InspeccionFicheroRemoteApiService>(InspeccionFicheroRemoteApiService(sl()));
   sl.registerSingleton<InspeccionTipoRemoteApiService>(InspeccionTipoRemoteApiService(sl()));
 
+  /// S
+  sl.registerSingleton<SettingsLocalDataService>(SettingsLocalDataService());
+
   // U
   sl.registerSingleton<UnidadRemoteApiService>(UnidadRemoteApiService(sl()));
   sl.registerSingleton<UnidadEOSRemoteApiService>(UnidadEOSRemoteApiService(sl()));
 
   /// ==================== REPOSITORIOS ==================== ///
+  /// A
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
+
+  /// D
   sl.registerSingleton<DataSourcePersistenceRepository>(DataSourcePersistenceRepositoryImpl(sl()));
+
+  /// C
   sl.registerSingleton<CategoriaRepository>(CategoriaRepositoryImpl(sl()));
   sl.registerSingleton<CategoriaItemRepository>(CategoriaItemRepositoryImpl(sl()));
+
+  /// I
   sl.registerSingleton<InspeccionRepository>(InspeccionRepositoryImpl(sl()));
   sl.registerSingleton<InspeccionCategoriaRepository>(InspeccionCategoriaRepositoryImpl(sl()));
   sl.registerSingleton<InspeccionFicheroRepository>(InspeccionFicheroRepositoryImpl(sl()));
   sl.registerSingleton<InspeccionTipoRepository>(InspeccionTipoRepositoryImpl(sl()));
+
+  /// S
+  sl.registerSingleton<SettingsRepository>(SettingsRepositoryImpl(sl()));
+
+  /// U
   sl.registerSingleton<UnidadRepository>(UnidadRepositoryImpl(sl()));
   sl.registerSingleton<UnidadEOSRepository>(UnidadEOSRepositoryImpl(sl()));
 
@@ -156,6 +177,7 @@ Future<void> initializeDependencies() async {
   // G
   sl.registerSingleton<GetCredentialsUseCase>(GetCredentialsUseCase(sl()));
   sl.registerSingleton<GetPreguntasInspeccionCategoriaUseCase>(GetPreguntasInspeccionCategoriaUseCase(sl()));
+  sl.registerSingleton<GetThemeModeUseCase>(GetThemeModeUseCase(sl()));
   sl.registerSingleton<GetUserInfoUseCase>(GetUserInfoUseCase(sl()));
 
   // I
@@ -175,6 +197,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<PredictiveEOSUnidadUseCase>(PredictiveEOSUnidadUseCase(sl()));
 
   // S
+  sl.registerSingleton<SetThemeModeUseCase>(SetThemeModeUseCase(sl()));
   sl.registerSingleton<SignInUseCase>(SignInUseCase(sl()));
   sl.registerSingleton<StoreCategoriaUseCase>(StoreCategoriaUseCase(sl()));
   sl.registerSingleton<StoreCategoriaItemUseCase>(StoreCategoriaItemUseCase(sl()));
@@ -197,6 +220,7 @@ Future<void> initializeDependencies() async {
   /// ==================== STATE MANAGEMENT (BLOC) ==================== ///
   // L (LOCAL OPERATIONS)
   sl.registerFactory<LocalAuthBloc>(() => LocalAuthBloc(sl(), sl(), sl(), sl(), sl(), sl()));
+  sl.registerFactory<LocalSettingsBloc>(() => LocalSettingsBloc(sl(), sl()));
 
   // R (REMOTE OPERATIONS)
   sl.registerFactory<RemoteAuthBloc>(() => RemoteAuthBloc(sl()));

@@ -1,4 +1,3 @@
-import 'package:eos_mobile/config/logic/data/home_data.dart';
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 part './widgets/_module_tile.dart';
@@ -14,6 +13,13 @@ class _HomePageState extends State<HomePage> {
   // CONTROLLERS
   late ScrollController _controller;
 
+  static List<_HomeData> lstHomeModules = <_HomeData>[
+    _HomeData($strings.homePageModule1, Icons.checklist),
+    _HomeData($strings.homePageModule2, Icons.shopping_cart),
+    _HomeData($strings.homePageModule3, Icons.forklift),
+    _HomeData($strings.homePageModule4, Icons.local_shipping),
+  ];
+
   // STATE
   @override
   void initState() {
@@ -28,7 +34,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   // EVENTS
-  void _handleModulePressed(HomeData data) {
+  void _handleModulePressed(_HomeData data) {
     GoRouter.of(context).go('/home/${data.title}'.toLowerCase());
   }
 
@@ -59,9 +65,9 @@ class _HomePageState extends State<HomePage> {
                     crossAxisCount    : (context.widthPx / 300).ceil(),
                     mainAxisSpacing   : $styles.insets.sm,
                     crossAxisSpacing  : $styles.insets.sm,
-                    childCount        : lstModulesData.length,
+                    childCount        : lstHomeModules.length,
                     itemBuilder       : (BuildContext context, int index) =>
-                        _ModuleTile(onPressed: _handleModulePressed, data: lstModulesData[index]),
+                        _ModuleTile(onPressed: _handleModulePressed, data: lstHomeModules[index]),
                   ),
                 ),
               ],
@@ -79,4 +85,12 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+@immutable
+class _HomeData {
+  const _HomeData(this.title, this.icon);
+
+  final String title;
+  final IconData icon;
 }

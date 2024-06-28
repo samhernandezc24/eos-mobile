@@ -2,7 +2,7 @@ import 'package:eos_mobile/features/auth/presentation/pages/sign_in/sign_in_page
 import 'package:eos_mobile/features/inspecciones/presentation/pages/configuracion/inspecciones_tipos/inspecciones_tipos_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/pages/index/index_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/pages/list/list_page.dart';
-import 'package:eos_mobile/features/inspecciones/presentation/pages/search_unidad/search_unidad_page.dart';
+// import 'package:eos_mobile/features/inspecciones/presentation/pages/search_unidad/search_unidad_page.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
@@ -91,7 +91,8 @@ final GoRouter appRouter = GoRouter(
                       useFade: true,
                       parentKey: _rootNavigatorKey,
                     ),
-                    AppRoute('searchunidad', 'home.inspecciones.searchUnidad', (_) => const InspeccionSearchUnidadPage(), useFade: true),
+                    // AppRoute('searchunidad', 'home.inspecciones.searchUnidad', (_) => const InspeccionSearchUnidadPage(), useFade: true),
+                    AppRoute('searchunidad', 'home.inspecciones.searchUnidad', (_) => const UnderConstructionPage(), useFade: true),
                   ],
                   useFade: true,
                 ),

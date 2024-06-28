@@ -3,8 +3,8 @@ part of '../home_page.dart';
 class _ModuleTile extends StatelessWidget {
   const _ModuleTile({required this.onPressed, required this.data, Key? key}) : super(key: key);
 
-  final void Function(HomeData data) onPressed;
-  final HomeData data;
+  final void Function(_HomeData data) onPressed;
+  final _HomeData data;
 
   @override
   Widget build(BuildContext context) {

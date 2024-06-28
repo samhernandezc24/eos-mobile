@@ -103,6 +103,7 @@ class _ResultTileInspeccion extends StatelessWidget {
                     ),
                   ),
                 ];
+
                 if (_showCancelOption(objInspeccion!.idInspeccionEstatus)) {
                   items.add(
                     PopupMenuItem(
@@ -121,6 +122,18 @@ class _ResultTileInspeccion extends StatelessWidget {
             ),
           ),
 
+          if (objInspeccion?.idInspeccionEstatus == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb34' && objInspeccion!.isValid)
+            Positioned(
+              top: 0,
+              left: 0,
+              child: IconButton(
+                onPressed : (){},
+                icon      : Icon(Icons.new_releases, color: Colors.red[100]),
+                tooltip   : 'Inspección vencida',
+              ),
+            ),
+            // child: IconButton(onPressed: (){}, icon: Icon(Icons.r, color: Colors.green[100]), tooltip: 'Inspección vigente'),
+
           if (_showChecklistButton(objInspeccion!.idInspeccionEstatus))
             Positioned(
               bottom: 0,
@@ -129,7 +142,7 @@ class _ResultTileInspeccion extends StatelessWidget {
                 onPressed : () => _handleChecklistPressed(context, InspeccionIdReqEntity(idInspeccion: objInspeccion!.idInspeccion)),
                 icon      : const Icon(Icons.assignment_turned_in),
                 label     : Text(
-                  objInspeccion!.idInspeccionEstatus == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33'
+                  objInspeccion?.idInspeccionEstatus == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33'
                       ? 'Finalizar'
                       : 'Evaluar',
                 ),
