@@ -58,6 +58,13 @@ class _AppScaffoldWithNavBarState extends State<AppScaffoldWithNavBar> {
     );
   }
 
+  void _onTap(BuildContext context, int index) {
+    Navigator.of(context).pop(); // Cerrar drawer
+    Future.delayed($styles.times.medium, () {
+      widget.navigationShell.goBranch(index, initialLocation: index == widget.navigationShell.currentIndex);
+    });
+  }
+
   Future<void> _handleLogoutTap(BuildContext context) async {
     await showDialog<void>(
       context: context,
@@ -164,6 +171,45 @@ class _AppScaffoldWithNavBarState extends State<AppScaffoldWithNavBar> {
             },
           ),
 
+          // NAVEGACION:
+          _buildDrawerList(
+            context,
+            title: 'Navegación',
+            items: <Widget>[
+              _buildDrawerItem(
+                icon          : Icons.home,
+                text          : $strings.homeMenuButtonHome,
+                currentIndex  : widget.navigationShell.currentIndex,
+                itemIndex     : 0,
+                onTap         : () => _onTap(context, 0),
+              ),
+              _buildDrawerItem(
+                icon          : Icons.dashboard,
+                text          : $strings.homeMenuButtonDashboard,
+                currentIndex  : widget.navigationShell.currentIndex,
+                itemIndex     : 1,
+                onTap         : () => _onTap(context, 1),
+              ),
+              _buildDrawerItem(
+                icon          : Icons.format_list_bulleted,
+                text          : $strings.homeMenuButtonActivity,
+                currentIndex  : widget.navigationShell.currentIndex,
+                itemIndex     : 2,
+                onTap         : () => _onTap(context, 2),
+              ),
+              _buildDrawerItem(
+                icon          : Icons.notifications,
+                text          : $strings.homeMenuButtonNotification,
+                trailing      : Text('+99', style: $styles.textStyles.label),
+                currentIndex  : widget.navigationShell.currentIndex,
+                itemIndex     : 3,
+                onTap         : () => _onTap(context, 3),
+              ),
+            ],
+          ),
+
+          const Divider(thickness: 1),
+
           // DRAWER CONTENT LIST
           // CONFIGURACION DE LA APLICACION:
           // ListTile(
@@ -228,6 +274,51 @@ class _AppScaffoldWithNavBarState extends State<AppScaffoldWithNavBar> {
           fit   : BoxFit.cover,
         ),
       ),
+    );
+  }
+
+  Widget _buildDrawerList(BuildContext context, {required List<Widget> items, required String title}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        _buildDrawerListTitle(context, title),
+        ...items,
+      ],
+    );
+  }
+
+  Widget _buildDrawerListTitle(BuildContext context, String title) {
+    return Container(
+      padding: EdgeInsets.all($styles.insets.sm).copyWith(bottom: 0),
+      child: TopLeft(
+        child: DefaultTextStyle(
+          style: $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurface),
+          child: Text(
+            title.toUpperCase(),
+            overflow: TextOverflow.ellipsis,
+            textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem({
+    required IconData icon,
+    required String text,
+    required GestureTapCallback onTap,
+    Widget? trailing,
+    int? itemIndex,
+    int? currentIndex,
+  }) {
+    final bool isSelected = currentIndex == itemIndex;
+
+    return ListTile(
+      leading   : Icon(icon),
+      title     : Text(text),
+      selected  : isSelected,
+      onTap     : onTap,
+      trailing  : trailing,
     );
   }
 

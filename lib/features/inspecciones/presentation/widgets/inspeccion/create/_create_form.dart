@@ -41,8 +41,6 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
   UnidadPredictiveListEntity? _selectedUnidad;
   UnidadEOSPredictiveListEntity? _selectedUnidadEOS;
 
-  String _errorMessage  = '';
-  bool _hasServerError  = false;
   bool _isLoading       = false;
 
   // LIST
@@ -298,18 +296,24 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
   }
 
   void _updateFormFieldsUnidad(UnidadPredictiveListEntity? value) {
-    _unidadNumeroEconomicoController.text      = value?.numeroEconomico     ?? '';
-    _unidadTipoNameController.text             = value?.unidadTipoName      ?? '';
-    _unidadMarcaNameController.text            = value?.unidadMarcaName     ?? '';
-    _unidadModeloController.text               = value?.modelo              ?? '';
-    _unidadPlacaTipoNameController.text        = value?.unidadPlacaTipoName ?? '';
-    _unidadPlacaController.text                = value?.placa               ?? '';
-    _unidadNumeroSerieController.text          = value?.numeroSerie         ?? '';
-    _unidadAnioEquipoController.text           = value?.anioEquipo          ?? '';
-    _unidadBaseNameController.text             = value?.baseName            ?? '';
-    _unidadCapacidadController.text            = value?.capacidad           ?? '';
-    _unidadOdometroController.text             = value?.odometro            ?? '';
-    _unidadHorometroController.text            = value?.horometro           ?? '';
+    setState(() {
+      _unidadNumeroEconomicoController.text      = value?.numeroEconomico     ?? '';
+      _unidadTipoNameController.text             = value?.unidadTipoName      ?? '';
+      _unidadMarcaNameController.text            = value?.unidadMarcaName     ?? '';
+      _unidadModeloController.text               = value?.modelo              ?? '';
+      _unidadPlacaTipoNameController.text        = value?.unidadPlacaTipoName ?? '';
+      _unidadPlacaController.text                = value?.placa               ?? '';
+      _unidadNumeroSerieController.text          = value?.numeroSerie         ?? '';
+      _unidadAnioEquipoController.text           = value?.anioEquipo          ?? '';
+      _unidadBaseNameController.text             = value?.baseName            ?? '';
+      _unidadCapacidadController.text            = value?.capacidad           ?? '';
+      _unidadOdometroController.text             = value?.odometro            ?? '';
+      _unidadHorometroController.text            = value?.horometro           ?? '';
+
+      _selectUnidadCapacidadMedida = lstUnidadesCapacidadesMedidas.firstWhereOrNull(
+        (item) => item.idUnidadCapacidadMedida == value!.idUnidadCapacidadMedida,
+      );
+    });
   }
 
   void _updateFormFieldsUnidadEOS(UnidadEOSPredictiveListEntity? value) {
@@ -325,21 +329,28 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
     _unidadCapacidadController.text            = '0.000';
     _unidadOdometroController.text             = '0';
     _unidadHorometroController.text            = '0';
+
+    _selectUnidadCapacidadMedida = lstUnidadesCapacidadesMedidas.firstWhereOrNull(
+      (item) => item.idUnidadCapacidadMedida == value!.idUnidadCapacidadMedida,
+    );
   }
 
   void _clearFormFields() {
-    _unidadNumeroEconomicoController.clear();
-    _unidadTipoNameController.clear();
-    _unidadMarcaNameController.clear();
-    _unidadModeloController.clear();
-    _unidadPlacaTipoNameController.clear();
-    _unidadPlacaController.clear();
-    _unidadNumeroSerieController.clear();
-    _unidadAnioEquipoController.clear();
-    _unidadBaseNameController.clear();
-    _unidadCapacidadController.clear();
-    _unidadOdometroController.clear();
-    _unidadHorometroController.clear();
+    setState(() {
+      _unidadNumeroEconomicoController.clear();
+      _unidadTipoNameController.clear();
+      _unidadMarcaNameController.clear();
+      _unidadModeloController.clear();
+      _unidadPlacaTipoNameController.clear();
+      _unidadPlacaController.clear();
+      _unidadNumeroSerieController.clear();
+      _unidadAnioEquipoController.clear();
+      _unidadBaseNameController.clear();
+      _unidadCapacidadController.clear();
+      _unidadOdometroController.clear();
+      _unidadHorometroController.clear();
+      _selectUnidadCapacidadMedida = null;
+    });
   }
 
   @override
@@ -552,8 +563,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                           controller  : _unidadBaseNameController,
                           isReadOnly  : true,
                           isEnabled   : false,
-                          label       : '* Base:',
-                          validator   : FormValidators.textValidator,
+                          label       : 'Base:',
                         ),
 
                         Gap($styles.insets.sm),
@@ -579,7 +589,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
 
                         Gap($styles.insets.sm),
 
-                        // CAMPO DE TEXTO Y SELECT:  UNIDAD CAPACIDAD / CAPACIDAD MEDIDA
+                        // CAMPO DE TEXTO Y SELECT: UNIDAD CAPACIDAD / CAPACIDAD MEDIDA
                         Row(
                           children: <Widget>[
                             Expanded(
@@ -587,8 +597,8 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                                 controller    : _unidadCapacidadController,
                                 hintText      : 'Ingresa cantidad',
                                 keyboardType  : TextInputType.number,
-                                label         : '* Capacidad:',
-                                validator     : FormValidators.decimalValidator,
+                                label         : 'Capacidad:',
+                                validator     : FormValidators.decimalValidatorNull,
                               ),
                             ),
                             Gap($styles.insets.sm),
@@ -596,9 +606,8 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                               child: LabeledDropdownFormField<UnidadCapacidadMedida>(
                                 items       : lstUnidadesCapacidadesMedidas,
                                 itemBuilder : (item) => Text(item.name ?? ''),
-                                label       : '* Capacidad medida:',
+                                label       : 'Capacidad medida:',
                                 onChanged   : (value) => setState(() => _selectUnidadCapacidadMedida = value),
-                                validator   : FormValidators.dropdownValidator,
                                 value       : _selectUnidadCapacidadMedida,
                               ),
                             ),
@@ -686,8 +695,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
             // ERROR
             if (state is RemoteUnidadServerFailedMessagePredictive) {
               setState(() {
-                _hasServerError = true;
-                _isLoading      = false;
+                _isLoading = false;
               });
 
               _showServerFailedDialog(context, state.errorMessage);
@@ -695,8 +703,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
 
             if (state is RemoteUnidadServerFailurePredictive) {
               setState(() {
-                _hasServerError = true;
-                _isLoading      = false;
+                _isLoading = false;
               });
 
               _showServerFailedDialog(context, state.failure?.errorMessage);
@@ -705,9 +712,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
             // SUCCESS
             if (state is RemoteUnidadPredictiveLoaded) {
               setState(() {
-                _isLoading      = false;
-                _hasServerError = false;
-
+                _isLoading  = false;
                 lstUnidades = state.objResponse ?? [];
               });
             }
@@ -741,26 +746,20 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
             // ERROR
             if (state is RemoteUnidadEOSServerFailedMessagePredictive) {
               setState(() {
-                _hasServerError = true;
-                _isLoading      = false;
-                _errorMessage   = state.errorMessage ?? 'Error inesperado';
+                _isLoading = false;
               });
             }
 
             if (state is RemoteUnidadEOSServerFailurePredictive) {
               setState(() {
-                _hasServerError = true;
-                _isLoading      = false;
-                _errorMessage   = state.failure?.errorMessage ?? 'Error inesperado';
+                _isLoading = false;
               });
             }
 
             // SUCCESS
             if (state is RemoteUnidadEOSPredictiveLoaded) {
               setState(() {
-                _isLoading      = false;
-                _hasServerError = false;
-
+                _isLoading     = false;
                 lstUnidadesEOS = state.objResponse ?? [];
               });
             }

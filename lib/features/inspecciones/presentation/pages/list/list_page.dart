@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:collection/collection.dart';
 import 'package:eos_mobile/core/constants/list_api.dart';
 import 'package:eos_mobile/core/data/catalogos/base.dart';
 import 'package:eos_mobile/core/data/catalogos/inspeccion_estatus.dart';

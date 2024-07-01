@@ -33,9 +33,6 @@ class StoreUnidad extends RemoteUnidadEvent {
   List<Object?> get props => [ objData ];
 }
 
-/// [ListUnidadUseCase]
-class ListUnidades extends RemoteUnidadEvent {}
-
 /// [PredictiveUnidadUseCase]
 class PredictiveUnidades extends RemoteUnidadEvent {
   const PredictiveUnidades(this.varArgs);

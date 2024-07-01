@@ -8,7 +8,6 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_s
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/create_unidad_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/data_source_unidad_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/index_unidad_usecase.dart';
-import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/list_unidad_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/predictive_unidad_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/unidad/store_unidad_usecase.dart';
 
@@ -23,14 +22,12 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
     this._dataSourceUnidadUseCase,
     this._createUnidadUseCase,
     this._storeUnidadUseCase,
-    this._listUnidadUseCase,
     this._predictiveUnidadUseCase,
   ) : super(RemoteUnidadInitialState()) {
     on<FetchUnidadInit>(onFetchUnidadInit);
     on<FetchUnidadDataSource>(onFetchUnidadDataSource);
     on<FetchUnidadCreate>(onFetchUnidadCreate);
     on<StoreUnidad>(onStoreUnidad);
-    on<ListUnidades>(onListUnidades);
     on<PredictiveUnidades>(onPredictiveUnidades);
   }
 
@@ -39,7 +36,6 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
   final DataSourceUnidadUseCase _dataSourceUnidadUseCase;
   final CreateUnidadUseCase _createUnidadUseCase;
   final StoreUnidadUseCase _storeUnidadUseCase;
-  final ListUnidadUseCase _listUnidadUseCase;
   final PredictiveUnidadUseCase _predictiveUnidadUseCase;
 
   Future<void> onFetchUnidadInit(FetchUnidadInit event, Emitter<RemoteUnidadState> emit) async {
@@ -111,24 +107,6 @@ class RemoteUnidadBloc extends Bloc<RemoteUnidadEvent, RemoteUnidadState> {
 
     if (objDataState is DataFailed) {
       emit(RemoteUnidadServerFailureStore(objDataState.serverException));
-    }
-  }
-
-  Future<void> onListUnidades(ListUnidades event, Emitter<RemoteUnidadState> emit) async {
-    emit(RemoteUnidadListLoading());
-
-    final objDataState = await _listUnidadUseCase(params: NoParams());
-
-    if (objDataState is DataSuccess) {
-      emit(RemoteUnidadListLoaded(objDataState.data));
-    }
-
-    if (objDataState is DataFailedMessage) {
-      emit(RemoteUnidadServerFailedMessage(objDataState.errorMessage));
-    }
-
-    if (objDataState is DataFailed) {
-      emit(RemoteUnidadServerFailure(objDataState.serverException));
     }
   }
 

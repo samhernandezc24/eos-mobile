@@ -8,11 +8,11 @@ class UnidadPredictiveListEntity extends Equatable {
   const UnidadPredictiveListEntity({
     required this.idUnidad,
     required this.numeroEconomico,
-    required this.numeroSerie,
-    required this.idBase,
-    required this.baseName,
     required this.idUnidadTipo,
     required this.unidadTipoName,
+    this.numeroSerie,
+    this.idBase,
+    this.baseName,
     this.idUnidadMarca,
     this.unidadMarcaName,
     this.idUnidadPlacaTipo,
@@ -29,9 +29,9 @@ class UnidadPredictiveListEntity extends Equatable {
 
   final String idUnidad;
   final String numeroEconomico;
-  final String numeroSerie;
-  final String idBase;
-  final String baseName;
+  final String? numeroSerie;
+  final String? idBase;
+  final String? baseName;
   final String idUnidadTipo;
   final String unidadTipoName;
   final String? idUnidadMarca;

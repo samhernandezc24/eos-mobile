@@ -40,7 +40,6 @@ Future<void> main() async {
 /// global `appRouter`, una instancia de [GoRouter].
 class MainApp extends StatelessWidget with GetItMixin {
   MainApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -55,7 +54,7 @@ class MainApp extends StatelessWidget with GetItMixin {
         BlocProvider<RemoteInspeccionCategoriaBloc>(create: (BuildContext context) => sl<RemoteInspeccionCategoriaBloc>()),
         BlocProvider<RemoteInspeccionFicheroBloc>(create: (BuildContext context) => sl<RemoteInspeccionFicheroBloc>()),
         BlocProvider<RemoteInspeccionTipoBloc>(create: (BuildContext context) => sl<RemoteInspeccionTipoBloc>()..add(ListInspeccionesTipos())),
-        BlocProvider<RemoteUnidadBloc>(create: (BuildContext context) => sl<RemoteUnidadBloc>()..add(ListUnidades())),
+        BlocProvider<RemoteUnidadBloc>(create: (BuildContext context) => sl<RemoteUnidadBloc>()),
         BlocProvider<RemoteUnidadEOSBloc>(create: (BuildContext context) => sl<RemoteUnidadEOSBloc>()),
       ],
       child: MaterialApp.router(

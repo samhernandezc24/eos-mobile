@@ -42,13 +42,6 @@ abstract class UnidadRemoteApiService {
     @Body() UnidadStoreReqModel objData,
   );
 
-  /// LISTADO DE UNIDADES
-  @POST('/List')
-  Future<HttpResponse<ServerResponse>> list(
-    @Header(HttpHeaders.contentTypeHeader) String contentType,
-    @Header(HttpHeaders.authorizationHeader) String token,
-  );
-
   /// PREDICTIVO DE UNIDADES
   @POST('/Predictive')
   Future<HttpResponse<ServerResponse>> predictive(

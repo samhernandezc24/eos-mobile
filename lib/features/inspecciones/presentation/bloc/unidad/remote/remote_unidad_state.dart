@@ -56,18 +56,6 @@ class RemoteUnidadStoreSuccess extends RemoteUnidadState {
   List<Object?> get props => [ objResponse ];
 }
 
-/// LIST
-class RemoteUnidadListLoading extends RemoteUnidadState {}
-
-class RemoteUnidadListLoaded extends RemoteUnidadState {
-  const RemoteUnidadListLoaded(this.objResponse);
-
-  final List<UnidadEntity>? objResponse;
-
-  @override
-  List<Object?> get props => [ objResponse ];
-}
-
 /// PREDICTIVE
 class RemoteUnidadPredictiveLoading extends RemoteUnidadState {}
 

@@ -238,11 +238,10 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
 
                         // SELECCIONAR UNIDAD MARCA:
                         LabeledDropdownFormField<UnidadMarca>(
-                          label       : '* Marca:',
+                          label       : 'Marca:',
                           items       : lstUnidadesMarcas,
                           itemBuilder : (item) => Text(item.name ?? ''),
                           onChanged   : (value) => setState(() => _selectedUnidadMarca = value),
-                          validator   : FormValidators.dropdownValidator,
                           value       : _selectedUnidadMarca,
                         ),
 
@@ -252,8 +251,7 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
                         LabeledTextFormField(
                           controller  : _unidadModeloController,
                           hintText    : 'Ingrese modelo',
-                          label       : '* Modelo:',
-                          validator   : FormValidators.textValidator,
+                          label       : 'Modelo:',
                         ),
 
                         Gap($styles.insets.sm),
@@ -262,19 +260,17 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
                         LabeledTextFormField(
                           controller  : _unidadNumeroSerieController,
                           hintText    : 'Ingrese número de serie',
-                          label       : '* Número de serie:',
-                          validator   : FormValidators.textValidator,
+                          label       : 'Número de serie:',
                         ),
 
                         Gap($styles.insets.sm),
 
                         // SELECCIONA LA BASE DE LA UNIDAD:
                         LabeledDropdownFormField<Base>(
-                          label       : '* Base:',
+                          label       : 'Base:',
                           items       : lstBases,
                           itemBuilder : (item) => Text(item.name ?? ''),
                           onChanged   : (value) => setState(() => _selectedUnidadBase = value),
-                          validator   : FormValidators.dropdownValidator,
                           value       : _selectedUnidadBase,
                         ),
 
@@ -332,19 +328,18 @@ class _CreateUnidadFormState extends State<_CreateUnidadForm> {
                               child: LabeledTextFormField(
                                 controller    : _unidadCapacidadController,
                                 hintText      : 'Ingrese cantidad',
-                                label         : '* Capacidad:',
+                                label         : 'Capacidad:',
                                 keyboardType  : TextInputType.number,
-                                validator     : FormValidators.decimalValidator,
+                                validator     : FormValidators.decimalValidatorNull,
                               ),
                             ),
                             Gap($styles.insets.sm),
                             Expanded(
                               child: LabeledDropdownFormField<UnidadCapacidadMedida>(
-                                label       : '* Tipo de capacidad:',
+                                label       : 'Tipo de capacidad:',
                                 items       : lstUnidadesCapacidadesMedidas,
                                 itemBuilder : (item) => Text(item.name ?? ''),
                                 onChanged   : (value) => setState(() => _selectedUnidadCapacidadMedida = value),
-                                validator   : FormValidators.dropdownValidator,
                                 value       : _selectedUnidadCapacidadMedida,
                               ),
                             ),

@@ -3,43 +3,43 @@ import 'package:eos_mobile/shared/shared_libraries.dart';
 class UnidadStoreReqEntity extends Equatable {
   const UnidadStoreReqEntity({
     required this.numeroEconomico,
-    required this.idBase,
-    required this.baseName,
     required this.idUnidadTipo,
     required this.unidadTipoName,
-    required this.idUnidadMarca,
-    required this.unidadMarcaName,
-    required this.numeroSerie,
-    required this.modelo,
-    required this.capacidad,
-    required this.idUnidadCapacidadMedida,
-    required this.unidadCapacidadMedidaName,
+    this.idBase,
+    this.baseName,
+    this.idUnidadMarca,
+    this.unidadMarcaName,
     this.idUnidadPlacaTipo,
     this.unidadPlacaTipoName,
     this.placa,
+    this.numeroSerie,
+    this.modelo,
     this.anioEquipo,
     this.descripcion,
+    this.capacidad,
+    this.idUnidadCapacidadMedida,
+    this.unidadCapacidadMedidaName,
     this.horometro,
     this.odometro,
   });
 
   final String numeroEconomico;
-  final String idBase;
-  final String baseName;
+  final String? idBase;
+  final String? baseName;
   final String idUnidadTipo;
   final String unidadTipoName;
-  final String idUnidadMarca;
-  final String unidadMarcaName;
+  final String? idUnidadMarca;
+  final String? unidadMarcaName;
   final String? idUnidadPlacaTipo;
   final String? unidadPlacaTipoName;
   final String? placa;
-  final String numeroSerie;
-  final String modelo;
+  final String? numeroSerie;
+  final String? modelo;
   final String? anioEquipo;
   final String? descripcion;
-  final double capacidad;
-  final String idUnidadCapacidadMedida;
-  final String unidadCapacidadMedidaName;
+  final double? capacidad;
+  final String? idUnidadCapacidadMedida;
+  final String? unidadCapacidadMedidaName;
   final int? horometro;
   final int? odometro;
 

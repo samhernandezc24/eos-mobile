@@ -13,7 +13,7 @@ class _UnidadEOSRemoteApiService implements UnidadEOSRemoteApiService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://10.0.2.2:7000/api/unidades';
+    baseUrl ??= ListAPI.unidadesEOS;
   }
 
   final Dio _dio;
