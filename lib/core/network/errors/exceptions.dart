@@ -53,9 +53,4 @@ class ServerException implements Exception {
   String toString() => errorMessage;
 }
 
-class LocalException implements Exception {
-  const LocalException({required this.message, this.statusCode});
-
-  final String message;
-  final int? statusCode;
-}
+class LocalDatabaseException implements Exception {}

@@ -14,7 +14,7 @@ class _InspeccionFicheroRemoteApiService
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= ListAPI.inspeccionesFicheros;
+    baseUrl ??= 'http://10.0.2.2:7000/api/Inspecciones/Ficheros';
   }
 
   final Dio _dio;

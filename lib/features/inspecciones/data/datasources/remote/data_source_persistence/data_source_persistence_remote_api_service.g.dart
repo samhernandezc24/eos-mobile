@@ -14,7 +14,7 @@ class _DataSourcePersistenceRemoteApiService
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= ListAPI.dataSourcePersistence;
+    baseUrl ??= 'http://10.0.2.2:7000/api/DataSourcePersistence';
   }
 
   final Dio _dio;

@@ -14,7 +14,7 @@ class _InspeccionCategoriaRemoteApiService
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= ListAPI.inspeccionesCategorias;
+    baseUrl ??= 'http://10.0.2.2:7000/api/Inspecciones/Categorias';
   }
 
   final Dio _dio;

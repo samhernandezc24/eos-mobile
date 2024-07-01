@@ -14,6 +14,8 @@ import 'package:eos_mobile/features/auth/domain/usecases/store_user_info_usecase
 import 'package:eos_mobile/features/auth/domain/usecases/store_user_session_usecase.dart.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/local/local_auth_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/auth/remote/remote_auth_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/data/datasources/local/db/inspeccion_db.dart';
+import 'package:eos_mobile/features/inspecciones/data/datasources/local/inspeccion/inspeccion_local_data_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/categoria/categoria_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/categoria_item/categoria_item_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/data_source_persistence/data_source_persistence_remote_api_service.dart';
@@ -53,6 +55,7 @@ import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/crea
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/data_source_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/finish_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/index_inspeccion_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/store_inspeccion_signature_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion/store_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_categoria/get_preguntas_inspeccion_categoria_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/inspeccion_categoria/store_inspeccion_categoria_usecase.dart';
@@ -98,7 +101,10 @@ final GetIt sl = GetIt.instance;
 /// funcionamiento de la aplicación, incluyendo lógicas de arranque, servicios, repositorios,
 /// manejadores de estado con BLoC, etc.
 Future<void> initializeDependencies() async {
-  /// ==================== DIO (HTTP) ==================== ///
+  /// ==================== LOCAL DATABASE (OBJECTBOX) ==================== ///
+  sl.registerLazySingleton<InspeccionDB>(() => InspeccionDB());
+
+  /// ==================== DIO (REST CLIENT) ==================== ///
   sl.registerSingleton<Dio>(Dio());
 
   /// ==================== LOGIC, GLOBALS & HELPERS ==================== ///
@@ -120,6 +126,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<DataSourcePersistenceRemoteApiService>(DataSourcePersistenceRemoteApiService(sl()));
 
   // I
+  sl.registerSingleton<InspeccionLocalDataService>(InspeccionLocalDataService(sl()));
   sl.registerSingleton<InspeccionRemoteApiService>(InspeccionRemoteApiService(sl()));
   sl.registerSingleton<InspeccionCategoriaRemoteApiService>(InspeccionCategoriaRemoteApiService(sl()));
   sl.registerSingleton<InspeccionFicheroRemoteApiService>(InspeccionFicheroRemoteApiService(sl()));
@@ -144,7 +151,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<CategoriaItemRepository>(CategoriaItemRepositoryImpl(sl()));
 
   /// I
-  sl.registerSingleton<InspeccionRepository>(InspeccionRepositoryImpl(sl()));
+  sl.registerSingleton<InspeccionRepository>(InspeccionRepositoryImpl(sl(), sl()));
   sl.registerSingleton<InspeccionCategoriaRepository>(InspeccionCategoriaRepositoryImpl(sl()));
   sl.registerSingleton<InspeccionFicheroRepository>(InspeccionFicheroRepositoryImpl(sl()));
   sl.registerSingleton<InspeccionTipoRepository>(InspeccionTipoRepositoryImpl(sl()));
@@ -201,6 +208,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<StoreCategoriaItemUseCase>(StoreCategoriaItemUseCase(sl()));
   sl.registerSingleton<StoreCredentialsUseCase>(StoreCredentialsUseCase(sl()));
   sl.registerSingleton<StoreDuplicateCategoriaItemUseCase>(StoreDuplicateCategoriaItemUseCase(sl()));
+  sl.registerSingleton<StoreInspeccionSignatureUseCase>(StoreInspeccionSignatureUseCase(sl()));
   sl.registerSingleton<StoreInspeccionUseCase>(StoreInspeccionUseCase(sl()));
   sl.registerSingleton<StoreInspeccionCategoriaUseCase>(StoreInspeccionCategoriaUseCase(sl()));
   sl.registerSingleton<StoreInspeccionFicheroUseCase>(StoreInspeccionFicheroUseCase(sl()));
@@ -216,11 +224,11 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<UpdateInspeccionTipoUseCase>(UpdateInspeccionTipoUseCase(sl()));
 
   /// ==================== STATE MANAGEMENT (BLOC) ==================== ///
-  // L (LOCAL OPERATIONS)
+  // (LOCAL OPERATIONS)
   sl.registerFactory<LocalAuthBloc>(() => LocalAuthBloc(sl(), sl(), sl(), sl(), sl(), sl()));
   sl.registerFactory<LocalSettingsBloc>(() => LocalSettingsBloc(sl(), sl()));
 
-  // R (REMOTE OPERATIONS)
+  // (REMOTE OPERATIONS)
   sl.registerFactory<RemoteAuthBloc>(() => RemoteAuthBloc(sl()));
   sl.registerFactory<RemoteCategoriaBloc>(() => RemoteCategoriaBloc(sl(), sl(), sl(), sl()));
   sl.registerFactory<RemoteCategoriaItemBloc>(() => RemoteCategoriaItemBloc(sl(), sl(), sl(), sl(), sl()));

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:eos_mobile/core/data/data_source.dart';
+import 'package:eos_mobile/features/inspecciones/data/datasources/local/inspeccion/inspeccion_local_data_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion/inspeccion_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_create_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_data_source_res_model.dart';
@@ -11,14 +12,16 @@ import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspecci
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_finish_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_signature_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_repository.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
 class InspeccionRepositoryImpl implements InspeccionRepository {
-  InspeccionRepositoryImpl(this._inspeccionRemoteApiService);
+  InspeccionRepositoryImpl(this._inspeccionRemoteApiService, this._inspeccionLocalDataService);
 
   final InspeccionRemoteApiService _inspeccionRemoteApiService;
+  final InspeccionLocalDataService _inspeccionLocalDataService;
 
   /// CARGA DE INFORMACION DE INSPECCION (FILTRADOS DINÁMICOS)
   @override
@@ -261,5 +264,12 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
     } on DioException catch (ex) {
       return DataFailed(ServerException.fromDioException(ex));
     }
+  }
+
+  // LOCAL METHODS
+  /// GUARDADO DE FIRMAS DE UNA INSPECCION (TEMPORAL)
+  @override
+  Future<void> storeSignature(InspeccionStoreSignatureEntity signature) async {
+    return _inspeccionLocalDataService.storeSignature(signature);
   }
 }

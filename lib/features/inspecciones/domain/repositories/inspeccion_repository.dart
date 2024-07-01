@@ -6,6 +6,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/insp
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_index_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_signature_entity.dart';
 
 import 'package:eos_mobile/shared/shared_libraries.dart';
 
@@ -19,4 +20,5 @@ abstract class InspeccionRepository {
   Future<DataState<ServerResponse>> cancel(InspeccionIdReqEntity objData);
 
   // LOCAL METHODS
+  Future<void> storeSignature(InspeccionStoreSignatureEntity signature);
 }
