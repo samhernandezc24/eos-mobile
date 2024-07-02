@@ -172,7 +172,7 @@ class _ListCardState extends State<_ListCard> {
                   ...[
                     TextButton(
                       onPressed : _handleCancelPressed,
-                      child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
+                      child     : Text(AppStrings.btnCancelText, style: $styles.textStyles.button),
                     ),
                     TextButton.icon(
                       onPressed : _handleUpdatePressed,

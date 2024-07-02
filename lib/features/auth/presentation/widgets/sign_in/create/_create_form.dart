@@ -173,7 +173,7 @@ class _CreateSignInFormState extends State<_CreateSignInForm> {
                       return FilledButton(
                         onPressed : _handleSignInPressed,
                         style     : ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(double.infinity, 48))),
-                        child     : Text($strings.signInButtonText, style: $styles.textStyles.button),
+                        child     : Text(AppStrings.btnJoinText, style: $styles.textStyles.button),
                       );
                     },
                   ),

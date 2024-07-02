@@ -65,9 +65,9 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget build(BuildContext context) {
     // Establecer los datos de la página.
     pageData = <_PageData>[
-      _PageData($strings.welcomeTitleOne, $strings.welcomeContentOne, 'one'),
-      _PageData($strings.welcomeTitleTwo, $strings.welcomeContentTwo, 'two'),
-      _PageData($strings.welcomeTitleThree, $strings.welcomeContentThree, 'three'),
+      const _PageData(AppStrings.welcomeFirstPageTitle, AppStrings.welcomeFirstPageContent, 'one'),
+      const _PageData(AppStrings.welcomeSecondPageTitle, AppStrings.welcomeSecondPageContent, 'two'),
+      const _PageData(AppStrings.welcomeThirdPageTitle, AppStrings.welcomeThirdPageContent, 'three'),
     ];
 
     // Esta vista utiliza un PageView a pantalla completa para permitir
@@ -126,7 +126,7 @@ class _WelcomePageState extends State<WelcomePage> {
                               height: _logoHeight,
                               alignment: Alignment.center,
                               child: Text(
-                                $strings.defaultAppName,
+                                AppStrings.defaultAppName,
                                 style: $styles.textStyles.title1,
                               ),
                             ),
@@ -208,7 +208,7 @@ class _WelcomePageState extends State<WelcomePage> {
           child: CircleIconButton(
             icon: AppIcons.next_large,
             onPressed: _handleWelcomeCompletePressed,
-            semanticLabel: $strings.welcomeSemanticEnterApp,
+            semanticLabel: AppStrings.welcomeSemanticEnterApp,
           ),
         );
       },
@@ -245,9 +245,9 @@ class _WelcomePageState extends State<WelcomePage> {
           opacity: pageIndex == pageData.length - 1 ? 0 : 1,
           duration: $styles.times.fast,
           child: Semantics(
-            onTapHint: $strings.welcomeSemanticNavigate,
+            onTapHint: AppStrings.welcomeSemanticNavigate,
             onTap: _isOnLastPage ? null : _handleNavTextSemanticTap,
-            child: Text($strings.welcomeSemanticSwipeLeft, style: $styles.textStyles.bodySmall),
+            child: Text(AppStrings.welcomeSemanticSwipeLeft, style: $styles.textStyles.bodySmall),
           ),
         );
       },

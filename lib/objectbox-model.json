@@ -4,23 +4,23 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:1655259591025763135",
-      "lastPropertyId": "3:9079106846542727244",
+      "id": "1:7368807676219307740",
+      "lastPropertyId": "3:4068840387619308703",
       "name": "InspeccionStoreSignatureEntity",
       "properties": [
         {
-          "id": "1:3788278256358394494",
+          "id": "1:3160082961079650625",
           "name": "id",
           "type": 6,
           "flags": 129
         },
         {
-          "id": "2:7050651768855984583",
+          "id": "2:1886737991592374575",
           "name": "firmaPath",
           "type": 9
         },
         {
-          "id": "3:9079106846542727244",
+          "id": "3:4068840387619308703",
           "name": "idInspeccion",
           "type": 9
         }
@@ -28,7 +28,7 @@
       "relations": []
     }
   ],
-  "lastEntityId": "1:1655259591025763135",
+  "lastEntityId": "1:7368807676219307740",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

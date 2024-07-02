@@ -182,15 +182,15 @@ class __ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEva
             ),
             actions: <Widget>[
               TextButton(
-                onPressed : () => Navigator.pop(context, $strings.cancelButtonText),
-                child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
+                onPressed : () => Navigator.pop(context, AppStrings.btnCancelText),
+                child     : Text(AppStrings.btnCancelText, style: $styles.textStyles.button),
               ),
               TextButton(
                 onPressed : () {
                   Navigator.of(context).pop();  // Cerrar AlertDialog
                   _store(isParcial);            // Finalizar InspeccionEvaluacion
                 },
-                child     : Text($strings.acceptButtonText, style: $styles.textStyles.button),
+                child     : Text($strings.btnAccepText, style: $styles.textStyles.button),
               ),
             ],
           );

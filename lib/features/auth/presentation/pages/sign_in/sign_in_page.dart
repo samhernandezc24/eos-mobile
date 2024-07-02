@@ -81,7 +81,7 @@ class _EosMobileLogo extends StatelessWidget {
         Gap($styles.insets.xs),
         StaticTextScale(
           child: Text(
-            $strings.signInTitleHeading,
+            AppStrings.authSignInTitle,
             style: $styles.textStyles.h1.copyWith(fontSize: 30 * $styles.scale, fontWeight: FontWeight.w600),
           ),
         ),

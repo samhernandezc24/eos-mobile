@@ -74,8 +74,8 @@ class _AppScaffoldWithNavBarState extends State<AppScaffoldWithNavBar> {
           content : Text('¿Salir de tu cuenta?', style: $styles.textStyles.body),
           actions: <Widget>[
             TextButton(
-              onPressed : () => Navigator.pop(context, $strings.cancelButtonText),
-              child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
+              onPressed : () => Navigator.pop(context, AppStrings.btnCancelText),
+              child     : Text(AppStrings.btnCancelText, style: $styles.textStyles.button),
             ),
             TextButton(
               onPressed : () => _handleLogoutRequestedPressed(context),

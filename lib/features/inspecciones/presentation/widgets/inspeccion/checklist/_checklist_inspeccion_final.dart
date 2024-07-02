@@ -116,13 +116,13 @@ class _ChecklistInspeccionFinalState extends State<_ChecklistInspeccionFinal> {
             style: $styles.textStyles.body.copyWith(height: 1.4),
           ),
           actions : [
-            TextButton(onPressed: () => Navigator.pop(context, $strings.cancelButtonText), child: Text($strings.cancelButtonText, style: $styles.textStyles.button)),
+            TextButton(onPressed: () => Navigator.pop(context, AppStrings.btnCancelText), child: Text(AppStrings.btnCancelText, style: $styles.textStyles.button)),
             TextButton(
               onPressed: () {
-                Navigator.pop(context, $strings.acceptButtonText);  // Cerrar el dialógo
+                Navigator.pop(context, $strings.btnAccepText);  // Cerrar el dialógo
                 _store();                                           // Finalizar inspección
               },
-              child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
+              child: Text($strings.btnAccepText, style: $styles.textStyles.button),
             ),
           ],
         );

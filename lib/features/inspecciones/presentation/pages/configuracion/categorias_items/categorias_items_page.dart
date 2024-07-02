@@ -70,8 +70,8 @@ class _InspeccionConfiguracionCategoriasItemsPageState extends State<InspeccionC
           ),
           actions: <Widget>[
             TextButton(
-              onPressed : () => Navigator.pop(context, $strings.cancelButtonText),
-              child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
+              onPressed : () => Navigator.pop(context, AppStrings.btnCancelText),
+              child     : Text(AppStrings.btnCancelText, style: $styles.textStyles.button),
             ),
             TextButton(
               onPressed : () => context.read<RemoteCategoriaItemBloc>().add(DeleteCategoriaItem(objData)),

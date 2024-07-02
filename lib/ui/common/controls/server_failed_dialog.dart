@@ -20,8 +20,8 @@ class ServerFailedDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         TextButton(
-          onPressed : () => Navigator.pop(context, $strings.acceptButtonText),
-          child     : Text($strings.acceptButtonText, style: $styles.textStyles.button),
+          onPressed : () => Navigator.pop(context, $strings.btnAccepText),
+          child     : Text($strings.btnAccepText, style: $styles.textStyles.button),
         ),
       ],
     );

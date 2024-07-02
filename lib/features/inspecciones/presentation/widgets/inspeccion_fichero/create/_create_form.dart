@@ -38,8 +38,8 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
           content: Text($strings.exitConfirmationDialogMessage, style: $styles.textStyles.body.copyWith(height: 1.3)),
           actions: <Widget>[
             TextButton(
-              onPressed: () => Navigator.pop(context, $strings.cancelButtonText),
-              child: Text($strings.cancelButtonText, style: $styles.textStyles.button),
+              onPressed: () => Navigator.pop(context, AppStrings.btnCancelText),
+              child: Text(AppStrings.btnCancelText, style: $styles.textStyles.button),
             ),
             TextButton(
               onPressed: () {
@@ -49,7 +49,7 @@ class _CreateInspeccionFicheroFormState extends State<_CreateInspeccionFicheroFo
                   widget.onFinish!();           // Ejecutar callback de actualización
                 });
               },
-              child: Text($strings.acceptButtonText, style: $styles.textStyles.button),
+              child: Text($strings.btnAccepText, style: $styles.textStyles.button),
             ),
           ],
         );

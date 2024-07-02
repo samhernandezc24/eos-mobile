@@ -262,8 +262,8 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
         contentPadding: EdgeInsets.fromLTRB($styles.insets.sm, 0, $styles.insets.sm, 0),
         actions: <Widget>[
           TextButton(
-            onPressed : () => Navigator.of(context).pop($strings.closeButtonText),
-            child     : Text($strings.closeButtonText, style: $styles.textStyles.button),
+            onPressed : () => Navigator.of(context).pop(AppStrings.btnCloseText),
+            child     : Text(AppStrings.btnCloseText, style: $styles.textStyles.button),
           ),
         ],
         actionsPadding: EdgeInsets.fromLTRB(0, 0, $styles.insets.sm, $styles.insets.xs),
@@ -314,12 +314,12 @@ class _InspeccionListPageState extends State<InspeccionListPage> with GetItState
           ),
           actions: <Widget>[
             TextButton(
-              onPressed : () => Navigator.pop(context, $strings.cancelButtonText),
-              child     : Text($strings.cancelButtonText, style: $styles.textStyles.button),
+              onPressed : () => Navigator.pop(context, AppStrings.btnCancelText),
+              child     : Text(AppStrings.btnCancelText, style: $styles.textStyles.button),
             ),
             TextButton(
               onPressed : () => context.read<RemoteInspeccionBloc>().add(CancelInspeccion(objData)),
-              child     : Text($strings.acceptButtonText, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
+              child     : Text(AppStrings.btnAcceptText, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
             ),
           ],
         );

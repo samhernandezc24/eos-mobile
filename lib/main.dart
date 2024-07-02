@@ -58,7 +58,7 @@ class MainApp extends StatelessWidget with GetItMixin {
         BlocProvider<RemoteUnidadEOSBloc>(create: (BuildContext context) => sl<RemoteUnidadEOSBloc>()),
       ],
       child: MaterialApp.router(
-        title                       : $strings.defaultAppName,
+        title                       : AppStrings.defaultAppName,
         debugShowCheckedModeBanner  : false,
         theme                       : AppTheme.lightTheme($styles),
         darkTheme                   : AppTheme.darkTheme($styles),
@@ -75,10 +75,9 @@ class MainApp extends StatelessWidget with GetItMixin {
 /// Deliberadamente no se crean shortcuts para los servicios, para desalentar su uso directamente en la capa de presentación.
 AppLogic get appLogic                 => sl.get<AppLogic>();
 SettingsLogic get settingsLogic       => sl.get<SettingsLogic>();
-ImageHelper get imageHelper           => sl.get<ImageHelper>();
 AuthTokenHelper get authTokenHelper   => sl.get<AuthTokenHelper>();
+ImageHelper get imageHelper           => sl.get<ImageHelper>();
 
 /// Helpers globales para facilitar la lectura del código.
-AppStrings get $strings               => AppStrings.instance;
-AppStyles get $styles                 => AppScaffold.styles;
-Logger get $logger                    => Logger();
+AppStyles get $styles        => AppScaffold.styles;
+Logger get $logger           => Logger();
