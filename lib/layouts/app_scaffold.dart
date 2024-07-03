@@ -1,9 +1,11 @@
-import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/ui/common/app_scroll_behavior.dart';
 
 class AppScaffold extends StatelessWidget {
   const AppScaffold({required this.child, Key? key}) : super(key: key);
 
   final Widget child;
+
   static AppStyles get styles => _styles;
   static AppStyles _styles = AppStyles();
 
@@ -22,12 +24,12 @@ class AppScaffold extends StatelessWidget {
     return KeyedSubtree(
       key: ValueKey($styles.scale),
       child: DefaultTextStyle(
-        style: $styles.textStyles.body,
+        style : $styles.textStyles.body,
         // Utilizar un comportamiento de desplazamiento personalizado
         // en toda la aplicación.
-        child: ScrollConfiguration(
-          behavior: AppScrollBehavior(),
-          child: child,
+        child : ScrollConfiguration(
+          behavior  : AppScrollBehavior(),
+          child     : child,
         ),
       ),
     );

@@ -1,4 +1,4 @@
-import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/shared/shared_libs.dart';
 import 'package:flutter/foundation.dart';
 
 class PlatformInfo {

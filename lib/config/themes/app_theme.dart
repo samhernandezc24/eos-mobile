@@ -1,12 +1,14 @@
-import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/shared/shared_libs.dart';
 
 class AppTheme {
-  static ThemeData lightTheme(AppStyles styles) {
+  const AppTheme();
+
+  static ThemeData lightTheme() {
     return FlexThemeData.light(
       scheme: FlexScheme.blue,
       surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
       blendLevel: 10,
-      subThemesData : const FlexSubThemesData(
+      subThemesData: const FlexSubThemesData(
         blendOnLevel                    : 10,
         blendOnColors                   : false,
         useTextTheme                    : true,
@@ -22,12 +24,12 @@ class AppTheme {
     );
   }
 
-  static ThemeData darkTheme(AppStyles styles) {
+  static ThemeData darkTheme() {
     return FlexThemeData.dark(
       scheme: FlexScheme.blue,
       surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
       blendLevel: 13,
-      subThemesData : const FlexSubThemesData(
+      subThemesData: const FlexSubThemesData(
         blendOnLevel                    : 20,
         blendOnColors                   : false,
         useTextTheme                    : true,

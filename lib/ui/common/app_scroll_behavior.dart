@@ -1,6 +1,5 @@
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
-import 'package:eos_mobile/shared/shared_libraries.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:eos_mobile/shared/shared_libs.dart';
 import 'package:flutter/gestures.dart';
 
 class AppScrollBehavior extends ScrollBehavior {

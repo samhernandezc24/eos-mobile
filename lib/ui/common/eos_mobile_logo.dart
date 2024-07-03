@@ -1,4 +1,4 @@
-import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/shared/shared_libs.dart';
 
 class EOSMobileLogo extends StatelessWidget {
   const EOSMobileLogo({Key? key, this.width = 100}) : super(key: key);
@@ -9,9 +9,9 @@ class EOSMobileLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image.asset(
       ImagePaths.appLogo,
-      fit: BoxFit.cover,
-      width: width,
-      filterQuality: FilterQuality.high,
+      fit           : BoxFit.cover,
+      width         : width,
+      filterQuality : FilterQuality.high,
     );
   }
 }

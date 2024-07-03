@@ -1,4 +1,4 @@
-import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/shared/shared_libs.dart';
 
 class BlankPage extends StatelessWidget {
   const BlankPage({Key? key}) : super(key: key);
@@ -6,8 +6,8 @@ class BlankPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Página Vacía', style: $styles.textStyles.h3)),
-      body: Container(),
+      appBar  : AppBar(title: Text(AppStrings.emptyPageAppBarTitle, style: $styles.textStyles.h3)),
+      body    : Container(),
     );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/shared/shared_libs.dart';
 
 extension SizedContext on BuildContext {
   /// Retorna lo mismo que `MediaQuery.of(context)`.

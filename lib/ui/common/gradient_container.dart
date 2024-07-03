@@ -1,10 +1,10 @@
-import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/shared/shared_libs.dart';
 
 class GradientContainer extends StatelessWidget {
   const GradientContainer(
     this.colors,
     this.stops, {
-    super.key,
+    Key? key,
     this.child,
     this.width,
     this.height,
@@ -13,7 +13,7 @@ class GradientContainer extends StatelessWidget {
     this.end,
     this.blendMode,
     this.borderRadius,
-  });
+  }) : super(key: key);
 
   final List<Color> colors;
   final List<double> stops;
@@ -28,54 +28,77 @@ class GradientContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: Container(
-        width: width,
-        height: height,
-        alignment: alignment,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: begin ?? Alignment.centerLeft,
-            end: end ?? Alignment.centerRight,
-            colors: colors,
-            stops: stops,
-          ),
-          backgroundBlendMode: blendMode,
-          borderRadius: borderRadius,
+    return Container(
+      width: width,
+      height: height,
+      alignment: alignment,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin   : begin ?? Alignment.centerLeft,
+          end     : end ?? Alignment.centerRight,
+          colors  : colors,
+          stops   : stops,
         ),
-        child: child,
+        backgroundBlendMode: blendMode,
+        borderRadius: borderRadius,
       ),
+      child: child,
     );
   }
 }
 
 class HorizontalGradient extends GradientContainer {
   const HorizontalGradient(
-    super.colors,
-    super.stops, {
-    super.key,
-    super.child,
-    super.width,
-    super.height,
-    super.alignment,
-    super.blendMode,
-    super.borderRadius,
-  });
-}
-
-class VerticalGradient extends GradientContainer {
-  const VerticalGradient(
-    super.colors,
-    super.stops, {
-    super.key,
-    super.child,
-    super.width,
-    super.height,
-    super.alignment,
-    super.blendMode,
-    super.borderRadius,
+    List<Color> colors,
+    List<double> stops, {
+    Key? key,
+    double? width,
+    double? height,
+    Widget? child,
+    Alignment? begin,
+    Alignment? end,
+    Alignment? alignment,
+    BlendMode? blendMode,
+    BorderRadius? borderRadius,
   }) : super(
-          begin : Alignment.topCenter,
-          end   : Alignment.bottomCenter,
+          colors,
+          stops,
+          key           : key,
+          width         : width,
+          height        : height,
+          child         : child,
+          begin         : begin,
+          end           : end,
+          alignment     : alignment,
+          blendMode     : blendMode,
+          borderRadius  : borderRadius,
+        );
+  }
+
+  class VerticalGradient extends GradientContainer {
+    const VerticalGradient(
+      List<Color> colors,
+      List<double> stops, {
+      Key? key,
+      double? width,
+      double? height,
+      Widget? child,
+      Alignment? begin  = Alignment.topCenter,
+      Alignment? end    = Alignment.bottomCenter,
+      Alignment? alignment,
+      BlendMode? blendMode,
+      BorderRadius? borderRadius,
+    }) : super(
+          colors,
+          stops,
+          key           : key,
+          width         : width,
+          height        : height,
+          child         : child,
+          begin         : begin,
+          end           : end,
+          alignment     : alignment,
+          blendMode     : blendMode,
+          borderRadius  : borderRadius,
         );
 }

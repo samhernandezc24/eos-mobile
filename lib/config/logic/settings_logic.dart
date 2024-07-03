@@ -1,18 +1,15 @@
-import 'package:eos_mobile/config/logic/common/platform_info.dart';
-import 'package:eos_mobile/config/logic/common/save_load_mixin.dart';
+import 'package:eos_mobile/config/logic/common/throttled_save_load_mixin.dart';
 
-import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/shared/shared_libs.dart';
 
 class SettingsLogic with ThrottledSaveLoadMixin {
   late final ValueNotifier<bool> hasCompletedOnboarding   = ValueNotifier<bool>(false)..addListener(scheduleSave);
-  late final ValueNotifier<bool> hasAuthenticated         = ValueNotifier<bool>(false)..addListener(scheduleSave);
-
-  final bool useBlurs = !PlatformInfo.isAndroid;
+  late final ValueNotifier<bool> isDarkTheme              = ValueNotifier<bool>(false)..addListener(scheduleSave);
 
   @override
   void copyFromJson(Map<String, dynamic> value) {
     hasCompletedOnboarding.value  = value['hasCompletedOnboarding'] as bool? ?? false;
-    hasAuthenticated.value        = value['hasAuthenticated'] as bool? ?? false;
+    isDarkTheme.value             = value['isDarkTheme'] as bool? ?? false;
   }
 
   @override
@@ -22,7 +19,7 @@ class SettingsLogic with ThrottledSaveLoadMixin {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'hasCompletedOnboarding'  : hasCompletedOnboarding.value,
-      'hasAuthenticated'        : hasAuthenticated.value,
+      'isDarkTheme'             : isDarkTheme.value,
     };
   }
 }

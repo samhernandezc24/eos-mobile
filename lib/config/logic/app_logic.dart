@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
-import 'package:eos_mobile/shared/shared_libraries.dart';
-import 'package:eos_mobile/ui/common/utils/page_routes_utils.dart';
+import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/ui/common/utils/page_routes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 
@@ -35,9 +35,8 @@ class AppLogic {
   /// Carga las configuraciones iniciales de la aplicación, arranca
   /// los servicios, etc.
   Future<void> bootstrap() async {
-    $logger.d('Inicializando bootstrap...🚀');
+    $logger.d('Inicializando aplicación...🚀');
 
-    // Ajustar la tasa de actualización deseada al máximo posible (el OS puede ignorar esto).
     if (!kIsWeb && PlatformInfo.isAndroid) {
       await FlutterDisplayMode.setHighRefreshRate();
     }
@@ -45,25 +44,21 @@ class AppLogic {
     // SETTINGS
     await settingsLogic.load();
 
-    // Marcar bootstrap como completado.
+    // BOOTSTRAP COMPLETE
     isBootstrapComplete = true;
 
-    // PROPERTIES
-    final bool showWelcomePage      = settingsLogic.hasCompletedOnboarding.value == false;
-    final bool isNotAuthenticated   = settingsLogic.hasAuthenticated.value == false;
-
-    // Cargar vista inicial (reemplazar la vista inicial vacía el cual está cubierta por una
-    // pantalla de splash nativa).
+    // REDIRECTION
+    final bool showWelcomePage = settingsLogic.hasCompletedOnboarding.value == false;
     if (showWelcomePage) {
-      appRouter.go(ScreenPaths.welcome);
+      appRouter.go(AppRoutes.welcome);
     } else {
-      appRouter.go(initialDeeplink ?? (isNotAuthenticated ? ScreenPaths.authSignIn : ScreenPaths.home));
+      appRouter.go(initialDeeplink ?? AppRoutes.authSignIn);
     }
   }
 
   Future<T?> showFullScreenDialogRoute<T>(BuildContext context, Widget child, {bool transparent = false}) async {
     return Navigator.of(context).push<T>(
-      PageRoutesUtils.dialog<T>(child, duration: $styles.times.pageTransition),
+      PageRoutes.dialog<T>(child, duration: const Duration(milliseconds: 400)),
     );
   }
 

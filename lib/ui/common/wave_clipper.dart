@@ -1,4 +1,4 @@
-import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/shared/shared_libs.dart';
 
 class WaveClipper extends CustomClipper<Path> {
   WaveClipper({this.reverse = false});

@@ -1,4 +1,5 @@
-import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/styles/app_colors.dart';
 
 @immutable
 class AppStyles {
@@ -24,6 +25,9 @@ class AppStyles {
   }
 
   late final double scale;
+
+  /// Obtener colores comúnes a partir de esta instancia.
+  final AppColors colors = AppColors();
 
   /// Clase para definir radios de esquina con bordes redondeados.
   late final _Corners corners         = _Corners();

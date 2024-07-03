@@ -1,6 +1,5 @@
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
-import 'package:eos_mobile/shared/shared_libraries.dart';
-import 'package:eos_mobile/ui/common/full_screen_keyboard_listener.dart';
+import 'package:eos_mobile/shared/shared_libs.dart';
 import 'package:flutter/gestures.dart';
 
 class PreviousNextNavigation extends StatefulWidget {
@@ -8,12 +7,12 @@ class PreviousNextNavigation extends StatefulWidget {
     required this.onPreviousPressed,
     required this.onNextPressed,
     required this.child,
-    super.key,
-    this.maxWidth = 1000,
+    Key? key,
+    this.maxWidth             = 1000,
     this.nextButtonColor,
     this.previousButtonColor,
-    this.listenToMouseWheel = true,
-  });
+    this.listenToMouseWheel   = true,
+  }) : super(key: key);
 
   final VoidCallback? onPreviousPressed;
   final VoidCallback? onNextPressed;
@@ -24,36 +23,20 @@ class PreviousNextNavigation extends StatefulWidget {
   final bool listenToMouseWheel;
 
   @override
-  State<PreviousNextNavigation> createState() => _PreviousNextNavigation();
+  State<PreviousNextNavigation> createState() => _PreviousNextNavigationState();
 }
 
-class _PreviousNextNavigation extends State<PreviousNextNavigation> {
+class _PreviousNextNavigationState extends State<PreviousNextNavigation> {
+  // PROPERTIES
   DateTime _lastMouseScrollTime   = DateTime.now();
   final int _scrollCooldownMs     = 300;
 
-  bool _handleKeyDown(KeyDownEvent event) {
-    if (event.logicalKey == LogicalKeyboardKey.arrowLeft && widget.onPreviousPressed != null) {
-      widget.onPreviousPressed?.call();
-      return true;
-    }
-
-    if (event.logicalKey == LogicalKeyboardKey.arrowRight && widget.onNextPressed != null) {
-      widget.onNextPressed?.call();
-      return true;
-    }
-
-    return false;
-  }
-
-  void _handleMouseScroll(dynamic event) {
+  // EVENTS
+  void _handleMouseScroll(PointerEvent event) {
     if (event is PointerScrollEvent) {
       // Desactivar, ignorar eventos de desplazamiento demasiado cercanos.
-      if (DateTime.now().millisecondsSinceEpoch - _lastMouseScrollTime.millisecondsSinceEpoch < _scrollCooldownMs) {
-        return;
-      }
-
+      if (DateTime.now().millisecondsSinceEpoch - _lastMouseScrollTime.millisecondsSinceEpoch < _scrollCooldownMs) { return; }
       _lastMouseScrollTime = DateTime.now();
-
       if (event.scrollDelta.dy > 0 && widget.onPreviousPressed != null) {
         widget.onPreviousPressed!();
       } else if (event.scrollDelta.dy < 0 && widget.onNextPressed != null) {
@@ -67,40 +50,6 @@ class _PreviousNextNavigation extends State<PreviousNextNavigation> {
     if (PlatformInfo.isMobile) return widget.child;
     return Listener(
       onPointerSignal: widget.listenToMouseWheel ? _handleMouseScroll : null,
-      child: FullScreenKeyboardListener(
-        onKeyDown: _handleKeyDown,
-        child: Stack(
-          children: <Widget>[
-            widget.child,
-            Center(
-              child: SizedBox(
-                width: widget.maxWidth ?? double.infinity,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: $styles.insets.sm),
-                  child: Row(
-                    children: <Widget>[
-                      CircleIconButton(
-                        icon: AppIcons.prev,
-                        onPressed: widget.onPreviousPressed,
-                        semanticLabel: 'Anterior',
-                        backgroundColor: widget.previousButtonColor,
-                      ),
-                      const Spacer(),
-                      CircleIconButton(
-                        icon: AppIcons.prev,
-                        onPressed: widget.onNextPressed,
-                        semanticLabel: 'Siguiente',
-                        flipIcon: true,
-                        backgroundColor: widget.nextButtonColor,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

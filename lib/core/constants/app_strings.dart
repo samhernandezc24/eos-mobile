@@ -6,47 +6,118 @@ class AppStrings {
   static final AppStrings instance = AppStrings._();
 
   // A
-  static const String appPageDefaultTitlePage   = 'página';
-  static const String appPageSemanticSwipe      = '{pageTitle} {count} de {total}.';
-  static const String appPageProcessingData     = 'Procesando...';
+  static const String appDrawerItemAbout                    = 'Acerca de';
+  static const String appDrawerItemActivity                 = 'Actividad';
+  static const String appDrawerItemDashboard                = 'Dashboard';
+  static const String appDrawerItemHelp                     = 'Ayuda y comentarios';
+  static const String appDrawerItemHome                     = 'Inicio';
+  static const String appDrawerItemNotification             = 'Notificaciones';
 
-  static const String authSignInTitle           = 'Iniciar sesión';
+  static const String appPageDefaultTitlePage               = 'página';
+  static const String appPageSemanticSwipe                  = '{pageTitle} {count} de {total}.';
+  static const String appPageProcessingData                 = 'Procesando...';
+
+  static const String authSignInTitle                       = 'Iniciar sesión';
 
   // B
-  static const String btnAcceptText             = 'Aceptar';
-  static const String btnCancelText             = 'Cancelar';
-  static const String btnCloseText              = 'Cerrar';
-  static const String btnContinueText           = 'Continuar';
-  static const String btnDeleteText             = 'Eliminar';
-  static const String btnJoinText               = 'Ingresar';
-  static const String btnLoadMoreText           = 'Cargar más';
-  static const String btnLoginText              = 'Iniciar sesión';
-  static const String btnRetryText              = 'Reintentar';
-  static const String btnSaveText               = 'Guardar';
-  static const String btnSubmitText             = 'Enviar';
+  static const String btnAcceptText                         = 'Aceptar';
+  static const String btnCancelText                         = 'Cancelar';
+  static const String btnCloseText                          = 'Cerrar';
+  static const String btnContinueText                       = 'Continuar';
+  static const String btnCreateCategoriaText                = 'Nueva categoría';
+  static const String btnCreateInspeccionTipoText           = 'Nuevo tipo de inspección';
+  static const String btnDeleteText                         = 'Eliminar';
+  static const String btnDisableText                        = 'Inhabilitar';
+  static const String btnGoBackText                         = 'Volver a inicio';
+  static const String btnJoinText                           = 'Ingresar';
+  static const String btnLeaveText                          = 'Salir';
+  static const String btnLoadMoreText                       = 'Cargar más';
+  static const String btnLoginText                          = 'Iniciar sesión';
+  static const String btnLogoutText                         = 'Cerrar sesión';
+  static const String btnRefreshText                        = 'Actualizar';
+  static const String btnRetryText                          = 'Reintentar';
+  static const String btnSaveText                           = 'Guardar';
+  static const String btnSubmitText                         = 'Enviar';
 
   // C
-  static const String categoriaAppBarTitle      = 'Configuración de categorías';
+  static const String categoriaAppBarTitle                  = 'Configuración de categorías';
+  static const String categoriaBoxDescription               = 'Crea categorías para agrupar las preguntas de las inspecciones.';
+  static const String categoriaBoxTitle                     = 'Categorías';
+  static const String categoriaCreateAppBarTitle            = 'Nueva categoría';
+  static const String categoriaEmptyListTitle               = 'Aún no hay categorías';
+
+  static const String categoriaItemAppBarTitle              = 'Configuración de preguntas';
+  static const String categoriaItemBoxDescription           = 'Crea las preguntas necesarias para la evaluación e inspección de una unidad.';
+  static const String categoriaItemBoxTitle                 = 'Preguntas';
+  static const String categoriaItemCreateTooltip            = 'Nueva pregunta';
+  static const String categoriaItemDeleteAlertFirstText     = 'Se eliminará la pregunta ';
+  static const String categoriaItemDeleteAlertSecondText    = '¿Estás seguro de querer realizar esa acción?';
+  static const String categoriaItemDeleteAlertTitle         = '¿Eliminar pregunta?';
+  static const String categoriaItemEmptyListTitle           = 'Aún no hay preguntas';
 
   // D
-  static const String defaultAppName            = 'EOS Mobile';
-  static const String defaultPageTitle          = 'Página';
+  static const String defaultAppName                        = 'EOS Mobile';
+  static const String defaultPageTitle                      = 'Página';
 
   // E
-  static const String errorAlertTitle           = 'Error';
+  static const String errorAlertTitle                       = 'Error';
+  static const String emptyListSyncMessage                  = 'Intenta actualizar el listado para sincronizar los últimos cambios del servidor.';
+  static const String emptyPageAppBarTitle                  = 'Página vacía';
+  static const String errorPageNotFoundSemanticLabel        = 'Error 404';
+  static const String errorPageNotFoundTitle                = '¡Oh, no! \nPágina no encontrada.';
+  static const String errorServerSemanticLabel              = 'Error 500';
+  static const String errorServerTitle                      = '¡Oh, no! \nSe produjo un error en nuestro sistema.';
+
+  // F
+  static const String forgotPasswordAppBarTitle             = '¿Has olvidado tu contraseña?';
+  static const String forgotPasswordBoxMessage              = 'Completa el formulario para restablecer su contraseña';
+
+  // H
+  static const String homeFirstModuleCard                   = 'Inspecciones';
+  static const String homeSecondModuleCard                  = 'Compras';
+  static const String homeThirdModuleCard                   = 'Embarques';
+  static const String homeFourthModuleCard                  = 'Unidades';
 
   // I
+  static const String inspeccionIndexListPageSubtitle       = 'Muestra las inspecciones generales.';
+  static const String inspeccionIndexListPageTitle          = 'Lista de inspecciones';
+  static const String inspeccionIndexUnidadPageSubtitle     = 'Encuentra unidades con inspecciones recientes.';
+  static const String inspeccionIndexUnidadPageTitle        = 'Buscar unidad';
+
+  static const String inspeccionListAppBarTitle             = 'Listado de inspecciones';
+
+  static const String inspeccionTipoAppBarTitle             = 'Configuración de inspecciones';
+  static const String inspeccionTipoBoxDescription          = 'Crea los tipos de inspección para organizar y gestionar tus inspecciones de manera eficiente.';
+  static const String inspeccionTipoBoxTitle                = 'Tipos de inspecciones';
+  static const String inspeccionTipoCreateAppBarTitle       = 'Nuevo tipo de inspección';
+  static const String inspeccionTipoEmptyListTitle          = 'Aún no hay tipos de inspecciones';
+
+  // S
+  static const String settingsAppBarTitle                   = 'Configuración general';
+  static const String settingsAutoUpdateTitle               = 'Actualizar automáticamente';
+  static const String settingsAutoUpdateSubtitle            = 'Actualiza la app automáticamente mediante Wi-Fi.';
+  static const String settingsChangeThemeTitle              = 'Tema';
+  static const String settingsChangeThemeSubtitle           = 'Cambiar tema de la aplicación.';
+  static const String settingsDisableUpdateContent          = 'Después de inhabilitar la actualización automática, deberá confirmar manualmente cuando actualice a una nueva versión para poder completar la actualización. ¿Seguro que quiere inhabilitar?';
+  static const String settingsDisableUpdateTitle            = 'Inhabilitar actualización automática';
+  static const String settingsRecentUpdateTitle             = 'Actualización reciente';
+  static const String settingsRecentUpdateSubtitle          = 'Recibe notificaciones cuando haya actualizaciones disponibles.';
+
+  static const String suggestionBoxTitle                    = 'Sugerencia';
+
+  // U
+  static const String underConstructionTitle                = '¡Próximamente! \nGracias por tu paciencia 👍.';
 
   // W
-  static const String warningAlertTitle         = 'Advertencia';
+  static const String warningAlertTitle                     = 'Advertencia';
 
-  static const String welcomeFirstPageContent   = 'Accede a los datos del EOS desde cualquier lugar, sincroniza cambios automáticamente.';
-  static const String welcomeFirstPageTitle     = 'Accede al EOS';
-  static const String welcomeSecondPageContent  = 'Navega de manera rápida entre los módulos para agilizar el proceso interno.';
-  static const String welcomeSecondPageTitle    = 'Explora módulos';
-  static const String welcomeSemanticNavigate   = 'Navegar';
-  static const String welcomeSemanticEnterApp   = 'Acceder a la aplicación';
-  static const String welcomeSemanticSwipeLeft  = 'Desliza a la izquierda para continuar';
-  static const String welcomeThirdPageContent   = 'Aprovecha las funcionalidades que ofrece EOS Mobile, mejorando la eficiencia y productividad de tu equipo.';
-  static const String welcomeThirdPageTitle     = 'Eficiencia empresarial';
+  static const String welcomeFirstPageContent               = 'Accede a los datos del EOS desde cualquier lugar, sincroniza cambios automáticamente.';
+  static const String welcomeFirstPageTitle                 = 'Accede al EOS';
+  static const String welcomeSecondPageContent              = 'Navega de manera rápida entre los módulos para agilizar el proceso interno.';
+  static const String welcomeSecondPageTitle                = 'Explora módulos';
+  static const String welcomeSemanticNavigate               = 'Navegar';
+  static const String welcomeSemanticEnterApp               = 'Acceder a la aplicación';
+  static const String welcomeSemanticSwipeLeft              = 'Desliza a la izquierda para continuar';
+  static const String welcomeThirdPageContent               = 'Aprovecha las funcionalidades que ofrece EOS Mobile, mejorando la eficiencia y productividad de tu equipo.';
+  static const String welcomeThirdPageTitle                 = 'Eficiencia empresarial';
 }

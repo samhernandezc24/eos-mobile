@@ -1,9 +1,12 @@
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
-import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/ui/common/app_icons.dart';
 import 'package:eos_mobile/ui/common/controls/app_page_indicator.dart';
 import 'package:eos_mobile/ui/common/gradient_container.dart';
 import 'package:eos_mobile/ui/common/previous_next_navigation.dart';
-import 'package:eos_mobile/ui/common/utils/app_haptics_utils.dart';
+import 'package:eos_mobile/ui/common/static_text_scale.dart';
+import 'package:eos_mobile/ui/common/themed_text.dart';
+import 'package:eos_mobile/ui/common/utils/app_haptics.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -13,19 +16,27 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
+  // CONTROLLERS
   late final PageController _pageController   = PageController()..addListener(_handlePageChanged);
-  late final ValueNotifier<int> _currentPage  = ValueNotifier<int>(0)..addListener(() => setState(() {}));
+  late final ValueNotifier<int> _currentPage  = ValueNotifier(0)..addListener(() => setState(() {}));
 
+  // PROPERTIES
   static const double _imageSize            = 250;
   static const double _logoHeight           = 126;
   static const double _textHeight           = 110;
   static const double _pageIndicatorHeight  = 55;
 
-  static List<_PageData> pageData = <_PageData>[];
+  bool get _isLastPage  => _currentPage.value == pageData.length - 1;
+  bool get _isFirstPage => _currentPage.value == 0;
 
-  bool get _isOnLastPage    => _currentPage.value == pageData.length - 1;
-  bool get _isOnFirstPage   => _currentPage.value == 0;
+  // LIST
+  static final List<_PageData> pageData = <_PageData>[
+    const _PageData(AppStrings.welcomeFirstPageTitle, AppStrings.welcomeFirstPageContent, 'one'),
+    const _PageData(AppStrings.welcomeSecondPageTitle, AppStrings.welcomeSecondPageContent, 'two'),
+    const _PageData(AppStrings.welcomeThirdPageTitle, AppStrings.welcomeThirdPageContent, 'three'),
+  ];
 
+  // STATE
   @override
   void dispose() {
     _pageController.dispose();
@@ -33,9 +44,10 @@ class _WelcomePageState extends State<WelcomePage> {
     super.dispose();
   }
 
+  // EVENTS
   void _handleWelcomeCompletePressed() {
     if (_currentPage.value == pageData.length - 1) {
-      context.go(ScreenPaths.authSignIn);
+      context.go(AppRoutes.authSignIn);
       settingsLogic.hasCompletedOnboarding.value = true;
     }
   }
@@ -46,38 +58,28 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   void _handleSemanticSwipe(int direction) {
-    _pageController.animateToPage((_pageController.page ?? 0).round() + direction,
-        duration: $styles.times.fast,
-        curve: Curves.easeOut,
-      );
+    _pageController.animateToPage((_pageController.page ?? 0).round() + direction, duration: $styles.times.fast, curve: Curves.easeOut);
   }
 
   void _handleNavTextSemanticTap() => _incrementPage(1);
 
+  // METHODS
   void _incrementPage(int direction) {
     final int current = _pageController.page!.round();
-    if (_isOnLastPage && direction > 0) return;
-    if (_isOnFirstPage && direction < 0) return;
+    if (_isLastPage && direction > 0) return;
+    if (_isFirstPage && direction < 0) return;
     _pageController.animateToPage(current + direction, duration: 250.ms, curve: Curves.easeIn);
   }
 
   @override
   Widget build(BuildContext context) {
-    // Establecer los datos de la página.
-    pageData = <_PageData>[
-      const _PageData(AppStrings.welcomeFirstPageTitle, AppStrings.welcomeFirstPageContent, 'one'),
-      const _PageData(AppStrings.welcomeSecondPageTitle, AppStrings.welcomeSecondPageContent, 'two'),
-      const _PageData(AppStrings.welcomeThirdPageTitle, AppStrings.welcomeThirdPageContent, 'three'),
-    ];
-
     // Esta vista utiliza un PageView a pantalla completa para permitir
     // la navegación por deslizamiento.
     //
     // Sin embargo, sólo queremos el título / contenido para deslizar,
     // así que apilamos un PageView con ese contenido sobre el resto de
     // contenido, y alineamos sus layouts.
-    final List<Widget> pages = pageData.map<_Page>((e) => _Page(data: e)).toList();
-
+    final List<Widget> pages = pageData.map((item) => _Page(objData: item)).toList();
     return Scaffold(
       body: DefaultTextColor(
         color: Theme.of(context).colorScheme.onBackground,
@@ -86,29 +88,22 @@ class _WelcomePageState extends State<WelcomePage> {
           child: SafeArea(
             child: Animate(
               delay: 500.ms,
-              effects: const <Effect<dynamic>>[FadeEffect()],
+              effects: const [ FadeEffect() ],
               child: PreviousNextNavigation(
-                maxWidth: 600,
-                nextButtonColor: _isOnLastPage ? Theme.of(context).primaryColor : null,
-                onPreviousPressed: _isOnFirstPage ? null : () => _incrementPage(-1),
-                onNextPressed: () {
-                  if (_isOnLastPage) {
-                    _handleWelcomeCompletePressed();
-                  } else {
-                    _incrementPage(1);
-                  }
-                },
-                child: Stack(
-                  children: <Widget>[
-                    // VISTA DE PÁGINA CON TITULO Y CONTENIDO:
+                maxWidth          : 600,
+                nextButtonColor   : _isLastPage ? Theme.of(context).primaryColor : null,
+                onPreviousPressed : _isFirstPage ? null : () => _incrementPage(-1),
+                onNextPressed     : _isLastPage ? _handleWelcomeCompletePressed : () => _incrementPage(1),
+                child             : Stack(
+                  children: [
                     MergeSemantics(
                       child: Semantics(
-                        onIncrease: () => _handleSemanticSwipe(1),
-                        onDecrease: () => _handleSemanticSwipe(-1),
-                        child: PageView(
-                          controller: _pageController,
-                          children: pages,
-                          onPageChanged: (_) => AppHapticsUtils.lightImpact(),
+                        onIncrease  : () => _handleSemanticSwipe(1),
+                        onDecrease  : () => _handleSemanticSwipe(-1),
+                        child       : PageView(
+                          controller    : _pageController,
+                          children      : pages,
+                          onPageChanged : (_) => AppHaptics.lightImpact(),
                         ),
                       ),
                     ),
@@ -119,31 +114,33 @@ class _WelcomePageState extends State<WelcomePage> {
                         children: <Widget>[
                           const Spacer(),
 
-                          // NOMBRE DE LA APLICACIÓN / LOGO
+                          // LOGO:
                           Semantics(
                             header: true,
                             child: Container(
-                              height: _logoHeight,
-                              alignment: Alignment.center,
-                              child: Text(
-                                AppStrings.defaultAppName,
-                                style: $styles.textStyles.title1,
+                              height    : _logoHeight,
+                              alignment : Alignment.center,
+                              child     : StaticTextScale(
+                                child: Text(
+                                  AppStrings.defaultAppName,
+                                  style: $styles.textStyles.eosTitle.copyWith(fontSize: 32 * $styles.scale),
+                                ),
                               ),
                             ),
                           ),
 
-                          // IMAGEN
+                          // IMAGEN:
                           SizedBox(
-                            height: _imageSize,
-                            width: _imageSize,
-                            child: ValueListenableBuilder<int>(
-                              valueListenable: _currentPage,
-                              builder: (_, value, __) {
+                            height  : _imageSize,
+                            width   : _imageSize,
+                            child   : ValueListenableBuilder<int>(
+                              valueListenable : _currentPage,
+                              builder         : (_, value, __) {
                                 return AnimatedSwitcher(
-                                  duration: $styles.times.fast,
-                                  child: KeyedSubtree(
-                                    key: ValueKey<int>(value),    // para que AnimatedSwitcher lo vea como un child diferente.
-                                    child: _PageImage(data: pageData[value]),
+                                  duration  : $styles.times.slow,
+                                  child     : KeyedSubtree(
+                                    key   : ValueKey(value),
+                                    child : _PageImage(objData: pageData[value]),
                                   ),
                                 );
                               },
@@ -151,30 +148,25 @@ class _WelcomePageState extends State<WelcomePage> {
                           ),
 
                           // ESPACIO PARA EL TEXTO:
-                          const Gap(_textHeight * 2),
+                          const Gap(_WelcomePageState._textHeight * 2),
 
-                          // INDICADOR DE PÁGINA:
+                          // PAGINADOR:
                           Container(
-                            height: _pageIndicatorHeight,
-                            alignment: Alignment.center,
-                            child: AppPageIndicator(
-                              count: pageData.length,
-                              controller: _pageController,
-                            ),
+                            height      : _pageIndicatorHeight,
+                            alignment   : Alignment.center,
+                            child       : AppPageIndicator(count: pageData.length, controller: _pageController),
                           ),
+
                           const Spacer(flex: 2),
                         ],
                       ),
                     ),
 
-                    // CONSTRUIR LOS OVERLAYS PARA OCULTAR EL CONTENIDO AL DESLIZAR EN PANTALLAS
-                    // MUY ANCHAS.
+                    // CONSTRUIR OVERLAYS PARA OCULTAR EL CONTENIDO AL DESLIZAR EN PANTALLAS ANCHAS:
                     _buildHorizontalGradientOverlay(left: true),
                     _buildHorizontalGradientOverlay(),
 
-                    // TEXTO NAV HELP:
                     if (PlatformInfo.isMobile) ...[
-                      // BOTÓN DE FINALIZAR LA PÁGIAN DE BIENVENIDA:
                       Positioned(
                         right   : $styles.insets.lg,
                         bottom  : $styles.insets.lg,
@@ -183,8 +175,8 @@ class _WelcomePageState extends State<WelcomePage> {
 
                       BottomCenter(
                         child: Padding(
-                          padding: EdgeInsets.only(bottom: $styles.insets.lg),
-                          child: _buildNavText(context),
+                          padding : EdgeInsets.only(bottom: $styles.insets.lg),
+                          child   : _buildNavigationText(context),
                         ),
                       ),
                     ],
@@ -200,15 +192,15 @@ class _WelcomePageState extends State<WelcomePage> {
 
   Widget _buildFinishButton(BuildContext context) {
     return ValueListenableBuilder<int>(
-      valueListenable: _currentPage,
-      builder: (_, pageIndex, __) {
+      valueListenable : _currentPage,
+      builder         : (_, pageIndex, __) {
         return AnimatedOpacity(
-          opacity: pageIndex == pageData.length - 1 ? 1 : 0,
-          duration: $styles.times.fast,
-          child: CircleIconButton(
-            icon: AppIcons.next_large,
-            onPressed: _handleWelcomeCompletePressed,
-            semanticLabel: AppStrings.welcomeSemanticEnterApp,
+          opacity   : pageIndex == pageData.length - 1 ? 1 : 0,
+          duration  : $styles.times.fast,
+          child     : CircleIconButton(
+            icon            : AppIcons.next_large,
+            onPressed       : _handleWelcomeCompletePressed,
+            semanticLabel   : AppStrings.welcomeSemanticEnterApp,
           ),
         );
       },
@@ -224,30 +216,27 @@ class _WelcomePageState extends State<WelcomePage> {
           padding: EdgeInsets.only(left: left ? 0 : 200, right: left ? 200 : 0),
           child: Transform.scale(
             scaleX: left ? -1 : 1,
-            child: HorizontalGradient(<Color>[
-              Theme.of(context).colorScheme.background.withOpacity(0),
-              Theme.of(context).colorScheme.background,
-            ], const <double>[
-              0,
-              .2,
-            ]),
+            child: HorizontalGradient([
+              $styles.colors.black.withOpacity(0),
+              $styles.colors.black,
+            ], const [ 0, .2 ],),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildNavText(BuildContext context) {
+  Widget _buildNavigationText(BuildContext context) {
     return ValueListenableBuilder<int>(
-      valueListenable: _currentPage,
-      builder: (_, pageIndex, __) {
+      valueListenable : _currentPage,
+      builder         : (_, pageIndex, __) {
         return AnimatedOpacity(
-          opacity: pageIndex == pageData.length - 1 ? 0 : 1,
-          duration: $styles.times.fast,
-          child: Semantics(
-            onTapHint: AppStrings.welcomeSemanticNavigate,
-            onTap: _isOnLastPage ? null : _handleNavTextSemanticTap,
-            child: Text(AppStrings.welcomeSemanticSwipeLeft, style: $styles.textStyles.bodySmall),
+          opacity   : pageIndex == pageData.length - 1 ? 0 : 1,
+          duration  : $styles.times.fast,
+          child     : Semantics(
+            onTapHint : AppStrings.welcomeSemanticNavigate,
+            onTap     : _isLastPage ? null : _handleNavTextSemanticTap,
+            child     : Text(AppStrings.welcomeSemanticSwipeLeft, style: $styles.textStyles.bodySmall),
           ),
         );
       },
@@ -265,9 +254,9 @@ class _PageData {
 }
 
 class _Page extends StatelessWidget {
-  const _Page({required this.data});
+  const _Page({required this.objData});
 
-  final _PageData data;
+  final _PageData objData;
 
   @override
   Widget build(BuildContext context) {
@@ -286,9 +275,9 @@ class _Page extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(data.title, style: $styles.textStyles.eosTitleFont.copyWith(fontSize: 24 * $styles.scale)),
+                    Text(objData.title, style: $styles.textStyles.eosTitle.copyWith(fontSize: 24 * $styles.scale)),
                     Gap($styles.insets.sm),
-                    Text(data.content, style: $styles.textStyles.bodySmall, textAlign: TextAlign.center),
+                    Text(objData.content, style: $styles.textStyles.body.copyWith(height: 1.3), textAlign: TextAlign.center),
                   ],
                 ),
               ),
@@ -303,9 +292,9 @@ class _Page extends StatelessWidget {
 }
 
 class _PageImage extends StatelessWidget {
-  const _PageImage({required this.data});
+  const _PageImage({required this.objData});
 
-  final _PageData data;
+  final _PageData objData;
 
   @override
   Widget build(BuildContext context) {
@@ -313,9 +302,9 @@ class _PageImage extends StatelessWidget {
       children: <Widget>[
         SizedBox.expand(
           child: Image.asset(
-            '${ImagePaths.welcome}/welcome-${data.image}.png',
-            fit: BoxFit.cover,
-            alignment: Alignment.centerRight,
+            '${ImagePaths.welcome}/welcome-${objData.image}.png',
+            fit       : BoxFit.cover,
+            alignment : Alignment.centerRight,
           ),
         ),
       ],

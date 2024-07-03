@@ -1,16 +1,17 @@
-import 'package:eos_mobile/shared/shared_libraries.dart';
+import 'package:eos_mobile/shared/shared_libs.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class AppPageIndicator extends StatefulWidget {
-  AppPageIndicator({
+  const AppPageIndicator({
     required this.count,
     required this.controller,
-    super.key,
+    Key? key,
     this.onDotPressed,
     this.color,
     this.dotSize,
     String? semanticPageTitle,
-  }) : semanticPageTitle = semanticPageTitle ?? $strings.appPageDefaultTitlePage;
+  }) : semanticPageTitle = semanticPageTitle ?? AppStrings.appPageDefaultTitlePage,
+       super(key: key);
 
   final int count;
   final PageController controller;
@@ -24,19 +25,19 @@ class AppPageIndicator extends StatefulWidget {
 }
 
 class _AppPageIndicatorState extends State<AppPageIndicator> {
-  /// STATES
-  final _currentPage = ValueNotifier(0);
+  // PROPERTIES
+  final ValueNotifier<int> _currentPage = ValueNotifier<int>(0);
 
+  int get _controllerPage => _currentPage.value;
+
+  // STATE
   @override
   void initState() {
     super.initState();
     widget.controller.addListener(_handlePageChanged);
   }
 
-  /// ACCESORS / MUTATORS
-  int get _controllerPage => _currentPage.value;
-
-  /// METHODS
+  // EVENTS
   void _handlePageChanged() {
     _currentPage.value = widget.controller.page!.round();
   }
@@ -46,21 +47,21 @@ class _AppPageIndicatorState extends State<AppPageIndicator> {
     return Stack(
       children: <Widget>[
         Container(
-          color: Colors.transparent,
+          color: $styles.colors.transparent,
           height: 30,
           alignment: Alignment.center,
-          child: ValueListenableBuilder<int>(
+          child: ValueListenableBuilder(
             valueListenable: _currentPage,
             builder: (_, value, child) {
               return Semantics(
-                liveRegion  : true,
-                focusable   : false,
-                readOnly    : true,
-                label       : $strings.appPageSemanticSwipe
-                                .replaceAll('{pageTitle}', widget.semanticPageTitle)
-                                .replaceAll('{count}', (_controllerPage % (widget.count) + 1).toString())
-                                .replaceAll('{total}', widget.count.toString()),
-                child       : Container(),
+                liveRegion: true,
+                focusable: false,
+                readOnly: true,
+                label: AppStrings.appPageSemanticSwipe
+                          .replaceAll('{pageTitle}', widget.semanticPageTitle)
+                          .replaceAll('{count}', (_controllerPage % (widget.count) + 1).toString())
+                          .replaceAll('{total}', widget.count.toString()),
+                child: Container(),
               );
             },
           ),
@@ -70,10 +71,9 @@ class _AppPageIndicatorState extends State<AppPageIndicator> {
           child: Center(
             child: ExcludeSemantics(
               child: SmoothPageIndicator(
-                controller    : widget.controller,
-                count         : widget.count,
-                onDotClicked  : widget.onDotPressed,
-                effect        : ExpandingDotsEffect(
+                controller  : widget.controller,
+                count       : widget.count,
+                effect      : ExpandingDotsEffect(
                   dotWidth        : widget.dotSize ?? 6,
                   dotHeight       : widget.dotSize ?? 6,
                   strokeWidth     : (widget.dotSize ?? 6) / 2,

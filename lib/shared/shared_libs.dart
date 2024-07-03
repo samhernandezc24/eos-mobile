@@ -1,0 +1,88 @@
+/// Unificación de las librerías que son comúnes en toda la aplicación.
+library;
+
+/// =========================================================
+/// DART MATH
+/// =========================================================
+export 'dart:math';
+
+/// =========================================================
+/// CONFIG (LOGIC CONTROLLERS, ROUTER)
+/// =========================================================
+export 'package:eos_mobile/config/logic/app_logic.dart';
+export 'package:eos_mobile/config/logic/settings_logic.dart';
+export 'package:eos_mobile/config/router/app_router.dart';
+
+/// =========================================================
+/// CORE
+/// =========================================================
+export 'package:eos_mobile/core/constants/app_strings.dart';
+export 'package:eos_mobile/core/constants/assets.dart';
+export 'package:eos_mobile/core/constants/globals.dart';
+export 'package:eos_mobile/core/extensions/alignments_extension.dart';
+export 'package:eos_mobile/core/extensions/sized_context_extension.dart';
+
+/// =========================================================
+/// MAIN
+/// =========================================================
+export 'package:eos_mobile/main.dart';
+
+/// =========================================================
+/// APP STYLES
+/// =========================================================
+export 'package:eos_mobile/styles/app_styles.dart';
+
+/// =========================================================
+/// UI WIDGET (COMPONENTS)
+/// =========================================================
+export 'package:eos_mobile/ui/common/controls/buttons.dart';
+export 'package:eos_mobile/ui/common/controls/circle_buttons.dart';
+export 'package:eos_mobile/ui/common/controls/labeled_password_form_field.dart';
+export 'package:eos_mobile/ui/common/controls/labeled_text_form_field.dart';
+
+/// =========================================================
+/// EQUATABLE
+/// =========================================================
+export 'package:equatable/equatable.dart';
+
+/// =========================================================
+/// FLEX SEED SCHEME
+/// =========================================================
+export 'package:flex_color_scheme/flex_color_scheme.dart';
+
+/// =========================================================
+/// FLUTTER WIDGETS
+/// =========================================================
+export 'package:flutter/material.dart';
+export 'package:flutter/services.dart';
+
+/// =========================================================
+/// FLUTTER ANIMATIONS
+/// =========================================================
+export 'package:flutter_animate/flutter_animate.dart';
+
+/// =========================================================
+/// FLUTTER BLOC
+/// =========================================================
+export 'package:flutter_bloc/flutter_bloc.dart';
+
+/// =========================================================
+/// GAP (FLUTTER WIDGET)
+/// =========================================================
+export 'package:gap/gap.dart';
+
+/// =========================================================
+/// GET IT (DEPENDENCY INJECTION)
+/// =========================================================
+export 'package:get_it/get_it.dart';
+export 'package:get_it_mixin/get_it_mixin.dart';
+
+/// =========================================================
+/// ROUTER NAVIGATION
+/// =========================================================
+export 'package:go_router/go_router.dart';
+
+/// =========================================================
+/// LOGGER (CUSTOM DEBUG PRINT)
+/// =========================================================
+export 'package:logger/logger.dart';

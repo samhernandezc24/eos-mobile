@@ -1,5 +1,5 @@
-import 'package:eos_mobile/shared/shared_libraries.dart';
-import 'package:eos_mobile/ui/common/app_icon.dart';
+import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/ui/common/app_icons.dart';
 
 class CircleButton extends StatelessWidget {
   const CircleButton({
@@ -7,8 +7,8 @@ class CircleButton extends StatelessWidget {
     required this.onPressed,
     required this.semanticLabel,
     Key? key,
-    this.backgroundColor,
     this.border,
+    this.backgroundColor,
     this.size,
   }) : super(key: key);
 
@@ -24,16 +24,15 @@ class CircleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double sz = size ?? defaultSize;
-
-    return AppBtn(
-      onPressed       : onPressed,
-      semanticLabel   : semanticLabel,
-      minimumSize     : Size(sz, sz),
-      padding         : EdgeInsets.zero,
-      circular        : true,
-      backgroundColor : backgroundColor,
-      border          : border,
-      child           : child,
+    return AppButton(
+      onPressed         : onPressed,
+      semanticLabel     : semanticLabel,
+      minimumSize       : Size(sz, sz),
+      padding           : EdgeInsets.zero,
+      circular          : true,
+      backgroundColor   : backgroundColor,
+      border            : border,
+      child             : child,
     );
   }
 }
@@ -44,32 +43,31 @@ class CircleIconButton extends StatelessWidget {
     required this.onPressed,
     required this.semanticLabel,
     Key? key,
-    this.backgroundColor,
     this.border,
     this.color,
-    this.iconSize,
+    this.backgroundColor,
     this.size,
+    this.iconSize,
     this.flipIcon = false,
   }) : super(key: key);
 
-  // TODO(samhernandezc24): Reducir el tamaño si el diseño reexporta imágenes-icono sin padding.
+  // TODO(samhernandez24): Reducir el tamaño si el diseño reexporta icon-images sin padding.
   static double defaultSize = 28;
 
   final AppIcons icon;
   final VoidCallback? onPressed;
-  final BorderSide? border;
-  final Color? backgroundColor;
   final Color? color;
-  final String semanticLabel;
+  final Color? backgroundColor;
+  final BorderSide? border;
   final double? size;
   final double? iconSize;
+  final String semanticLabel;
   final bool flipIcon;
 
   @override
   Widget build(BuildContext context) {
     final Color defaultColor  = Theme.of(context).primaryColor;
     final Color iconColor     = color ?? Theme.of(context).colorScheme.onPrimary;
-
     return CircleButton(
       onPressed       : onPressed,
       border          : border,

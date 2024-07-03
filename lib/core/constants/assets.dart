@@ -1,19 +1,24 @@
 /// Unifica las rutas de las imágenes utilizadas en la aplicación.
 class ImagePaths {
-  static const String root            = 'assets/images';
-  static const String backgrounds     = '$root/backgrounds';
-  static const String errors          = '$root/errors';
-  static const String pages           = '$root/pages';
-  static const String welcome         = '$root/welcome';
+  // ROOT
+  static const String _root             = 'assets/images';
+  static const String _backgrounds      = '$_root/backgrounds';
+  static const String _logo             = '$_root/logo';
 
-  static const String appLogo         = '$root/logo/app-logo.png';
+  // BACKGROUNDS
+  static const String background001     = '$_backgrounds/background-001.jpg';
 
-  static const String crane           = '$root/pages/crane.png';
-  static const String circleVehicle   = '$root/pages/circle_vehicle_config.png';
+  // ERRORS
+  static const String errors            = '$_root/errors';
 
-  static const String background001   = '$backgrounds/background-001.jpg';
+  // LOGO
+  static const String appLogo           = '$_logo/app-logo.png';
 
-  // static const String iconCrane     = '$root/icons/crane.png';
+  // PAGES
+  static const String pages             = '$_root/pages';
+
+  // WELCOME (ON-BOARDING PAGE)
+  static const String welcome           = '$_root/welcome';
 }
 
 /// Unifica las rutas de las imágenes SVG en su propia clase,
@@ -26,6 +31,6 @@ class SvgPaths {
 
 /// Unifica las rutas de los lotties en su propia clase.
 class LottiePaths {
-  static const String root                = 'assets/lottie';
-  static const String underConstruction   = '$root/page_under_construction.json';
+  static const String _root                = 'assets/lottie';
+  static const String underConstruction     = '$_root/page_under_construction.json';
 }

@@ -1,1 +1,0 @@
-enum InspeccionMenu { details, cancel }
