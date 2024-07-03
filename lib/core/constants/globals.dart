@@ -13,4 +13,9 @@ class Globals {
   /// )
   /// ```
   static const EdgeInsets kDefaultContentPadding = EdgeInsets.symmetric(horizontal: 10.2, vertical: 13.2);
+
+  /// Verifica si [argObject] es non-nullable.
+  ///
+  /// Retorna true si [argObject] no es null, de lo contrario retorna false.
+  static bool isValidValue(dynamic argObject) => argObject != null;
 }

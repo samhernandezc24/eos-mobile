@@ -18,6 +18,7 @@ class AppStrings {
   static const String appPageProcessingData                 = 'Procesando...';
 
   static const String authSignInTitle                       = 'Iniciar sesión';
+  static const String authSignInErrorDialogMessage          = 'Se produjo un error inesperado. Intenta de nuevo iniciar sesión.';
 
   // B
   static const String btnAcceptText                         = 'Aceptar';
@@ -67,6 +68,22 @@ class AppStrings {
   static const String errorPageNotFoundTitle                = '¡Oh, no! \nPágina no encontrada.';
   static const String errorServerSemanticLabel              = 'Error 500';
   static const String errorServerTitle                      = '¡Oh, no! \nSe produjo un error en nuestro sistema.';
+
+  static const String errorBadCertificateMessage            = 'Certificado inválido.';
+  static const String errorConnectionMessage                = 'Error de conexión. Por favor, verifica tu conexión a internet.';
+  static const String errorConnectionTimeoutMessage         = 'Se agotó el tiempo de conexión con el servidor. Por favor, verifica tu conexión a internet.';
+  static const String errorGenericMessage                   = 'Se produjo un error inesperado. Inténtalo de nuevo.';
+  static const String errorReceiveTimeoutMessage            = 'Se agotó el tiempo de recepción. Inténtalo de nuevo más tarde.';
+  static const String errorSendTimeoutMessage               = 'Se agotó el tiempo de envío. Inténtalo de nuevo más tarde.';
+  static const String errorServerCancelMessage              = 'La solicitud al servidor ha sido cancelada. Inténtalo de nuevo más tarde.';
+  static const String errorUnknownMessage                   = 'Error desconocido. Inténtalo de nuevo más tarde.';
+
+  static const String errorBadResponseInfoMessage           = 'Respuesta informativa: {statusCode}; Se ha recibido la solicitud, que sigue procesándose.';
+  static const String errorBadResponseSuccessMessage        = 'Respuesta satisfactoria: {statusCode}; La solicitud se ha recibido, comprendido y aceptado correctamente.';
+  static const String errorBadResponseRedirectMessage       = 'Redirección: {statusCode}; Es necesario realizar más acciones para completar la solicitud.';
+  static const String errorBadResponseClientErrorMessage    = 'Error del cliente: {statusCode}; La solicitud contiene una sintaxis incorrecta o no puede cumplirse.';
+  static const String errorBadResponseServerErrorMessage    = 'Error del servidor: {statusCode}; El servidor no ha podido responder a una solicitud aparentemente válida.';
+  static const String errorBadResponseUnknownMessage        = 'Una respuesta con un código de estado que no se encuentra entre 100 y 600. Es una respuesta no estándar, posiblemente debida al software del servidor.';
 
   // F
   static const String forgotPasswordAppBarTitle             = '¿Has olvidado tu contraseña?';

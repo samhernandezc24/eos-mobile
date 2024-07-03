@@ -29,9 +29,9 @@ class _AuthSignInPageState extends State<AuthSignInPage> {
 
   @override
   void dispose() {
-    super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -77,7 +77,7 @@ class _AuthSignInPageState extends State<AuthSignInPage> {
                       const Spacer(),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -126,6 +126,18 @@ class _AuthSignInForm extends StatefulWidget {
 }
 
 class _AuthSignInFormState extends State<_AuthSignInForm> {
+  // EVENTS
+  Future<void> _showServerErrorDialog(BuildContext context, String? errorMessage) async {
+    return showDialog<void>(
+      context: context,
+      builder: (_) => ServerErrorDialog(message: errorMessage!),
+    );
+  }
+
+  // METHODS
+  Future<void> _signIn() async {
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -154,6 +166,27 @@ class _AuthSignInFormState extends State<_AuthSignInForm> {
           style     : ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(double.infinity, 48))),
           child     : Text(AppStrings.btnJoinText, style: $styles.textStyles.button),
         ),
+
+        // BlocConsumer<RemoteAuthBloc, RemoteAuthState>(
+        //   listener: (BuildContext context, RemoteAuthState state) {
+        //     // TODO: implement listener
+        //   },
+        //   builder: (BuildContext context, RemoteAuthState state) {
+        //     // LOADING
+        //     if (state is RemoteAuthLoading) {
+        //       return FilledButton(
+        //         onPressed : null,
+        //         style     : ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(double.infinity, 48))),
+        //         child     : const AppLoadingIndicator(width: 20, height: 20),
+        //       );
+        //     }
+        //     return FilledButton(
+        //       onPressed : (){},
+        //       style     : ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(double.infinity, 48))),
+        //       child     : Text(AppStrings.btnJoinText, style: $styles.textStyles.button),
+        //     );
+        //   },
+        // ),
       ],
     );
   }

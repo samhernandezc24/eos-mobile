@@ -7,6 +7,11 @@ library;
 export 'dart:math';
 
 /// =========================================================
+/// DIO (HTTP OPERATIONS)
+/// =========================================================
+export 'package:dio/dio.dart';
+
+/// =========================================================
 /// CONFIG (LOGIC CONTROLLERS, ROUTER)
 /// =========================================================
 export 'package:eos_mobile/config/logic/app_logic.dart';
@@ -21,6 +26,9 @@ export 'package:eos_mobile/core/constants/assets.dart';
 export 'package:eos_mobile/core/constants/globals.dart';
 export 'package:eos_mobile/core/extensions/alignments_extension.dart';
 export 'package:eos_mobile/core/extensions/sized_context_extension.dart';
+export 'package:eos_mobile/core/network/data_state.dart';
+export 'package:eos_mobile/core/network/errors/exceptions.dart';
+export 'package:eos_mobile/core/usecase/usecase.dart';
 
 /// =========================================================
 /// MAIN
@@ -35,10 +43,12 @@ export 'package:eos_mobile/styles/app_styles.dart';
 /// =========================================================
 /// UI WIDGET (COMPONENTS)
 /// =========================================================
+export 'package:eos_mobile/ui/common/controls/app_loading_indicator.dart';
 export 'package:eos_mobile/ui/common/controls/buttons.dart';
 export 'package:eos_mobile/ui/common/controls/circle_buttons.dart';
 export 'package:eos_mobile/ui/common/controls/labeled_password_form_field.dart';
 export 'package:eos_mobile/ui/common/controls/labeled_text_form_field.dart';
+export 'package:eos_mobile/ui/common/controls/server_error_dialog.dart';
 
 /// =========================================================
 /// EQUATABLE
