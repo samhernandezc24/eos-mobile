@@ -25,7 +25,7 @@ class NotFoundPage extends StatelessWidget {
             ),
             Gap($styles.insets.md),
             FilledButton(
-              onPressed : (){},
+              onPressed : () => context.go(AppRoutes.home),
               child     : Text(AppStrings.btnGoBackText, style: $styles.textStyles.button),
             ),
           ],

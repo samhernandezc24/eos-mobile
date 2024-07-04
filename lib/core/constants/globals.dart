@@ -18,4 +18,10 @@ class Globals {
   ///
   /// Retorna true si [argObject] no es null, de lo contrario retorna false.
   static bool isValidValue(dynamic argObject) => argObject != null;
+
+  /// Verifica si [argObject] es una cadena non-nullable y no vacía después de
+  /// eliminar espacios en blanco.
+  ///
+  /// Retorna true si [argObject] es una cadena non-nullable y no vacía, de lo contrario retorna false.
+  static bool isValidStringValue(String argObject) => Globals.isValidValue(argObject) && argObject.trim().isNotEmpty;
 }

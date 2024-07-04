@@ -1,7 +1,8 @@
+import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
+import 'package:eos_mobile/features/auth/presentation/bloc/remote/remote_auth_bloc.dart';
+
 import 'package:eos_mobile/shared/shared_libs.dart';
-import 'package:eos_mobile/ui/common/eos_mobile_logo.dart';
-import 'package:eos_mobile/ui/common/static_text_scale.dart';
-import 'package:eos_mobile/ui/common/themed_text.dart';
+
 import 'package:eos_mobile/ui/common/wave_clipper.dart';
 
 class AuthSignInPage extends StatefulWidget {
@@ -32,6 +33,30 @@ class _AuthSignInPageState extends State<AuthSignInPage> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  // EVENTS
+  void _handleSignInPressed() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      _signIn();
+    }
+  }
+
+  Future<void> _showServerErrorDialog(BuildContext context, String? errorMessage) async {
+    return showDialog<void>(
+      context: context,
+      builder: (_) => ServerErrorDialog(message: errorMessage ?? AppStrings.errorGenericMessage),
+    );
+  }
+
+  // METHODS
+  Future<void> _signIn() async {
+    final SignInEntity credentials = SignInEntity(
+      email     : _emailController.text,
+      password  : _passwordController.text,
+    );
+    context.read<RemoteAuthBloc>().add(SignIn(credentials));
   }
 
   @override
@@ -67,13 +92,62 @@ class _AuthSignInPageState extends State<AuthSignInPage> {
                         padding: EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.lg * 1.34, $styles.insets.sm, $styles.insets.sm),
                         child: Form(
                           key   : _formKey,
-                          child : _AuthSignInForm(
-                            emailController     : _emailController,
-                            passwordController  : _passwordController,
+                          child : Column(
+                            children: <Widget>[
+                              // CAMPO: CORREO ELECTRÓNICO:
+                              LabeledTextFormField(
+                                controller    : _emailController,
+                                hintText      : 'ejem@plo.com',
+                                keyboardType  : TextInputType.emailAddress,
+                                label         : 'Usuario:',
+                                validator     : FormValidators.emailValidator,
+                              ),
+
+                              Gap($styles.insets.md),
+
+                              // CAMPO: CONTRASEÑA:
+                              LabeledPasswordFormField(
+                                controller      : _passwordController,
+                                label           : 'Contraseña:',
+                                textInputAction : TextInputAction.done,
+                                validator       : FormValidators.passwordValidator,
+                              ),
+
+                              Gap($styles.insets.lg),
+
+                              BlocConsumer<RemoteAuthBloc, RemoteAuthState>(
+                                listener: (BuildContext context, RemoteAuthState state) {
+                                  // ERROR
+                                  if (state is RemoteAuthServerError) {
+                                    _showServerErrorDialog(context, state.error?.errorMessage);
+                                  }
+
+                                  // SUCCESS
+                                  if (state is RemoteAuthSuccess) {
+                                    context.go(AppRoutes.home);
+                                    settingsLogic.hasAuthenticated.value = true;
+                                  }
+                                },
+                                builder: (BuildContext context, RemoteAuthState state) {
+                                  // LOADING
+                                  if (state is RemoteAuthLoading) {
+                                    return FilledButton(
+                                      onPressed : null,
+                                      style     : ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(double.infinity, 48))),
+                                      child     : const AppLoadingIndicator(width: 20, height: 20),
+                                    );
+                                  }
+                                  return FilledButton(
+                                    onPressed : _handleSignInPressed,
+                                    style     : ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(double.infinity, 48))),
+                                    child     : Text(AppStrings.btnJoinText, style: $styles.textStyles.button),
+                                  );
+                                },
+                              ),
+                            ],
                           ),
                         ),
                       ),
-
                       const Spacer(),
                     ],
                   ),
@@ -107,86 +181,6 @@ class _AuthSignInPageState extends State<AuthSignInPage> {
             height    : 180,
           ),
         ),
-      ],
-    );
-  }
-}
-
-class _AuthSignInForm extends StatefulWidget {
-  const _AuthSignInForm({
-    required this.emailController,
-    required this.passwordController,
-  });
-
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
-
-  @override
-  State<_AuthSignInForm> createState() => _AuthSignInFormState();
-}
-
-class _AuthSignInFormState extends State<_AuthSignInForm> {
-  // EVENTS
-  Future<void> _showServerErrorDialog(BuildContext context, String? errorMessage) async {
-    return showDialog<void>(
-      context: context,
-      builder: (_) => ServerErrorDialog(message: errorMessage!),
-    );
-  }
-
-  // METHODS
-  Future<void> _signIn() async {
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        // CAMPO: CORREO ELECTRÓNICO:
-        LabeledTextFormField(
-          controller    : widget.emailController,
-          hintText      : 'ejem@plo.com',
-          keyboardType  : TextInputType.emailAddress,
-          label         : 'Usuario:',
-        ),
-
-        Gap($styles.insets.md),
-
-        // CAMPO: CONTRASEÑA:
-        LabeledPasswordFormField(
-          controller      : widget.passwordController,
-          label           : 'Contraseña:',
-          textInputAction : TextInputAction.done,
-        ),
-
-        Gap($styles.insets.lg),
-
-        FilledButton(
-          onPressed : (){},
-          style     : ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(double.infinity, 48))),
-          child     : Text(AppStrings.btnJoinText, style: $styles.textStyles.button),
-        ),
-
-        // BlocConsumer<RemoteAuthBloc, RemoteAuthState>(
-        //   listener: (BuildContext context, RemoteAuthState state) {
-        //     // TODO: implement listener
-        //   },
-        //   builder: (BuildContext context, RemoteAuthState state) {
-        //     // LOADING
-        //     if (state is RemoteAuthLoading) {
-        //       return FilledButton(
-        //         onPressed : null,
-        //         style     : ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(double.infinity, 48))),
-        //         child     : const AppLoadingIndicator(width: 20, height: 20),
-        //       );
-        //     }
-        //     return FilledButton(
-        //       onPressed : (){},
-        //       style     : ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(double.infinity, 48))),
-        //       child     : Text(AppStrings.btnJoinText, style: $styles.textStyles.button),
-        //     );
-        //   },
-        // ),
       ],
     );
   }

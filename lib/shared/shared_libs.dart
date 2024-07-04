@@ -29,6 +29,7 @@ export 'package:eos_mobile/core/extensions/sized_context_extension.dart';
 export 'package:eos_mobile/core/network/data_state.dart';
 export 'package:eos_mobile/core/network/errors/exceptions.dart';
 export 'package:eos_mobile/core/usecase/usecase.dart';
+export 'package:eos_mobile/core/validators/form_validators.dart';
 
 /// =========================================================
 /// MAIN
@@ -49,6 +50,9 @@ export 'package:eos_mobile/ui/common/controls/circle_buttons.dart';
 export 'package:eos_mobile/ui/common/controls/labeled_password_form_field.dart';
 export 'package:eos_mobile/ui/common/controls/labeled_text_form_field.dart';
 export 'package:eos_mobile/ui/common/controls/server_error_dialog.dart';
+export 'package:eos_mobile/ui/common/eos_mobile_logo.dart';
+export 'package:eos_mobile/ui/common/static_text_scale.dart';
+export 'package:eos_mobile/ui/common/themed_text.dart';
 
 /// =========================================================
 /// EQUATABLE

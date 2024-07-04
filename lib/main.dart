@@ -3,6 +3,7 @@ import 'package:eos_mobile/features/auth/presentation/bloc/remote/remote_auth_bl
 import 'package:eos_mobile/features/settings/presentation/cubits/local/local_settings_cubit.dart';
 import 'package:eos_mobile/injection_container.dart';
 import 'package:eos_mobile/layouts/app_scaffold.dart';
+import 'package:eos_mobile/layouts/app_scaffold_with_navbar.dart';
 import 'package:eos_mobile/shared/shared_libs.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -62,5 +63,6 @@ AppLogic get appLogic             => sl.get<AppLogic>();
 SettingsLogic get settingsLogic   => sl.get<SettingsLogic>();
 
 // Helpers globales para facilitar la lectura de código.
-AppStyles get $styles   => AppScaffold.styles;
-Logger get $logger      => Logger();
+AppStyles get $stylesShell  => AppScaffold.styles;
+AppStyles get $styles       => AppScaffoldWithNavBar.styles;
+Logger get $logger          => Logger();

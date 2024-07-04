@@ -12,7 +12,7 @@ class ServerException implements Exception {
       case DioExceptionType.badCertificate:
         errorMessage = AppStrings.errorBadCertificateMessage;
       case DioExceptionType.badResponse:
-        errorMessage = _badResponseExceptionMessage(dioException.response?.statusCode);
+        errorMessage = _badResponseExceptionMessage(dioException.response?.statusCode, dioException.response?.data.toString());
       case DioExceptionType.cancel:
         errorMessage = AppStrings.errorServerCancelMessage;
       case DioExceptionType.connectionError:
@@ -24,8 +24,11 @@ class ServerException implements Exception {
 
   late String errorMessage;
 
-  String _badResponseExceptionMessage(int? statusCode) {
+  String _badResponseExceptionMessage(int? statusCode, String? serverResponse) {
     if (statusCode == null) { return AppStrings.errorGenericMessage; }
+
+    if (serverResponse != null && serverResponse.isNotEmpty) { return serverResponse; }
+
     final String message;
 
     if (statusCode >= 100 && statusCode < 200) {
@@ -44,4 +47,7 @@ class ServerException implements Exception {
 
     return message;
   }
+
+  @override
+  String toString() => errorMessage;
 }

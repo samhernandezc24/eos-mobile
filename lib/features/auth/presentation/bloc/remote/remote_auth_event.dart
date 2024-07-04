@@ -8,7 +8,7 @@ abstract class RemoteAuthEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// [SignInUseCase]
+/// [RemoteSignInUseCase]
 class SignIn extends RemoteAuthEvent {
   const SignIn(this.credentials);
 

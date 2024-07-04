@@ -4,8 +4,6 @@ import 'package:eos_mobile/ui/common/app_icons.dart';
 import 'package:eos_mobile/ui/common/controls/app_page_indicator.dart';
 import 'package:eos_mobile/ui/common/gradient_container.dart';
 import 'package:eos_mobile/ui/common/previous_next_navigation.dart';
-import 'package:eos_mobile/ui/common/static_text_scale.dart';
-import 'package:eos_mobile/ui/common/themed_text.dart';
 import 'package:eos_mobile/ui/common/utils/app_haptics.dart';
 
 class WelcomePage extends StatefulWidget {

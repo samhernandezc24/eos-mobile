@@ -48,11 +48,12 @@ class AppLogic {
     isBootstrapComplete = true;
 
     // REDIRECTION
-    final bool showWelcomePage = settingsLogic.hasCompletedOnboarding.value == false;
+    final bool showWelcomePage    = settingsLogic.hasCompletedOnboarding.value  == false;
+    final bool isNotAuthenticated = settingsLogic.hasAuthenticated.value        == false;
     if (showWelcomePage) {
       appRouter.go(AppRoutes.welcome);
     } else {
-      appRouter.go(initialDeeplink ?? AppRoutes.authSignIn);
+      appRouter.go(initialDeeplink ?? (isNotAuthenticated ? AppRoutes.authSignIn : AppRoutes.home));
     }
   }
 

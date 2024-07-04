@@ -90,10 +90,10 @@ class AppStrings {
   static const String forgotPasswordBoxMessage              = 'Completa el formulario para restablecer su contraseña';
 
   // H
-  static const String homeFirstModuleCard                   = 'Inspecciones';
-  static const String homeSecondModuleCard                  = 'Compras';
-  static const String homeThirdModuleCard                   = 'Embarques';
-  static const String homeFourthModuleCard                  = 'Unidades';
+  static const String homeFirstModuleCardTitle              = 'Inspecciones';
+  static const String homeSecondModuleCardTitle             = 'Compras';
+  static const String homeThirdModuleCardTitle              = 'Embarques';
+  static const String homeFourthModuleCardTitle             = 'Unidades';
 
   // I
   static const String inspeccionIndexListPageSubtitle       = 'Muestra las inspecciones generales.';

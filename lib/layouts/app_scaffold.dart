@@ -24,7 +24,7 @@ class AppScaffold extends StatelessWidget {
     return KeyedSubtree(
       key: ValueKey($styles.scale),
       child: DefaultTextStyle(
-        style : $styles.textStyles.body,
+        style : $stylesShell.textStyles.body,
         // Utilizar un comportamiento de desplazamiento personalizado
         // en toda la aplicación.
         child : ScrollConfiguration(
