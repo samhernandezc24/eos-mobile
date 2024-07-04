@@ -1,3 +1,4 @@
+import 'package:eos_mobile/features/auth/data/datasources/local/auth_local_service.dart';
 import 'package:eos_mobile/features/auth/data/datasources/remote/auth_remote_api_service.dart';
 import 'package:eos_mobile/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:eos_mobile/features/auth/domain/repositories/auth_repository.dart';
@@ -24,11 +25,12 @@ Future<void> initializeDependencies() async {
   /// SERVICES / DATASOURCES
   /// =========================================================
   sl.registerSingleton<AuthRemoteApiService>(AuthRemoteApiService(sl()));
+  sl.registerSingleton<AuthLocalService>(AuthLocalServiceImpl());
 
   /// =========================================================
   /// REPOSITORIES
   /// =========================================================
-  sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl()));
+  sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
 
   /// =========================================================
   /// USE CASES

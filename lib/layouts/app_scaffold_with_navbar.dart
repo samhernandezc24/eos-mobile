@@ -41,6 +41,9 @@ class AppScaffoldWithNavBar extends StatelessWidget {
             ),
             body: navigationShell,
             bottomNavigationBar: _buildBottomNavigationBar(),
+            drawer: const Drawer(
+              child: _AppScaffoldWithNavBarDrawer(),
+            ),
           ),
         ),
       ),
@@ -60,6 +63,28 @@ class AppScaffoldWithNavBar extends StatelessWidget {
     return canPop ? BackButton(onPressed: routerDelegate.pop) : null;
   }
 
+  Widget _buildDrawer(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          _buildUserAccountDrawerHeader(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUserAccountDrawerHeader(BuildContext context) {
+    return UserAccountsDrawerHeader(
+      accountName   : Text(''),
+      accountEmail  : Text(''),
+      currentAccountPicture: CircleAvatar(
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        child: Text('Hola'),
+      ),
+    );
+  }
+
   Widget _buildBottomNavigationBar() {
     return NavigationBar(
       selectedIndex: navigationShell.currentIndex,
@@ -70,6 +95,25 @@ class AppScaffoldWithNavBar extends StatelessWidget {
         NavigationDestination(icon: Badge(label: Text('+99'), child: Icon(Icons.notifications)), label: 'Notificaciones'),
       ],
       onDestinationSelected: (int index) => navigationShell.goBranch(index, initialLocation: index == navigationShell.currentIndex),
+    );
+  }
+}
+
+class _AppScaffoldWithNavBarDrawer extends StatefulWidget {
+  const _AppScaffoldWithNavBarDrawer({super.key});
+
+  @override
+  State<_AppScaffoldWithNavBarDrawer> createState() => _AppScaffoldWithNavBarDrawerState();
+}
+
+class _AppScaffoldWithNavBarDrawerState extends State<_AppScaffoldWithNavBarDrawer> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: EdgeInsets.zero,
+      children: <Widget>[
+        // DRAWER HEADER
+      ],
     );
   }
 }

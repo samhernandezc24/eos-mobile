@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:eos_mobile/features/auth/data/datasources/local/auth_local_service.dart';
 import 'package:eos_mobile/features/auth/data/datasources/remote/auth_remote_api_service.dart';
 import 'package:eos_mobile/features/auth/data/models/account_model.dart';
 import 'package:eos_mobile/features/auth/data/models/sign_in_model.dart';
@@ -10,9 +11,10 @@ import 'package:eos_mobile/features/auth/domain/repositories/auth_repository.dar
 import 'package:eos_mobile/shared/shared_libs.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  AuthRepositoryImpl(this._authRemoteApiService);
+  AuthRepositoryImpl(this._authRemoteApiService, this._authLocalService);
 
   final AuthRemoteApiService _authRemoteApiService;
+  final AuthLocalService _authLocalService;
 
   // =========================================================
   // REMOTE OPERATIONS
@@ -45,40 +47,40 @@ class AuthRepositoryImpl implements AuthRepository {
   // =========================================================
   // LOCAL OPERATIONS
   // =========================================================
+
+  /// OBTENCIÓN DE CREDENCIALES DEL USUARIO
   @override
-  Future<SignInEntity?> getCredentials() {
-    // TODO: implement getCredentials
-    throw UnimplementedError();
+  Future<SignInEntity?> getCredentials() async {
+    return _authLocalService.getCredentials();
   }
 
+  /// OBTENCIÓN DE INFORMACIÓN DEL USUARIO
   @override
-  Future<AccountEntity?> getUserInfo() {
-    // TODO: implement getUserInfo
-    throw UnimplementedError();
+  Future<AccountEntity?> getUserInfo() async {
+    return _authLocalService.getUserInfo();
   }
 
+  /// GUARDADO DE CREDENCIALES DEL USUARIO
   @override
-  Future<void> logout() {
-    // TODO: implement logout
-    throw UnimplementedError();
+  Future<void> storeCredentials(SignInEntity credentials) async {
+    return _authLocalService.storeCredentials(credentials);
   }
 
+  /// GUARDADO DE INFORMACIÓN DEL USUARIO
   @override
-  Future<void> storeCredentials(SignInEntity credentials) {
-    // TODO: implement storeCredentials
-    throw UnimplementedError();
+  Future<void> storeUserInfo(AccountEntity objData) async {
+    return _authLocalService.storeUserInfo(objData);
   }
 
+  /// GUARDADO DE SESIÓN DEL USUARIO
   @override
-  Future<void> storeUserInfo(AccountEntity objData) {
-    // TODO: implement storeUserInfo
-    throw UnimplementedError();
+  Future<void> storeUserSession(String token) async {
+    return _authLocalService.storeUserSession(token);
   }
 
+  /// CIERRE DE SESIÓN
   @override
-  Future<void> storeUserSession(String token) {
-    // TODO: implement storeUserSession
-    throw UnimplementedError();
+  Future<void> logout() async {
+    return _authLocalService.logout();
   }
-
 }

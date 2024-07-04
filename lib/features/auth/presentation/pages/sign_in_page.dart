@@ -89,7 +89,7 @@ class _AuthSignInPageState extends State<AuthSignInPage> {
 
                       // FORM:
                       Padding(
-                        padding: EdgeInsets.fromLTRB($styles.insets.sm, $styles.insets.lg * 1.34, $styles.insets.sm, $styles.insets.sm),
+                        padding: EdgeInsets.fromLTRB($stylesShell.insets.sm, $stylesShell.insets.lg * 1.34, $stylesShell.insets.sm, $stylesShell.insets.sm),
                         child: Form(
                           key   : _formKey,
                           child : Column(
@@ -103,7 +103,7 @@ class _AuthSignInPageState extends State<AuthSignInPage> {
                                 validator     : FormValidators.emailValidator,
                               ),
 
-                              Gap($styles.insets.md),
+                              Gap($stylesShell.insets.md),
 
                               // CAMPO: CONTRASEÑA:
                               LabeledPasswordFormField(
@@ -113,7 +113,7 @@ class _AuthSignInPageState extends State<AuthSignInPage> {
                                 validator       : FormValidators.passwordValidator,
                               ),
 
-                              Gap($styles.insets.lg),
+                              Gap($stylesShell.insets.lg),
 
                               BlocConsumer<RemoteAuthBloc, RemoteAuthState>(
                                 listener: (BuildContext context, RemoteAuthState state) {
@@ -140,7 +140,7 @@ class _AuthSignInPageState extends State<AuthSignInPage> {
                                   return FilledButton(
                                     onPressed : _handleSignInPressed,
                                     style     : ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(double.infinity, 48))),
-                                    child     : Text(AppStrings.btnJoinText, style: $styles.textStyles.button),
+                                    child     : Text(AppStrings.btnJoinText, style: $stylesShell.textStyles.button),
                                   );
                                 },
                               ),
@@ -193,11 +193,11 @@ class _AuthSignInLogo extends StatelessWidget {
       mainAxisAlignment : MainAxisAlignment.center,
       children          : <Widget>[
         const ExcludeSemantics(child: EOSMobileLogo(width: 96)),
-        Gap($styles.insets.xs),
+        Gap($stylesShell.insets.xs),
         StaticTextScale(
           child: Text(
             AppStrings.authSignInTitle,
-            style: $styles.textStyles.eosTitle.copyWith(fontSize: 30 * $styles.scale, fontWeight: FontWeight.w600),
+            style: $stylesShell.textStyles.eosTitle.copyWith(fontSize: 30 * $stylesShell.scale, fontWeight: FontWeight.w600),
           ),
         ),
       ],

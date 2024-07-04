@@ -56,7 +56,7 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   void _handleSemanticSwipe(int direction) {
-    _pageController.animateToPage((_pageController.page ?? 0).round() + direction, duration: $styles.times.fast, curve: Curves.easeOut);
+    _pageController.animateToPage((_pageController.page ?? 0).round() + direction, duration: $stylesShell.times.fast, curve: Curves.easeOut);
   }
 
   void _handleNavTextSemanticTap() => _incrementPage(1);
@@ -121,7 +121,7 @@ class _WelcomePageState extends State<WelcomePage> {
                               child     : StaticTextScale(
                                 child: Text(
                                   AppStrings.defaultAppName,
-                                  style: $styles.textStyles.eosTitle.copyWith(fontSize: 32 * $styles.scale),
+                                  style: $stylesShell.textStyles.eosTitle.copyWith(fontSize: 32 * $stylesShell.scale),
                                 ),
                               ),
                             ),
@@ -135,7 +135,7 @@ class _WelcomePageState extends State<WelcomePage> {
                               valueListenable : _currentPage,
                               builder         : (_, value, __) {
                                 return AnimatedSwitcher(
-                                  duration  : $styles.times.slow,
+                                  duration  : $stylesShell.times.slow,
                                   child     : KeyedSubtree(
                                     key   : ValueKey(value),
                                     child : _PageImage(objData: pageData[value]),
@@ -166,14 +166,14 @@ class _WelcomePageState extends State<WelcomePage> {
 
                     if (PlatformInfo.isMobile) ...[
                       Positioned(
-                        right   : $styles.insets.lg,
-                        bottom  : $styles.insets.lg,
+                        right   : $stylesShell.insets.lg,
+                        bottom  : $stylesShell.insets.lg,
                         child   : _buildFinishButton(context),
                       ),
 
                       BottomCenter(
                         child: Padding(
-                          padding : EdgeInsets.only(bottom: $styles.insets.lg),
+                          padding : EdgeInsets.only(bottom: $stylesShell.insets.lg),
                           child   : _buildNavigationText(context),
                         ),
                       ),
@@ -194,7 +194,7 @@ class _WelcomePageState extends State<WelcomePage> {
       builder         : (_, pageIndex, __) {
         return AnimatedOpacity(
           opacity   : pageIndex == pageData.length - 1 ? 1 : 0,
-          duration  : $styles.times.fast,
+          duration  : $stylesShell.times.fast,
           child     : CircleIconButton(
             icon            : AppIcons.next_large,
             onPressed       : _handleWelcomeCompletePressed,
@@ -215,8 +215,8 @@ class _WelcomePageState extends State<WelcomePage> {
           child: Transform.scale(
             scaleX: left ? -1 : 1,
             child: HorizontalGradient([
-              $styles.colors.black.withOpacity(0),
-              $styles.colors.black,
+              $stylesShell.colors.black.withOpacity(0),
+              $stylesShell.colors.black,
             ], const [ 0, .2 ],),
           ),
         ),
@@ -230,11 +230,11 @@ class _WelcomePageState extends State<WelcomePage> {
       builder         : (_, pageIndex, __) {
         return AnimatedOpacity(
           opacity   : pageIndex == pageData.length - 1 ? 0 : 1,
-          duration  : $styles.times.fast,
+          duration  : $stylesShell.times.fast,
           child     : Semantics(
             onTapHint : AppStrings.welcomeSemanticNavigate,
             onTap     : _isLastPage ? null : _handleNavTextSemanticTap,
-            child     : Text(AppStrings.welcomeSemanticSwipeLeft, style: $styles.textStyles.bodySmall),
+            child     : Text(AppStrings.welcomeSemanticSwipeLeft, style: $stylesShell.textStyles.bodySmall),
           ),
         );
       },
@@ -261,7 +261,7 @@ class _Page extends StatelessWidget {
     return Semantics(
       liveRegion: true,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: $styles.insets.md),
+        padding: EdgeInsets.symmetric(horizontal: $stylesShell.insets.md),
         child: Column(
           children: <Widget>[
             const Spacer(),
@@ -273,9 +273,9 @@ class _Page extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(objData.title, style: $styles.textStyles.eosTitle.copyWith(fontSize: 24 * $styles.scale)),
-                    Gap($styles.insets.sm),
-                    Text(objData.content, style: $styles.textStyles.body.copyWith(height: 1.3), textAlign: TextAlign.center),
+                    Text(objData.title, style: $stylesShell.textStyles.eosTitle.copyWith(fontSize: 24 * $stylesShell.scale)),
+                    Gap($stylesShell.insets.sm),
+                    Text(objData.content, style: $stylesShell.textStyles.body.copyWith(height: 1.3), textAlign: TextAlign.center),
                   ],
                 ),
               ),
