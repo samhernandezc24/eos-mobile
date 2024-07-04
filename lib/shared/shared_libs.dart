@@ -32,6 +32,12 @@ export 'package:eos_mobile/core/usecase/usecase.dart';
 export 'package:eos_mobile/core/validators/form_validators.dart';
 
 /// =========================================================
+/// LAYOUTS
+/// =========================================================
+export 'package:eos_mobile/layouts/app_scaffold.dart';
+export 'package:eos_mobile/layouts/app_scaffold_with_navbar.dart';
+
+/// =========================================================
 /// MAIN
 /// =========================================================
 export 'package:eos_mobile/main.dart';

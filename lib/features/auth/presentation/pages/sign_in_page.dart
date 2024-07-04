@@ -1,5 +1,6 @@
 import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/remote/remote_auth_bloc.dart';
+import 'package:eos_mobile/features/auth/presentation/cubits/local/local_auth_cubit.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
 
@@ -26,6 +27,8 @@ class _AuthSignInPageState extends State<AuthSignInPage> {
     super.initState();
     _emailController      = TextEditingController();
     _passwordController   = TextEditingController();
+
+    context.read<LocalAuthCubit>().onGetCredentials();
   }
 
   @override
@@ -90,62 +93,87 @@ class _AuthSignInPageState extends State<AuthSignInPage> {
                       // FORM:
                       Padding(
                         padding: EdgeInsets.fromLTRB($stylesShell.insets.sm, $stylesShell.insets.lg * 1.34, $stylesShell.insets.sm, $stylesShell.insets.sm),
-                        child: Form(
-                          key   : _formKey,
-                          child : Column(
-                            children: <Widget>[
-                              // CAMPO: CORREO ELECTRÓNICO:
-                              LabeledTextFormField(
-                                controller    : _emailController,
-                                hintText      : 'ejem@plo.com',
-                                keyboardType  : TextInputType.emailAddress,
-                                label         : 'Usuario:',
-                                validator     : FormValidators.emailValidator,
+                        child: BlocBuilder<LocalAuthCubit, LocalAuthState>(
+                          builder: (BuildContext context, LocalAuthState state) {
+                            if (state is LocalAuthGetCredentials) {
+                              _emailController.text     = state.credentials?.email    ?? '';
+                              _passwordController.text  = state.credentials?.password ?? '';
+                            }
+                            return Form(
+                              key   : _formKey,
+                              child : Column(
+                                children: <Widget>[
+                                  // CAMPO: CORREO ELECTRÓNICO:
+                                  LabeledTextFormField(
+                                    controller    : _emailController,
+                                    hintText      : 'ejem@plo.com',
+                                    keyboardType  : TextInputType.emailAddress,
+                                    label         : 'Usuario:',
+                                    validator     : FormValidators.emailValidator,
+                                  ),
+
+                                  Gap($stylesShell.insets.md),
+
+                                  // CAMPO: CONTRASEÑA:
+                                  LabeledPasswordFormField(
+                                    controller      : _passwordController,
+                                    label           : 'Contraseña:',
+                                    textInputAction : TextInputAction.done,
+                                    validator       : FormValidators.passwordValidator,
+                                  ),
+
+                                  Gap($stylesShell.insets.lg),
+
+                                  BlocConsumer<RemoteAuthBloc, RemoteAuthState>(
+                                    listener: (BuildContext context, RemoteAuthState state) {
+                                      // ERROR
+                                      if (state is RemoteAuthServerError) {
+                                        _showServerErrorDialog(context, state.error?.errorMessage);
+                                      }
+
+                                      // SUCCESS
+                                      if (state is RemoteAuthSuccess) {
+                                        final localAuthCubit = context.read<LocalAuthCubit>();
+
+                                        // GUARDAR CREDENCIALES
+                                        localAuthCubit.onStoreCredentials(
+                                          SignInEntity(
+                                            email     : _emailController.text,
+                                            password  : _passwordController.text,
+                                          ),
+                                        );
+
+                                        // GUARDAR TOKEN
+                                        localAuthCubit.onStoreUserSession(state.objResponse!.token);
+
+                                        // GUARDAR INFORMACIÓN DEL USUARIO
+                                        localAuthCubit.onStoreUserInfo(state.objResponse!);
+
+                                        // NAVEGAR A LA PAGINA PRINCIPAL
+                                        context.go(AppRoutes.home);
+                                        settingsLogic.hasAuthenticated.value = true;
+                                      }
+                                    },
+                                    builder: (BuildContext context, RemoteAuthState state) {
+                                      // LOADING
+                                      if (state is RemoteAuthLoading) {
+                                        return FilledButton(
+                                          onPressed : null,
+                                          style     : ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(double.infinity, 48))),
+                                          child     : const AppLoadingIndicator(width: 20, height: 20),
+                                        );
+                                      }
+                                      return FilledButton(
+                                        onPressed : _handleSignInPressed,
+                                        style     : ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(double.infinity, 48))),
+                                        child     : Text(AppStrings.btnJoinText, style: $stylesShell.textStyles.button),
+                                      );
+                                    },
+                                  ),
+                                ],
                               ),
-
-                              Gap($stylesShell.insets.md),
-
-                              // CAMPO: CONTRASEÑA:
-                              LabeledPasswordFormField(
-                                controller      : _passwordController,
-                                label           : 'Contraseña:',
-                                textInputAction : TextInputAction.done,
-                                validator       : FormValidators.passwordValidator,
-                              ),
-
-                              Gap($stylesShell.insets.lg),
-
-                              BlocConsumer<RemoteAuthBloc, RemoteAuthState>(
-                                listener: (BuildContext context, RemoteAuthState state) {
-                                  // ERROR
-                                  if (state is RemoteAuthServerError) {
-                                    _showServerErrorDialog(context, state.error?.errorMessage);
-                                  }
-
-                                  // SUCCESS
-                                  if (state is RemoteAuthSuccess) {
-                                    context.go(AppRoutes.home);
-                                    settingsLogic.hasAuthenticated.value = true;
-                                  }
-                                },
-                                builder: (BuildContext context, RemoteAuthState state) {
-                                  // LOADING
-                                  if (state is RemoteAuthLoading) {
-                                    return FilledButton(
-                                      onPressed : null,
-                                      style     : ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(double.infinity, 48))),
-                                      child     : const AppLoadingIndicator(width: 20, height: 20),
-                                    );
-                                  }
-                                  return FilledButton(
-                                    onPressed : _handleSignInPressed,
-                                    style     : ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(double.infinity, 48))),
-                                    child     : Text(AppStrings.btnJoinText, style: $stylesShell.textStyles.button),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
+                            );
+                          },
                         ),
                       ),
                       const Spacer(),

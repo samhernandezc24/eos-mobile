@@ -14,6 +14,23 @@ class Globals {
   /// ```
   static const EdgeInsets kDefaultContentPadding = EdgeInsets.symmetric(horizontal: 10.2, vertical: 13.2);
 
+  /// Retorna las iniciales de las dos primeras palabras del [value] dado.
+  /// Si el [value] no es válido, devuelve una cadena vacía.
+  static String getInitials(String value) {
+    String objReturn = '';
+    if (Globals.isValidStringValue(value)) {
+      final List<String> parts = value.split(' ');
+      if (parts.isNotEmpty) {
+        final StringBuffer strBuffer = StringBuffer();
+        for (final part in parts.take(2)) {
+          strBuffer.write(part[0].toUpperCase());
+        }
+        objReturn = strBuffer.toString();
+      }
+    }
+    return objReturn;
+  }
+
   /// Verifica si [argObject] es non-nullable.
   ///
   /// Retorna true si [argObject] no es null, de lo contrario retorna false.

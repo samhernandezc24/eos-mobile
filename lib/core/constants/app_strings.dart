@@ -11,6 +11,7 @@ class AppStrings {
   static const String appDrawerItemDashboard                = 'Dashboard';
   static const String appDrawerItemHelp                     = 'Ayuda y comentarios';
   static const String appDrawerItemHome                     = 'Inicio';
+  static const String appDrawerItemLogout                   = 'Cerrar sesión';
   static const String appDrawerItemNotification             = 'Notificaciones';
 
   static const String appPageDefaultTitlePage               = 'página';
@@ -108,6 +109,11 @@ class AppStrings {
   static const String inspeccionTipoBoxTitle                = 'Tipos de inspecciones';
   static const String inspeccionTipoCreateAppBarTitle       = 'Nuevo tipo de inspección';
   static const String inspeccionTipoEmptyListTitle          = 'Aún no hay tipos de inspecciones';
+
+  // L
+  static const String logoutAlertDialogTitle                = '¿Salir de tu cuenta?';
+  static const String logoutRedirectTitle                   = '¡Te has desconectado!';
+  static const String logoutRedirectMessage                 = 'Has sido redirigido al inicio de sesión.';
 
   // S
   static const String settingsAppBarTitle                   = 'Configuración general';

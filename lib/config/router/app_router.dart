@@ -1,6 +1,4 @@
 import 'package:eos_mobile/features/auth/presentation/pages/sign_in_page.dart';
-import 'package:eos_mobile/layouts/app_scaffold.dart';
-import 'package:eos_mobile/layouts/app_scaffold_with_navbar.dart';
 import 'package:eos_mobile/shared/shared_libs.dart';
 import 'package:eos_mobile/ui/pages/home/home_page.dart';
 import 'package:eos_mobile/ui/pages/not_found/not_found_page.dart';

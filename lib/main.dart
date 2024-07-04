@@ -1,9 +1,8 @@
 import 'package:eos_mobile/config/themes/theme_detector.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/remote/remote_auth_bloc.dart';
+import 'package:eos_mobile/features/auth/presentation/cubits/local/local_auth_cubit.dart';
 import 'package:eos_mobile/features/settings/presentation/cubits/local/local_settings_cubit.dart';
 import 'package:eos_mobile/injection_container.dart';
-import 'package:eos_mobile/layouts/app_scaffold.dart';
-import 'package:eos_mobile/layouts/app_scaffold_with_navbar.dart';
 import 'package:eos_mobile/shared/shared_libs.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -33,8 +32,9 @@ class MainApp extends StatelessWidget with GetItMixin {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<LocalSettingsCubit>(create: (context) => sl<LocalSettingsCubit>()),
         BlocProvider<RemoteAuthBloc>(create: (context) => sl<RemoteAuthBloc>()),
+        BlocProvider<LocalAuthCubit>(create: (context) => sl<LocalAuthCubit>()),
+        BlocProvider<LocalSettingsCubit>(create: (context) => sl<LocalSettingsCubit>()),
       ],
       child: Builder(
         builder: (BuildContext context) {

@@ -8,4 +8,5 @@ class AppColors {
   final Color transparent   = Colors.transparent;
   final Color secondary     = const Color(0xFFF4FAFF);
   final Color onSecondary   = const Color(0xFF233876);
+  final Color success       = Colors.green;
 }
