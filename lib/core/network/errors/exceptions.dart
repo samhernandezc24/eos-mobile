@@ -4,25 +4,25 @@ class ServerException implements Exception {
   ServerException.fromDioException(DioException dioException) {
     switch (dioException.type) {
       case DioExceptionType.connectionTimeout:
-        errorMessage = AppStrings.errorConnectionTimeoutMessage;
+        message = AppStrings.errorConnectionTimeoutMessage;
       case DioExceptionType.sendTimeout:
-        errorMessage = AppStrings.errorSendTimeoutMessage;
+        message = AppStrings.errorSendTimeoutMessage;
       case DioExceptionType.receiveTimeout:
-        errorMessage = AppStrings.errorReceiveTimeoutMessage;
+        message = AppStrings.errorReceiveTimeoutMessage;
       case DioExceptionType.badCertificate:
-        errorMessage = AppStrings.errorBadCertificateMessage;
+        message = AppStrings.errorBadCertificateMessage;
       case DioExceptionType.badResponse:
-        errorMessage = _badResponseExceptionMessage(dioException.response?.statusCode, dioException.response?.data.toString());
+        message = _badResponseExceptionMessage(dioException.response?.statusCode, dioException.response?.data.toString());
       case DioExceptionType.cancel:
-        errorMessage = AppStrings.errorServerCancelMessage;
+        message = AppStrings.errorServerCancelMessage;
       case DioExceptionType.connectionError:
-        errorMessage = AppStrings.errorConnectionMessage;
+        message = AppStrings.errorConnectionMessage;
       case DioExceptionType.unknown:
-        errorMessage = AppStrings.errorUnknownMessage;
+        message = AppStrings.errorUnknownMessage;
     }
   }
 
-  late String errorMessage;
+  late String message;
 
   String _badResponseExceptionMessage(int? statusCode, String? serverResponse) {
     if (statusCode == null) { return AppStrings.errorGenericMessage; }
@@ -49,5 +49,5 @@ class ServerException implements Exception {
   }
 
   @override
-  String toString() => errorMessage;
+  String toString() => message;
 }

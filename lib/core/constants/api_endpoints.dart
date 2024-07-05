@@ -15,5 +15,14 @@ class ApiEndpoints {
   // =========================================================
   // API.Account
   // =========================================================
+
+  /// AspNetUser
   static const String aspNetUser = '$_apiBaseUrl/api/AspNetUser';
+
+  // =========================================================
+  // API.Inspecciones
+  // =========================================================
+
+  /// InspeccionesTipos
+  static const String inspeccionesTipos = '$_apiBaseUrl/api/Inspecciones/Tipos';
 }

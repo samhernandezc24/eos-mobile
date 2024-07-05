@@ -1,3 +1,4 @@
+import 'package:eos_mobile/core/network/api_interceptor.dart';
 import 'package:eos_mobile/features/auth/data/datasources/local/auth_local_service.dart';
 import 'package:eos_mobile/features/auth/data/datasources/remote/auth_remote_api_service.dart';
 import 'package:eos_mobile/features/auth/data/repositories/auth_repository_impl.dart';
@@ -10,8 +11,16 @@ import 'package:eos_mobile/features/auth/domain/usecases/local/local_store_user_
 import 'package:eos_mobile/features/auth/domain/usecases/local/local_store_user_session_usecase.dart';
 import 'package:eos_mobile/features/auth/domain/usecases/remote/remote_sign_in_usecase.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/remote/remote_auth_bloc.dart';
-import 'package:eos_mobile/features/auth/presentation/cubits/local/local_auth_cubit.dart';
-import 'package:eos_mobile/features/settings/presentation/cubits/local/local_settings_cubit.dart';
+import 'package:eos_mobile/features/auth/presentation/cubit/local/local_auth_cubit.dart';
+import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion_tipo/inspeccion_tipo_remote_api_service.dart';
+import 'package:eos_mobile/features/inspecciones/data/repositories/inspeccion_tipo_repository_impl.dart';
+import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_tipo_repository.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/inspeccion_tipo/remote_delete_inspeccion_tipo_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/inspeccion_tipo/remote_list_inspeccion_tipo_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/inspeccion_tipo/remote_store_inspeccion_tipo_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/inspeccion_tipo/remote_update_inspeccion_tipo_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/inspeccion_tipo/remote_inspeccion_tipo_bloc.dart';
+import 'package:eos_mobile/features/settings/presentation/cubit/local/local_settings_cubit.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
 
@@ -24,9 +33,11 @@ final GetIt sl = GetIt.instance;
 /// manejadores de estado con BLoC, etc.
 Future<void> initializeDependencies() async {
   /// =========================================================
-  /// SERVICES / DATASOURCES
+  /// DIO (HTTP, INTERCEPTORS)
   /// =========================================================
-  sl.registerSingleton<Dio>(Dio());
+  final Dio dio = Dio();
+  dio.interceptors.add(ApiInterceptor());
+  sl.registerSingleton<Dio>(dio);
 
   /// =========================================================
   /// SERVICES / DATASOURCES
@@ -34,15 +45,23 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<AuthRemoteApiService>(AuthRemoteApiService(sl()));
   sl.registerSingleton<AuthLocalService>(AuthLocalServiceImpl());
 
+  sl.registerSingleton<InspeccionTipoRemoteApiService>(InspeccionTipoRemoteApiService(sl()));
+
   /// =========================================================
   /// REPOSITORIES
   /// =========================================================
-  sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
+  sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(),sl()));
+  sl.registerSingleton<InspeccionTipoRepository>(InspeccionTipoRepositoryImpl(sl()));
 
   /// =========================================================
   /// USE CASES
   /// =========================================================
   sl.registerSingleton<RemoteSignInUseCase>(RemoteSignInUseCase(sl()));
+
+  sl.registerSingleton<RemoteListInspeccionTipoUseCase>(RemoteListInspeccionTipoUseCase(sl()));
+  sl.registerSingleton<RemoteStoreInspeccionTipoUseCase>(RemoteStoreInspeccionTipoUseCase(sl()));
+  sl.registerSingleton<RemoteUpdateInspeccionTipoUseCase>(RemoteUpdateInspeccionTipoUseCase(sl()));
+  sl.registerSingleton<RemoteDeleteInspeccionTipoUseCase>(RemoteDeleteInspeccionTipoUseCase(sl()));
 
   sl.registerSingleton<LocalGetCredentialsUseCase>(LocalGetCredentialsUseCase(sl()));
   sl.registerSingleton<LocalGetUserInfoUseCase>(LocalGetUserInfoUseCase(sl()));
@@ -55,6 +74,7 @@ Future<void> initializeDependencies() async {
   /// STATE MANAGEMENT (BLOC, CUBITS)
   /// =========================================================
   sl.registerFactory<RemoteAuthBloc>(() => RemoteAuthBloc(sl()));
+  sl.registerFactory<RemoteInspeccionTipoBloc>(() => RemoteInspeccionTipoBloc(sl(),sl(),sl(),sl()));
 
   sl.registerFactory<LocalAuthCubit>(() => LocalAuthCubit(sl(),sl(),sl(),sl(),sl(),sl()));
   sl.registerFactory<LocalSettingsCubit>(() => LocalSettingsCubit());

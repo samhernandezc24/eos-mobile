@@ -1,6 +1,12 @@
-import 'package:eos_mobile/features/auth/presentation/cubits/local/local_auth_cubit.dart';
+import 'package:eos_mobile/config/logic/common/platform_info.dart';
+import 'package:eos_mobile/features/auth/presentation/cubit/local/local_auth_cubit.dart';
 import 'package:eos_mobile/shared/shared_libs.dart';
 import 'package:eos_mobile/ui/common/app_scroll_behavior.dart';
+import 'package:eos_mobile/ui/common/modals/fullscreen_web_view.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AppScaffoldWithNavBar extends StatelessWidget {
   const AppScaffoldWithNavBar({
@@ -100,6 +106,29 @@ class _AppScaffoldWithNavBarDrawerState extends State<_AppScaffoldWithNavBarDraw
     });
   }
 
+  Future<void> _handleAboutTap(BuildContext context) async {
+    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    final Widget applicationIcon  = Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular($styles.corners.md),
+      ),
+      padding: EdgeInsets.all($styles.insets.sm),
+      child: const EOSMobileLogo(width: 52),
+    );
+
+    if (!mounted) return;
+
+    showAboutDialog(
+      context             : context,
+      applicationIcon     : applicationIcon,
+      applicationName     : AppStrings.defaultAppName,
+      applicationVersion  : 'v${packageInfo.version}',
+      applicationLegalese : 'Powered by Workcube © 2024',
+      children            : <Widget>[ const _AppScaffoldWithNavarAboutDialogContent() ],
+    );
+  }
+
   Future<void> _handleLogoutTap(BuildContext context) async {
     return showDialog<void>(
       context: context,
@@ -139,8 +168,15 @@ class _AppScaffoldWithNavBarDrawerState extends State<_AppScaffoldWithNavBarDraw
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(AppStrings.logoutRedirectTitle, style: $styles.textStyles.bodyBold),
-            Text(AppStrings.logoutRedirectMessage, style: $styles.textStyles.body.copyWith(height: 1.3), softWrap: true),
+            Text(
+              AppStrings.logoutRedirectTitle,
+              style: $styles.textStyles.bodyBold.copyWith(color: $styles.colors.white),
+            ),
+            Text(
+              AppStrings.logoutRedirectMessage,
+              style     : $styles.textStyles.bodySmall.copyWith(color: $styles.colors.white),
+              softWrap  : true,
+            ),
           ],
         ),
         backgroundColor: $styles.colors.success,
@@ -239,7 +275,7 @@ class _AppScaffoldWithNavBarDrawerState extends State<_AppScaffoldWithNavBarDraw
         ListTile(
           leading : const Icon(Icons.info),
           title   : const Text(AppStrings.appDrawerItemAbout),
-          onTap   : (){},
+          onTap   : () => _handleAboutTap(context),
         ),
 
         const Divider(thickness: 1),
@@ -298,6 +334,82 @@ class _AppScaffoldWithNavBarDrawerState extends State<_AppScaffoldWithNavBarDraw
       selected  : isSelected,
       onTap     : onTap,
       trailing  : trailing,
+    );
+  }
+}
+
+class _AppScaffoldWithNavarAboutDialogContent extends StatelessWidget {
+  const _AppScaffoldWithNavarAboutDialogContent();
+  @override
+  Widget build(BuildContext context) {
+    // PROPERTIES
+    double fontSize = $styles.textStyles.body.fontSize!;
+    fontSize *= MediaQuery.of(context).textScaler.scale(1);
+
+    // EVENT
+    void handleTap(String url) {
+      if (PlatformInfo.isDesktopOrWeb) {
+        launchUrl(Uri.parse(url));
+      } else {
+        Navigator.push(context, CupertinoPageRoute<void>(builder: (_) => FullScreenWebView(url)));
+      }
+    }
+
+    // METHOD
+    List<TextSpan> buildSpan(String text, {Map<String, List<String>>? linkSupplants}) {
+      if (linkSupplants?.isEmpty ?? true) {
+        return [ TextSpan(text: text) ];
+      }
+
+      final regExp    = RegExp(r'\{\w+\}');
+      final matches   = regExp.allMatches(text);
+      final parts     = text.split(regExp);
+
+      final supplantKeys = matches.map((x) => x.group(0));
+      final sortedEntries = supplantKeys.map((x) => linkSupplants?.entries.firstWhere((element) => element.key == x));
+
+      final spans = <TextSpan>[];
+
+      for (int i = 0; i < parts.length; i++) {
+        spans.add(TextSpan(text: parts[i]));
+        if (i < sortedEntries.length) {
+          final String label  = sortedEntries.elementAt(i)!.value[0];
+          final String link   = sortedEntries.elementAt(i)!.value[1];
+
+          spans.add(
+            TextSpan(
+              text        : label,
+              recognizer  : TapGestureRecognizer()..onTap = () => handleTap(link),
+              style       : TextStyle(fontWeight: FontWeight.w600, color: Theme.of(context).primaryColor),
+            ),
+          );
+        }
+      }
+      return spans;
+    }
+
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          Gap($styles.insets.sm),
+          RichText(
+            text: TextSpan(
+              style: $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurface, fontSize: fontSize, height: 1.3),
+              children: <InlineSpan>[
+                ...buildSpan(
+                  AppStrings.homeMenuAboutEosMobile,
+                  linkSupplants: {
+                    '{heavyLiftUrl}': ['Heavy-Lift Rigging Services & Consulting Mexico', 'https://heavy-lift.com.mx'],
+                  },
+                ),
+                ...buildSpan(AppStrings.homeMenuAboutBuiltApp, linkSupplants: {'{flutterUrl}': ['Flutter', 'https://flutter.dev']}),
+                ...buildSpan('\n\n'),
+                ...buildSpan(AppStrings.homeMenuAboutProcessApp),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

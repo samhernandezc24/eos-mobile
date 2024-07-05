@@ -1,5 +1,5 @@
 import 'package:eos_mobile/config/themes/app_theme.dart';
-import 'package:eos_mobile/features/settings/presentation/cubits/local/local_settings_cubit.dart';
+import 'package:eos_mobile/features/settings/presentation/cubit/local/local_settings_cubit.dart';
 import 'package:eos_mobile/shared/shared_libs.dart';
 
 class ThemeDetector {

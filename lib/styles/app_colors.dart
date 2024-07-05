@@ -1,7 +1,7 @@
 import 'package:eos_mobile/shared/shared_libs.dart';
 
 class AppColors {
-  /// COMMON
+  // COMMON
   final Color offWhite      = const Color(0xFFF8ECE5);
   final Color white         = Colors.white;
   final Color black         = const Color(0xFF1E1818);

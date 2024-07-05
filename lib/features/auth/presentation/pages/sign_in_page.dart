@@ -1,6 +1,6 @@
 import 'package:eos_mobile/features/auth/domain/entities/sign_in_entity.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/remote/remote_auth_bloc.dart';
-import 'package:eos_mobile/features/auth/presentation/cubits/local/local_auth_cubit.dart';
+import 'package:eos_mobile/features/auth/presentation/cubit/local/local_auth_cubit.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
 

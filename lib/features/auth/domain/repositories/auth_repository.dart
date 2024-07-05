@@ -7,7 +7,7 @@ abstract class AuthRepository {
   /// REMOTE OPERATIONS
   Future<DataState<AccountEntity>> signIn(SignInEntity credentials);
 
-  /// LOCAL METHODS
+  /// LOCAL OPERATIONS
   Future<SignInEntity?> getCredentials();
   Future<AccountEntity?> getUserInfo();
 

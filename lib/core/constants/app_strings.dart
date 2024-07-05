@@ -91,18 +91,22 @@ class AppStrings {
   static const String forgotPasswordBoxMessage              = 'Completa el formulario para restablecer su contraseña';
 
   // H
+  static const String homeMenuAboutEosMobile                = 'EOS Mobile agiliza los procesos internos de la empresa {heavyLiftUrl}. ';
+  static const String homeMenuAboutBuiltApp                 = 'Desarrollado con {flutterUrl} para ofrecer una experiencia nativa.';
+  static const String homeMenuAboutProcessApp               = 'Facilita la centralización de tareas y operaciones en un único lugar, mejorando la productividad.';
+
   static const String homeFirstModuleCardTitle              = 'Inspecciones';
   static const String homeSecondModuleCardTitle             = 'Compras';
   static const String homeThirdModuleCardTitle              = 'Embarques';
   static const String homeFourthModuleCardTitle             = 'Unidades';
 
   // I
-  static const String inspeccionIndexListPageSubtitle       = 'Muestra las inspecciones generales.';
-  static const String inspeccionIndexListPageTitle          = 'Lista de inspecciones';
-  static const String inspeccionIndexUnidadPageSubtitle     = 'Encuentra unidades con inspecciones recientes.';
-  static const String inspeccionIndexUnidadPageTitle        = 'Buscar unidad';
+  static const String inspeccionMenuIndexPageSubtitle       = 'Muestra las inspecciones generales.';
+  static const String inspeccionMenuIndexPageTitle          = 'Lista de inspecciones';
+  static const String inspeccionMenuUnidadPageSubtitle      = 'Encuentra unidades con inspecciones recientes.';
+  static const String inspeccionMenuUnidadPageTitle         = 'Buscar unidad';
 
-  static const String inspeccionListAppBarTitle             = 'Listado de inspecciones';
+  static const String inspeccionIndexAppBarTitle            = 'Inspecciones';
 
   static const String inspeccionTipoAppBarTitle             = 'Configuración de inspecciones';
   static const String inspeccionTipoBoxDescription          = 'Crea los tipos de inspección para organizar y gestionar tus inspecciones de manera eficiente.';

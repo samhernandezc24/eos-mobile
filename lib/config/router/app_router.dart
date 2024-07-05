@@ -1,4 +1,6 @@
 import 'package:eos_mobile/features/auth/presentation/pages/sign_in_page.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/pages/index/index_page.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/pages/menu/menu_page.dart';
 import 'package:eos_mobile/shared/shared_libs.dart';
 import 'package:eos_mobile/ui/pages/home/home_page.dart';
 import 'package:eos_mobile/ui/pages/not_found/not_found_page.dart';
@@ -44,15 +46,16 @@ final appRouter = GoRouter(
       builder: (context, state, navigationShell) {
         final String? routeName = GoRouterState.of(context).topRoute?.name;
         final String title = switch (routeName) {
-          'home'                => 'EOS Mobile',
-          'home.inspecciones'   => 'Módulo de inspecciones',
-          'home.compras'        => 'Módulo de compras',
-          'home.embarques'      => 'Módulo de embarques',
-          'home.unidades'       => 'Módulo de unidades',
-          'dashboard'           => 'Dashboard',
-          'actividades'         => 'Registro de actividades',
-          'notificaciones'      => 'Notificaciones',
-          _                     => '',
+          'home'                            => 'EOS Mobile',
+          'home.inspecciones'               => 'Módulo de inspecciones',
+          'home.inspecciones.searchUnidad'  => 'Unidades',
+          'home.compras'                    => 'Módulo de compras',
+          'home.embarques'                  => 'Módulo de embarques',
+          'home.unidades'                   => 'Módulo de unidades',
+          'dashboard'                       => 'Dashboard',
+          'actividades'                     => 'Registro de actividades',
+          'notificaciones'                  => 'Notificaciones',
+          _                                 => '',
         };
 
         return AppScaffoldWithNavBar(title: title, navigationShell: navigationShell);
@@ -61,10 +64,32 @@ final appRouter = GoRouter(
         StatefulShellBranch(
           routes: [
             AppRoute(
+              // HOME PAGE
               AppRoutes.home, 'home', (_) => const HomePage(), routes: [
-                AppRoute('inspecciones', 'home.inspecciones', (_) => const UnderConstructionPage(), useFade: true),
+                // INSPECCIONES PAGE
+                AppRoute(
+                  'inspecciones',
+                  'home.inspecciones',
+                  (_) => const InspeccionMenuPage(),
+                  routes: <GoRoute>[
+                    // INSPECCIONES INDEX PAGE
+                    AppRoute(
+                      'index',
+                      'home.inspecciones.index',
+                      (_) => const InspeccionIndexPage(),
+                      parentKey: _rootNavigatorKey,
+                      useFade: true,
+                    ),
+                    // INSPECCIONES SEARCH UNIDAD PAGE
+                    AppRoute('search-unidad', 'home.inspecciones.searchUnidad', (_) => const UnderConstructionPage(), useFade: true),
+                  ],
+                  useFade: true,
+                ),
+                // COMPRAS PAGE
                 AppRoute('compras', 'home.compras', (_) => const UnderConstructionPage(), useFade: true),
+                // EMBARQUES PAGE
                 AppRoute('embarques', 'home.embarques', (_) => const UnderConstructionPage(), useFade: true),
+                // UNIDADES PAGE
                 AppRoute('unidades', 'home.unidades', (_) => const UnderConstructionPage(), useFade: true),
               ],
             ),
@@ -73,18 +98,21 @@ final appRouter = GoRouter(
 
         StatefulShellBranch(
           routes: [
+            // DASHBOARD PAGE
             AppRoute(AppRoutes.dashboard, 'dashboard', (_) => const UnderConstructionPage()),
           ],
         ),
 
         StatefulShellBranch(
           routes: [
+            // ACTIVIDADES PAGE
             AppRoute(AppRoutes.actividades, 'actividades', (_) => const UnderConstructionPage()),
           ],
         ),
 
         StatefulShellBranch(
           routes: [
+            // NOTIFICACIONES PAGE
             AppRoute(AppRoutes.notificaciones, 'notificaciones', (_) => const UnderConstructionPage()),
           ],
         ),
