@@ -50,7 +50,7 @@ class _EditInspeccionTipoFormState extends State<_EditInspeccionTipoForm> {
     final InspeccionTipoEntity objPost = InspeccionTipoEntity(
       idInspeccionTipo  : widget.objInspeccionTipo?.idInspeccionTipo ?? '',
       codigo            : _codigoController.text,
-      name              : _nameController.text
+      name              : _nameController.text,
     );
 
     context.read<RemoteInspeccionTipoBloc>().add(UpdateInspeccionTipo(objPost));

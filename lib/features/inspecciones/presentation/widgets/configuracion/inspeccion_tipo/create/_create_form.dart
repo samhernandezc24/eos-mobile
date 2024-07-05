@@ -48,7 +48,7 @@ class _CreateInspeccionTipoFormState extends State<_CreateInspeccionTipoForm> {
   Future<void> _store() async {
     final InspeccionTipoStoreReqEntity objPost = InspeccionTipoStoreReqEntity(
       codigo  : _codigoController.text,
-      name    : _nameController.text
+      name    : _nameController.text,
     );
 
     context.read<RemoteInspeccionTipoBloc>().add(StoreInspeccionTipo(objPost));

@@ -26,6 +26,9 @@ class ApiEndpoints {
   /// Categorias
   static const String categorias = '$_apiBaseUrl/api/Inspecciones/Tipos/Categorias';
 
+  /// CategoriasItem
+  static const String categoriasItems = '$_apiBaseUrl/api/Inspecciones/Tipos/Categorias/Items';
+
   /// InspeccionesTipos
   static const String inspeccionesTipos = '$_apiBaseUrl/api/Inspecciones/Tipos';
 }

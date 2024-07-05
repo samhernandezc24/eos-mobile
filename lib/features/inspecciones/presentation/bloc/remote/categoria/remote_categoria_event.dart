@@ -42,7 +42,7 @@ class UpdateCategoria extends RemoteCategoriaEvent {
 class DeleteCategoria extends RemoteCategoriaEvent {
   const DeleteCategoria(this.objData);
 
-  final CategoriaIdParamEntity objData;
+  final CategoriaParamsEntity objData;
 
   @override
   List<Object?> get props => [ objData ];

@@ -156,7 +156,7 @@ class _ListCategoriaTile extends StatelessWidget {
                 TextButton(
                   onPressed : () => context.read<RemoteCategoriaBloc>().add(
                     DeleteCategoria(
-                      CategoriaIdParamEntity(
+                      CategoriaParamsEntity(
                         idInspeccionTipo  : objCategoria?.idInspeccionTipo  ?? '',
                         idCategoria       : objCategoria?.idCategoria       ?? '',
                       ),

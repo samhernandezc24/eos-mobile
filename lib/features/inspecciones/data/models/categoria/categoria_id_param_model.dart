@@ -6,22 +6,22 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categ
 /// eliminación donde solo debe pasarse el [idCategoria] como parámetro
 /// en la solicitud.
 class CategoriaIdParamModel extends CategoriaIdParamEntity {
-  const CategoriaIdParamModel({required String idInspeccionTipo, required String idCategoria}) : super(idInspeccionTipo: idInspeccionTipo, idCategoria: idCategoria);
+  const CategoriaIdParamModel({required String idCategoria}) : super(idCategoria: idCategoria);
 
   /// Constructor factory para crear la instancia de [CategoriaIdParamModel]
   /// durante el mapeo del JSON.
   factory CategoriaIdParamModel.fromJson(Map<String, dynamic> jsonMap) {
-    return CategoriaIdParamModel(idInspeccionTipo: jsonMap['idInspeccionTipo'] as String, idCategoria: jsonMap['idCategoria'] as String);
+    return CategoriaIdParamModel(idCategoria: jsonMap['idCategoria'] as String);
   }
 
   /// Constructor factory para convertir la instancia de [CategoriaIdParamEntity]
   /// en una instancia de [CategoriaIdParamModel].
   factory CategoriaIdParamModel.fromEntity(CategoriaIdParamEntity entity) {
-    return CategoriaIdParamModel(idInspeccionTipo: entity.idInspeccionTipo, idCategoria: entity.idCategoria);
+    return CategoriaIdParamModel(idCategoria: entity.idCategoria);
   }
 
   /// Serialización de la estructura del modelo a formato JSON.
   Map<String, dynamic> toJson() {
-    return <String, dynamic>{ 'idInspeccionTipo': idInspeccionTipo, 'idCategoria': idCategoria };
+    return <String, dynamic>{'idCategoria': idCategoria };
   }
 }

@@ -1,5 +1,5 @@
 import 'package:eos_mobile/core/constants/api_endpoints.dart';
-import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria_id_param_model.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria_params_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria_store_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria/categoria_update_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion_tipo/inspeccion_tipo_id_param_model.dart';
@@ -26,5 +26,5 @@ abstract class CategoriaRemoteApiService {
 
   /// ELIMINAR CATEGORIA
   @POST('/Delete')
-  Future<HttpResponse<IReturn>> delete(@Body() CategoriaIdParamModel objData);
+  Future<HttpResponse<IReturn>> delete(@Body() CategoriaParamsModel objData);
 }

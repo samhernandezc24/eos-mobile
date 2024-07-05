@@ -25,6 +25,7 @@ class AppStrings {
 
   // B
   static const String btnAcceptText                         = 'Aceptar';
+  static const String btnAddText                            = 'Agregar';
   static const String btnCancelText                         = 'Cancelar';
   static const String btnCloseText                          = 'Cerrar';
   static const String btnContinueText                       = 'Continuar';
@@ -47,7 +48,6 @@ class AppStrings {
   // C
   static const String categoriaAppBarTitle                  = 'Configuración de categorías';
   static const String categoriaBoxDescription               = 'Crea categorías para agrupar las preguntas de las inspecciones.';
-  static const String categoriaBoxTitle                     = 'Categorías';
   static const String categoriaCreateAppBarTitle            = 'Nueva categoría';
   static const String categoriaEditAppBarTitle              = 'Editar: {categoria}';
   static const String categoriaEmptyListTitle               = 'Aún no hay categorías';
@@ -58,7 +58,6 @@ class AppStrings {
 
   static const String categoriaItemAppBarTitle              = 'Configuración de preguntas';
   static const String categoriaItemBoxDescription           = 'Crea las preguntas necesarias para la evaluación e inspección de una unidad.';
-  static const String categoriaItemBoxTitle                 = 'Preguntas';
   static const String categoriaItemCreateTooltip            = 'Nueva pregunta';
   static const String categoriaItemDeleteAlertFirstText     = 'Se eliminará la pregunta ';
   static const String categoriaItemDeleteAlertSecondText    = '¿Estás seguro de querer realizar esa acción?';

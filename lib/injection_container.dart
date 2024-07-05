@@ -13,15 +13,23 @@ import 'package:eos_mobile/features/auth/domain/usecases/remote/remote_sign_in_u
 import 'package:eos_mobile/features/auth/presentation/bloc/remote/remote_auth_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/cubit/local/local_auth_cubit.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/categoria/categoria_remote_api_service.dart';
+import 'package:eos_mobile/features/inspecciones/data/datasources/remote/categoria_item/categoria_item_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion_tipo/inspeccion_tipo_remote_api_service.dart';
+import 'package:eos_mobile/features/inspecciones/data/repositories/categoria_item_repository_impl.dart';
 import 'package:eos_mobile/features/inspecciones/data/repositories/categoria_repository_impl.dart';
 import 'package:eos_mobile/features/inspecciones/data/repositories/inspeccion_tipo_repository_impl.dart';
+import 'package:eos_mobile/features/inspecciones/domain/repositories/categoria_item_repository.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/categoria_repository.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_tipo_repository.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categoria/remote_delete_categoria_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categoria/remote_list_categoria_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categoria/remote_store_categoria_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categoria/remote_update_categoria_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categoria_item/remote_delete_categoria_item_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categoria_item/remote_list_categoria_item_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categoria_item/remote_store_categoria_item_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categoria_item/remote_store_duplicate_categoria_item.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categoria_item/remote_update_categoria_item_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/inspeccion_tipo/remote_delete_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/inspeccion_tipo/remote_list_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/inspeccion_tipo/remote_store_inspeccion_tipo_usecase.dart';
@@ -55,6 +63,7 @@ Future<void> initializeDependencies() async {
 
   sl.registerSingleton<InspeccionTipoRemoteApiService>(InspeccionTipoRemoteApiService(sl()));
   sl.registerSingleton<CategoriaRemoteApiService>(CategoriaRemoteApiService(sl()));
+  sl.registerSingleton<CategoriaItemRemoteApiService>(CategoriaItemRemoteApiService(sl()));
 
   /// =========================================================
   /// REPOSITORIES
@@ -62,6 +71,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(),sl()));
   sl.registerSingleton<InspeccionTipoRepository>(InspeccionTipoRepositoryImpl(sl()));
   sl.registerSingleton<CategoriaRepository>(CategoriaRepositoryImpl(sl()));
+  sl.registerSingleton<CategoriaItemRepository>(CategoriaItemRepositoryImpl(sl()));
 
   /// =========================================================
   /// USE CASES
@@ -77,6 +87,12 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<RemoteStoreCategoriaUseCase>(RemoteStoreCategoriaUseCase(sl()));
   sl.registerSingleton<RemoteUpdateCategoriaUseCase>(RemoteUpdateCategoriaUseCase(sl()));
   sl.registerSingleton<RemoteDeleteCategoriaUseCase>(RemoteDeleteCategoriaUseCase(sl()));
+
+  sl.registerSingleton<RemoteListCategoriaItemUseCase>(RemoteListCategoriaItemUseCase(sl()));
+  sl.registerSingleton<RemoteStoreCategoriaItemUseCase>(RemoteStoreCategoriaItemUseCase(sl()));
+  sl.registerSingleton<RemoteStoreDuplicateCategoriaItemUseCase>(RemoteStoreDuplicateCategoriaItemUseCase(sl()));
+  sl.registerSingleton<RemoteUpdateCategoriaItemUseCase>(RemoteUpdateCategoriaItemUseCase(sl()));
+  sl.registerSingleton<RemoteDeleteCategoriaItemUseCase>(RemoteDeleteCategoriaItemUseCase(sl()));
 
   sl.registerSingleton<LocalGetCredentialsUseCase>(LocalGetCredentialsUseCase(sl()));
   sl.registerSingleton<LocalGetUserInfoUseCase>(LocalGetUserInfoUseCase(sl()));
