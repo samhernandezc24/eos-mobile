@@ -128,7 +128,7 @@ class _AuthSignInPageState extends State<AuthSignInPage> {
                                     listener: (BuildContext context, RemoteAuthState state) {
                                       // ERROR
                                       if (state is RemoteAuthServerError) {
-                                        _showServerErrorDialog(context, state.error?.errorMessage);
+                                        _showServerErrorDialog(context, state.error?.message);
                                       }
 
                                       // SUCCESS

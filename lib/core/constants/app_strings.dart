@@ -30,6 +30,7 @@ class AppStrings {
   static const String btnCreateInspeccionTipoText           = 'Nuevo tipo de inspección';
   static const String btnDeleteText                         = 'Eliminar';
   static const String btnDisableText                        = 'Inhabilitar';
+  static const String btnEditText                           = 'Editar';
   static const String btnGoBackText                         = 'Volver a inicio';
   static const String btnJoinText                           = 'Ingresar';
   static const String btnLeaveText                          = 'Salir';
@@ -112,7 +113,12 @@ class AppStrings {
   static const String inspeccionTipoBoxDescription          = 'Crea los tipos de inspección para organizar y gestionar tus inspecciones de manera eficiente.';
   static const String inspeccionTipoBoxTitle                = 'Tipos de inspecciones';
   static const String inspeccionTipoCreateAppBarTitle       = 'Nuevo tipo de inspección';
+  static const String inspeccionTipoCreateCategoriasText    = 'Crear categorías';
   static const String inspeccionTipoEmptyListTitle          = 'Aún no hay tipos de inspecciones';
+  static const String inspeccionTipoEditAppBarTitle         = 'Editar: {inspeccionTipo}';
+  static const String inspeccionTipoDeleteAlertTitle        = '¿Eliminar tipo de inspección?';
+  static const String inspeccionTipoDeleteAlertFirstText    = 'Se eliminará el tipo de inspección ';
+  static const String inspeccionTipoDeleteAlertSecondText   = 'con el código {codigo}. \n¿Estás seguro de querer realizar esa acción?';
 
   // L
   static const String logoutAlertDialogTitle                = '¿Salir de tu cuenta?';

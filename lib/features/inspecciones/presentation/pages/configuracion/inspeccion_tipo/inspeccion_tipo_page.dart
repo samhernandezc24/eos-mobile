@@ -1,7 +1,14 @@
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_id_param_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/inspeccion_tipo/remote_inspeccion_tipo_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/pages/configuracion/categoria/categoria_page.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
+
+part '../../../widgets/configuracion/inspeccion_tipo/list/_list_tile.dart';
+part '../../../widgets/configuracion/inspeccion_tipo/create/_create_form.dart';
+part '../../../widgets/configuracion/inspeccion_tipo/edit/_edit_form.dart';
 
 class InspeccionConfiguracionInspeccionTipoPage extends StatefulWidget {
   const InspeccionConfiguracionInspeccionTipoPage({Key? key}) : super(key: key);
@@ -19,6 +26,17 @@ class _InspeccionConfiguracionInspeccionTipoPageState extends State<InspeccionCo
   void initState() {
     super.initState();
     _initialization();
+  }
+
+  // EVENTS
+  void _handleCreatePressed(BuildContext context) {
+    Navigator.push<void>(context, AppModalRoute(child: _CreateInspeccionTipoForm(onComplete: _initialization)));
+  }
+
+  void _onInspeccionTipoPressed(InspeccionTipoEntity objInspeccionTipo) {
+    Future.delayed($styles.times.pageTransition, () {
+      Navigator.push<void>(context, MaterialPageRoute(builder: (_) => const InspeccionConfiguracionCategoriaPage()));
+    });
   }
 
   // METHODS
@@ -55,7 +73,7 @@ class _InspeccionConfiguracionInspeccionTipoPageState extends State<InspeccionCo
                 Container(
                   alignment : Alignment.center,
                   child     : FilledButton.icon(
-                    onPressed : () {},
+                    onPressed : () => _handleCreatePressed(context),
                     icon      : const Icon(Icons.add),
                     label     : Text(AppStrings.btnCreateInspeccionTipoText, style: $styles.textStyles.button),
                   ),
@@ -66,7 +84,7 @@ class _InspeccionConfiguracionInspeccionTipoPageState extends State<InspeccionCo
 
           Expanded(
             child: RefreshIndicator(
-              onRefresh: () async {},
+              onRefresh: _initialization,
               child: BlocBuilder<RemoteInspeccionTipoBloc, RemoteInspeccionTipoState>(
                 builder: (BuildContext context, RemoteInspeccionTipoState state) {
                   // LOADING
@@ -98,7 +116,11 @@ class _InspeccionConfiguracionInspeccionTipoPageState extends State<InspeccionCo
                     return ListView.builder(
                       itemCount   : lstInspeccionesTipos.length,
                       itemBuilder : (BuildContext context, int index) {
-                        return Container();
+                        return _ListInspeccionTipoTile(
+                          objInspeccionTipo : lstInspeccionesTipos[index],
+                          onPressed         : (objInspeccionTipo) => _onInspeccionTipoPressed(objInspeccionTipo),
+                          onComplete        : _initialization,
+                        );
                       },
                     );
                   }

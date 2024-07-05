@@ -42,7 +42,6 @@ class LabeledTextFormField extends StatelessWidget {
           decoration: InputDecoration(
             contentPadding  : Globals.kDefaultContentPadding,
             hintText        : hintText ?? '',
-            filled          : isEnabled,
             fillColor       : isEnabled
                 ? Theme.of(context).inputDecorationTheme.fillColor?.withOpacity(0.3)
                 : Theme.of(context).inputDecorationTheme.fillColor,

@@ -46,7 +46,6 @@ class _LabeledPasswordFormFieldState extends State<LabeledPasswordFormField> {
           decoration: InputDecoration(
             contentPadding  : Globals.kDefaultContentPadding,
             hintText        : widget.hintText ?? '',
-            filled          : widget.isEnabled,
             fillColor       : widget.isEnabled
                 ? Theme.of(context).inputDecorationTheme.fillColor?.withOpacity(0.3)
                 : Theme.of(context).inputDecorationTheme.fillColor,

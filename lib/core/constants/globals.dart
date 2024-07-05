@@ -7,6 +7,8 @@ class Globals {
   // CONSTRUCTOR PRIVADO
   Globals._();
 
+  static const _digits = '0123456789';
+
   /// Padding por defecto para el contenido en un contenedor.
   ///
   /// Ejemplo:
@@ -32,6 +34,12 @@ class Globals {
       }
     }
     return objReturn;
+  }
+
+  static String generateRandomNumericCode({int length = 5}) {
+    final Random random   = Random.secure();
+    final String code     = String.fromCharCodes(Iterable.generate(length, (_) => _digits.codeUnitAt(random.nextInt(_digits.length))));
+    return code;
   }
 
   /// Verifica si [argObject] es non-nullable.
