@@ -14,6 +14,8 @@ class AppStrings {
   static const String appDrawerItemLogout                   = 'Cerrar sesión';
   static const String appDrawerItemNotification             = 'Notificaciones';
 
+  static const String appDrawerItemSettingsInspeccion       = 'Configuración de inspecciones';
+
   static const String appPageDefaultTitlePage               = 'página';
   static const String appPageSemanticSwipe                  = '{pageTitle} {count} de {total}.';
   static const String appPageProcessingData                 = 'Procesando...';
@@ -47,7 +49,12 @@ class AppStrings {
   static const String categoriaBoxDescription               = 'Crea categorías para agrupar las preguntas de las inspecciones.';
   static const String categoriaBoxTitle                     = 'Categorías';
   static const String categoriaCreateAppBarTitle            = 'Nueva categoría';
+  static const String categoriaEditAppBarTitle              = 'Editar: {categoria}';
   static const String categoriaEmptyListTitle               = 'Aún no hay categorías';
+  static const String categoriaCreatePreguntasText          = 'Crear preguntas';
+  static const String categoriaDeleteAlertTitle             = '¿Eliminar categoría?';
+  static const String categoriaDeleteAlertFirstText         = 'Se eliminará la categoría ';
+  static const String categoriaDeleteAlertSecondText        = '\n¿Estás seguro de querer realizar esa acción?';
 
   static const String categoriaItemAppBarTitle              = 'Configuración de preguntas';
   static const String categoriaItemBoxDescription           = 'Crea las preguntas necesarias para la evaluación e inspección de una unidad.';
@@ -103,7 +110,7 @@ class AppStrings {
 
   // I
   static const String inspeccionMenuIndexPageSubtitle       = 'Muestra las inspecciones generales.';
-  static const String inspeccionMenuIndexPageTitle          = 'Lista de inspecciones';
+  static const String inspeccionMenuIndexPageTitle          = 'Listado de inspecciones';
   static const String inspeccionMenuUnidadPageSubtitle      = 'Encuentra unidades con inspecciones recientes.';
   static const String inspeccionMenuUnidadPageTitle         = 'Buscar unidad';
 

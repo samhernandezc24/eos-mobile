@@ -1,33 +1,37 @@
-part of '../../../../pages/configuracion/inspeccion_tipo/inspeccion_tipo_page.dart';
+part of '../../../../pages/configuracion/categoria/categoria_page.dart';
 
-class _CreateInspeccionTipoForm extends StatefulWidget {
-  const _CreateInspeccionTipoForm({Key? key, this.onComplete}) : super(key: key);
+class _CreateCategoriaForm extends StatefulWidget {
+  const _CreateCategoriaForm({
+    required this.objInspeccionTipo,
+    required this.orden,
+    Key? key,
+    this.onComplete,
+  }) : super(key: key);
 
+  final InspeccionTipoEntity objInspeccionTipo;
   final VoidCallback? onComplete;
+  final int orden;
 
   @override
-  State<_CreateInspeccionTipoForm> createState() => _CreateInspeccionTipoFormState();
+  State<_CreateCategoriaForm> createState() => _CreateCategoriaFormState();
 }
 
-class _CreateInspeccionTipoFormState extends State<_CreateInspeccionTipoForm> {
+class _CreateCategoriaFormState extends State<_CreateCategoriaForm> {
   // GLOBAL KEY
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // CONTROLLERS
-  late TextEditingController _codigoController;
   late TextEditingController _nameController;
 
   // STATE
   @override
   void initState() {
     super.initState();
-    _codigoController = TextEditingController(text: Globals.generateRandomNumericCode());
     _nameController   = TextEditingController();
   }
 
   @override
   void dispose() {
-    _codigoController.dispose();
     _nameController.dispose();
     super.dispose();
   }
@@ -46,18 +50,21 @@ class _CreateInspeccionTipoFormState extends State<_CreateInspeccionTipoForm> {
 
   // METHODS
   Future<void> _store() async {
-    final InspeccionTipoStoreReqEntity objPost = InspeccionTipoStoreReqEntity(
-      codigo  : _codigoController.text,
-      name    : _nameController.text
+    final CategoriaStoreReqEntity objPost = CategoriaStoreReqEntity(
+      name                  : _nameController.text,
+      idInspeccionTipo      : widget.objInspeccionTipo.idInspeccionTipo,
+      inspeccionTipoCodigo  : widget.objInspeccionTipo.codigo,
+      inspeccionTipoName    : widget.objInspeccionTipo.name,
+      orden                 : widget.orden,
     );
 
-    context.read<RemoteInspeccionTipoBloc>().add(StoreInspeccionTipo(objPost));
+    context.read<RemoteCategoriaBloc>().add(StoreCategoria(objPost));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(AppStrings.inspeccionTipoCreateAppBarTitle, style: $styles.textStyles.h3)),
+      appBar: AppBar(title: Text(AppStrings.categoriaCreateAppBarTitle, style: $styles.textStyles.h3)),
       body: Container(
         padding: EdgeInsets.all($styles.insets.sm),
         child: Form(
@@ -65,19 +72,9 @@ class _CreateInspeccionTipoFormState extends State<_CreateInspeccionTipoForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              // CODIGO
-              LabeledTextFormField(
-                controller  : _codigoController,
-                label       : 'Código:',
-                readOnly    : true,
-                isEnabled   : false,
-                validator   : FormValidators.textValidator,
-              ),
-
-              Gap($styles.insets.sm),
-
               // NOMBRE
               LabeledTextFormField(
+                autoFocus       : true,
                 controller      : _nameController,
                 hintText        : 'Ingresa el nombre',
                 label           : '* Nombre:',
@@ -87,17 +84,17 @@ class _CreateInspeccionTipoFormState extends State<_CreateInspeccionTipoForm> {
 
               Gap($styles.insets.lg),
 
-              BlocConsumer<RemoteInspeccionTipoBloc, RemoteInspeccionTipoState>(
-                listener: (BuildContext context, RemoteInspeccionTipoState state) {
+              BlocConsumer<RemoteCategoriaBloc, RemoteCategoriaState>(
+                listener: (BuildContext context, RemoteCategoriaState state) {
                   // ERROR
-                  if (state is RemoteInspeccionTipoServerFailedMessageStore) {
+                  if (state is RemoteCategoriaServerFailedMessageStore) {
                     _showServerErrorDialog(context, state.error);
 
                     // Ejecutar callback.
                     widget.onComplete!();
                   }
 
-                  if (state is RemoteInspeccionTipoServerExceptionMessageStore) {
+                  if (state is RemoteCategoriaServerExceptionMessageStore) {
                     _showServerErrorDialog(context, state.error?.message);
 
                     // Ejecutar callback.
@@ -105,7 +102,7 @@ class _CreateInspeccionTipoFormState extends State<_CreateInspeccionTipoForm> {
                   }
 
                   // SUCCESS
-                  if (state is RemoteInspeccionTipoStore) {
+                  if (state is RemoteCategoriaStore) {
                     Navigator.of(context).pop(); // Cerramos el modal
 
                     ScaffoldMessenger.of(context)
@@ -113,7 +110,7 @@ class _CreateInspeccionTipoFormState extends State<_CreateInspeccionTipoForm> {
                     ..showSnackBar(
                       SnackBar(
                         content: Text(
-                          state.objResponse?.message ?? 'Nuevo tipo de inspección',
+                          state.objResponse?.message ?? 'Nueva categoría',
                           style     : $styles.textStyles.bodySmall.copyWith(color: $styles.colors.white),
                           softWrap  : true,
                         ),
@@ -127,9 +124,9 @@ class _CreateInspeccionTipoFormState extends State<_CreateInspeccionTipoForm> {
                     widget.onComplete!();
                   }
                 },
-                builder: (BuildContext context, RemoteInspeccionTipoState state) {
+                builder: (BuildContext context, RemoteCategoriaState state) {
                   // LOADING
-                  if (state is RemoteInspeccionTipoStoreLoading) {
+                  if (state is RemoteCategoriaStoreLoading) {
                     return FilledButton(
                       onPressed : null,
                       style     : ButtonStyle(minimumSize: MaterialStateProperty.all<Size?>(const Size(double.infinity, 48))),

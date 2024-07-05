@@ -1,14 +1,14 @@
-part of '../../../../pages/configuracion/inspeccion_tipo/inspeccion_tipo_page.dart';
+part of '../../../../pages/configuracion/categoria/categoria_page.dart';
 
-class _ListInspeccionTipoTile extends StatelessWidget {
-  const _ListInspeccionTipoTile({Key? key, this.objInspeccionTipo, this.onPressed, this.onComplete}) : super(key: key);
+class _ListCategoriaTile extends StatelessWidget {
+  const _ListCategoriaTile({Key? key, this.objCategoria, this.onPressed, this.onComplete}) : super(key: key);
 
-  final InspeccionTipoEntity? objInspeccionTipo;
-  final void Function(InspeccionTipoEntity objInspeccionTipo)? onPressed;
+  final CategoriaEntity? objCategoria;
+  final void Function(CategoriaEntity objCategoria)? onPressed;
   final VoidCallback? onComplete;
 
   // EVENTS
-  void _handleMoreActionsPressed(BuildContext context, InspeccionTipoEntity? objInspeccionTipo) {
+  void _handleMoreActionsPressed(BuildContext context, CategoriaEntity? objCategoria) {
     showModalBottomSheet<void>(
       context : context,
       builder : (BuildContext context) {
@@ -19,7 +19,7 @@ class _ListInspeccionTipoTile extends StatelessWidget {
               padding : EdgeInsets.all($styles.insets.sm),
               child   : Center(
                 child : Text(
-                  '${objInspeccionTipo?.name}',
+                  '${objCategoria?.name}',
                   style     : $styles.textStyles.h3.copyWith(fontSize: 18),
                   overflow  : TextOverflow.ellipsis,
                 ),
@@ -28,20 +28,20 @@ class _ListInspeccionTipoTile extends StatelessWidget {
             ListTile(
               onTap   : _handleTap,
               leading : const Icon(Icons.add),
-              title   : const Text(AppStrings.inspeccionTipoCreateCategoriasText),
+              title   : const Text(AppStrings.categoriaCreatePreguntasText),
             ),
             ListTile(
               onTap: () {
-                Navigator.of(context).pop();                      // Cerrar modal bottom sheet
-                _handleEditPressed(context, objInspeccionTipo);   // Editar tipo de inspeccion
+                Navigator.of(context).pop();                  // Cerrar modal bottom sheet
+                _handleEditPressed(context, objCategoria);   // Editar categoria
               },
               leading : const Icon(Icons.edit),
               title   : const Text(AppStrings.btnEditText),
             ),
             ListTile(
               onTap: () {
-                Navigator.of(context).pop();                      // Cerrar modal bottom sheet
-                _handleDeletePressed(context, objInspeccionTipo); // Eliminar tipo de inspeccion
+                Navigator.of(context).pop();                   // Cerrar modal bottom sheet
+                _handleDeletePressed(context, objCategoria);   // Eliminar tipo de inspeccion
               },
               leading   : const Icon(Icons.delete),
               textColor : Theme.of(context).colorScheme.error,
@@ -56,29 +56,29 @@ class _ListInspeccionTipoTile extends StatelessWidget {
 
   void _handleTap() {
     if (onPressed != null) {
-      return onPressed!(objInspeccionTipo!);
+      return onPressed!(objCategoria!);
     }
   }
 
-  void _handleEditPressed(BuildContext context, InspeccionTipoEntity? objInspeccionTipo) {
-    Navigator.push<void>(context, AppModalRoute(child: _EditInspeccionTipoForm(objInspeccionTipo: objInspeccionTipo, onComplete: onComplete)));
+  void _handleEditPressed(BuildContext context, CategoriaEntity? objCategoria) {
+    Navigator.push<void>(context, AppModalRoute(child: _EditCategoriaForm(objCategoria: objCategoria, onComplete: onComplete)));
   }
 
-  Future<void> _handleDeletePressed(BuildContext context, InspeccionTipoEntity? objInspeccionTipo) async {
+  Future<void> _handleDeletePressed(BuildContext context, CategoriaEntity? objCategoria) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return BlocConsumer<RemoteInspeccionTipoBloc, RemoteInspeccionTipoState>(
-          listener: (BuildContext context, RemoteInspeccionTipoState state) async {
+        return BlocConsumer<RemoteCategoriaBloc, RemoteCategoriaState>(
+          listener: (BuildContext context, RemoteCategoriaState state) async {
             // ERROR
-            if (state is RemoteInspeccionTipoServerFailedMessageDelete) {
+            if (state is RemoteCategoriaServerFailedMessageDelete) {
               await _showServerErrorDialog(context, state.error);
 
               // Ejecutar callback.
               onComplete!();
             }
 
-            if (state is RemoteInspeccionTipoServerExceptionMessageDelete) {
+            if (state is RemoteCategoriaServerExceptionMessageDelete) {
               await _showServerErrorDialog(context, state.error?.message);
 
               // Ejecutar callback.
@@ -86,7 +86,7 @@ class _ListInspeccionTipoTile extends StatelessWidget {
             }
 
             // SUCCESS
-            if (state is RemoteInspeccionTipoDelete) {
+            if (state is RemoteCategoriaDelete) {
               Navigator.of(context).pop(); // Cerramos el dialog
 
               ScaffoldMessenger.of(context)
@@ -108,9 +108,9 @@ class _ListInspeccionTipoTile extends StatelessWidget {
               onComplete!();
             }
           },
-          builder: (BuildContext context, RemoteInspeccionTipoState state) {
+          builder: (BuildContext context, RemoteCategoriaState state) {
             // LOADING
-            if (state is RemoteInspeccionTipoDeleteLoading) {
+            if (state is RemoteCategoriaDeleteLoading) {
               return Dialog(
                 shape     : RoundedRectangleBorder(borderRadius: BorderRadius.circular($styles.corners.md)),
                 elevation : 0,
@@ -134,16 +134,17 @@ class _ListInspeccionTipoTile extends StatelessWidget {
             }
 
             return AlertDialog(
-              title   : Text(AppStrings.inspeccionTipoDeleteAlertTitle, style: $styles.textStyles.h3.copyWith(fontSize: 18)),
+              title   : Text(AppStrings.categoriaDeleteAlertTitle, style: $styles.textStyles.h3.copyWith(fontSize: 18)),
               content : RichText(
                 text: TextSpan(style: $styles.textStyles.body.copyWith(color: Theme.of(context).colorScheme.onSurface),
                   children: <InlineSpan>[
-                    const TextSpan(text: AppStrings.inspeccionTipoDeleteAlertFirstText),
+                    const TextSpan(text: AppStrings.categoriaDeleteAlertFirstText),
                     TextSpan(
-                      text  : '"${objInspeccionTipo?.name}" ',
+                      text  : '"${objCategoria?.name}"',
                       style : const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    TextSpan(text: AppStrings.inspeccionTipoDeleteAlertSecondText.replaceFirst('{codigo}', objInspeccionTipo?.codigo ?? '')),
+                    const TextSpan(text: '.'),
+                    const TextSpan(text: AppStrings.categoriaDeleteAlertSecondText),
                   ],
                 ),
               ),
@@ -153,7 +154,14 @@ class _ListInspeccionTipoTile extends StatelessWidget {
                   child     : Text(AppStrings.btnCancelText, style: $styles.textStyles.button),
                 ),
                 TextButton(
-                  onPressed : () => context.read<RemoteInspeccionTipoBloc>().add(DeleteInspeccionTipo(InspeccionTipoIdParamEntity(idInspeccionTipo: objInspeccionTipo?.idInspeccionTipo ?? ''))),
+                  onPressed : () => context.read<RemoteCategoriaBloc>().add(
+                    DeleteCategoria(
+                      CategoriaIdParamEntity(
+                        idInspeccionTipo  : objCategoria?.idInspeccionTipo  ?? '',
+                        idCategoria       : objCategoria?.idCategoria       ?? '',
+                      ),
+                    ),
+                  ),
                   child     : Text(AppStrings.btnDeleteText, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
                 ),
               ],
@@ -171,11 +179,10 @@ class _ListInspeccionTipoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading   : const CircleAvatar(child: Icon(Icons.local_shipping)),
-      title     : Text(objInspeccionTipo?.name ?? '', overflow: TextOverflow.ellipsis),
-      subtitle  : Text('Código: ${objInspeccionTipo?.codigo}'),
+      leading   : CircleAvatar(child: Text(objCategoria?.orden.toString() ?? '0', style: $styles.textStyles.h4)),
+      title     : Text(objCategoria?.name ?? '', overflow: TextOverflow.ellipsis),
       trailing  : IconButton(
-        onPressed : () => _handleMoreActionsPressed(context, objInspeccionTipo),
+        onPressed : () => _handleMoreActionsPressed(context, objCategoria),
         icon      : const Icon(Icons.more_vert),
       ),
       onTap     : _handleTap,

@@ -1,6 +1,7 @@
 import 'package:eos_mobile/config/themes/theme_detector.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/remote/remote_auth_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/cubit/local/local_auth_cubit.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/categoria/remote_categoria_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/inspeccion_tipo/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/features/settings/presentation/cubit/local/local_settings_cubit.dart';
 import 'package:eos_mobile/injection_container.dart';
@@ -35,6 +36,7 @@ class MainApp extends StatelessWidget with GetItMixin {
       providers: [
         BlocProvider<RemoteAuthBloc>(create: (context) => sl<RemoteAuthBloc>()),
         BlocProvider<RemoteInspeccionTipoBloc>(create: (context) => sl<RemoteInspeccionTipoBloc>()),
+        BlocProvider<RemoteCategoriaBloc>(create: (context) => sl<RemoteCategoriaBloc>()),
         BlocProvider<LocalAuthCubit>(create: (context) => sl<LocalAuthCubit>()),
         BlocProvider<LocalSettingsCubit>(create: (context) => sl<LocalSettingsCubit>()),
       ],

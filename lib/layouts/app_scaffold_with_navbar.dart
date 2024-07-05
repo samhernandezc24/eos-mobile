@@ -1,5 +1,6 @@
 import 'package:eos_mobile/config/logic/common/platform_info.dart';
 import 'package:eos_mobile/features/auth/presentation/cubit/local/local_auth_cubit.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/pages/configuracion/inspeccion_tipo/inspeccion_tipo_page.dart';
 import 'package:eos_mobile/shared/shared_libs.dart';
 import 'package:eos_mobile/ui/common/app_scroll_behavior.dart';
 import 'package:eos_mobile/ui/common/modals/fullscreen_web_view.dart';
@@ -106,6 +107,19 @@ class _AppScaffoldWithNavBarDrawerState extends State<_AppScaffoldWithNavBarDraw
     });
   }
 
+  void _handleInspeccionSettingsTap(BuildContext context) {
+    Navigator.of(context).pop(); // Cerrar el drawer
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        Navigator.push<void>(
+          context,
+          MaterialPageRoute(builder: (context) => const InspeccionConfiguracionInspeccionTipoPage()),
+        );
+      }
+    });
+  }
+
   Future<void> _handleAboutTap(BuildContext context) async {
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
     final Widget applicationIcon  = Container(
@@ -194,101 +208,129 @@ class _AppScaffoldWithNavBarDrawerState extends State<_AppScaffoldWithNavBarDraw
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+    return SingleChildScrollView(
       padding: EdgeInsets.zero,
-      children: <Widget>[
-        // DRAWER HEADER
-        BlocBuilder<LocalAuthCubit, LocalAuthState>(
-          builder: (BuildContext context, LocalAuthState state) {
-            String accountName  = '';
-            String accountEmail = '';
+      child: Column(
+        children: <Widget>[
+          // DRAWER HEADER
+          BlocBuilder<LocalAuthCubit, LocalAuthState>(
+            builder: (BuildContext context, LocalAuthState state) {
+              String accountName  = '';
+              String accountEmail = '';
 
-            if (state is LocalAuthGetUserInfo) {
-              accountName   = state.objResponse?.nombre     ?? '';
-              accountEmail  = state.objResponse?.user.email ?? '';
-            }
+              if (state is LocalAuthGetUserInfo) {
+                accountName   = state.objResponse?.nombre     ?? '';
+                accountEmail  = state.objResponse?.user.email ?? '';
+              }
 
-            return  UserAccountsDrawerHeader(
-              accountName: Text(accountName, style: $styles.textStyles.body.copyWith(color: $styles.colors.white)),
-              accountEmail: Text(accountEmail, style: $styles.textStyles.bodySmall.copyWith(color: $styles.colors.white, height: 1.3)),
-              currentAccountPicture: CircleAvatar(child: Text(Globals.getInitials(accountName), style: $styles.textStyles.h2)),
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image         : AssetImage(ImagePaths.background001),
-                  fit           : BoxFit.cover,
-                  filterQuality : FilterQuality.high,
+              return  UserAccountsDrawerHeader(
+                accountName: Text(accountName, style: $styles.textStyles.body.copyWith(color: $styles.colors.white)),
+                accountEmail: Text(accountEmail, style: $styles.textStyles.bodySmall.copyWith(color: $styles.colors.white, height: 1.3)),
+                currentAccountPicture: CircleAvatar(child: Text(Globals.getInitials(accountName), style: $styles.textStyles.h2)),
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image         : AssetImage(ImagePaths.background001),
+                    fit           : BoxFit.cover,
+                    filterQuality : FilterQuality.high,
+                  ),
+                ),
+              );
+            },
+          ),
+
+          // NAVIGATION
+          _buildDrawerItemList(
+            context,
+            title : 'Navegación',
+            items : <Widget>[
+              _buildDrawerItem(
+                icon          : Icons.home,
+                text          : AppStrings.appDrawerItemHome,
+                currentIndex  : widget.navigationShell.currentIndex,
+                index         : 0,
+                onTap         : () => _onTap(context, 0),
+              ),
+              _buildDrawerItem(
+                icon          : Icons.dashboard,
+                text          : AppStrings.appDrawerItemDashboard,
+                currentIndex  : widget.navigationShell.currentIndex,
+                index         : 1,
+                onTap         : () => _onTap(context, 1),
+              ),
+              _buildDrawerItem(
+                icon          : Icons.format_list_bulleted,
+                text          : AppStrings.appDrawerItemActivity,
+                currentIndex  : widget.navigationShell.currentIndex,
+                index         : 2,
+                onTap         : () => _onTap(context, 2),
+              ),
+              _buildDrawerItem(
+                icon          : Icons.notifications,
+                text          : AppStrings.appDrawerItemNotification,
+                trailing      : Text('+99', style: $styles.textStyles.label),
+                currentIndex  : widget.navigationShell.currentIndex,
+                index         : 3,
+                onTap         : () => _onTap(context, 3),
+              ),
+            ],
+          ),
+
+          const Divider(thickness: 1),
+
+          // MODULES
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all($styles.insets.sm).copyWith(bottom: 0),
+                child: TopLeft(
+                  child: DefaultTextStyle(
+                    style: $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                    child: const Text(
+                      'Módulos',
+                      overflow            : TextOverflow.ellipsis,
+                      textHeightBehavior  : TextHeightBehavior(applyHeightToFirstAscent: false),
+                    ),
+                  ),
                 ),
               ),
-            );
-          },
-        ),
+              Gap($styles.insets.xxs),
+              ListTile(
+                leading   : const Icon(Icons.settings_applications),
+                title     : const Text(AppStrings.appDrawerItemSettingsInspeccion),
+                onTap     : () => _handleInspeccionSettingsTap(context),
+              ),
+            ],
+          ),
 
-        // NAVIGATION
-        _buildDrawerItemList(
-          context,
-          title : 'Navegación',
-          items : <Widget>[
-            _buildDrawerItem(
-              icon          : Icons.home,
-              text          : AppStrings.appDrawerItemHome,
-              currentIndex  : widget.navigationShell.currentIndex,
-              index         : 0,
-              onTap         : () => _onTap(context, 0),
-            ),
-            _buildDrawerItem(
-              icon          : Icons.dashboard,
-              text          : AppStrings.appDrawerItemDashboard,
-              currentIndex  : widget.navigationShell.currentIndex,
-              index         : 1,
-              onTap         : () => _onTap(context, 1),
-            ),
-            _buildDrawerItem(
-              icon          : Icons.format_list_bulleted,
-              text          : AppStrings.appDrawerItemActivity,
-              currentIndex  : widget.navigationShell.currentIndex,
-              index         : 2,
-              onTap         : () => _onTap(context, 2),
-            ),
-            _buildDrawerItem(
-              icon          : Icons.notifications,
-              text          : AppStrings.appDrawerItemNotification,
-              trailing      : Text('+99', style: $styles.textStyles.label),
-              currentIndex  : widget.navigationShell.currentIndex,
-              index         : 3,
-              onTap         : () => _onTap(context, 3),
-            ),
-          ],
-        ),
+          const Divider(thickness: 1),
 
-        const Divider(thickness: 1),
+          // HELP
+          ListTile(
+            leading : const Icon(Icons.help),
+            title   : const Text(AppStrings.appDrawerItemHelp),
+            onTap   : (){},
+          ),
 
-        // HELP
-        ListTile(
-          leading : const Icon(Icons.help),
-          title   : const Text(AppStrings.appDrawerItemHelp),
-          onTap   : (){},
-        ),
+          // ABOUT APP
+          ListTile(
+            leading : const Icon(Icons.info),
+            title   : const Text(AppStrings.appDrawerItemAbout),
+            onTap   : () => _handleAboutTap(context),
+          ),
 
-        // ABOUT APP
-        ListTile(
-          leading : const Icon(Icons.info),
-          title   : const Text(AppStrings.appDrawerItemAbout),
-          onTap   : () => _handleAboutTap(context),
-        ),
+          const Divider(thickness: 1),
 
-        const Divider(thickness: 1),
-
-        // LOGOUT
-        ListTile(
-          leading   : const Icon(Icons.logout),
-          title     : const Text(AppStrings.appDrawerItemLogout),
-          iconColor : Theme.of(context).colorScheme.error,
-          textColor : Theme.of(context).colorScheme.error,
-          onTap     : () => _handleLogoutTap(context),
-        ),
-      ],
+          // LOGOUT
+          ListTile(
+            leading   : const Icon(Icons.logout),
+            title     : const Text(AppStrings.appDrawerItemLogout),
+            iconColor : Theme.of(context).colorScheme.error,
+            textColor : Theme.of(context).colorScheme.error,
+            onTap     : () => _handleLogoutTap(context),
+          ),
+        ],
+      ),
     );
   }
 

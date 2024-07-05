@@ -35,7 +35,17 @@ class _InspeccionConfiguracionInspeccionTipoPageState extends State<InspeccionCo
 
   void _onInspeccionTipoPressed(InspeccionTipoEntity objInspeccionTipo) {
     Future.delayed($styles.times.pageTransition, () {
-      Navigator.push<void>(context, MaterialPageRoute(builder: (_) => const InspeccionConfiguracionCategoriaPage()));
+      Navigator.push<void>(
+        context,
+        MaterialPageRoute(
+          builder: (_) => InspeccionConfiguracionCategoriaPage(
+            objInspeccionTipo: objInspeccionTipo,
+            objData: InspeccionTipoIdParamEntity(
+              idInspeccionTipo: objInspeccionTipo.idInspeccionTipo,
+            ),
+          ),
+        ),
+      );
     });
   }
 

@@ -5,11 +5,11 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo
 import 'package:eos_mobile/shared/shared_libs.dart';
 
 abstract class InspeccionTipoRepository {
-  /// REMOTE OPERATIONS
+  // REMOTE OPERATIONS
   Future<DataState<List<InspeccionTipoEntity>>> list();
   Future<DataState<IReturn>> store(InspeccionTipoStoreReqEntity objData);
   Future<DataState<IReturn>> update(InspeccionTipoEntity objData);
   Future<DataState<IReturn>> delete(InspeccionTipoIdParamEntity objData);
 
-  /// LOCAL OPERATIONS
+  // LOCAL OPERATIONS
 }
