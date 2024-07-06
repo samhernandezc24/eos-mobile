@@ -20,8 +20,8 @@ class CategoriaItemListModel extends CategoriaItemListEntity {
   /// durante el mapeo del JSON.
   factory CategoriaItemListModel.fromJson(Map<String, dynamic> jsonMap) {
     return CategoriaItemListModel(
-      categoriasItems   : (jsonMap['categoriasItems'] as List<dynamic>?)?.map((i) => CategoriaItemModel.fromJson(i as Map<String, dynamic>)).toList(),
-      formulariosTipos  : (jsonMap['formulariosTipos'] as List<dynamic>?)?.map((i) => FormularioTipo.fromJson(i as Map<String, dynamic>)).toList(),
+      categoriasItems   : (jsonMap['categoriasItems'] as List<dynamic>?)?.map((item) => CategoriaItemModel.fromJson(item as Map<String, dynamic>)).toList(),
+      formulariosTipos  : (jsonMap['formulariosTipos'] as List<dynamic>?)?.map((item) => FormularioTipo.fromJson(item as Map<String, dynamic>)).toList(),
     );
   }
 

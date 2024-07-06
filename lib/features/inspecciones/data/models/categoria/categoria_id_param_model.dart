@@ -22,6 +22,6 @@ class CategoriaIdParamModel extends CategoriaIdParamEntity {
 
   /// Serialización de la estructura del modelo a formato JSON.
   Map<String, dynamic> toJson() {
-    return <String, dynamic>{'idCategoria': idCategoria };
+    return <String, dynamic>{ 'idCategoria': idCategoria };
   }
 }

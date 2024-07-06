@@ -132,6 +132,9 @@ class AppStrings {
   static const String logoutRedirectMessage                 = 'Has sido redirigido al inicio de sesión.';
 
   // S
+  static const String searchInputHintText                   = 'Buscar...';
+  static const String searchInputSemanticClear              = 'Limpiar';
+
   static const String settingsAppBarTitle                   = 'Configuración general';
   static const String settingsAutoUpdateTitle               = 'Actualizar automáticamente';
   static const String settingsAutoUpdateSubtitle            = 'Actualiza la app automáticamente mediante Wi-Fi.';

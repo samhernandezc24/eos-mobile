@@ -15,4 +15,14 @@ class CategoriaItemListEntity extends Equatable {
 
   @override
   List<Object?> get props => [ categoriasItems, formulariosTipos ];
+
+  CategoriaItemListEntity copyWith({
+    List<CategoriaItemEntity>? categoriasItems,
+    List<FormularioTipo>? formulariosTipos,
+  }) {
+    return CategoriaItemListEntity(
+      categoriasItems   : categoriasItems ?? this.categoriasItems,
+      formulariosTipos  : formulariosTipos ?? this.formulariosTipos,
+    );
+  }
 }

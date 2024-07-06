@@ -81,7 +81,13 @@ final appRouter = GoRouter(
                       useFade: true,
                     ),
                     // INSPECCIONES SEARCH UNIDAD PAGE
-                    AppRoute('search-unidad', 'home.inspecciones.searchUnidad', (_) => const UnderConstructionPage(), useFade: true),
+                    AppRoute(
+                      'search-unidad',
+                      'home.inspecciones.searchUnidad',
+                      (_) => const UnderConstructionPage(),
+                      // parentKey: _rootNavigatorKey,
+                      useFade: true,
+                    ),
                   ],
                   useFade: true,
                 ),

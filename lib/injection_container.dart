@@ -14,12 +14,15 @@ import 'package:eos_mobile/features/auth/presentation/bloc/remote/remote_auth_bl
 import 'package:eos_mobile/features/auth/presentation/cubit/local/local_auth_cubit.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/categoria/categoria_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/categoria_item/categoria_item_remote_api_service.dart';
+import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion/inspeccion_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion_tipo/inspeccion_tipo_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/repositories/categoria_item_repository_impl.dart';
 import 'package:eos_mobile/features/inspecciones/data/repositories/categoria_repository_impl.dart';
+import 'package:eos_mobile/features/inspecciones/data/repositories/inspeccion_repository_impl.dart';
 import 'package:eos_mobile/features/inspecciones/data/repositories/inspeccion_tipo_repository_impl.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/categoria_item_repository.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/categoria_repository.dart';
+import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_repository.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_tipo_repository.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categoria/remote_delete_categoria_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categoria/remote_list_categoria_usecase.dart';
@@ -30,11 +33,17 @@ import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categori
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categoria_item/remote_store_categoria_item_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categoria_item/remote_store_duplicate_categoria_item.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categoria_item/remote_update_categoria_item_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/inspeccion/remote_cancel_inspeccion_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/inspeccion/remote_create_inspeccion_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/inspeccion/remote_data_source_inspeccion_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/inspeccion/remote_index_inspeccion_usecase.dart';
+import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/inspeccion/remote_store_inspeccion_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/inspeccion_tipo/remote_delete_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/inspeccion_tipo/remote_list_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/inspeccion_tipo/remote_store_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/inspeccion_tipo/remote_update_inspeccion_tipo_usecase.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/categoria/remote_categoria_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/categoria_item/remote_categoria_item_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/inspeccion_tipo/remote_inspeccion_tipo_bloc.dart';
 import 'package:eos_mobile/features/settings/presentation/cubit/local/local_settings_cubit.dart';
 
@@ -64,6 +73,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<InspeccionTipoRemoteApiService>(InspeccionTipoRemoteApiService(sl()));
   sl.registerSingleton<CategoriaRemoteApiService>(CategoriaRemoteApiService(sl()));
   sl.registerSingleton<CategoriaItemRemoteApiService>(CategoriaItemRemoteApiService(sl()));
+  sl.registerSingleton<InspeccionRemoteApiService>(InspeccionRemoteApiService(sl()));
 
   /// =========================================================
   /// REPOSITORIES
@@ -72,6 +82,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<InspeccionTipoRepository>(InspeccionTipoRepositoryImpl(sl()));
   sl.registerSingleton<CategoriaRepository>(CategoriaRepositoryImpl(sl()));
   sl.registerSingleton<CategoriaItemRepository>(CategoriaItemRepositoryImpl(sl()));
+  sl.registerSingleton<InspeccionRepository>(InspeccionRepositoryImpl(sl()));
 
   /// =========================================================
   /// USE CASES
@@ -94,6 +105,12 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<RemoteUpdateCategoriaItemUseCase>(RemoteUpdateCategoriaItemUseCase(sl()));
   sl.registerSingleton<RemoteDeleteCategoriaItemUseCase>(RemoteDeleteCategoriaItemUseCase(sl()));
 
+  sl.registerSingleton<RemoteIndexInspeccionUseCase>(RemoteIndexInspeccionUseCase(sl()));
+  sl.registerSingleton<RemoteDataSourceInspeccionUseCase>(RemoteDataSourceInspeccionUseCase(sl()));
+  sl.registerSingleton<RemoteCreateInspeccionUseCase>(RemoteCreateInspeccionUseCase(sl()));
+  sl.registerSingleton<RemoteStoreInspeccionUseCase>(RemoteStoreInspeccionUseCase(sl()));
+  sl.registerSingleton<RemoteCancelInspeccionUseCase>(RemoteCancelInspeccionUseCase(sl()));
+
   sl.registerSingleton<LocalGetCredentialsUseCase>(LocalGetCredentialsUseCase(sl()));
   sl.registerSingleton<LocalGetUserInfoUseCase>(LocalGetUserInfoUseCase(sl()));
   sl.registerSingleton<LocalStoreCredentialsUseCase>(LocalStoreCredentialsUseCase(sl()));
@@ -107,6 +124,7 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<RemoteAuthBloc>(() => RemoteAuthBloc(sl()));
   sl.registerFactory<RemoteInspeccionTipoBloc>(() => RemoteInspeccionTipoBloc(sl(),sl(),sl(),sl()));
   sl.registerFactory<RemoteCategoriaBloc>(() => RemoteCategoriaBloc(sl(),sl(),sl(),sl()));
+  sl.registerFactory<RemoteCategoriaItemBloc>(() => RemoteCategoriaItemBloc(sl(),sl()));
 
   sl.registerFactory<LocalAuthCubit>(() => LocalAuthCubit(sl(),sl(),sl(),sl(),sl(),sl()));
   sl.registerFactory<LocalSettingsCubit>(() => LocalSettingsCubit());
