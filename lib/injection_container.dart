@@ -12,6 +12,11 @@ import 'package:eos_mobile/features/auth/domain/usecases/local/local_store_user_
 import 'package:eos_mobile/features/auth/domain/usecases/remote/remote_sign_in_usecase.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/remote/remote_auth_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/cubit/local/local_auth_cubit.dart';
+import 'package:eos_mobile/features/data_source_persistence/data/datasources/remote/data_source_persistence_remote_api_service.dart';
+import 'package:eos_mobile/features/data_source_persistence/data/repositories/data_source_persistence_repository_impl.dart';
+import 'package:eos_mobile/features/data_source_persistence/domain/repositories/data_source_persistence_repository.dart';
+import 'package:eos_mobile/features/data_source_persistence/domain/usecases/remote/remote_update_data_source_persistence_usecase.dart';
+import 'package:eos_mobile/features/data_source_persistence/presentation/cubit/remote/remote_data_source_persistence_cubit.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/categoria/categoria_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/categoria_item/categoria_item_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion/inspeccion_remote_api_service.dart';
@@ -83,6 +88,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<CategoriaItemRemoteApiService>(CategoriaItemRemoteApiService(sl()));
   sl.registerSingleton<InspeccionRemoteApiService>(InspeccionRemoteApiService(sl()));
   sl.registerSingleton<UnidadRemoteApiService>(UnidadRemoteApiService(sl()));
+  sl.registerSingleton<DataSourcePersistenceRemoteApiService>(DataSourcePersistenceRemoteApiService(sl()));
 
   /// =========================================================
   /// REPOSITORIES
@@ -93,6 +99,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<CategoriaItemRepository>(CategoriaItemRepositoryImpl(sl()));
   sl.registerSingleton<InspeccionRepository>(InspeccionRepositoryImpl(sl()));
   sl.registerSingleton<UnidadRepository>(UnidadRepositoryImpl(sl()));
+  sl.registerSingleton<DataSourcePersistenceRepository>(DataSourcePersistenceRepositoryImpl(sl()));
 
   /// =========================================================
   /// USE CASES
@@ -125,6 +132,8 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<RemoteStoreUnidadUseCase>(RemoteStoreUnidadUseCase(sl()));
   sl.registerSingleton<RemotePredictiveUnidadUseCase>(RemotePredictiveUnidadUseCase(sl()));
 
+  sl.registerSingleton<RemoteUpdateDataSourcePersistenceUseCase>(RemoteUpdateDataSourcePersistenceUseCase(sl()));
+
   sl.registerSingleton<LocalGetCredentialsUseCase>(LocalGetCredentialsUseCase(sl()));
   sl.registerSingleton<LocalGetUserInfoUseCase>(LocalGetUserInfoUseCase(sl()));
   sl.registerSingleton<LocalStoreCredentialsUseCase>(LocalStoreCredentialsUseCase(sl()));
@@ -139,8 +148,9 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<RemoteInspeccionTipoBloc>(() => RemoteInspeccionTipoBloc(sl(),sl(),sl(),sl()));
   sl.registerFactory<RemoteCategoriaBloc>(() => RemoteCategoriaBloc(sl(),sl(),sl(),sl()));
   sl.registerFactory<RemoteCategoriaItemBloc>(() => RemoteCategoriaItemBloc(sl(),sl(),sl(),sl(),sl()));
-  sl.registerFactory<RemoteInspeccionBloc>(() => RemoteInspeccionBloc(sl(),sl()));
+  sl.registerFactory<RemoteInspeccionBloc>(() => RemoteInspeccionBloc(sl(),sl(),sl(),sl(),sl()));
   sl.registerFactory<RemoteUnidadBloc>(() => RemoteUnidadBloc(sl(),sl(),sl()));
+  sl.registerFactory<RemoteDataSourcePersistenceCubit>(() => RemoteDataSourcePersistenceCubit(sl()));
 
   sl.registerFactory<LocalAuthCubit>(() => LocalAuthCubit(sl(),sl(),sl(),sl(),sl(),sl()));
   sl.registerFactory<LocalSettingsCubit>(() => LocalSettingsCubit());

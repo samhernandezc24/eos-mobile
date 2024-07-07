@@ -1,8 +1,10 @@
 part of '../predictive_search_form_field.dart';
 
-typedef PredictiveOptionsBuilder<T extends Object> = FutureOr<List<T>> Function(TextEditingValue textEditingValue);
-
 typedef PredictiveOnSelected<T extends Object> = void Function(T option);
+
+typedef PredictiveOptionToString<T extends Object> = String Function(T option);
+
+typedef PredictiveFetchOptions<T extends Object> = Future<List<T>> Function(String query);
 
 typedef PredictiveOptionsViewBuilder<T extends Object> = Widget Function(
   BuildContext context,
@@ -13,44 +15,38 @@ typedef PredictiveOptionsViewBuilder<T extends Object> = Widget Function(
 typedef PredictiveFieldViewBuilder = Widget Function(
   BuildContext context,
   TextEditingController textEditingController,
-  FocusNode focusNode,
   VoidCallback onFieldSubmitted,
 );
-
-typedef PredictiveOptionToString<T extends Object> = String Function(T option);
 
 enum PredictiveOptionsViewOpenDirection {
   up,
   down,
 }
 
-
 class RawPredictive<T extends Object> extends StatefulWidget {
   const RawPredictive({
+    required this.fetchOptions,
     required this.optionsViewBuilder,
-    required this.optionsBuilder,
     Key? key,
     this.optionsViewOpenDirection   = PredictiveOptionsViewOpenDirection.down,
     this.displayStringForOption     = defaultStringForOption,
     this.fieldViewBuilder,
-    this.focusNode,
     this.onSelected,
     this.textEditingController,
     this.initialValue,
   }) : super(key: key);
 
+  final PredictiveFetchOptions<T> fetchOptions;
   final PredictiveFieldViewBuilder? fieldViewBuilder;
-  final FocusNode? focusNode;
   final PredictiveOptionsViewBuilder<T> optionsViewBuilder;
   final PredictiveOptionsViewOpenDirection optionsViewOpenDirection;
   final PredictiveOptionToString<T> displayStringForOption;
   final PredictiveOnSelected<T>? onSelected;
-  final PredictiveOptionsBuilder<T> optionsBuilder;
   final TextEditingController? textEditingController;
   final TextEditingValue? initialValue;
 
   static void onFieldSubmitted<T extends Object>(GlobalKey key) {
-    final _RawPredictive<T> rawPredictive = key.currentState! as _RawPredictive<T>;
+    final _RawPredictiveState<T> rawPredictive = key.currentState! as _RawPredictiveState<T>;
     rawPredictive._onFieldSubmitted();
   }
 
@@ -59,33 +55,30 @@ class RawPredictive<T extends Object> extends StatefulWidget {
   }
 
   @override
-  State<RawPredictive<T>> createState() => _RawPredictive<T>();
+  State<RawPredictive<T>> createState() => _RawPredictiveState<T>();
 }
 
-class _RawPredictive<T extends Object> extends State<RawPredictive<T>> {
+class _RawPredictiveState<T extends Object> extends State<RawPredictive<T>> {
   // GLOBAL KEY
   final GlobalKey _fieldKey = GlobalKey();
 
   // LAYER LINK
   final LayerLink _optionsLayerLink = LayerLink();
 
-  // CONTROLLER
+  // CONTROLLERS
   late TextEditingController _textEditingController;
-  late FocusNode _focusNode;
   late final Map<Type, Action<Intent>> _actionMap;
   late final _PredictiveCallbackAction<PredictivePreviousOptionIntent> _previousOptionAction;
   late final _PredictiveCallbackAction<PredictiveNextOptionIntent> _nextOptionAction;
   late final _PredictiveCallbackAction<DismissIntent> _hideOptionsAction;
 
   // LIST
-  List<T> _options = [];
+  List<T> _options = <T>[];
 
   // PROPERTIES
   T? _selection;
   bool _userHideOptions                 = false;
-  bool _isLoading                       = false;
   bool _floatingOptionsUpdateScheduled  = false;
-  String _lastFieldText                 = '';
 
   final ValueNotifier<int> _highlightedOptionIndex = ValueNotifier<int>(0);
 
@@ -93,12 +86,12 @@ class _RawPredictive<T extends Object> extends State<RawPredictive<T>> {
   OverlayEntry? _floatingOptions;
 
   static const Map<ShortcutActivator, Intent> _shortcuts = <ShortcutActivator, Intent>{
-    SingleActivator(LogicalKeyboardKey.arrowUp): AutocompletePreviousOptionIntent(),
-    SingleActivator(LogicalKeyboardKey.arrowDown): AutocompleteNextOptionIntent(),
+    SingleActivator(LogicalKeyboardKey.arrowUp)   : PredictivePreviousOptionIntent(),
+    SingleActivator(LogicalKeyboardKey.arrowDown) : PredictiveNextOptionIntent(),
   };
 
   bool get _shouldShowOptions {
-    return !_userHideOptions && _focusNode.hasFocus && _selection == null && _options.isNotEmpty;
+    return !_userHideOptions && _selection == null && _options.isNotEmpty;
   }
 
   // STATE
@@ -106,7 +99,6 @@ class _RawPredictive<T extends Object> extends State<RawPredictive<T>> {
   void initState() {
     super.initState();
     _textEditingController  = widget.textEditingController ?? TextEditingController.fromValue(widget.initialValue);
-    _focusNode              = widget.focusNode ?? FocusNode();
     _previousOptionAction   = _PredictiveCallbackAction<PredictivePreviousOptionIntent>(onInvoke: _highlightPreviousOption);
     _nextOptionAction       = _PredictiveCallbackAction<PredictiveNextOptionIntent>(onInvoke: _highlightNextOption);
     _hideOptionsAction      = _PredictiveCallbackAction<DismissIntent>(onInvoke: _hideOptions);
@@ -115,12 +107,14 @@ class _RawPredictive<T extends Object> extends State<RawPredictive<T>> {
       AutocompleteNextOptionIntent      : _nextOptionAction,
       DismissIntent                     : _hideOptionsAction,
     };
+    _updateActions();
     _updateOverlay();
   }
 
   @override
   void didUpdateWidget(RawPredictive<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
+    _updateActions();
     _updateOverlay();
   }
 
@@ -129,57 +123,49 @@ class _RawPredictive<T extends Object> extends State<RawPredictive<T>> {
     if (widget.textEditingController == null) {
       _textEditingController.dispose();
     }
-    if (widget.focusNode == null) {
-      _focusNode.dispose();
-    }
     _floatingOptions?.remove();
     _floatingOptions?.dispose();
     _floatingOptions = null;
+    _highlightedOptionIndex.dispose();
     super.dispose();
   }
 
   // EVENTS
   Future<void> _onFieldSubmitted() async {
-    if (_options.isEmpty || _userHideOptions) return;
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    final List<T> options = await widget.optionsBuilder(_textEditingController.value);
-    setState(() {
-      _isLoading = false;
-      _options = options;
-    });
-
-    // _select(_options.elementAt(index))
-    _updateOverlay();
+    final query = _textEditingController.text;
+    if (query.isNotEmpty) {
+      final options = await widget.fetchOptions(query);
+      setState(() {
+        _options = options;
+        _userHideOptions = false;
+      });
+      _updateActions();
+      _updateOverlay();
+    } else {
+      setState(() {
+        _options = [];
+        _userHideOptions = true;
+      });
+      _updateOverlay();
+    }
   }
 
-  // Selecciona la opción dada y actualiza el widget.
   void _select(T nextSelection) {
-    if (nextSelection == _selection) return;
+    if (nextSelection == _selection) {
+      return;
+    }
     _selection = nextSelection;
     final String selectionString = widget.displayStringForOption(nextSelection);
     _textEditingController.value = TextEditingValue(
       selection : TextSelection.collapsed(offset: selectionString.length),
       text      : selectionString,
     );
+    _updateActions();
     _updateOverlay();
     widget.onSelected?.call(_selection!);
   }
 
   // METHODS
-  Object? _hideOptions(DismissIntent intent) {
-    if (!_userHideOptions) {
-      _userHideOptions = true;
-      _textEditingController.clear();
-      _updateOverlay();
-      return null;
-    }
-    return Actions.invoke(context, intent);
-  }
-
   void _updateHighlight(int newIndex) {
     _highlightedOptionIndex.value = _options.isEmpty ? 0 : newIndex % _options.length;
   }
@@ -187,6 +173,7 @@ class _RawPredictive<T extends Object> extends State<RawPredictive<T>> {
   void _highlightPreviousOption(PredictivePreviousOptionIntent intent) {
     if (_userHideOptions) {
       _userHideOptions = false;
+      _updateActions();
       _updateOverlay();
       return;
     }
@@ -196,13 +183,33 @@ class _RawPredictive<T extends Object> extends State<RawPredictive<T>> {
   void _highlightNextOption(PredictiveNextOptionIntent intent) {
     if (_userHideOptions) {
       _userHideOptions = false;
+      _updateActions();
       _updateOverlay();
       return;
     }
     _updateHighlight(_highlightedOptionIndex.value + 1);
   }
 
-  // Oculta o muestra el overlay de opciones, si es necesario.
+  Object? _hideOptions(DismissIntent intent) {
+    if (!_userHideOptions) {
+      _userHideOptions = true;
+      _updateActions();
+      _updateOverlay();
+      return null;
+    }
+    return Actions.invoke(context, intent);
+  }
+
+  void _setActionsEnabled(bool enabled) {
+    _previousOptionAction.enabled   = enabled;
+    _nextOptionAction.enabled       = enabled;
+    _hideOptionsAction.enabled      = enabled;
+  }
+
+  void _updateActions() {
+    _setActionsEnabled(_selection == null && _options.isNotEmpty);
+  }
+
   void _updateOverlay() {
     if (SchedulerBinding.instance.schedulerPhase == SchedulerPhase.persistentCallbacks) {
       if (!_floatingOptionsUpdateScheduled) {
@@ -227,14 +234,6 @@ class _RawPredictive<T extends Object> extends State<RawPredictive<T>> {
           return CompositedTransformFollower(
             link: _optionsLayerLink,
             showWhenUnlinked: false,
-            targetAnchor: switch (widget.optionsViewOpenDirection) {
-              PredictiveOptionsViewOpenDirection.up   => Alignment.topLeft,
-              PredictiveOptionsViewOpenDirection.down => Alignment.bottomLeft,
-            },
-            followerAnchor: switch (widget.optionsViewOpenDirection) {
-              PredictiveOptionsViewOpenDirection.up   => Alignment.bottomLeft,
-              PredictiveOptionsViewOpenDirection.down => Alignment.topLeft,
-            },
             child: Builder(
               builder: (BuildContext context) {
                 return widget.optionsViewBuilder(context, _select, _options);
@@ -243,7 +242,7 @@ class _RawPredictive<T extends Object> extends State<RawPredictive<T>> {
           );
         },
       );
-
+      // Add the OverlayEntry to the Overlay.
       Overlay.of(context, rootOverlay: true, debugRequiredFor: widget).insert(newFloatingOptions);
       _floatingOptions = newFloatingOptions;
     } else {
@@ -253,30 +252,26 @@ class _RawPredictive<T extends Object> extends State<RawPredictive<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(
-          key   : _fieldKey,
-          child : Shortcuts(
-            shortcuts : _shortcuts,
-            child     : Actions(
-              actions : _actionMap,
-              child   : CompositedTransformTarget(
-                link  : _optionsLayerLink,
-                child : widget.fieldViewBuilder == null
-                    ? const SizedBox.shrink()
-                    : widget.fieldViewBuilder!(
-                        context,
-                        _textEditingController,
-                        _focusNode,
-                        _onFieldSubmitted,
-                      ),
-              ),
+    return TextFieldTapRegion(
+      child: Container(
+        key: _fieldKey,
+        child: Shortcuts(
+          shortcuts: _shortcuts,
+          child: Actions(
+            actions: _actionMap,
+            child: CompositedTransformTarget(
+              link: _optionsLayerLink,
+              child: widget.fieldViewBuilder == null
+                  ? const SizedBox.shrink()
+                  : widget.fieldViewBuilder!(
+                      context,
+                      _textEditingController,
+                      _onFieldSubmitted,
+                    ),
             ),
           ),
         ),
-        // const LinearProgressIndicator(),
-      ],
+      ),
     );
   }
 }
@@ -296,25 +291,38 @@ class _PredictiveCallbackAction<T extends Intent> extends CallbackAction<T> {
   bool consumesKey(covariant T intent) => enabled;
 }
 
-/// An [Intent] to highlight the previous option in the autocomplete list.
+/// Un [Intent] para resaltar la opción anterior en la lista predictiva.
 class PredictivePreviousOptionIntent extends Intent {
-  /// Creates an instance of AutocompletePreviousOptionIntent.
   const PredictivePreviousOptionIntent();
 }
 
-/// An [Intent] to highlight the next option in the autocomplete list.
+/// Un [Intent] para resaltar la opción siguiente en la lista predictiva.
 class PredictiveNextOptionIntent extends Intent {
-  /// Creates an instance of AutocompleteNextOptionIntent.
   const PredictiveNextOptionIntent();
 }
 
+/// Un widget heredado utilizado para indicar qué opción del predictivo debe ser
+/// resaltada para la navegación por teclado.
+///
+/// El widget `RawPredictive` envolverá la vista de opciones generada por el
+/// `optionsViewBuilder` con este widget para proporcionar el índice
+/// de la opción resaltada al constructor.
+///
+/// En la llamada de retorno del constructor el índice de la opción resaltada puede obtenerse
+/// utilizando el método estático [of]:
+///
+/// ```dart
+/// int highlightedIndex = AutocompleteHighlightedOption.of(context);
+/// ```
+///
+/// que luego se puede utilizar para decir qué opción debe recibir una indicación visual
+/// indicación visual que será la opción seleccionada con el teclado.
 class PredictiveHighlightedOption extends InheritedNotifier<ValueNotifier<int>> {
   const PredictiveHighlightedOption({
     required ValueNotifier<int> highlightIndexNotifier,
     required super.child,
     super.key,
   }) : super(notifier: highlightIndexNotifier);
-
 
   static int of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<PredictiveHighlightedOption>()?.notifier?.value ?? 0;

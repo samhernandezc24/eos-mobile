@@ -1,11 +1,19 @@
-import 'dart:convert';
-
 import 'package:eos_mobile/core/data/catalogos/base.dart';
+import 'package:eos_mobile/core/data/catalogos/inspeccion_estatus.dart';
+import 'package:eos_mobile/core/data/catalogos/requerimiento.dart';
 import 'package:eos_mobile/core/data/catalogos/unidad_capacidad_medida.dart';
 import 'package:eos_mobile/core/data/catalogos/unidad_marca.dart';
 import 'package:eos_mobile/core/data/catalogos/unidad_placa_tipo.dart';
 import 'package:eos_mobile/core/data/catalogos/unidad_tipo.dart';
+import 'package:eos_mobile/core/data/catalogos/usuario.dart';
+import 'package:eos_mobile/core/data/data_source/data_source.dart';
+import 'package:eos_mobile/core/data/data_source/data_source_persistence.dart';
+import 'package:eos_mobile/core/data/data_source/search_filter.dart';
+import 'package:eos_mobile/core/data/data_source/sort.dart';
 
+import 'package:eos_mobile/features/data_source_persistence/presentation/cubit/remote/remote_data_source_persistence_cubit.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_param_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_store_req_entity.dart';
@@ -14,13 +22,16 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/unidad
 import 'package:eos_mobile/features/inspecciones/presentation/pages/configuracion/inspeccion_tipo/inspeccion_tipo_page.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 part '../../widgets/index/create/_create_form.dart';
 part '../../widgets/index/create/predictive/_search_input.dart';
 part '../../widgets/index/create/predictive/_search_input_eos.dart';
 part '../../widgets/index/unidad/_create_form.dart';
+part '../../widgets/index/results/_result_tile.dart';
+part '../../widgets/index/results/_results_list.dart';
+
+enum InspeccionMenu { details, cancel }
 
 class InspeccionIndexPage extends StatefulWidget {
   const InspeccionIndexPage({Key? key}) : super(key: key);
@@ -35,24 +46,30 @@ class _InspeccionIndexPageState extends State<InspeccionIndexPage> {
   final ScrollController _scrollController = ScrollController();
 
   // LIST
-  List<String> items = [];
-  bool hasMore = true;
-  bool isLoading = false;
-  int page = 1;
+  List<UnidadTipo> lstUnidadesTipos               = [];
+  List<InspeccionEstatus> lstInspeccionesEstatus  = [];
+  List<Usuario> lstUsuarios                       = [];
+  List<Requerimiento> lstHasRequerimiento         = [
+    const Requerimiento(value: true, name: 'Con requerimiento'),
+    const Requerimiento(value: false, name: 'Sin requerimiento'),
+  ];
+
+  // PROPERTIES
+  bool _hasServerError  = false;
+  bool _isLoading       = false;
+
+  // SEARCH FILTERS
+  List<SearchFilter> searchFilters = [];
+
+  List<InspeccionEntity> lstRows = [];
 
   // STATE
   @override
   void initState() {
     super.initState();
-    fetch();
-
-    _scrollController.addListener(() {
-      if (_scrollController.position.maxScrollExtent == _scrollController.offset) {
-        fetch();
-      }
-    });
-
     _searchTextController = TextEditingController();
+
+    _initialization();
   }
 
   @override
@@ -75,52 +92,118 @@ class _InspeccionIndexPageState extends State<InspeccionIndexPage> {
 
   void _handleSearchSubmitted(String query) {
     _searchTextController.text = query;
+    _fetchDataSource();
+  }
+
+  void _handleSearchFiltersPressed(BuildContext context) {
+    showModalBottomSheet<void>(
+      context : context,
+      builder : (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return SearchFiltersActionSheet(
+              searchFilters: searchFilters,
+              onChange: (newValue) {
+                setState(() => searchFilters = newValue);
+                _updateResults(showLoading: false);
+                _fetchDataSource();
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   void _handleCreatePressed(BuildContext context) {
-    Navigator.push<void>(context, AppModalRoute(child: const _CreateInspeccionForm()));
+    Navigator.push<void>(context, AppModalRoute(child: _CreateInspeccionForm(onComplete: _fetchDataSource)));
   }
 
   // METHODS
-  Future<void> fetch() async {
-    if (isLoading) return;
-    isLoading = true;
+  Future<void> _initialization() async {
+    context.read<RemoteInspeccionBloc>().add(IndexInspeccion());
+  }
 
-    const limit = 25;
+  Future<void> _fetchDataSource() async {
+    final DataSource varArgs = DataSource(
+      search          : Globals.isValidValue(_searchTextController.text) ? _searchTextController.text : '',
+      searchFilters   : DataSourceManager.searchFilters(searchFilters),
+      filters         : const [],
+      filtersMultiple : const [],
+      dateFrom        : '',
+      dateTo          : '',
+      dateOptions     : const [],
+      length          : 25,
+      page            : 1,
+      sort            : const Sort(column: '', direction: ''),
+    );
 
-    final url = Uri.parse('https://jsonplaceholder.typicode.com/posts?_limit=$limit&_page=$page');
-    final response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      final List<dynamic> newItems = json.decode(response.body) as List<dynamic>;
-      setState(() {
-        page++;
-        isLoading = false;
-
-        if (newItems.length < limit) {
-          hasMore = false;
-        }
-
-        items.addAll(newItems.map<String>((item) {
-          final number = item['id'];
-          return 'Item $number';
-        }).toList());
-      });
-    }
+    context.read<RemoteInspeccionBloc>().add(DataSourceInspeccion(varArgs));
   }
 
   Future<void> onRefresh() async {
-    setState(() {
-      isLoading = false;
-      hasMore = true;
-      page = 0;
-      items.clear();
-    });
-
-    await fetch();
+    await _fetchDataSource();
   }
 
   // METHODS
+  Future<void> _updateResults({bool showLoading = true}) async {
+    if (showLoading) { setState(() => _isLoading = true); }
+
+    final DataSourcePersistence varArgs = DataSourcePersistence(
+      table             : 'Inspecciones',
+      searchFilters     : searchFilters,
+      columns           : const [],
+      sort              : const Sort(column: '', direction: ''),
+      displayedColumns  : const [],
+      filters           : const [],
+      filtersMultiple   : const [],
+      dateOption        : '',
+      dateFrom          : '',
+      dateTo            : '',
+    );
+
+    await context.read<RemoteDataSourcePersistenceCubit>().onUpdateDataSourcePersistence(varArgs: varArgs).then((result) {
+      if (result) {
+        if (showLoading) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      } else {
+        Navigator.of(context).pop();
+
+        ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(
+              'No se pudo actualizar el filtro dinámico',
+              style     : $styles.textStyles.bodySmall.copyWith(color: $styles.colors.white),
+              softWrap  : true,
+            ),
+            backgroundColor : Theme.of(context).colorScheme.error,
+            elevation       : 0,
+            behavior        : SnackBarBehavior.fixed,
+          ),
+        );
+
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    });
+  }
+
+  List<SearchFilter> _getSearchFilters() {
+    final List<SearchFilter> arrSearchFilters = <SearchFilter>[
+      const SearchFilter(field: 'Folio',                  isChecked: true,  title: 'Folio'                  ),
+      const SearchFilter(field: 'RequerimientoFolio',     isChecked: false, title: 'Requerimiento / folio'  ),
+      const SearchFilter(field: 'UnidadNumeroEconomico',  isChecked: true,  title: 'No. económico'          ),
+      const SearchFilter(field: 'Locacion',               isChecked: false, title: 'Locación'               ),
+    ];
+
+    return arrSearchFilters;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +218,7 @@ class _InspeccionIndexPageState extends State<InspeccionIndexPage> {
             child   : SearchInputFormField(
               controller              : _searchTextController,
               onSubmit                : _handleSearchSubmitted,
-              onSearchFiltersPressed  : (){},
+              onSearchFiltersPressed  : () => _handleSearchFiltersPressed(context),
             ),
           ),
 
@@ -148,22 +231,91 @@ class _InspeccionIndexPageState extends State<InspeccionIndexPage> {
           Expanded(
             child: RefreshIndicator(
               onRefresh: onRefresh,
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: items.length + 1,
-                itemBuilder: (BuildContext context, int index) {
-                  if (index < items.length) {
-                    final item = items[index];
+              child: BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
+                listener: (context, state) {
+                  // LOADING
 
-                    return ListTile(title: Text(item));
-                  } else {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 32),
-                      child: Center(
-                        child: hasMore ? const AppLoadingIndicator() : const Text('No hay más datos para cargar'),
-                      ),
+                  // ERROR
+                  if (state is RemoteInspeccionServerFailedMessageIndex || state is RemoteInspeccionServerExceptionMessageIndex) {
+                    setState(() {
+                      _hasServerError = true;
+                    });
+                  }
+
+                  // SUCCESS
+                  if (state is RemoteInspeccionIndex) {
+                    setState(() {
+                      _hasServerError = false;
+
+                      // FRAGMENTO MODIFICABLE - LISTAS
+                      lstUnidadesTipos        = state.objResponse?.unidadesTipos        ?? [];
+                      lstInspeccionesEstatus  = state.objResponse?.inspeccionesEstatus  ?? [];
+                      lstUsuarios             = state.objResponse?.usuarios             ?? [];
+
+                      // FRAGMENTO NO MODIFICABLE - DATOS
+                      final DataSourcePersistence? dataSourcePersistence = state.objResponse?.dataSourcePersistence;
+
+                      searchFilters = dataSourcePersistence == null ? _getSearchFilters() : dataSourcePersistence.searchFilters ?? [];
+                    });
+
+                    // FRAGMENTO NO MODIFICABLE - RENDERIZACION
+                    _fetchDataSource();
+                  }
+
+                  if (state is RemoteInspeccionDataSource) {
+                    setState(() {
+                      lstRows = state.objResponse?.rows ?? [];
+                    });
+                  }
+                },
+                builder: (context, state) {
+                  // LOADING
+                  if (state is RemoteInspeccionIndexLoading) {
+                    return const Center(child: AppLoadingIndicator());
+                  }
+
+                  if (state is RemoteInspeccionDataSourceLoading) {
+                    return ListView.builder(
+                      padding     : EdgeInsets.all($styles.insets.sm),
+                      itemCount   : 10,
+                      itemBuilder : (BuildContext context, int index) => const ShimmerLoading(),
                     );
                   }
+
+                  // SUCCESS
+                  if (state is RemoteInspeccionDataSource) {
+                    if (lstRows.isEmpty) {
+                      return const EmptyResultsMessage(
+                        title   : AppStrings.inspeccionDataSourceEmptyListTitle,
+                        message : AppStrings.inspeccionDataSourceEmptyListMessage,
+                      );
+                    }
+
+                    return _ResultsInspeccionList(
+                      results: lstRows,
+                    );
+                  }
+
+                  return const SizedBox.shrink();
+
+                  // return ListView.builder(
+                  //   controller: _scrollController,
+                  //   itemCount: lstRows.length + 1,
+                  //   itemBuilder: (BuildContext context, int index) {
+                  //     if (index < lstRows.length) {
+                  //       final item = lstRows[index];
+
+                  //       return ListTile(title: Text(item.rows.));
+                  //     } else {
+                  //       return Padding(
+                  //         padding: const EdgeInsets.symmetric(vertical: 32),
+                  //         child: Center(
+                  //           child: hasMore ? const AppLoadingIndicator() : const Text('No hay más datos para cargar'),
+                  //         ),
+                  //       );
+                  //     }
+                  //   },
+                  // );
                 },
               ),
             ),

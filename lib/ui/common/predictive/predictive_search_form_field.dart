@@ -7,7 +7,7 @@ part 'widgets/raw_predictive.dart';
 
 class PredictiveSearchFormField<T extends Object> extends StatelessWidget {
   const PredictiveSearchFormField({
-    required this.optionsBuilder,
+    required this.fetchOptions,
     Key? key,
     this.displayStringForOption   = RawPredictive.defaultStringForOption,
     this.fieldViewBuilder         = _defaultFieldViewBuilder,
@@ -18,19 +18,17 @@ class PredictiveSearchFormField<T extends Object> extends StatelessWidget {
     this.initialValue,
   }) : super(key: key);
 
+  final PredictiveFetchOptions<T> fetchOptions;
   final PredictiveOptionToString<T> displayStringForOption;
   final PredictiveFieldViewBuilder fieldViewBuilder;
   final PredictiveOnSelected<T>? onSelected;
-  final PredictiveOptionsBuilder<T> optionsBuilder;
   final PredictiveOptionsViewBuilder<T>? optionsViewBuilder;
   final PredictiveOptionsViewOpenDirection optionsViewOpenDirection;
   final double optionsMaxHeight;
   final TextEditingValue? initialValue;
 
-
-  static Widget _defaultFieldViewBuilder(BuildContext context, TextEditingController textEditingController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
+  static Widget _defaultFieldViewBuilder(BuildContext context, TextEditingController textEditingController, VoidCallback onFieldSubmitted) {
     return _PredictiveField(
-      focusNode             : focusNode,
       textEditingController : textEditingController,
       onFieldSubmitted      : onFieldSubmitted,
     );
@@ -41,9 +39,9 @@ class PredictiveSearchFormField<T extends Object> extends StatelessWidget {
     return RawPredictive<T>(
       displayStringForOption    : displayStringForOption,
       fieldViewBuilder          : fieldViewBuilder,
+      fetchOptions              : fetchOptions,
       initialValue              : initialValue,
       onSelected                : onSelected,
-      optionsBuilder            : optionsBuilder,
       optionsViewOpenDirection  : optionsViewOpenDirection,
       optionsViewBuilder        : optionsViewBuilder ?? (BuildContext context, PredictiveOnSelected<T> onSelected, List<T> options) {
         return _PredictiveOptions<T>(
@@ -59,23 +57,18 @@ class PredictiveSearchFormField<T extends Object> extends StatelessWidget {
 
 class _PredictiveField extends StatelessWidget {
   const _PredictiveField({
-    required this.focusNode,
     required this.onFieldSubmitted,
     required this.textEditingController,
   });
 
-  final FocusNode focusNode;
   final VoidCallback onFieldSubmitted;
   final TextEditingController textEditingController;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: textEditingController,
-      focusNode: focusNode,
-      onFieldSubmitted: (String value) {
-        onFieldSubmitted();
-      },
+      controller        : textEditingController,
+      onFieldSubmitted  : (String value) => onFieldSubmitted(),
     );
   }
 }

@@ -89,6 +89,19 @@ class FormValidators {
     return null;
   }
 
+  /// Validador para campos de tipo hora.
+  ///
+  /// Retorna un mensaje de error si [value] es nulo o está vacío.
+  /// Retorna null si [value] es válido.
+  static String? timeValidator(String? value) {
+    if (value == null || value.isEmpty) return null;
+    final RegExp dateRegex = RegExp(r'^[0-2]\d:[0-5]\d$');
+    if (!dateRegex.hasMatch(value)) {
+      return 'Por favor, ingresa una hora en formato hh:mm.';
+    }
+    return null;
+  }
+
   /// Validador para la selección de opción en un dropdown.
   ///
   /// Retorna un mensaje de error si [value] es nulo.

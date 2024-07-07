@@ -60,9 +60,9 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
 
   /// OBTENCIÓN DE DATOS DINAMICOS DE INSPECCIONES
   @override
-  Future<DataState<InspeccionDataSourceModel>> dataSource(DataSource objData) async {
+  Future<DataState<InspeccionDataSourceModel>> dataSource(DataSource varArgs) async {
     try {
-      final httpResponse = await _inspeccionRemoteApiService.dataSource(objData);
+      final httpResponse = await _inspeccionRemoteApiService.dataSource(varArgs);
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         final response = httpResponse.data;
         if (response.session ?? false) {

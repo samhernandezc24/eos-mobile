@@ -10,7 +10,7 @@ import 'package:eos_mobile/shared/shared_libs.dart';
 abstract class InspeccionRepository {
   // REMOTE OPERATIONS
   Future<DataState<InspeccionIndexEntity>> index();
-  Future<DataState<InspeccionDataSourceEntity>> dataSource(DataSource objData);
+  Future<DataState<InspeccionDataSourceEntity>> dataSource(DataSource varArgs);
   Future<DataState<InspeccionCreateEntity>> create();
   Future<DataState<IReturn>> store(InspeccionStoreReqEntity objData);
   // Future<DataState<IReturn>> finish();

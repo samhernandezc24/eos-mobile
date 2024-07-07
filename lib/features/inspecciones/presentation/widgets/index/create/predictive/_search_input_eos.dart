@@ -10,22 +10,38 @@ class _SearchUnidadEOSInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> _allOptions = [
+    'Apple',
+    'Banana',
+    'Cherry',
+    'Date',
+    'Elderberry',
+    'Fig',
+    'Grape',
+    'Honeydew',
+  ];
+
+  Future<List<String>> _fetchOptions(String query) async {
+    // Simular un retraso en la búsqueda
+    await Future.delayed(Duration(milliseconds: 300));
+    // Filtrar las opciones que contienen la consulta
+    return _allOptions.where((option) => option.toLowerCase().contains(query.toLowerCase())).toList();
+  }
+
     return LayoutBuilder(
       builder: (ctx, constraints) {
         return Center(
           child: PredictiveSearchFormField<String>(
+            fetchOptions: _fetchOptions,
             displayStringForOption: (data) => data,
-            optionsBuilder: (textEditingValue) {
-              return [];
-            },
-            fieldViewBuilder: _buildInput,
+            // fieldViewBuilder: _buildInput,
           ),
         );
       },
     );
   }
 
-  Widget _buildInput(BuildContext context, TextEditingController textController, FocusNode focusNode, _) {
+  Widget _buildInput(BuildContext context, TextEditingController textController, _) {
     return Container(
       height: 54,
       decoration: BoxDecoration(
@@ -40,7 +56,6 @@ class _SearchUnidadEOSInput extends StatelessWidget {
           Expanded(
             child: TextField(
               controller        : textController,
-              focusNode         : focusNode,
               onSubmitted       : onSubmit,
               style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
               textAlignVertical : TextAlignVertical.top,

@@ -8,6 +8,19 @@ abstract class RemoteInspeccionEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+/// [RemoteIndexInspeccionUseCase]
+class IndexInspeccion extends RemoteInspeccionEvent {}
+
+/// [RemoteDataSourceInspeccionUseCase]
+class DataSourceInspeccion extends RemoteInspeccionEvent {
+  const DataSourceInspeccion(this.varArgs);
+
+  final DataSource varArgs;
+
+  @override
+  List<Object?> get props => [ varArgs ];
+}
+
 /// [RemoteCreateInspeccionUseCase]
 class CreateInspeccion extends RemoteInspeccionEvent {}
 
@@ -16,6 +29,16 @@ class StoreInspeccion extends RemoteInspeccionEvent {
   const StoreInspeccion(this.objData);
 
   final InspeccionStoreReqEntity objData;
+
+  @override
+  List<Object?> get props => [ objData ];
+}
+
+/// [RemoteCancelInspeccionUseCase]
+class CancelInspeccion extends RemoteInspeccionEvent {
+  const CancelInspeccion(this.objData);
+
+  final InspeccionIdParamEntity objData;
 
   @override
   List<Object?> get props => [ objData ];

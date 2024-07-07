@@ -1,5 +1,4 @@
 import 'package:eos_mobile/shared/shared_libs.dart';
-import 'package:eos_mobile/ui/common/app_icons.dart';
 
 class SearchInputFormField extends StatelessWidget {
   const SearchInputFormField({
@@ -42,6 +41,7 @@ class SearchInputFormField extends StatelessWidget {
             onPressed     : _handleSearchFiltersPressed,
             visualDensity : VisualDensity.compact,
             icon          : const Icon(Icons.search),
+            tooltip       : AppStrings.searchFiltersTooltip,
           ),
 
           Expanded(

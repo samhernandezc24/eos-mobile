@@ -9,7 +9,9 @@ enum InspeccionUnidadSelectOption {
 }
 
 class _CreateInspeccionForm extends StatefulWidget {
-  const _CreateInspeccionForm({Key? key}) : super(key: key);
+  const _CreateInspeccionForm({Key? key, this.onComplete}) : super(key: key);
+
+  final VoidCallback? onComplete;
 
   @override
   State<_CreateInspeccionForm> createState() => _CreateInspeccionFormState();
@@ -102,6 +104,34 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
           ? InspeccionUnidadSelectOption.temporal
           : InspeccionUnidadSelectOption.inventario;
     });
+  }
+
+  void _handleDidPopPressed(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppStrings.exitConfirmationDialogTitle, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600)),
+          content: Text(AppStrings.exitConfirmationDialogMessage, style: $styles.textStyles.body.copyWith(height: 1.3)),
+          actions: <Widget>[
+            TextButton(
+              onPressed : () => Navigator.pop(context, AppStrings.btnCancelText),
+              child     : Text(AppStrings.btnCancelText, style: $styles.textStyles.button),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();    // Cerrar dialog
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  Navigator.of(context).pop();  // Cerrar página
+                  widget.onComplete!();         // Ejecutar callback
+                });
+              },
+              child: Text(AppStrings.btnAcceptText, style: $styles.textStyles.button),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _handleRefreshPressed() {
@@ -485,66 +515,70 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
       ),
     );
 
-    return Scaffold(
-      appBar: AppBar(title: Text(AppStrings.inspeccionCreateAppBarTitle, style: $styles.textStyles.h3)),
-      body: BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
-        listener: (BuildContext context, RemoteInspeccionState state) {
-          // LOADING
-          if (state is RemoteInspeccionCreateLoading) {
-            setState(() {
-              _isLoading = true;
-            });
-          }
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) => !didPop ? _handleDidPopPressed(context) : null,
+      child: Scaffold(
+        appBar: AppBar(title: Text(AppStrings.inspeccionCreateAppBarTitle, style: $styles.textStyles.h3)),
+        body: BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
+          listener: (BuildContext context, RemoteInspeccionState state) {
+            // LOADING
+            if (state is RemoteInspeccionCreateLoading) {
+              setState(() {
+                _isLoading = true;
+              });
+            }
 
-          // SUCCESS
-          if (state is RemoteInspeccionCreate) {
-            setState(() {
-              _hasServerError = false;
-              _isLoading      = false;
+            // SUCCESS
+            if (state is RemoteInspeccionCreate) {
+              setState(() {
+                _hasServerError = false;
+                _isLoading      = false;
 
-              // LISTAS DE COMBOBOX
-              lstInspeccionesTipos            = state.objResponse?.inspeccionesTipos            ?? [];
-              lstUnidadesCapacidadesMedidas   = state.objResponse?.unidadesCapacidadesMedidas   ?? [];
-            });
-          }
+                // LISTAS DE COMBOBOX
+                lstInspeccionesTipos            = state.objResponse?.inspeccionesTipos            ?? [];
+                lstUnidadesCapacidadesMedidas   = state.objResponse?.unidadesCapacidadesMedidas   ?? [];
+              });
+            }
 
-          // ERROR
-          if (state is RemoteInspeccionServerFailedMessageCreate || state is RemoteInspeccionServerExceptionMessageCreate) {
-            setState(() {
-              _hasServerError = true;
-              _isLoading      = false;
-            });
-          }
-        },
-        builder: (BuildContext context, RemoteInspeccionState state) {
-          // LOADING
-          if (state is RemoteInspeccionCreateLoading) {
-            return const Center(child: AppLoadingIndicator());
-          }
+            // ERROR
+            if (state is RemoteInspeccionServerFailedMessageCreate || state is RemoteInspeccionServerExceptionMessageCreate) {
+              setState(() {
+                _hasServerError = true;
+                _isLoading      = false;
+              });
+            }
+          },
+          builder: (BuildContext context, RemoteInspeccionState state) {
+            // LOADING
+            if (state is RemoteInspeccionCreateLoading) {
+              return const Center(child: AppLoadingIndicator());
+            }
 
-          // ERROR
-          if (state is RemoteInspeccionServerFailedMessageCreate) {
-            return ErrorServerMessage(message: state.error, onPressed: _handleRefreshPressed);
-          }
+            // ERROR
+            if (state is RemoteInspeccionServerFailedMessageCreate) {
+              return ErrorServerMessage(message: state.error, onPressed: _handleRefreshPressed);
+            }
 
-          if (state is RemoteInspeccionServerExceptionMessageCreate) {
-            return ErrorServerMessage(message: state.error?.message, onPressed: _handleRefreshPressed);
-          }
+            if (state is RemoteInspeccionServerExceptionMessageCreate) {
+              return ErrorServerMessage(message: state.error?.message, onPressed: _handleRefreshPressed);
+            }
 
-          // SUCCESS
-          if (state is RemoteInspeccionCreate) {
-            return Stack(
-              children: <Widget>[
-                Positioned.fill(
-                  child: ColoredBox(color: Theme.of(context).colorScheme.background.withOpacity(0.4), child: content),
-                ),
-              ],
-            );
-          }
-          return const SizedBox.shrink();
-        },
+            // SUCCESS
+            if (state is RemoteInspeccionCreate) {
+              return Stack(
+                children: <Widget>[
+                  Positioned.fill(
+                    child: ColoredBox(color: Theme.of(context).colorScheme.background.withOpacity(0.4), child: content),
+                  ),
+                ],
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
+        bottomNavigationBar: _buildBottomAppBar(context),
       ),
-      bottomNavigationBar: _buildBottomAppBar(context),
     );
   }
 
@@ -574,12 +608,18 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
 
   // BUSCADOR PREDICTIVO DE UNIDADES INVENTARIO
   Widget _buildUnidadEOSSearch(BuildContext context) {
-    return _SearchUnidadEOSInput(onSubmit: (_){});
+    return Column(
+      children: <Widget>[
+        _SearchUnidadEOSInput(onSubmit: (_){}),
+        // AppLinearIndicator(),
+      ],
+    );
   }
 
   // BUSCADOR PREDICTIVO DE UNIDADES TEMPORALES
   Widget _buildUnidadSearch(BuildContext context) {
-    return _SearchUnidadInput(onSubmit: (_){});
+    return Container();
+    // return _SearchUnidadInput(onSubmit: (_){});
   }
 
   Widget _buildBottomAppBar(BuildContext context) {

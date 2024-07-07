@@ -1,7 +1,7 @@
 import 'package:eos_mobile/shared/shared_libs.dart';
 
-class LabeledDateTimeFormField extends StatelessWidget {
-  const LabeledDateTimeFormField({
+class LabeledTimeFormField extends StatelessWidget {
+  const LabeledTimeFormField({
     required this.controller,
     Key? key,
     this.label,
@@ -18,27 +18,20 @@ class LabeledDateTimeFormField extends StatelessWidget {
   final bool isEnabled;
   final FocusNode? focusNode;
 
-    Future<DateTime?> _handleSelectDatePressed(BuildContext context) async {
-    final DateTime currentDate = DateTime.now();
+    Future<TimeOfDay?> _handleSelecTimeOfDayPressed(BuildContext context) async {
+    final TimeOfDay currentTime = TimeOfDay.now();
 
-    // Mostrar el selector de fecha.
-    final DateTime? pickedDate = await showDatePicker(
+    // Mostrar el selector de hora.
+    final TimeOfDay? pickedTime = await showTimePicker(
       context     : context,
-      initialDate : currentDate,
-      firstDate   : DateTime(2000),
-      lastDate    : DateTime(2100),
+      initialTime : currentTime,
     );
 
-    if (pickedDate != null) {
-      final TimeOfDay? pickedTime = await showTimePicker(context: context, initialTime: TimeOfDay.now());
-      if (pickedTime != null) {
-        final String day     = pickedDate.day.toString().padLeft(2, '0');
-        final String month   = pickedDate.month.toString().padLeft(2, '0');
-        final String hour    = pickedTime.hour.toString().padLeft(2, '0');
-        final String minute  = pickedTime.minute.toString().padLeft(2, '0');
+    if (pickedTime != null) {
+      final hour   = pickedTime.hour.toString().padLeft(2, '0');
+      final minute = pickedTime.minute.toString().padLeft(2, '0');
 
-        controller.text = '$day/$month/${pickedDate.year} $hour:$minute';
-      }
+      controller.text = '$hour:$minute';
     }
     return null;
   }
@@ -106,7 +99,7 @@ class LabeledDateTimeFormField extends StatelessWidget {
 
               Gap($styles.insets.xs),
 
-              IconButton(onPressed: () => _handleSelectDatePressed(context), icon: Icon(Icons.calendar_month, color: Theme.of(context).hintColor), tooltip: 'Seleccionar fecha'),
+              IconButton(onPressed: () => _handleSelecTimeOfDayPressed(context), icon: Icon(Icons.schedule, color: Theme.of(context).hintColor), tooltip: 'Seleccionar hora'),
             ],
           ),
         ),
@@ -119,7 +112,7 @@ class LabeledDateTimeFormField extends StatelessWidget {
             return Visibility(
               visible : FormValidators.dateTimeValidator(controller.text) != null,
               child   : Text(
-                FormValidators.dateTimeValidator(controller.text) ?? '',
+                FormValidators.timeValidator(controller.text) ?? '',
                 style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.error, height: 1.3),
                 softWrap  : true,
               ),

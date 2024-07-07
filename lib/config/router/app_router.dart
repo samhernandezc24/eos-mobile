@@ -60,7 +60,7 @@ final appRouter = GoRouter(
 
         return AppScaffoldWithNavBar(title: title, navigationShell: navigationShell);
       },
-      branches: [
+      branches: <StatefulShellBranch>[
         StatefulShellBranch(
           routes: [
             AppRoute(
@@ -182,6 +182,5 @@ String? _handleRedirect(BuildContext context, GoRouterState state) {
   }
 
   if (!kIsWeb) debugPrint('Navegando a: ${state.uri}');
-
   return null; // no hacer nada
 }

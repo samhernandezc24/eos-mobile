@@ -17,7 +17,7 @@ abstract class InspeccionRemoteApiService {
 
   /// OBTENER DATOS DINAMICOS DE INSPECCIONES
   @POST('/DataSource')
-  Future<HttpResponse<IReturn>> dataSource(@Body() DataSource objData);
+  Future<HttpResponse<IReturn>> dataSource(@Body() DataSource varArgs);
 
   /// OBTENER DATOS PARA CREAR INSPECCION
   @POST('/Create')
