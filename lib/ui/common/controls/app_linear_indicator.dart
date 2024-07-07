@@ -1,13 +1,13 @@
 import 'package:eos_mobile/shared/shared_libs.dart';
 
-class AppLoadingIndicator extends StatelessWidget {
-  const AppLoadingIndicator({
+class AppLinearIndicator extends StatelessWidget {
+  const AppLinearIndicator({
     Key? key,
     this.color,
     this.value,
     this.width,
     this.height,
-    this.strokeWidth,
+    this.minHeight,
   }) : assert(value == null || (value >= 0 && value <= 1), 'El valor del progress debe estar entre 0 y 1'),
        super(key: key);
 
@@ -15,18 +15,19 @@ class AppLoadingIndicator extends StatelessWidget {
   final double? value;
   final double? width;
   final double? height;
-  final double? strokeWidth;
+  final double? minHeight;
 
   @override
   Widget build(BuildContext context) {
     final progress = (value == null || value! < .05) ? null : value;
     return SizedBox(
-      width   : width ?? 30,
-      height  : height ?? 30,
-      child   : CircularProgressIndicator(
-        color       : color ?? Theme.of(context).primaryColor,
-        value       : progress,
-        strokeWidth : strokeWidth ?? 3,
+      width   : width ?? double.infinity,
+      height  : height ?? 4.0,
+      child   : LinearProgressIndicator(
+        backgroundColor : color?.withOpacity(0.3) ?? Theme.of(context).primaryColor.withOpacity(0.3),
+        color           : color ?? Theme.of(context).primaryColor,
+        value           : progress,
+        minHeight       : minHeight ?? 4.0,
       ),
     );
   }

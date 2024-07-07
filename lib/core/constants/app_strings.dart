@@ -44,6 +44,7 @@ class AppStrings {
   static const String btnRetryText                          = 'Reintentar';
   static const String btnSaveText                           = 'Guardar';
   static const String btnSubmitText                         = 'Enviar';
+  static const String btnCreateUnidadText                   = 'Nueva unidad';
 
   // C
   static const String categoriaAppBarTitle                  = 'Configuración de categorías';
@@ -70,6 +71,9 @@ class AppStrings {
 
   // E
   static const String errorAlertTitle                       = 'Error';
+  static const String errorAlertWarningTitle                = 'Atención';
+  static const String errorAlertInvalidFormTitle            = 'Formulario';
+  static const String errorAlertInvalidFormMessage          = 'Por favor, revisa los campos del formulario';
   static const String emptyListSyncMessage                  = 'Intenta actualizar el listado para sincronizar los últimos cambios del servidor.';
   static const String emptyPageAppBarTitle                  = 'Página vacía';
   static const String errorPageNotFoundSemanticLabel        = 'Error 404';
@@ -93,6 +97,9 @@ class AppStrings {
   static const String errorBadResponseServerErrorMessage    = 'Error del servidor: {statusCode}; El servidor no ha podido responder a una solicitud aparentemente válida.';
   static const String errorBadResponseUnknownMessage        = 'Una respuesta con un código de estado que no se encuentra entre 100 y 600. Es una respuesta no estándar, posiblemente debida al software del servidor.';
 
+  static const String exitConfirmationDialogTitle           = '¿Estás seguro que deseas salir?';
+  static const String exitConfirmationDialogMessage         = 'Podrías perder la información que no se ha guardado. ¿Estás seguro de querer realizar esa acción?';
+
   // F
   static const String forgotPasswordAppBarTitle             = '¿Has olvidado tu contraseña?';
   static const String forgotPasswordBoxMessage              = 'Completa el formulario para restablecer su contraseña';
@@ -108,6 +115,12 @@ class AppStrings {
   static const String homeFourthModuleCardTitle             = 'Unidades';
 
   // I
+  static const String incompleteFormDataMessage             = 'Datos incompletos en el formulario';
+  static const String inputDateTimeSemanticClear            = 'Borrar fecha';
+
+  static const String inspeccionCreateAppBarTitle           = 'Nueva inspección';
+  static const String inspeccionCreateSuggestion            = 'Es necesario que realice la búsqueda de la unidad a inspeccionar antes de continuar.';
+
   static const String inspeccionMenuIndexPageSubtitle       = 'Muestra las inspecciones generales.';
   static const String inspeccionMenuIndexPageTitle          = 'Listado de inspecciones';
   static const String inspeccionMenuUnidadPageSubtitle      = 'Encuentra unidades con inspecciones recientes.';
@@ -131,9 +144,13 @@ class AppStrings {
   static const String logoutRedirectTitle                   = '¡Te has desconectado!';
   static const String logoutRedirectMessage                 = 'Has sido redirigido al inicio de sesión.';
 
+  // R
+  static const String refreshDataTooltip                    = 'Actualizar datos';
+
   // S
   static const String searchInputHintText                   = 'Buscar...';
   static const String searchInputSemanticClear              = 'Limpiar';
+  static const String searchInputTitleSuggestions           = 'Resultados';
 
   static const String settingsAppBarTitle                   = 'Configuración general';
   static const String settingsAutoUpdateTitle               = 'Actualizar automáticamente';
@@ -148,6 +165,8 @@ class AppStrings {
   static const String suggestionBoxTitle                    = 'Sugerencia';
 
   // U
+  static const String unidadCreateAppBarTitle               = 'Nueva unidad';
+
   static const String underConstructionTitle                = '¡Próximamente! \nGracias por tu paciencia 👍.';
 
   // W

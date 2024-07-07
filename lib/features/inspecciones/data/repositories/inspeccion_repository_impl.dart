@@ -58,7 +58,7 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
     }
   }
 
-  /// OBTENCIÓN DATOS DINAMICOS DE INSPECCIONES
+  /// OBTENCIÓN DE DATOS DINAMICOS DE INSPECCIONES
   @override
   Future<DataState<InspeccionDataSourceModel>> dataSource(DataSource objData) async {
     try {
@@ -94,7 +94,7 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
     }
   }
 
-  /// OBTENCIÓN DATOS PARA CREAR INSPECCION
+  /// OBTENCIÓN DE DATOS PARA CREAR INSPECCION
   @override
   Future<DataState<InspeccionCreateModel>> create() async {
     try {

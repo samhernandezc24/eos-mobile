@@ -1,9 +1,26 @@
 import 'dart:convert';
 
+import 'package:eos_mobile/core/data/catalogos/base.dart';
+import 'package:eos_mobile/core/data/catalogos/unidad_capacidad_medida.dart';
+import 'package:eos_mobile/core/data/catalogos/unidad_marca.dart';
+import 'package:eos_mobile/core/data/catalogos/unidad_placa_tipo.dart';
+import 'package:eos_mobile/core/data/catalogos/unidad_tipo.dart';
+
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_store_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/inspeccion/remote_inspeccion_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/unidad/remote_unidad_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/pages/configuracion/inspeccion_tipo/inspeccion_tipo_page.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+
+part '../../widgets/index/create/_create_form.dart';
+part '../../widgets/index/create/predictive/_search_input.dart';
+part '../../widgets/index/create/predictive/_search_input_eos.dart';
+part '../../widgets/index/unidad/_create_form.dart';
 
 class InspeccionIndexPage extends StatefulWidget {
   const InspeccionIndexPage({Key? key}) : super(key: key);
@@ -58,6 +75,10 @@ class _InspeccionIndexPageState extends State<InspeccionIndexPage> {
 
   void _handleSearchSubmitted(String query) {
     _searchTextController.text = query;
+  }
+
+  void _handleCreatePressed(BuildContext context) {
+    Navigator.push<void>(context, AppModalRoute(child: const _CreateInspeccionForm()));
   }
 
   // METHODS
@@ -184,7 +205,7 @@ class _InspeccionIndexPageState extends State<InspeccionIndexPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: () => _handleCreatePressed(context),
         tooltip: 'Nueva inspección',
         child: const Icon(Icons.add),
       ),

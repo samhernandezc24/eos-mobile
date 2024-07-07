@@ -51,12 +51,16 @@ export 'package:eos_mobile/styles/app_styles.dart';
 /// =========================================================
 /// UI WIDGET (COMPONENTS)
 /// =========================================================
+export 'package:eos_mobile/ui/common/app_icons.dart';
+export 'package:eos_mobile/ui/common/controls/app_linear_indicator.dart';
 export 'package:eos_mobile/ui/common/controls/app_loading_indicator.dart';
 export 'package:eos_mobile/ui/common/controls/buttons.dart';
 export 'package:eos_mobile/ui/common/controls/circle_buttons.dart';
+export 'package:eos_mobile/ui/common/controls/labeled_datetime_form_field.dart';
 export 'package:eos_mobile/ui/common/controls/labeled_dropdown_form_field.dart';
 export 'package:eos_mobile/ui/common/controls/labeled_password_form_field.dart';
 export 'package:eos_mobile/ui/common/controls/labeled_text_form_field.dart';
+export 'package:eos_mobile/ui/common/controls/labeled_textarea_form_field.dart';
 export 'package:eos_mobile/ui/common/controls/server_error_dialog.dart';
 export 'package:eos_mobile/ui/common/controls/server_failed_message.dart';
 export 'package:eos_mobile/ui/common/data_source/search_input.dart';
@@ -64,6 +68,7 @@ export 'package:eos_mobile/ui/common/empty_list_message.dart';
 export 'package:eos_mobile/ui/common/eos_mobile_logo.dart';
 export 'package:eos_mobile/ui/common/error_server_message.dart';
 export 'package:eos_mobile/ui/common/modals/app_modal_route.dart';
+export 'package:eos_mobile/ui/common/predictive/predictive_search_form_field.dart';
 export 'package:eos_mobile/ui/common/static_text_scale.dart';
 export 'package:eos_mobile/ui/common/themed_text.dart';
 

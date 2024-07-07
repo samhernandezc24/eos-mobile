@@ -34,4 +34,7 @@ class ApiEndpoints {
 
   /// InspeccionesTipos
   static const String inspeccionesTipos = '$_apiBaseUrl/api/Inspecciones/Tipos';
+
+  /// Unidades
+  static const String unidades = '$_apiBaseUrl/api/Inspecciones/Unidades';
 }

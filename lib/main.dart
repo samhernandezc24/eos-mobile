@@ -3,7 +3,9 @@ import 'package:eos_mobile/features/auth/presentation/bloc/remote/remote_auth_bl
 import 'package:eos_mobile/features/auth/presentation/cubit/local/local_auth_cubit.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/categoria/remote_categoria_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/categoria_item/remote_categoria_item_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/inspeccion/remote_inspeccion_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/inspeccion_tipo/remote_inspeccion_tipo_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/unidad/remote_unidad_bloc.dart';
 import 'package:eos_mobile/features/settings/presentation/cubit/local/local_settings_cubit.dart';
 import 'package:eos_mobile/injection_container.dart';
 import 'package:eos_mobile/shared/shared_libs.dart';
@@ -39,6 +41,8 @@ class MainApp extends StatelessWidget with GetItMixin {
         BlocProvider<RemoteInspeccionTipoBloc>(create: (context) => sl<RemoteInspeccionTipoBloc>()),
         BlocProvider<RemoteCategoriaBloc>(create: (context) => sl<RemoteCategoriaBloc>()),
         BlocProvider<RemoteCategoriaItemBloc>(create: (context) => sl<RemoteCategoriaItemBloc>()),
+        BlocProvider<RemoteInspeccionBloc>(create: (context) => sl<RemoteInspeccionBloc>()),
+        BlocProvider<RemoteUnidadBloc>(create: (context) => sl<RemoteUnidadBloc>()),
         BlocProvider<LocalAuthCubit>(create: (context) => sl<LocalAuthCubit>()),
         BlocProvider<LocalSettingsCubit>(create: (context) => sl<LocalSettingsCubit>()),
       ],
