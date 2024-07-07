@@ -34,6 +34,9 @@ class _CreateInspeccionUnidadFormState extends State<_CreateInspeccionUnidadForm
   ];
 
   // PROPERTIES
+  bool _isLoading       = false;
+  bool _hasServerError  = false;
+
   Base? _selectUnidadBase;
   UnidadCapacidadMedida? _selectUnidadCapacidadMedida;
   UnidadMarca? _selectUnidadMarca;
@@ -77,7 +80,7 @@ class _CreateInspeccionUnidadFormState extends State<_CreateInspeccionUnidadForm
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(AppStrings.exitConfirmationDialogTitle, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600, height: 1.3)),
+          title: Text(AppStrings.exitConfirmationDialogTitle, style: $styles.textStyles.title1.copyWith(fontWeight: FontWeight.w600)),
           content: Text(AppStrings.exitConfirmationDialogMessage, style: $styles.textStyles.body.copyWith(height: 1.3)),
           actions: <Widget>[
             TextButton(
@@ -176,9 +179,27 @@ class _CreateInspeccionUnidadFormState extends State<_CreateInspeccionUnidadForm
         appBar: AppBar(title: Text(AppStrings.unidadCreateAppBarTitle, style: $styles.textStyles.h3)),
         body: BlocConsumer<RemoteUnidadBloc, RemoteUnidadState>(
           listener: (BuildContext context, RemoteUnidadState state) {
+            // LOADING
+            if (state is RemoteUnidadCreateLoading) {
+              setState(() {
+                _isLoading = true;
+              });
+            }
+
+            // ERROR
+            if (state is RemoteUnidadServerFailedMessageCreate || state is RemoteUnidadServerExceptionMessageCreate) {
+              setState(() {
+                _hasServerError = true;
+                _isLoading      = false;
+              });
+            }
+
             // SUCCESS
             if (state is RemoteUnidadCreate) {
               setState(() {
+                _hasServerError = false;
+                _isLoading      = false;
+
                 // LISTAS DE COMBOBOX
                 lstBases                      = state.objResponse?.bases                        ?? [];
                 lstUnidadesCapacidadesMedidas = state.objResponse?.unidadesCapacidadesMedidas   ?? [];
@@ -439,7 +460,7 @@ class _CreateInspeccionUnidadFormState extends State<_CreateInspeccionUnidadForm
                 );
               }
               return FilledButton(
-                onPressed : _handleStorePressed,
+                onPressed : !_hasServerError && !_isLoading ? _handleStorePressed : null,
                 child     : Text(AppStrings.btnSaveText, style: $styles.textStyles.button),
               );
             },

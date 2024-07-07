@@ -12,7 +12,11 @@ class ServerException implements Exception {
       case DioExceptionType.badCertificate:
         message = AppStrings.errorBadCertificateMessage;
       case DioExceptionType.badResponse:
-        message = _badResponseExceptionMessage(dioException.response?.statusCode, dioException.response?.data.toString());
+        if (dioException.response != null && dioException.response?.statusCode != null && dioException.response?.data != null) {
+          message = dioException.response?.data.toString() ?? '';
+        } else {
+          message = _badResponseExceptionMessage(dioException.response?.statusCode ?? 0);
+        }
       case DioExceptionType.cancel:
         message = AppStrings.errorServerCancelMessage;
       case DioExceptionType.connectionError:
@@ -24,10 +28,10 @@ class ServerException implements Exception {
 
   late String message;
 
-  String _badResponseExceptionMessage(int? statusCode, String? serverResponse) {
-    if (statusCode == null) { return AppStrings.errorGenericMessage; }
-
-    if (serverResponse != null && serverResponse.isNotEmpty) { return serverResponse; }
+  String _badResponseExceptionMessage(int? statusCode) {
+    if (statusCode == null) {
+      return AppStrings.errorGenericMessage;
+    }
 
     final String message;
 

@@ -44,6 +44,9 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
   // PROPERTIES
   InspeccionUnidadSelectOption _inspeccionUnidadSelectOption = InspeccionUnidadSelectOption.inventario;
 
+  bool _isLoading       = false;
+  bool _hasServerError  = false;
+
   InspeccionTipoEntity? _selectInspeccionTipo;
   UnidadCapacidadMedida? _selectUnidadCapacidadMedida;
 
@@ -109,7 +112,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
     Navigator.push<void>(
       context,
       AppModalRoute(
-        child: _CreateInspeccionUnidadForm(),
+        child: const _CreateInspeccionUnidadForm(),
       ),
     );
   }
@@ -486,12 +489,30 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
       appBar: AppBar(title: Text(AppStrings.inspeccionCreateAppBarTitle, style: $styles.textStyles.h3)),
       body: BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
         listener: (BuildContext context, RemoteInspeccionState state) {
+          // LOADING
+          if (state is RemoteInspeccionCreateLoading) {
+            setState(() {
+              _isLoading = true;
+            });
+          }
+
           // SUCCESS
           if (state is RemoteInspeccionCreate) {
             setState(() {
+              _hasServerError = false;
+              _isLoading      = false;
+
               // LISTAS DE COMBOBOX
               lstInspeccionesTipos            = state.objResponse?.inspeccionesTipos            ?? [];
               lstUnidadesCapacidadesMedidas   = state.objResponse?.unidadesCapacidadesMedidas   ?? [];
+            });
+          }
+
+          // ERROR
+          if (state is RemoteInspeccionServerFailedMessageCreate || state is RemoteInspeccionServerExceptionMessageCreate) {
+            setState(() {
+              _hasServerError = true;
+              _isLoading      = false;
             });
           }
         },
@@ -502,6 +523,13 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
           }
 
           // ERROR
+          if (state is RemoteInspeccionServerFailedMessageCreate) {
+            return ErrorServerMessage(message: state.error, onPressed: _handleRefreshPressed);
+          }
+
+          if (state is RemoteInspeccionServerExceptionMessageCreate) {
+            return ErrorServerMessage(message: state.error?.message, onPressed: _handleRefreshPressed);
+          }
 
           // SUCCESS
           if (state is RemoteInspeccionCreate) {
@@ -565,7 +593,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
             icon      : const Icon(Icons.refresh), tooltip: AppStrings.refreshDataTooltip,
           ),
           FilledButton(
-            onPressed : _handleStorePressed,
+            onPressed : !_hasServerError && !_isLoading ? _handleStorePressed : null,
             child     : Text(AppStrings.btnSaveText, style: $styles.textStyles.button),
           ),
         ],

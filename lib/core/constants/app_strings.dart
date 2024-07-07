@@ -68,6 +68,8 @@ class AppStrings {
   // D
   static const String defaultAppName                        = 'EOS Mobile';
   static const String defaultPageTitle                      = 'Página';
+  static const String deleteElementTooltip                  = 'Eliminar';
+  static const String duplicateElementTooltip               = 'Duplicar elemento';
 
   // E
   static const String errorAlertTitle                       = 'Error';

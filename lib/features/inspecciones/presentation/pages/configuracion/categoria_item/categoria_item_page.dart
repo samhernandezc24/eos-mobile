@@ -2,7 +2,10 @@ import 'package:eos_mobile/core/data/catalogos/formulario_tipo.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria/categoria_id_param_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_params_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_store_duplicate_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_store_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_update_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/categoria_item/remote_categoria_item_bloc.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
@@ -27,7 +30,8 @@ class _InspeccionConfiguracionCategoriaItemPage extends State<InspeccionConfigur
   List<FormularioTipo> lstFormulariosTipos      = [];
 
   // PROPERTIES
-  bool _isLoading = false;
+  bool _isLoading       = false;
+  bool _hasServerError  = false;
 
   // STATE
   @override
@@ -47,6 +51,40 @@ class _InspeccionConfiguracionCategoriaItemPage extends State<InspeccionConfigur
   // EVENTS
   void _handleAddPressed() {
     _store();
+  }
+
+  Future<void> _handleDeletePressed(BuildContext context, CategoriaItemEntity objCategoriaItem, CategoriaItemParamsEntity objPost) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title   : Text(AppStrings.categoriaItemDeleteAlertTitle, style: $styles.textStyles.h3.copyWith(fontSize: 18)),
+          content : RichText(
+            text: TextSpan(
+              style     : $styles.textStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, height: 1.5),
+              children  : <InlineSpan>[
+                const TextSpan(text: AppStrings.categoriaItemDeleteAlertFirstText),
+                TextSpan(
+                  text: '"${objCategoriaItem.name}"\n',
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                const TextSpan(text: AppStrings.categoriaItemDeleteAlertSecondText),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed : () => Navigator.pop(context, AppStrings.btnCancelText),
+              child     : Text(AppStrings.btnCancelText, style: $styles.textStyles.button),
+            ),
+            TextButton(
+              onPressed : () => context.read<RemoteCategoriaItemBloc>().add(DeleteCategoriaItem(objPost)),
+              child     : Text(AppStrings.btnDeleteText, style: $styles.textStyles.button.copyWith(color: Theme.of(context).colorScheme.error)),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _scrollToEnd() {
@@ -107,6 +145,14 @@ class _InspeccionConfiguracionCategoriaItemPage extends State<InspeccionConfigur
     );
 
     context.read<RemoteCategoriaItemBloc>().add(StoreCategoriaItem(objPost));
+  }
+
+  Future<void> _storeDuplicate(CategoriaItemStoreDuplicateReqEntity objPost) async {
+    context.read<RemoteCategoriaItemBloc>().add(StoreDuplicateCategoriaItem(objPost));
+  }
+
+  Future<void> _update(CategoriaItemUpdateReqEntity objPost) async {
+    context.read<RemoteCategoriaItemBloc>().add(UpdateCategoriaItem(objPost));
   }
 
   String _generarNombrePregunta() {
@@ -176,10 +222,89 @@ class _InspeccionConfiguracionCategoriaItemPage extends State<InspeccionConfigur
                     });
                   }
 
+                  if (state is RemoteCategoriaItemStoreDuplicateLoading) {
+                    _showProgressDialog(context);
+                  }
+
+                  if (state is RemoteCategoriaItemUpdateLoading) {
+                    _showProgressDialog(context);
+                  }
+
+                  if (state is RemoteCategoriaItemDeleteLoading) {
+                    _showProgressDialog(context);
+                  }
+
+                  // ERROR
+                  if (state is RemoteCategoriaItemServerFailedMessageList || state is RemoteCategoriaItemServerExceptionMessageList) {
+                    setState(() {
+                      _hasServerError = true;
+                      _isLoading      = false;
+                    });
+                  }
+
+                  if (state is RemoteCategoriaItemServerFailedMessageStoreDuplicate) {
+                    Navigator.of(context).pop();
+
+                    _showServerErrorDialog(context, state.error);
+
+                    // Actualizamos la lista.
+                    _list();
+                  }
+
+                  if (state is RemoteCategoriaItemServerExceptionMessageStoreDuplicate) {
+                    Navigator.of(context).pop();
+
+                    _showServerErrorDialog(context, state.error?.message);
+
+                    // Actualizamos la lista.
+                    _list();
+                  }
+
+                  if (state is RemoteCategoriaItemServerFailedMessageUpdate) {
+                    Navigator.of(context).pop();
+
+                    _showServerErrorDialog(context, state.error);
+
+                    // Actualizamos la lista.
+                    _list();
+                  }
+
+                  if (state is RemoteCategoriaItemServerExceptionMessageUpdate) {
+                    Navigator.of(context).pop();
+
+                    _showServerErrorDialog(context, state.error?.message);
+
+                    // Actualizamos la lista.
+                    _list();
+                  }
+
+                  if (state is RemoteCategoriaItemServerFailedMessageDelete) {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+
+                    _showServerErrorDialog(context, state.error);
+
+                    // Actualizamos la lista.
+                    _list();
+                  }
+
+                  if (state is RemoteCategoriaItemServerExceptionMessageDelete) {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+
+                    _showServerErrorDialog(context, state.error?.message);
+
+                    // Actualizamos la lista.
+                    _list();
+                  }
+
                   // SUCCESS
                   if (state is RemoteCategoriaItemList) {
                     setState(() {
-                      _isLoading          = false;
+                      _hasServerError   = false;
+                      _isLoading        = false;
+
+                      // LISTAS DE COMBOBOX
                       lstCategoriasItems  = state.objResponse?.categoriasItems  ?? [];
                       lstFormulariosTipos = state.objResponse?.formulariosTipos ?? [];
                     });
@@ -187,9 +312,89 @@ class _InspeccionConfiguracionCategoriaItemPage extends State<InspeccionConfigur
                     _scrollToEnd();
                   }
 
-                  if (state is RemoteCategoriaItemStore) {
-                    // Actualizar listado
+                  if (state is RemoteCategoriaItemStoreDuplicate) {
+                    Navigator.of(context).pop(); // Cerramos el dialog
+
+                    ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          state.objResponse?.message ?? 'Pregunta duplicada',
+                          style     : $styles.textStyles.bodySmall.copyWith(color: $styles.colors.white),
+                          softWrap  : true,
+                        ),
+                        backgroundColor : $styles.colors.success,
+                        elevation       : 0,
+                        behavior        : SnackBarBehavior.fixed,
+                      ),
+                    );
+
+                    // Actualizamos la lista.
                     _list();
+
+                    setState(() {
+                      _isLoading          = false;
+                    });
+
+                    _scrollToEnd();
+                  }
+
+                  if (state is RemoteCategoriaItemUpdate) {
+                    Navigator.of(context).pop(); // Cerramos el dialog
+
+                    ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          state.objResponse?.message ?? 'Actualizado',
+                          style     : $styles.textStyles.bodySmall.copyWith(color: $styles.colors.white),
+                          softWrap  : true,
+                        ),
+                        backgroundColor : $styles.colors.success,
+                        elevation       : 0,
+                        behavior        : SnackBarBehavior.fixed,
+                      ),
+                    );
+
+                    // Actualizamos la lista.
+                    _list();
+
+                    setState(() {
+                      _isLoading          = false;
+                    });
+
+                    _scrollToEnd();
+                  }
+
+                  if (state is RemoteCategoriaItemDelete) {
+                    Navigator.of(context).pop(); // Cerramos el dialog
+                    Navigator.of(context).pop(); // Cerramos el dialog
+
+                    ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          state.objResponse?.message ?? 'Eliminado',
+                          style     : $styles.textStyles.bodySmall.copyWith(color: $styles.colors.white),
+                          softWrap  : true,
+                        ),
+                        backgroundColor : $styles.colors.success,
+                        elevation       : 0,
+                        behavior        : SnackBarBehavior.fixed,
+                      ),
+                    );
+
+                    // Actualizamos la lista.
+                    _list();
+
+                    setState(() {
+                      _isLoading          = false;
+                    });
+
+                    _scrollToEnd();
                   }
                 },
                 builder: (BuildContext context, RemoteCategoriaItemState state) {
@@ -221,9 +426,14 @@ class _InspeccionConfiguracionCategoriaItemPage extends State<InspeccionConfigur
                       controller  : _scrollController,
                       itemCount   : lstCategoriasItems.length,
                       itemBuilder : (BuildContext context, int index) {
+                        final CategoriaItemEntity objCategoriaItem = lstCategoriasItems[index];
                         return _ListCategoriaItemCard(
-                          objCategoriaItem  : lstCategoriasItems[index],
-                          formulariosTipos  : lstFormulariosTipos,
+                          objCategoriaItem    : objCategoriaItem,
+                          formulariosTipos    : lstFormulariosTipos,
+                          onDuplicatePressed  : (CategoriaItemStoreDuplicateReqEntity objPost)      => _storeDuplicate(objPost),
+                          onUpdatePressed     : (CategoriaItemUpdateReqEntity objPost)              => _update(objPost),
+                          onDeletePressed     : (CategoriaItemParamsEntity objCategoriaItemParams)  => _handleDeletePressed(context, objCategoriaItem, objCategoriaItemParams),
+                          orden               : lstCategoriasItems.length + 1,
                         );
                       },
                     );
@@ -237,7 +447,7 @@ class _InspeccionConfiguracionCategoriaItemPage extends State<InspeccionConfigur
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-      floatingActionButton: _buildFloatingActionButton(context),
+      floatingActionButton: !_hasServerError && !_isLoading ? _buildFloatingActionButton(context) : null,
     );
   }
 
