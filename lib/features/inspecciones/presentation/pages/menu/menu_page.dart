@@ -26,14 +26,6 @@ class InspeccionMenuPage extends StatelessWidget {
             trailing  : const Icon(Icons.keyboard_arrow_right),
             onTap     : () => context.go('/home/inspecciones/search-unidad'),
           ),
-
-          // PRUEBAS DE GUARDADO DE FOTOGRAFIAS
-          ListTile(
-            leading   : const Icon(Icons.photo_library),
-            title     : const Text('Fotografias'),
-            trailing  : const Icon(Icons.keyboard_arrow_right),
-            onTap     : () => context.go('/home/inspecciones/fotos'),
-          ),
         ],
       ),
     );

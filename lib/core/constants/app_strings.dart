@@ -41,6 +41,7 @@ class AppStrings {
   static const String btnLoadMoreText                       = 'Cargar más';
   static const String btnLoginText                          = 'Iniciar sesión';
   static const String btnLogoutText                         = 'Cerrar sesión';
+  static const String btnPreviousText                       = 'Anterior';
   static const String btnNextText                           = 'Siguiente';
   static const String btnRefreshText                        = 'Actualizar';
   static const String btnRetryText                          = 'Reintentar';

@@ -1,37 +1,40 @@
-import 'dart:io';
+part of '../../../../pages/index/index_page.dart';
 
-import 'package:eos_mobile/features/inspecciones/presentation/pages/fotos/foto_tile.dart';
-import 'package:eos_mobile/shared/shared_libs.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-
-/// Staggered Masonry styled grid for displaying two columns of different aspect-ratio images.
-class FotosInspeccionFicheroGrid extends StatefulWidget {
-  const FotosInspeccionFicheroGrid({
+class _ItemInspeccionFicheroGrid extends StatefulWidget {
+  const _ItemInspeccionFicheroGrid({
     required this.files,
+    required this.onImagePressed,
+    required this.onDeletePressed,
     required this.isUploading,
     Key? key,
   }) : super(key: key);
 
   final List<File> files;
+  final void Function(List<File> files, int index) onImagePressed;
+  final void Function(int index) onDeletePressed;
   final bool isUploading;
 
   @override
-  State<FotosInspeccionFicheroGrid> createState() => FotosInspeccionFicheroGridState();
+  State<_ItemInspeccionFicheroGrid> createState() => _ItemInspeccionFicheroGridState();
 }
 
-class FotosInspeccionFicheroGridState extends State<FotosInspeccionFicheroGrid> {
+class _ItemInspeccionFicheroGridState extends State<_ItemInspeccionFicheroGrid> {
+  // CONTROLLERS
   late ScrollController _controller;
 
-  double _prevVel = -1;
+  // PROPERTIES
+  double _prevVelocity = -1;
 
+  // EVENTS
   void _handleResultsScrolled() {
-    // Hide the keyboard if the list is scrolled manually by the pointer, ignoring velocity based scroll changes like deceleration or over-scroll bounce
-    // ignore: INVALID_USE_OF_PROTECTED_MEMBER, INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-    final vel = _controller.position.activity?.velocity;
-    if (vel == 0 && _prevVel == 0) {
+    // Ocultar el teclado si la lista se desplaza manualmente por el puntero, ignorando los cambios de desplazamiento
+    // basados en la velocidad, como la desaceleración o el bounce por sobredesplazamiento.
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+    final velocity = _controller.position.activity?.velocity;
+    if (velocity == 0 && _prevVelocity == 0) {
       FocusManager.instance.primaryFocus?.unfocus();
     }
-    _prevVel = vel ?? _prevVel;
+    _prevVelocity = velocity ?? _prevVelocity;
   }
 
   @override
@@ -52,10 +55,13 @@ class FotosInspeccionFicheroGridState extends State<FotosInspeccionFicheroGrid> 
                 crossAxisSpacing  : $styles.insets.sm,
                 childCount        : widget.files.length,
                 itemBuilder       : (BuildContext context, int index) =>
-                    FotoInspeccionFicheroTile(
+                    _ItemInspeccionFicheroTile(
                       objFile         : widget.files[index],
-                      isUploading     : widget.isUploading && index == 0,
+                      files           : widget.files,
                       index           : index,
+                      onImagePressed  : widget.onImagePressed,
+                      onDeletePressed : widget.onDeletePressed,
+                      isUploading     : widget.isUploading && index == 0,
                     ),
               ),
             ),

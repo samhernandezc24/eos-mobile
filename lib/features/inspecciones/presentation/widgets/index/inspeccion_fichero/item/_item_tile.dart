@@ -1,17 +1,21 @@
-import 'dart:io';
+part of '../../../../pages/index/index_page.dart';
 
-import 'package:eos_mobile/shared/shared_libs.dart';
-
-class FotoInspeccionFicheroTile extends StatelessWidget {
-  const FotoInspeccionFicheroTile({
+class _ItemInspeccionFicheroTile extends StatelessWidget {
+  const _ItemInspeccionFicheroTile({
     required this.objFile,
+    required this.files,
     required this.index,
+    required this.onImagePressed,
+    required this.onDeletePressed,
     required this.isUploading,
     Key? key,
   }) : super(key: key);
 
   final File objFile;
+  final List<File> files;
   final int index;
+  final void Function(List<File> files, int index) onImagePressed;
+  final void Function(int index) onDeletePressed;
   final bool isUploading;
 
   @override
@@ -30,7 +34,7 @@ class FotoInspeccionFicheroTile extends StatelessWidget {
         child: Stack(
           children: <Widget>[
             AppButton.basic(
-              onPressed     : () {},
+              onPressed     : () => onImagePressed(files, index),
               semanticLabel : 'Fotografía $index',
               child: Container(
                 color   : Colors.grey,
@@ -52,7 +56,7 @@ class FotoInspeccionFicheroTile extends StatelessWidget {
               right : 8,
               child : IconButton(
                 color     : Colors.red[400],
-                onPressed : () {},
+                onPressed : () => onDeletePressed(index),
                 icon      : const Icon(Icons.delete),
                 tooltip   : 'Eliminar',
               ),

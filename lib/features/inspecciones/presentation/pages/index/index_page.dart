@@ -1,13 +1,21 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:eos_mobile/core/constants/api_endpoints.dart';
 import 'package:eos_mobile/features/data_source_persistence/presentation/cubit/remote/remote_data_source_persistence_cubit.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/inspeccion_fichero/inspeccion_fichero_id_param_model.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_param_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_categoria/inspeccion_categoria_store_req_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_fichero/inspeccion_fichero_id_param_entity.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_fichero/inspeccion_fichero_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo/inspeccion_tipo_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_predictive_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/inspeccion/remote_inspeccion_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/inspeccion_categoria/remote_inspeccion_categoria_bloc.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/inspeccion_fichero/remote_inspeccion_fichero_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/unidad/remote_unidad_bloc.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/pages/configuracion/inspeccion_tipo/inspeccion_tipo_page.dart';
 import 'package:eos_mobile/features/unidades/domain/entities/unidad/unidad_eos_predictive_entity.dart';
@@ -15,11 +23,21 @@ import 'package:eos_mobile/features/unidades/presentation/bloc/remote/unidad/rem
 
 import 'package:eos_mobile/shared/shared_libs.dart';
 import 'package:eos_mobile/shared/shared_models.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 
 part '../../widgets/index/create/_create_form.dart';
 part '../../widgets/index/checklist/_checklist_evaluacion.dart';
 part '../../widgets/index/checklist/_checklist_fotos.dart';
+part '../../widgets/index/inspeccion_fichero/create/_create_form.dart';
+part '../../widgets/index/inspeccion_fichero/item/_item_grid.dart';
+part '../../widgets/index/inspeccion_fichero/item/_item_tile.dart';
+part '../../widgets/index/checklist/ficheros/_fichero_details.dart';
+part '../../widgets/index/checklist/ficheros/_fichero_tile.dart';
+part '../../widgets/index/checklist/ficheros/_ficheros_grid.dart';
 part '../../widgets/index/checklist/pregunta/_checklist_pregunta_tile.dart';
 part '../../widgets/index/create/predictive/_search_input.dart';
 part '../../widgets/index/create/predictive/_search_input_eos.dart';
