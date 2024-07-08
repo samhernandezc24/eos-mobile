@@ -1,9 +1,18 @@
 part of '../../../pages/index/index_page.dart';
 
 class _ResultsInspeccionList extends StatefulWidget {
-  const _ResultsInspeccionList({required this.results, Key? key}) : super(key: key);
+  const _ResultsInspeccionList({
+    required this.results,
+    Key? key,
+    this.onDetailsPressed,
+    this.onCancelPressed,
+    this.onComplete,
+  }) : super(key: key);
 
   final List<InspeccionEntity> results;
+  final void Function(BuildContext, InspeccionEntity)? onDetailsPressed;
+  final void Function(BuildContext, InspeccionIdParamEntity, InspeccionEntity)? onCancelPressed;
+  final VoidCallback? onComplete;
 
   @override
   State<_ResultsInspeccionList> createState() => _ResultsInspeccionListState();
@@ -45,7 +54,9 @@ class _ResultsInspeccionListState extends State<_ResultsInspeccionList> {
                   childCount: widget.results.length,
                   (BuildContext context, int index) {
                     return _ResultInspeccionTile(
-                      objInspeccion: widget.results[index],
+                      objInspeccion     : widget.results[index],
+                      onDetailsPressed  : widget.onDetailsPressed,
+                      onCancelPressed   : widget.onCancelPressed,
                     );
                   },
                 ),

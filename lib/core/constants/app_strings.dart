@@ -123,6 +123,10 @@ class AppStrings {
   static const String inspeccionCreateAppBarTitle           = 'Nueva inspección';
   static const String inspeccionCreateSuggestion            = 'Es necesario que realice la búsqueda de la unidad a inspeccionar antes de continuar.';
 
+  static const String inspeccionCancelAlertTitle            = '¿Cancelar inspección?';
+  static const String inspeccionCancelAlertFirstText        = 'Se cancelará la inspección con folio ';
+  static const String inspeccionCancelAlertSecondText       = '¿Estás seguro de querer realizar esa acción?';
+
   static const String inspeccionDataSourceEmptyListTitle    = 'No se encontraron resultados';
   static const String inspeccionDataSourceEmptyListMessage  = 'Lo sentimos, pero no hemos podido encontrar ningún resultado.';
 
@@ -162,6 +166,7 @@ class AppStrings {
   static const String searchInputTitleSuggestions           = 'Resultados';
   static const String searchFiltersModalBottomTitle         = 'Buscar resultados en:';
   static const String searchFiltersTooltip                  = 'Buscar resultados en...';
+  static const String sortModalBottomTitle                  = 'Ordenar por:';
 
   static const String settingsAppBarTitle                   = 'Configuración general';
   static const String settingsAutoUpdateTitle               = 'Actualizar automáticamente';

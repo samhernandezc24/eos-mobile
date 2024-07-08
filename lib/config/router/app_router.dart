@@ -78,7 +78,7 @@ final appRouter = GoRouter(
                     AppRoute(
                       'index',
                       'home.inspecciones.index',
-                      (_) => const InspeccionIndexPage(),
+                      (_) => InspeccionIndexPage(),
                       parentKey: _rootNavigatorKey,
                       useFade: true,
                     ),

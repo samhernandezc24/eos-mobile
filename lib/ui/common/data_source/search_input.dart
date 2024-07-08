@@ -6,11 +6,13 @@ class SearchInputFormField extends StatelessWidget {
     required this.onSubmit,
     Key? key,
     this.onSearchFiltersPressed,
+    this.hasServerError,
   }) : super(key: key);
 
   final TextEditingController controller;
   final void Function(String) onSubmit;
   final void Function()? onSearchFiltersPressed;
+  final bool? hasServerError;
 
   // EVENTS
   void _handleSearchFiltersPressed() {
@@ -38,7 +40,7 @@ class SearchInputFormField extends StatelessWidget {
           Gap($styles.insets.xs * 1.5),
 
           IconButton(
-            onPressed     : _handleSearchFiltersPressed,
+            onPressed     : hasServerError ?? false ? null : _handleSearchFiltersPressed,
             visualDensity : VisualDensity.compact,
             icon          : const Icon(Icons.search),
             tooltip       : AppStrings.searchFiltersTooltip,
@@ -51,6 +53,7 @@ class SearchInputFormField extends StatelessWidget {
               style             : TextStyle(color: Theme.of(context).colorScheme.onSurface),
               textAlignVertical : TextAlignVertical.top,
               textInputAction   : TextInputAction.search,
+              readOnly          : hasServerError ?? false,
               decoration        : InputDecoration(
                 isDense         : true,
                 contentPadding  : EdgeInsets.all($styles.insets.xs),

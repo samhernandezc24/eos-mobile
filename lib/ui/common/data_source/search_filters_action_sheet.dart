@@ -1,5 +1,5 @@
-import 'package:eos_mobile/core/data/data_source/search_filter.dart';
 import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/shared/shared_models.dart';
 
 class SearchFiltersActionSheet extends StatefulWidget {
   const SearchFiltersActionSheet({

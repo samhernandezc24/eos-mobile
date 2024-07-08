@@ -6,11 +6,13 @@ class _ResultInspeccionTile extends StatelessWidget {
     this.objInspeccion,
     this.onDetailsPressed,
     this.onCancelPressed,
+    this.onComplete,
   }) : super(key: key);
 
   final InspeccionEntity? objInspeccion;
-  final void Function(InspeccionEntity)? onDetailsPressed;
-  final void Function(InspeccionIdParamEntity)? onCancelPressed;
+  final void Function(BuildContext, InspeccionEntity)? onDetailsPressed;
+  final void Function(BuildContext, InspeccionIdParamEntity, InspeccionEntity)? onCancelPressed;
+  final VoidCallback? onComplete;
 
   // EVENTS
   void _handleMenuSelection(BuildContext context, InspeccionMenu item) {
@@ -18,16 +20,20 @@ class _ResultInspeccionTile extends StatelessWidget {
       case InspeccionMenu.details:
         _handleDetailsPressed(context, objInspeccion!);
       case InspeccionMenu.cancel:
-        _handleCancelPressed(InspeccionIdParamEntity(idInspeccion: objInspeccion!.idInspeccion));
+        _handleCancelPressed(
+          context,
+          InspeccionIdParamEntity(idInspeccion: objInspeccion!.idInspeccion),
+          objInspeccion!,
+        );
     }
   }
 
   void _handleDetailsPressed(BuildContext context, InspeccionEntity objInspeccion) {
-    if (onDetailsPressed != null) { return onDetailsPressed!(objInspeccion); }
+    if (onDetailsPressed != null) { return onDetailsPressed!(context, objInspeccion); }
   }
 
-  void _handleCancelPressed(InspeccionIdParamEntity objData) {
-    if (onCancelPressed != null) { return onCancelPressed!(objData); }
+  void _handleCancelPressed(BuildContext context, InspeccionIdParamEntity objData, InspeccionEntity objInspeccion) {
+    if (onCancelPressed != null) { return onCancelPressed!(context, objData, objInspeccion); }
   }
 
   // METHODS
@@ -284,7 +290,7 @@ class _ResultInspeccionTile extends StatelessWidget {
                 Icon(getEstatusIcon(), color: getTextColor()),
                 Gap($styles.insets.xxs),
                 Text(
-                  objInspeccion.inspeccionEstatusName.capitalize,
+                  objInspeccion.inspeccionEstatusName.toProperCase(),
                   style: $styles.textStyles.bodySmall.copyWith(fontSize: 13, height: 1.3),
                   softWrap: true,
                   textAlign: TextAlign.center,
