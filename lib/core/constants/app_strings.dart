@@ -144,6 +144,10 @@ class AppStrings {
   static const String inspeccionTipoDeleteAlertFirstText    = 'Se eliminará el tipo de inspección ';
   static const String inspeccionTipoDeleteAlertSecondText   = 'con el código {codigo}. \n¿Estás seguro de querer realizar esa acción?';
 
+  static const String inspeccionPhotoEmptyListTitle         = 'Aún no hay fotografías';
+  static const String inspeccionPhotoEmptyListMessage       = 'Captura las evidencias fotográficas de todas las áreas importantes de la unidad para su inspección.';
+  static const String inspeccionPhotoAddEmptyListMessage    = 'Intenta tomar fotografías dando clic en el ícono de la cámara o selecciona de la galería.';
+
   // L
   static const String logoutAlertDialogTitle                = '¿Salir de tu cuenta?';
   static const String logoutRedirectTitle                   = '¡Te has desconectado!';

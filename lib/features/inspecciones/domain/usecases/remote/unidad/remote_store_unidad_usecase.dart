@@ -2,6 +2,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_s
 import 'package:eos_mobile/features/inspecciones/domain/repositories/unidad_repository.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/shared/shared_models.dart';
 
 class RemoteStoreUnidadUseCase implements UseCase<DataState<IReturn>, UnidadStoreReqEntity> {
   RemoteStoreUnidadUseCase(this._unidadRepository);

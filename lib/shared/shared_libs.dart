@@ -25,7 +25,6 @@ export 'package:eos_mobile/core/constants/app_strings.dart';
 export 'package:eos_mobile/core/constants/assets.dart';
 export 'package:eos_mobile/core/constants/data_source_manager.dart';
 export 'package:eos_mobile/core/constants/globals.dart';
-export 'package:eos_mobile/core/data/server/ireturn.dart';
 export 'package:eos_mobile/core/extensions/alignments_extension.dart';
 export 'package:eos_mobile/core/extensions/sized_context_extension.dart';
 export 'package:eos_mobile/core/network/data_state.dart';

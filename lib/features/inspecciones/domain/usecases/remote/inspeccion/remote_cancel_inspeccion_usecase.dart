@@ -2,6 +2,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/insp
 import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_repository.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/shared/shared_models.dart';
 
 class RemoteCancelInspeccionUseCase implements UseCase<DataState<IReturn>, InspeccionIdParamEntity> {
   RemoteCancelInspeccionUseCase(this._inspeccionRepository);

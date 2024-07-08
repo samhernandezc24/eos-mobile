@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:eos_mobile/core/data/data_source/data_source.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion/inspeccion_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_create_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_data_source_model.dart';
@@ -12,6 +11,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/insp
 import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_repository.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/shared/shared_models.dart';
 
 class InspeccionRepositoryImpl implements InspeccionRepository {
   InspeccionRepositoryImpl(this._inspeccionRemoteApiService);

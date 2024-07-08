@@ -9,6 +9,7 @@ import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categori
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categoria/remote_update_categoria_usecase.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/shared/shared_models.dart';
 
 part 'remote_categoria_event.dart';
 part 'remote_categoria_state.dart';

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:eos_mobile/core/data/data_source/predictive.dart';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/unidad/unidad_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_create_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/unidad/unidad_predictive_model.dart';
@@ -9,6 +8,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/unidad/unidad_s
 import 'package:eos_mobile/features/inspecciones/domain/repositories/unidad_repository.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/shared/shared_models.dart';
 
 class UnidadRepositoryImpl implements UnidadRepository {
   UnidadRepositoryImpl(this._unidadRemoteApiService);

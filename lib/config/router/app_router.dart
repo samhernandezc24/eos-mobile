@@ -1,4 +1,5 @@
 import 'package:eos_mobile/features/auth/presentation/pages/sign_in_page.dart';
+import 'package:eos_mobile/features/inspecciones/presentation/pages/fotos/fotos.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/pages/index/index_page.dart';
 import 'package:eos_mobile/features/inspecciones/presentation/pages/menu/menu_page.dart';
 import 'package:eos_mobile/shared/shared_libs.dart';
@@ -49,6 +50,7 @@ final appRouter = GoRouter(
           'home'                            => 'EOS Mobile',
           'home.inspecciones'               => 'Módulo de inspecciones',
           'home.inspecciones.searchUnidad'  => 'Unidades',
+          'home.inspecciones.fotos'         => 'Fotos',
           'home.compras'                    => 'Módulo de compras',
           'home.embarques'                  => 'Módulo de embarques',
           'home.unidades'                   => 'Módulo de unidades',
@@ -85,6 +87,14 @@ final appRouter = GoRouter(
                       'search-unidad',
                       'home.inspecciones.searchUnidad',
                       (_) => const UnderConstructionPage(),
+                      // parentKey: _rootNavigatorKey,
+                      useFade: true,
+                    ),
+                    // PRUEBA DE FOTOGRAFIAS
+                    AppRoute(
+                      'fotos',
+                      'home.inspecciones.fotos',
+                      (_) => const FotosPage(),
                       // parentKey: _rootNavigatorKey,
                       useFade: true,
                     ),

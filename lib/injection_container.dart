@@ -1,3 +1,4 @@
+import 'package:eos_mobile/core/helpers/image_helper.dart';
 import 'package:eos_mobile/core/network/api_interceptor.dart';
 import 'package:eos_mobile/features/auth/data/datasources/local/auth_local_service.dart';
 import 'package:eos_mobile/features/auth/data/datasources/remote/auth_remote_api_service.dart';
@@ -162,4 +163,5 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<SettingsLogic>(() => SettingsLogic());
 
   sl.registerLazySingleton<Logger>(() => Logger());
+  sl.registerLazySingleton<ImageHelper>(() => ImageHelper());
 }

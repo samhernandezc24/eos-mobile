@@ -11,6 +11,7 @@ import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categori
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/categoria_item/remote_update_categoria_item_usecase.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/shared/shared_models.dart';
 
 part 'remote_categoria_item_event.dart';
 part 'remote_categoria_item_state.dart';

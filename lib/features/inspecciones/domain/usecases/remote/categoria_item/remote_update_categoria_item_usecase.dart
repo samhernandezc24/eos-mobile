@@ -2,6 +2,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/
 import 'package:eos_mobile/features/inspecciones/domain/repositories/categoria_item_repository.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/shared/shared_models.dart';
 
 class RemoteUpdateCategoriaItemUseCase implements UseCase<DataState<IReturn>, CategoriaItemUpdateReqEntity> {
   RemoteUpdateCategoriaItemUseCase(this._categoriaItemRepository);

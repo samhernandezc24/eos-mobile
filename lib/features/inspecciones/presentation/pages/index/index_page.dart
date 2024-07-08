@@ -1,16 +1,3 @@
-import 'package:eos_mobile/core/data/catalogos/base.dart';
-import 'package:eos_mobile/core/data/catalogos/inspeccion_estatus.dart';
-import 'package:eos_mobile/core/data/catalogos/requerimiento.dart';
-import 'package:eos_mobile/core/data/catalogos/unidad_capacidad_medida.dart';
-import 'package:eos_mobile/core/data/catalogos/unidad_marca.dart';
-import 'package:eos_mobile/core/data/catalogos/unidad_placa_tipo.dart';
-import 'package:eos_mobile/core/data/catalogos/unidad_tipo.dart';
-import 'package:eos_mobile/core/data/catalogos/usuario.dart';
-import 'package:eos_mobile/core/data/data_source/data_source.dart';
-import 'package:eos_mobile/core/data/data_source/data_source_persistence.dart';
-import 'package:eos_mobile/core/data/data_source/search_filter.dart';
-import 'package:eos_mobile/core/data/data_source/sort.dart';
-
 import 'package:eos_mobile/features/data_source_persistence/presentation/cubit/remote/remote_data_source_persistence_cubit.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_param_entity.dart';
@@ -22,6 +9,7 @@ import 'package:eos_mobile/features/inspecciones/presentation/bloc/remote/unidad
 import 'package:eos_mobile/features/inspecciones/presentation/pages/configuracion/inspeccion_tipo/inspeccion_tipo_page.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/shared/shared_models.dart';
 import 'package:intl/intl.dart';
 
 part '../../widgets/index/create/_create_form.dart';

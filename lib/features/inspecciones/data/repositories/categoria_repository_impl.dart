@@ -13,6 +13,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo
 import 'package:eos_mobile/features/inspecciones/domain/repositories/categoria_repository.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/shared/shared_models.dart';
 
 class CategoriaRepositoryImpl implements CategoriaRepository {
   CategoriaRepositoryImpl(this._categoriaRemoteApiService);

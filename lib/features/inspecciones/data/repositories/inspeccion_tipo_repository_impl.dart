@@ -10,6 +10,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion_tipo
 import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_tipo_repository.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/shared/shared_models.dart';
 
 class InspeccionTipoRepositoryImpl implements InspeccionTipoRepository {
   InspeccionTipoRepositoryImpl(this._inspeccionTipoRemoteApiService);

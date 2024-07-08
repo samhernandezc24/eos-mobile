@@ -6,6 +6,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/
 import 'package:eos_mobile/features/inspecciones/domain/entities/categoria_item/categoria_item_update_req_entity.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/shared/shared_models.dart';
 
 abstract class CategoriaItemRepository {
   // REMOTE OPERATIONS

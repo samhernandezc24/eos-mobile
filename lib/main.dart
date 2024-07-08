@@ -1,4 +1,5 @@
 import 'package:eos_mobile/config/themes/theme_detector.dart';
+import 'package:eos_mobile/core/helpers/image_helper.dart';
 import 'package:eos_mobile/features/auth/presentation/bloc/remote/remote_auth_bloc.dart';
 import 'package:eos_mobile/features/auth/presentation/cubit/local/local_auth_cubit.dart';
 import 'package:eos_mobile/features/data_source_persistence/presentation/cubit/remote/remote_data_source_persistence_cubit.dart';
@@ -73,6 +74,7 @@ class MainApp extends StatelessWidget with GetItMixin {
 // Deliberadamente no se crean shortcuts para los servicios, para desalentar su uso directamente en la capa de presentación.
 AppLogic get appLogic             => sl.get<AppLogic>();
 SettingsLogic get settingsLogic   => sl.get<SettingsLogic>();
+ImageHelper get imageHelper       => sl.get<ImageHelper>();
 
 // Helpers globales para facilitar la lectura de código.
 AppStyles get $stylesShell  => AppScaffold.styles;

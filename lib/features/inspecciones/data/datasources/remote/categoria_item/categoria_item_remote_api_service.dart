@@ -5,6 +5,7 @@ import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/cate
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_store_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/categoria_item/categoria_item_update_req_model.dart';
 import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/shared/shared_models.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'categoria_item_remote_api_service.g.dart';

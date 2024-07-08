@@ -7,6 +7,7 @@ import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/inspecci
 import 'package:eos_mobile/features/inspecciones/domain/usecases/remote/inspeccion_tipo/remote_update_inspeccion_tipo_usecase.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/shared/shared_models.dart';
 
 part 'remote_inspeccion_tipo_event.dart';
 part 'remote_inspeccion_tipo_state.dart';

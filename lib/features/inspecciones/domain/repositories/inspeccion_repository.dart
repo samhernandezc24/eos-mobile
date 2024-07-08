@@ -1,4 +1,3 @@
-import 'package:eos_mobile/core/data/data_source/data_source.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_create_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_data_source_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_param_entity.dart';
@@ -6,6 +5,7 @@ import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/insp
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
 
 import 'package:eos_mobile/shared/shared_libs.dart';
+import 'package:eos_mobile/shared/shared_models.dart';
 
 abstract class InspeccionRepository {
   // REMOTE OPERATIONS
