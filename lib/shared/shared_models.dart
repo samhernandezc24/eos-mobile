@@ -5,8 +5,13 @@ library;
 /// CORE (CATALOGOS)
 /// =========================================================
 export 'package:eos_mobile/core/data/catalogos/base.dart';
+export 'package:eos_mobile/core/data/catalogos/fichero.dart';
 export 'package:eos_mobile/core/data/catalogos/formulario_tipo.dart';
+export 'package:eos_mobile/core/data/catalogos/inspeccion_categoria.dart';
+export 'package:eos_mobile/core/data/catalogos/inspeccion_categoria_value.dart';
+export 'package:eos_mobile/core/data/catalogos/inspeccion_checklist.dart';
 export 'package:eos_mobile/core/data/catalogos/inspeccion_estatus.dart';
+export 'package:eos_mobile/core/data/catalogos/inspeccion_fichero.dart';
 export 'package:eos_mobile/core/data/catalogos/requerimiento.dart';
 export 'package:eos_mobile/core/data/catalogos/unidad_capacidad_medida.dart';
 export 'package:eos_mobile/core/data/catalogos/unidad_marca.dart';

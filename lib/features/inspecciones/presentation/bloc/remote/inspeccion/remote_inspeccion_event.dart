@@ -34,6 +34,16 @@ class StoreInspeccion extends RemoteInspeccionEvent {
   List<Object?> get props => [ objData ];
 }
 
+/// [RemoteFinishInspeccionUseCase]
+class FinishInspeccion extends RemoteInspeccionEvent {
+  const FinishInspeccion(this.objData);
+
+  final InspeccionFinishReqModel objData;
+
+  @override
+  List<Object?> get props => [ objData ];
+}
+
 /// [RemoteCancelInspeccionUseCase]
 class CancelInspeccion extends RemoteInspeccionEvent {
   const CancelInspeccion(this.objData);

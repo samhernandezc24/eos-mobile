@@ -1,4 +1,5 @@
 import 'package:eos_mobile/core/constants/api_endpoints.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_finish_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_id_param_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_store_req_model.dart';
 import 'package:eos_mobile/shared/shared_libs.dart';
@@ -26,6 +27,10 @@ abstract class InspeccionRemoteApiService {
   /// GUARDAR INSPECCION
   @POST('/Store')
   Future<HttpResponse<IReturn>> store(@Body() InspeccionStoreReqModel objData);
+
+  /// FINALIZAR INSPECCION
+  @POST('/Finish')
+  Future<HttpResponse<IReturn>> finish(@Body() InspeccionFinishReqModel objData);
 
   /// CANCELAR INSPECCION
   @POST('/Cancel')

@@ -57,6 +57,7 @@ class _ResultsInspeccionListState extends State<_ResultsInspeccionList> {
                       objInspeccion     : widget.results[index],
                       onDetailsPressed  : widget.onDetailsPressed,
                       onCancelPressed   : widget.onCancelPressed,
+                      onComplete        : widget.onComplete,
                     );
                   },
                 ),

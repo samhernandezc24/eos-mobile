@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:eos_mobile/features/inspecciones/data/datasources/remote/inspeccion/inspeccion_remote_api_service.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_create_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_data_source_model.dart';
+import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_finish_req_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_id_param_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_index_model.dart';
 import 'package:eos_mobile/features/inspecciones/data/models/inspeccion/inspeccion_store_req_model.dart';
+import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_finish_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_id_param_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/entities/inspeccion/inspeccion_store_req_entity.dart';
 import 'package:eos_mobile/features/inspecciones/domain/repositories/inspeccion_repository.dart';
@@ -135,6 +137,38 @@ class InspeccionRepositoryImpl implements InspeccionRepository {
   Future<DataState<IReturn>> store(InspeccionStoreReqEntity objData) async {
     try {
       final httpResponse = await _inspeccionRemoteApiService.store(InspeccionStoreReqModel.fromEntity(objData));
+      if (httpResponse.response.statusCode == HttpStatus.ok) {
+        if (httpResponse.data.session ?? false) {
+          if (httpResponse.data.action ?? false) {
+            return DataSuccess(httpResponse.data);
+          } else {
+            return DataFailedMessage(httpResponse.data.message ?? 'Error inesperado');
+          }
+        } else {
+          return DataFailedMessage(httpResponse.data.message ?? 'Error inesperado');
+        }
+      } else {
+        return DataFailed(
+          ServerException.fromDioException(
+            DioException(
+              error           : httpResponse.response.statusMessage,
+              response        : httpResponse.response,
+              type            : DioExceptionType.badResponse,
+              requestOptions  : httpResponse.response.requestOptions,
+            ),
+          ),
+        );
+      }
+    } on DioException catch (ex) {
+      return DataFailed(ServerException.fromDioException(ex));
+    }
+  }
+
+  // FINALIZACIÓN DE INSPECCION
+  @override
+  Future<DataState<IReturn>> finish(InspeccionFinishReqEntity objData) async {
+    try {
+      final httpResponse = await _inspeccionRemoteApiService.finish(InspeccionFinishReqModel.fromEntity(objData));
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         if (httpResponse.data.session ?? false) {
           if (httpResponse.data.action ?? false) {

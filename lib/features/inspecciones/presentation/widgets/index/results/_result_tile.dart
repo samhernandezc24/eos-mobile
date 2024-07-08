@@ -36,6 +36,18 @@ class _ResultInspeccionTile extends StatelessWidget {
     if (onCancelPressed != null) { return onCancelPressed!(context, objData, objInspeccion); }
   }
 
+  void _handleChecklistPressed(BuildContext context, InspeccionIdParamEntity objData) {
+    Navigator.push<void>(
+      context, AppModalRoute(
+        child: _ChecklistInspeccionEvaluacion(
+          objData       : objData,
+          objInspeccion : objInspeccion!,
+          onComplete    : onComplete,
+        ),
+      ),
+    );
+  }
+
   // METHODS
   bool _showCancelOption(String idInspeccionEstatus) {
     const estatusCancelado = {'ea52bdfd-8af6-4f5a-b182-2b99e554eb34', 'ea52bdfd-8af6-4f5a-b182-2b99e554eb35'};
@@ -135,7 +147,7 @@ class _ResultInspeccionTile extends StatelessWidget {
               bottom: 0,
               right: 4,
               child: TextButton.icon(
-                onPressed : () {},
+                onPressed : () => _handleChecklistPressed(context, InspeccionIdParamEntity(idInspeccion: objInspeccion!.idInspeccion)),
                 icon      : const Icon(Icons.assignment_turned_in),
                 label     : Text(
                   objInspeccion?.idInspeccionEstatus == 'ea52bdfd-8af6-4f5a-b182-2b99e554eb33'
@@ -196,7 +208,7 @@ class _ResultInspeccionTile extends StatelessWidget {
               Text(objInspeccion.unidadNumeroEconomico, style: $styles.textStyles.bodySmallBold, overflow: TextOverflow.ellipsis),
 
               Text('Tipo de unidad:', style: $styles.textStyles.bodySmall),
-              Text(objInspeccion.unidadTipoName ?? '', style: $styles.textStyles.bodySmallBold, overflow: TextOverflow.ellipsis),
+              Text(objInspeccion.unidadTipoName, style: $styles.textStyles.bodySmallBold, overflow: TextOverflow.ellipsis),
             ],
           ),
         ],

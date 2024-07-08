@@ -34,12 +34,14 @@ class AppStrings {
   static const String btnDeleteText                         = 'Eliminar';
   static const String btnDisableText                        = 'Inhabilitar';
   static const String btnEditText                           = 'Editar';
+  static const String btnFinishText                         = 'Finalizar';
   static const String btnGoBackText                         = 'Volver a inicio';
   static const String btnJoinText                           = 'Ingresar';
   static const String btnLeaveText                          = 'Salir';
   static const String btnLoadMoreText                       = 'Cargar más';
   static const String btnLoginText                          = 'Iniciar sesión';
   static const String btnLogoutText                         = 'Cerrar sesión';
+  static const String btnNextText                           = 'Siguiente';
   static const String btnRefreshText                        = 'Actualizar';
   static const String btnRetryText                          = 'Reintentar';
   static const String btnSaveText                           = 'Guardar';
@@ -151,6 +153,35 @@ class AppStrings {
   static const String inspeccionPhotoEmptyListTitle         = 'Aún no hay fotografías';
   static const String inspeccionPhotoEmptyListMessage       = 'Captura las evidencias fotográficas de todas las áreas importantes de la unidad para su inspección.';
   static const String inspeccionPhotoAddEmptyListMessage    = 'Intenta tomar fotografías dando clic en el ícono de la cámara o selecciona de la galería.';
+
+  static const String inspeccionChecklistAppBarTitle        = 'Evaluar unidad';
+  static const String inspeccionChecklistModalBottomTitle   = '¿Quieres terminar la inspección más tarde?';
+
+  static const String inspeccionChecklistFinishAlertFirstText   = 'Una vez finalizada la evaluación no se podrán revertir los cambios.\n';
+  static const String inspeccionChecklistFinishAlertSecondText  = '¿Estás seguro de querer finalizar la evaluación?';
+
+
+  static const String inspeccionChecklistAlertSaveMessage          = 'No se puede guardar parcialmente o finalizar una evaluación que no cuenta con categorías o preguntas';
+  static const String inspeccionChecklistAlertNextPageMessage      = 'No se puede avanzar a la etapa siguiente, debido a que la evaluación no ha sido configurada correctamente';
+  static const String inspeccionChecklistPhotoAlertNextPageMessage = 'No se puede avanzar a la etapa final, sin antes haber cargado las evidencias fotográficas';
+  static const String inspeccionChecklistDrawSignatureAppBarTitle  = 'Dibujar firma';
+  static const String inspeccionChecklistDrawSignatureBoxSuggest   = 'Dibuja tu firma en el espacio rectangular con bordes punteados, de preferencia en el centro del espacio rectangular.';
+  static const String inspeccionChecklistPhotoEvidenceAppBarTitle  = 'Fotos de evidencia';
+  static const String inspeccionChecklistPhotoDeleteAlertTitle     = '¿Eliminar fotografía?';
+  static const String inspeccionChecklistPhotoDeleteAlertContent1  = 'Se eliminará la fotografía de la inspección.\n';
+  static const String inspeccionChecklistPhotoDeleteAlertContent2  = '¿Estás seguro de querer realizar esa acción?';
+  static const String inspeccionChecklistPhotoAddAppBarTitle       = 'Cargar evidencias fotográficas';
+  static const String inspeccionChecklistPhotoEmptyListTitle       = 'Aún no hay fotografías';
+  static const String inspeccionChecklistPhotoEmptyListMessage     = 'Captura las evidencias fotográficas de todas las áreas importantes de la unidad para su inspección.';
+  static const String inspeccionChecklistPhotoAddEmptyListTitle    = 'Aún no hay fotografías';
+  static const String inspeccionChecklistPhotoAddEmptyListMessage  = 'Intenta tomar fotografías dando clic en el ícono de la cámara o selecciona de la galería.';
+  static const String inspeccionChecklistEmptyListTitle            = 'Aún no hay categorías';
+  static const String inspeccionChecklistEmptyListMessage          = 'Intenta configurar las categorías y preguntas para la evaluación de la unidad.';
+  static const String inspeccionChecklistFinishAppBarTitle         = 'Finalizar inspección';
+  static const String inspeccionChecklistFinishSignatureButtonText = 'Dibujar firma';
+  static const String inspeccionChecklistFinishImportantMessage    = 'Soy testigo de la inspección realizada al equipo que tengo a mi cargo y se me informo específicamente de cada punto a considerar para su atención correctiva.';
+  static const String inspeccionChecklistAlertInvalidDateMessage   = 'Ingresa la fecha de inspección inicial';
+
 
   // L
   static const String logoutAlertDialogTitle                = '¿Salir de tu cuenta?';

@@ -117,7 +117,7 @@ class _CreateInspeccionUnidadFormState extends State<_CreateInspeccionUnidadForm
               ),
               Text(
                 AppStrings.errorAlertInvalidFormMessage,
-                style     : $styles.textStyles.bodySmall.copyWith(color: $styles.colors.white),
+                style     : $styles.textStyles.bodySmall.copyWith(color: $styles.colors.white, height: 1.3),
                 softWrap  : true,
               ),
             ],
