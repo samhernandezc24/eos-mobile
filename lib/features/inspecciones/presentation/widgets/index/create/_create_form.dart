@@ -22,6 +22,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // CONTROLLERS
+  late TextEditingController _searchUnidadController;
   late TextEditingController _searchUnidadEOSController;
   late TextEditingController _fechaProgramadaController;
   late TextEditingController _unidadBaseNameController;
@@ -42,6 +43,8 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
   // LIST
   List<InspeccionTipoEntity> lstInspeccionesTipos             = [];
   List<UnidadCapacidadMedida> lstUnidadesCapacidadesMedidas   = [];
+  List<UnidadPredictiveEntity> lstUnidades                    = [];
+  List<UnidadEOSPredictiveEntity> lstUnidadesEOS              = [];
 
   // PROPERTIES
   InspeccionUnidadSelectOption _inspeccionUnidadSelectOption = InspeccionUnidadSelectOption.inventario;
@@ -51,11 +54,14 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
 
   InspeccionTipoEntity? _selectInspeccionTipo;
   UnidadCapacidadMedida? _selectUnidadCapacidadMedida;
+  UnidadPredictiveEntity? _selectUnidad;
+  UnidadEOSPredictiveEntity? _selectUnidadEOS;
 
   // STATE
   @override
   void initState() {
     super.initState();
+    _searchUnidadController           = TextEditingController();
     _searchUnidadEOSController        = TextEditingController();
     _fechaProgramadaController        = TextEditingController();
     _unidadBaseNameController         = TextEditingController();
@@ -78,6 +84,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
 
   @override
   void dispose() {
+    _searchUnidadController.dispose();
     _searchUnidadEOSController.dispose();
     _fechaProgramadaController.dispose();
     _unidadBaseNameController.dispose();
@@ -147,6 +154,60 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
     );
   }
 
+  void _handleUnidadSearchSubmitted(String query) {
+    if (!Globals.isValidStringValue(query)) return;
+
+    final List<SearchFilterPredictive> lstSearchFilters = [
+      const SearchFilterPredictive(field: 'NumeroEconomico'),
+      const SearchFilterPredictive(field: 'NumeroSerie'),
+      const SearchFilterPredictive(field: 'UnidadTipoName'),
+    ];
+
+    final Predictive varArgs = Predictive(
+      search          : query,
+      searchFilters   : lstSearchFilters,
+      filters         : const {},
+      columns         : const {},
+      dateFilters     : const DateFilter(dateStart: '', dateEnd: ''),
+    );
+
+    context.read<RemoteUnidadBloc>().add(PredictiveUnidades(varArgs));
+  }
+
+  void _handleUnidadEOSSearchSubmitted(String query) {
+    if (!Globals.isValidStringValue(query)) return;
+
+    final List<SearchFilterPredictive> lstSearchFilters = [
+      const SearchFilterPredictive(field: 'NumeroEconomico'),
+      const SearchFilterPredictive(field: 'NumeroSerie'),
+      const SearchFilterPredictive(field: 'UnidadTipoName'),
+    ];
+
+    final Predictive varArgs = Predictive(
+      search          : query,
+      searchFilters   : lstSearchFilters,
+      filters         : const {},
+      columns         : const {},
+      dateFilters     : const DateFilter(dateStart: '', dateEnd: ''),
+    );
+
+    context.read<RemoteUnidadEOSBloc>().add(PredictiveUnidadesEOS(varArgs));
+  }
+
+  void _handleSelectUnidad(UnidadPredictiveEntity? value) {
+    setState(() {
+      _selectUnidad = value;
+      _updateUnidadFormFields(value);
+    });
+  }
+
+  void _handleSelectUnidadEOS(UnidadEOSPredictiveEntity? value) {
+    setState(() {
+      _selectUnidadEOS = value;
+      _updateUnidadEOSFormFields(value);
+    });
+  }
+
   void _handleStorePressed() {
     if (_fechaProgramadaController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -197,6 +258,10 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
     _store();
   }
 
+  Future<void> _showServerErrorDialog(BuildContext context, String? message) async {
+    return showDialog<void>(context: context, builder: (BuildContext context) => ServerFailedDialog(message: message ?? AppStrings.errorGenericMessage));
+  }
+
   // METHODS
   Future<void> _create() async {
     context.read<RemoteInspeccionBloc>().add(CreateInspeccion());
@@ -205,36 +270,94 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
   Future<void> _store() async {
     final InspeccionStoreReqEntity objPost = InspeccionStoreReqEntity(
       fechaProgramada           : DateFormat('dd/MM/yyyy HH:mm').parse(_fechaProgramadaController.text),
-      idInspeccionTipo          : '',
-      inspeccionTipoCodigo      : '',
-      inspeccionTipoName        : '',
-      idBase                    : '',
+      idInspeccionTipo          : _selectInspeccionTipo?.idInspeccionTipo   ?? '',
+      inspeccionTipoCodigo      : _selectInspeccionTipo?.codigo             ?? '',
+      inspeccionTipoName        : _selectInspeccionTipo?.name               ?? '',
+      idBase                    : _selectUnidad?.idBase ?? _selectUnidadEOS?.idBase ?? '',
       baseName                  : _unidadBaseNameController.text,
-      idUnidad                  : '',
+      idUnidad                  : _selectUnidad?.idUnidad ?? _selectUnidadEOS?.idUnidad ?? '',
       unidadNumeroEconomico     : _unidadNumeroEconomicoController.text,
       isUnidadTemporal          : _inspeccionUnidadSelectOption == InspeccionUnidadSelectOption.temporal,
-      idUnidadTipo              : '',
-      unidadTipoName            : '',
-      idUnidadMarca             : '',
-      unidadMarcaName           : '',
-      idUnidadPlacaTipo         : '',
+      idUnidadTipo              : _selectUnidad?.idUnidadTipo ?? _selectUnidadEOS?.idUnidadTipo ?? '',
+      unidadTipoName            : _selectUnidad?.unidadTipoName ?? _selectUnidadEOS?.unidadTipoName ?? '',
+      idUnidadMarca             : _selectUnidad?.idUnidadMarca ?? _selectUnidadEOS?.idUnidadMarca ?? '',
+      unidadMarcaName           : _selectUnidad?.unidadMarcaName ?? _selectUnidadEOS?.unidadMarcaName ?? '',
+      idUnidadPlacaTipo         : _selectUnidad?.idUnidadPlacaTipo ?? _selectUnidadEOS?.idUnidadPlacaTipo ?? '',
       unidadPlacaTipoName       : _unidadPlacaTipoNameController.text,
       placa                     : _unidadPlacaController.text,
       numeroSerie               : _unidadNumeroSerieController.text,
       modelo                    : _unidadModeloController.text,
       anioEquipo                : _unidadAnioEquipoController.text,
       capacidad                 : double.tryParse(_unidadCapacidadController.text) ?? 0.000,
-      idUnidadCapacidadMedida   : '',
-      unidadCapacidadMedidaName : '',
+      idUnidadCapacidadMedida   : _selectUnidadCapacidadMedida?.idUnidadCapacidadMedida ?? '',
+      unidadCapacidadMedidaName : _selectUnidadCapacidadMedida?.name ?? '',
       locacion                  : _locacionController.text,
       tipoPlataforma            : _unidadTipoPlataformaController.text,
       odometro                  : int.tryParse(_unidadOdometroController.text)  ?? 0,
       horometro                 : int.tryParse(_unidadHorometroController.text) ?? 0,
     );
 
-    print(objPost);
+    context.read<RemoteInspeccionBloc>().add(StoreInspeccion(objPost));
+  }
 
-    // context.read<RemoteInspeccionBloc>().add(StoreInspeccion(objPost));
+  void _updateUnidadFormFields(UnidadPredictiveEntity? value) {
+    setState(() {
+      _unidadBaseNameController.text         = value?.baseName              ?? '';
+      _unidadNumeroEconomicoController.text  = value?.numeroEconomico       ?? '';
+      _unidadTipoNameController.text         = value?.unidadTipoName        ?? '';
+      _unidadMarcaNameController.text        = value?.unidadMarcaName       ?? '';
+      _unidadPlacaTipoNameController.text    = value?.unidadPlacaTipoName   ?? '';
+      _unidadPlacaController.text            = value?.placa                 ?? '';
+      _unidadNumeroSerieController.text      = value?.numeroSerie           ?? '';
+      _unidadModeloController.text           = value?.modelo                ?? '';
+      _unidadAnioEquipoController.text       = value?.anioEquipo            ?? '';
+      _unidadCapacidadController.text        = value?.capacidad             ?? '';
+      _unidadOdometroController.text         = value?.odometro              ?? '';
+      _unidadHorometroController.text        = value?.horometro             ?? '';
+
+      _selectUnidadCapacidadMedida = lstUnidadesCapacidadesMedidas.firstWhereOrNull((item) =>
+        item.idUnidadCapacidadMedida == value!.idUnidadCapacidadMedida,
+      );
+    });
+  }
+
+  void _updateUnidadEOSFormFields(UnidadEOSPredictiveEntity? value) {
+    setState(() {
+      _unidadBaseNameController.text         = value?.baseName              ?? '';
+      _unidadNumeroEconomicoController.text  = value?.numeroEconomico       ?? '';
+      _unidadTipoNameController.text         = value?.unidadTipoName        ?? '';
+      _unidadMarcaNameController.text        = value?.unidadMarcaName       ?? '';
+      _unidadPlacaTipoNameController.text    = value?.unidadPlacaTipoName   ?? '';
+      _unidadPlacaController.text            = value?.placa                 ?? '';
+      _unidadNumeroSerieController.text      = value?.numeroSerie           ?? '';
+      _unidadModeloController.text           = value?.modelo                ?? '';
+      _unidadAnioEquipoController.text       = value?.anioFabricacion       ?? '';
+      _unidadCapacidadController.text        = '0.000';
+      _unidadOdometroController.text         = '0';
+      _unidadHorometroController.text        = '0';
+
+      _selectUnidadCapacidadMedida = lstUnidadesCapacidadesMedidas.firstWhereOrNull((item) =>
+        item.idUnidadCapacidadMedida == value!.idUnidadCapacidadMedida,
+      );
+    });
+  }
+
+  void _clearFormFields() {
+    setState(() {
+      _unidadBaseNameController.clear();
+      _unidadNumeroEconomicoController.clear();
+      _unidadTipoNameController.clear();
+      _unidadMarcaNameController.clear();
+      _unidadPlacaTipoNameController.clear();
+      _unidadPlacaController.clear();
+      _unidadNumeroSerieController.clear();
+      _unidadModeloController.clear();
+      _unidadAnioEquipoController.clear();
+      _unidadCapacidadController.clear();
+      _unidadOdometroController.clear();
+      _unidadHorometroController.clear();
+      _selectUnidadCapacidadMedida = null;
+    });
   }
 
   @override
@@ -610,16 +733,95 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
   Widget _buildUnidadEOSSearch(BuildContext context) {
     return Column(
       children: <Widget>[
-        _SearchUnidadEOSInput(onSubmit: (_){}),
-        // AppLinearIndicator(),
+        BlocListener<RemoteUnidadEOSBloc, RemoteUnidadEOSState>(
+          listener: (context, state) {
+            // LOADING
+            if (state is RemoteUnidadEOSPredictiveLoading) {
+              setState(() {
+                _isLoading = true;
+              });
+            }
+
+            // ERROR
+            if (state is RemoteUnidadEOSServerFailedMessagePredictive) {
+              setState(() {
+                _isLoading = false;
+              });
+            }
+
+            if (state is RemoteUnidadEOSServerExceptionMessagePredictive) {
+              setState(() {
+                _isLoading = false;
+              });
+            }
+
+            // SUCCESS
+            if (state is RemoteUnidadEOSPredictive) {
+              setState(() {
+                _isLoading = false;
+
+                lstUnidadesEOS = state.objResponse ?? [];
+              });
+            }
+          },
+          child: _SearchUnidadEOSInput(
+            controller    : _searchUnidadEOSController,
+            results       : lstUnidadesEOS,
+            onSubmit      : _handleUnidadEOSSearchSubmitted,
+            onSelected    : _handleSelectUnidadEOS,
+            onClearField  : _clearFormFields,
+            boolSearch    : _isLoading,
+          ),
+        ),
       ],
     );
   }
 
   // BUSCADOR PREDICTIVO DE UNIDADES TEMPORALES
   Widget _buildUnidadSearch(BuildContext context) {
-    return Container();
-    // return _SearchUnidadInput(onSubmit: (_){});
+    return Column(
+      children: <Widget>[
+        BlocListener<RemoteUnidadBloc, RemoteUnidadState>(
+          listener: (BuildContext context, RemoteUnidadState state) {
+            // LOADING
+            if (state is RemoteUnidadPredictiveLoading) {
+              setState(() {
+                _isLoading = true;
+              });
+            }
+
+            // ERROR
+            if (state is RemoteUnidadServerFailedMessagePredictive) {
+              setState(() {
+                _isLoading = false;
+              });
+            }
+
+            if (state is RemoteUnidadServerExceptionMessagePredictive) {
+              setState(() {
+                _isLoading = false;
+              });
+            }
+
+            // SUCCESS
+            if (state is RemoteUnidadPredictive) {
+              setState(() {
+                _isLoading  = false;
+                lstUnidades = state.objResponse ?? [];
+              });
+            }
+          },
+          child: _SearchUnidadInput(
+            controller    : _searchUnidadController,
+            results       : lstUnidades,
+            onSubmit      : _handleUnidadSearchSubmitted,
+            onSelected    : _handleSelectUnidad,
+            onClearField  : _clearFormFields,
+            boolSearch    : _isLoading,
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildBottomAppBar(BuildContext context) {
@@ -632,9 +834,57 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
             onPressed : _handleRefreshPressed,
             icon      : const Icon(Icons.refresh), tooltip: AppStrings.refreshDataTooltip,
           ),
-          FilledButton(
-            onPressed : !_hasServerError && !_isLoading ? _handleStorePressed : null,
-            child     : Text(AppStrings.btnSaveText, style: $styles.textStyles.button),
+          BlocConsumer<RemoteInspeccionBloc, RemoteInspeccionState>(
+            listener: (BuildContext context, RemoteInspeccionState state) {
+              // ERROR
+              if (state is RemoteInspeccionServerFailedMessageStore) {
+                _showServerErrorDialog(context, state.error);
+
+                _create();
+              }
+
+              if (state is RemoteInspeccionServerExceptionMessageStore) {
+                _showServerErrorDialog(context, state.error?.message);
+
+                _create();
+              }
+
+              // SUCCESS
+              if (state is RemoteInspeccionStore) {
+                Navigator.of(context).pop(); // Cerramos el modal
+
+                ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      state.objResponse?.message ?? 'Nueva inspección',
+                      style     : $styles.textStyles.bodySmall.copyWith(color: $styles.colors.white),
+                      softWrap  : true,
+                    ),
+                    backgroundColor : $styles.colors.success,
+                    elevation       : 0,
+                    behavior        : SnackBarBehavior.fixed,
+                  ),
+                );
+
+                // Ejecutar callback.
+                widget.onComplete!();
+              }
+            },
+            builder: (BuildContext context, RemoteInspeccionState state) {
+              if (state is RemoteInspeccionStoreLoading) {
+                return const FilledButton(
+                  onPressed : null,
+                  child     : AppLoadingIndicator(width: 20, height: 20),
+                );
+              }
+
+              return FilledButton(
+                onPressed : !_hasServerError && !_isLoading ? _handleStorePressed : null,
+                child     : Text(AppStrings.btnSaveText, style: $styles.textStyles.button),
+              );
+            },
           ),
         ],
       ),
