@@ -9,6 +9,7 @@ class _SearchUnidadInput extends StatefulWidget {
     required this.onClearField,
     Key? key,
     this.boolSearch,
+    this.boolError,
   }) : super(key: key);
 
   final TextEditingController controller;
@@ -17,6 +18,7 @@ class _SearchUnidadInput extends StatefulWidget {
   final void Function(String) onSubmit;
   final VoidCallback onClearField;
   final bool? boolSearch;
+  final bool? boolError;
 
   @override
   State<_SearchUnidadInput> createState() => _SearchUnidadInputState();
@@ -33,7 +35,8 @@ class _SearchUnidadInputState extends State<_SearchUnidadInput> {
         child: Column(
           children: <Widget>[
             _buildInput(context, widget.controller),
-            if (_showSuggestions && widget.results.isNotEmpty) _buildSuggestionsView(context, widget.onSelected, widget.results, constraints),
+            if (_showSuggestions && widget.results.isNotEmpty && !(widget.boolError ?? false))
+              _buildSuggestionsView(context, widget.onSelected, widget.results, constraints),
           ],
         ),
       ),

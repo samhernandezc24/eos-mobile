@@ -747,7 +747,8 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
               _showServerErrorDialog(context, state.error);
 
               setState(() {
-                _isLoading = false;
+                _hasServerError  = true;
+                _isLoading       = false;
               });
             }
 
@@ -755,14 +756,16 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
               _showServerErrorDialog(context, state.error?.message);
 
               setState(() {
-                _isLoading = false;
+                _hasServerError  = true;
+                _isLoading       = false;
               });
             }
 
             // SUCCESS
             if (state is RemoteUnidadEOSPredictive) {
               setState(() {
-                _isLoading = false;
+                _hasServerError  = false;
+                _isLoading       = false;
 
                 lstUnidadesEOS = state.objResponse ?? [];
               });
@@ -775,6 +778,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
             onSelected    : _handleSelectUnidadEOS,
             onClearField  : _clearFormFields,
             boolSearch    : _isLoading,
+            boolError     : _hasServerError,
           ),
         ),
       ],
@@ -799,7 +803,8 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
               _showServerErrorDialog(context, state.error);
 
               setState(() {
-                _isLoading = false;
+                _hasServerError = true;
+                _isLoading      = false;
               });
             }
 
@@ -807,14 +812,16 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
               _showServerErrorDialog(context, state.error?.message);
 
               setState(() {
-                _isLoading = false;
+                _hasServerError = true;
+                _isLoading      = false;
               });
             }
 
             // SUCCESS
             if (state is RemoteUnidadPredictive) {
               setState(() {
-                _isLoading  = false;
+                _hasServerError = false;
+                _isLoading      = false;
                 lstUnidades = state.objResponse ?? [];
               });
             }
@@ -826,6 +833,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
             onSelected    : _handleSelectUnidad,
             onClearField  : _clearFormFields,
             boolSearch    : _isLoading,
+            boolError     : _hasServerError,
           ),
         ),
       ],
