@@ -85,7 +85,6 @@ export 'package:eos_mobile/ui/common/error_server_message.dart';
 export 'package:eos_mobile/ui/common/image_fade.dart';
 export 'package:eos_mobile/ui/common/modals/app_modal_route.dart';
 export 'package:eos_mobile/ui/common/modals/full_screen_image_preview.dart';
-export 'package:eos_mobile/ui/common/predictive/predictive_search_form_field.dart';
 export 'package:eos_mobile/ui/common/static_text_scale.dart';
 export 'package:eos_mobile/ui/common/themed_text.dart';
 
