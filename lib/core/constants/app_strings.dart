@@ -27,6 +27,7 @@ class AppStrings {
   static const String btnAcceptText                         = 'Aceptar';
   static const String btnAddText                            = 'Agregar';
   static const String btnCancelText                         = 'Cancelar';
+  static const String btnClearText                          = 'Limpiar';
   static const String btnCloseText                          = 'Cerrar';
   static const String btnContinueText                       = 'Continuar';
   static const String btnCreateCategoriaText                = 'Nueva categoría';
@@ -48,6 +49,7 @@ class AppStrings {
   static const String btnSaveText                           = 'Guardar';
   static const String btnSubmitText                         = 'Enviar';
   static const String btnCreateUnidadText                   = 'Nueva unidad';
+  static const String btnFirmText                           = 'Firmar';
 
   // C
   static const String categoriaAppBarTitle                  = 'Configuración de categorías';
@@ -179,7 +181,6 @@ class AppStrings {
   static const String inspeccionChecklistEmptyListTitle            = 'Aún no hay categorías';
   static const String inspeccionChecklistEmptyListMessage          = 'Intenta configurar las categorías y preguntas para la evaluación de la unidad.';
   static const String inspeccionChecklistFinishAppBarTitle         = 'Finalizar inspección';
-  static const String inspeccionChecklistFinishSignatureButtonText = 'Dibujar firma';
   static const String inspeccionChecklistFinishImportantMessage    = 'Soy testigo de la inspección realizada al equipo que tengo a mi cargo y se me informo específicamente de cada punto a considerar para su atención correctiva.';
   static const String inspeccionChecklistAlertInvalidDateMessage   = 'Ingresa la fecha de inspección inicial';
 

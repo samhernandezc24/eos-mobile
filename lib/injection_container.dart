@@ -101,8 +101,6 @@ Future<void> initializeDependencies() async {
   /// SERVICES / DATASOURCES
   /// =========================================================
   sl.registerSingleton<AuthRemoteApiService>(AuthRemoteApiService(sl()));
-  sl.registerSingleton<AuthLocalService>(AuthLocalServiceImpl());
-
   sl.registerSingleton<InspeccionTipoRemoteApiService>(InspeccionTipoRemoteApiService(sl()));
   sl.registerSingleton<CategoriaRemoteApiService>(CategoriaRemoteApiService(sl()));
   sl.registerSingleton<CategoriaItemRemoteApiService>(CategoriaItemRemoteApiService(sl()));
@@ -112,6 +110,8 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<InspeccionCategoriaRemoteApiService>(InspeccionCategoriaRemoteApiService(sl()));
   sl.registerSingleton<InspeccionFicheroRemoteApiService>(InspeccionFicheroRemoteApiService(sl()));
   sl.registerSingleton<DataSourcePersistenceRemoteApiService>(DataSourcePersistenceRemoteApiService(sl()));
+
+  sl.registerSingleton<AuthLocalService>(AuthLocalServiceImpl());
 
   /// =========================================================
   /// REPOSITORIES

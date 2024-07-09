@@ -205,8 +205,9 @@ class __ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEva
         transitionDuration: $styles.times.pageTransition,
         pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) =>
           _ChecklistInspeccionFotos(
-            objInspeccion: widget.objInspeccion,
-            objData: InspeccionIdParamEntity(idInspeccion: widget.objData.idInspeccion),
+            objInspeccion : widget.objInspeccion,
+            objData       : InspeccionIdParamEntity(idInspeccion: widget.objData.idInspeccion),
+            onComplete    : widget.onComplete,
           ),
         transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
           const Offset begin    = Offset(1, 0);
@@ -276,7 +277,17 @@ class __ChecklistInspeccionEvaluacionState extends State<_ChecklistInspeccionEva
       canPop: false,
       onPopInvoked: (bool didPop) => !didPop ? _showOnPopModalBottomSheet(context) : null,
       child: Scaffold(
-        appBar: AppBar(title: Text(isEvaluado ? 'Evaluado' : AppStrings.inspeccionChecklistAppBarTitle, style: $styles.textStyles.h3)),
+        appBar: AppBar(
+          title: Text(isEvaluado ? 'Evaluado' : AppStrings.inspeccionChecklistAppBarTitle, style: $styles.textStyles.h3),
+          actions: <Widget>[
+            if (isEvaluado)
+              IconButton(
+                onPressed : (){},
+                icon      : Icon(Icons.check_circle, color: $styles.colors.success),
+                tooltip   : 'Evaluación finalizada',
+              ),
+          ],
+        ),
         body: BlocConsumer<RemoteInspeccionCategoriaBloc, RemoteInspeccionCategoriaState>(
           listener: (BuildContext context, RemoteInspeccionCategoriaState state) {
             // LOADING

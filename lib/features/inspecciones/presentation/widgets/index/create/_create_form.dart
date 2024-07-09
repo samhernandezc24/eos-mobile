@@ -216,7 +216,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(AppStrings.errorAlertWarningTitle, style: $styles.textStyles.bodyBold),
-              const Text('Ingresa la fecha programada de inspección', softWrap: true),
+              const Text('Ingrese la fecha programada de inspección', softWrap: true),
             ],
           ),
           backgroundColor : $styles.colors.warning,
@@ -560,7 +560,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                     // CAMPO: LOCACIÓN
                     LabeledTextareaFormField(
                       controller    : _locacionController,
-                      hintText      : 'Ingresa el lugar de inspección...',
+                      hintText      : 'Ingrese el lugar de inspección...',
                       label         : '* Locación:',
                       maxLines      : 3,
                       maxCharacters : 300,
@@ -572,7 +572,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                     // CAMPO: UNIDAD TIPO PLATAFORMA (SI APLICA)
                     LabeledTextFormField(
                       controller  : _unidadTipoPlataformaController,
-                      hintText    : 'Ingresa tipo de plataforma',
+                      hintText    : 'Ingrese tipo de plataforma',
                       label       : 'Tipo de plataforma (Si aplica):',
                     ),
 
@@ -584,7 +584,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                         Expanded(
                           child: LabeledTextFormField(
                             controller    : _unidadCapacidadController,
-                            hintText      : 'Ingresa cantidad',
+                            hintText      : 'Ingrese cantidad',
                             keyboardType  : TextInputType.number,
                             label         : 'Capacidad:',
                             validator     : FormValidators.decimalValidatorNull,
@@ -611,7 +611,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                         Expanded(
                           child: LabeledTextFormField(
                             controller    : _unidadOdometroController,
-                            hintText      : 'Ingresa cantidad',
+                            hintText      : 'Ingrese cantidad',
                             keyboardType  : TextInputType.number,
                             label         : 'Odómetro (Si aplica):',
                             validator     : FormValidators.integerValidator,
@@ -621,7 +621,7 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
                         Expanded(
                           child: LabeledTextFormField(
                             controller    : _unidadHorometroController,
-                            hintText      : 'Ingresa cantidad',
+                            hintText      : 'Ingrese cantidad',
                             keyboardType  : TextInputType.number,
                             label         : 'Horómetro (Si aplica):',
                             validator     : FormValidators.integerValidator,
@@ -744,12 +744,16 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
 
             // ERROR
             if (state is RemoteUnidadEOSServerFailedMessagePredictive) {
+              _showServerErrorDialog(context, state.error);
+
               setState(() {
                 _isLoading = false;
               });
             }
 
             if (state is RemoteUnidadEOSServerExceptionMessagePredictive) {
+              _showServerErrorDialog(context, state.error?.message);
+
               setState(() {
                 _isLoading = false;
               });
@@ -792,12 +796,16 @@ class _CreateInspeccionFormState extends State<_CreateInspeccionForm> {
 
             // ERROR
             if (state is RemoteUnidadServerFailedMessagePredictive) {
+              _showServerErrorDialog(context, state.error);
+
               setState(() {
                 _isLoading = false;
               });
             }
 
             if (state is RemoteUnidadServerExceptionMessagePredictive) {
+              _showServerErrorDialog(context, state.error?.message);
+
               setState(() {
                 _isLoading = false;
               });
