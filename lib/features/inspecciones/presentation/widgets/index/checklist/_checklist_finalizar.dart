@@ -212,6 +212,10 @@ class _ChecklistInspeccionFinalizarState extends State<_ChecklistInspeccionFinal
     );
 
     context.read<RemoteInspeccionBloc>().add(FinishInspeccion(objPost));
+
+    await Future<void>.delayed(const Duration(seconds: 2));
+    await _delete('operador');
+    await _delete('verificador');
   }
 
   Future<File> _getFirmaFile(String role) async {
@@ -239,13 +243,15 @@ class _ChecklistInspeccionFinalizarState extends State<_ChecklistInspeccionFinal
     if (objFile.existsSync()) {
       await objFile.delete();
 
-      setState(() {
-        if (role == 'operador') {
-          _firmaOperador = null;
-        } else if (role == 'verificador') {
-          _firmaVerificador = null;
-        }
-      });
+      if (mounted) {
+        setState(() {
+          if (role == 'operador') {
+            _firmaOperador = null;
+          } else if (role == 'verificador') {
+            _firmaVerificador = null;
+          }
+        });
+      }
     }
   }
 
@@ -374,27 +380,29 @@ class _ChecklistInspeccionFinalizarState extends State<_ChecklistInspeccionFinal
 
               // SUCCESS
               if (state is RemoteInspeccionFinish) {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                if (mounted) {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
 
-                ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      state.objResponse?.message ?? 'Finalizado',
-                      style     : $styles.textStyles.bodySmall.copyWith(color: $styles.colors.white, height: 1.3),
-                      softWrap  : true,
+                  ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        state.objResponse?.message ?? 'Finalizado',
+                        style     : $styles.textStyles.bodySmall.copyWith(color: $styles.colors.white, height: 1.3),
+                        softWrap  : true,
+                      ),
+                      backgroundColor : $styles.colors.success,
+                      elevation       : 0,
+                      behavior        : SnackBarBehavior.fixed,
                     ),
-                    backgroundColor : $styles.colors.success,
-                    elevation       : 0,
-                    behavior        : SnackBarBehavior.fixed,
-                  ),
-                );
+                  );
 
-                // Ejecutar callback.
-                widget.onComplete!();
+                  // Ejecutar callback.
+                  widget.onComplete!();
+                }
               }
             },
             builder: (BuildContext context, RemoteInspeccionState state) {

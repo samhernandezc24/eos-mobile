@@ -5,14 +5,10 @@ class ApiEndpoints {
   ApiEndpoints._();
 
   // DETECTAR BASE URL BASADO EN EL MODO DE DESPLIEGUE
-  static const String _releaseModeApiBaseUrl   = 'http://35.193.90.143:7000';
-  static const String _releaseModeAppBaseUrl   = 'http://eos.heavy-lift.com.mx';
-
-  static const String _debugModeApiBaseUrl     = 'http://10.0.2.2:7000';
-  static const String _debugModeAppBaseUrl     = 'http://172.20.192.35';
+  static const String _releaseModeAppBaseUrl   = 'http://35.193.90.143:7000';
+  static const String _debugModeAppBaseUrl     = 'http://10.0.2.2:7000';
 
   // BASE URLs
-  static const String _apiBaseUrl = kReleaseMode ? _releaseModeApiBaseUrl : _debugModeApiBaseUrl;
   static const String _appBaseUrl = kReleaseMode ? _releaseModeAppBaseUrl : _debugModeAppBaseUrl;
 
   // =========================================================
@@ -20,44 +16,44 @@ class ApiEndpoints {
   // =========================================================
 
   /// AspNetUser
-  static const String aspNetUser = '$_apiBaseUrl/api/AspNetUser';
+  static const String aspNetUser = '$_appBaseUrl/api/AspNetUser';
 
   /// DataSourcePersistence
-  static const String dataSourcePersistence = '$_apiBaseUrl/api/DataSourcePersistence';
+  static const String dataSourcePersistence = '$_appBaseUrl/api/DataSourcePersistence';
 
   // =========================================================
   // API.Inspecciones
   // =========================================================
 
   /// Categorias
-  static const String categorias = '$_apiBaseUrl/api/Inspecciones/Tipos/Categorias';
+  static const String categorias = '$_appBaseUrl/api/Inspecciones/Tipos/Categorias';
 
   /// CategoriasItem
-  static const String categoriasItems = '$_apiBaseUrl/api/Inspecciones/Tipos/Categorias/Items';
+  static const String categoriasItems = '$_appBaseUrl/api/Inspecciones/Tipos/Categorias/Items';
 
   /// Inspecciones
-  static const String inspecciones = '$_apiBaseUrl/api/Inspecciones';
+  static const String inspecciones = '$_appBaseUrl/api/Inspecciones';
 
   /// InspeccionesCategorias
-  static const String inspeccionesCategorias = '$_apiBaseUrl/api/Inspecciones/Categorias';
+  static const String inspeccionesCategorias = '$_appBaseUrl/api/Inspecciones/Categorias';
 
   /// InspeccionesFicheros
-  static const String inspeccionesFicheros = '$_apiBaseUrl/api/Inspecciones/Ficheros';
+  static const String inspeccionesFicheros = '$_appBaseUrl/api/Inspecciones/Ficheros';
 
   static String inspeccionFicheroPath(String imagePath) {
-    return '$_appBaseUrl/Ficheros/InspeccionesFicheros/$imagePath';
+    return '$_appBaseUrl/Ficheros/Mobile/Inspecciones/$imagePath';
   }
 
   /// InspeccionesTipos
-  static const String inspeccionesTipos = '$_apiBaseUrl/api/Inspecciones/Tipos';
+  static const String inspeccionesTipos = '$_appBaseUrl/api/Inspecciones/Tipos';
 
   /// Unidades
-  static const String unidades = '$_apiBaseUrl/api/Inspecciones/Unidades';
+  static const String unidades = '$_appBaseUrl/api/Inspecciones/Unidades';
 
   // =========================================================
   // API.Unidades
   // =========================================================
 
   /// Unidades
-  static const String unidadesEOS = '$_apiBaseUrl/api/unidades';
+  static const String unidadesEOS = '$_appBaseUrl/api/unidades';
 }

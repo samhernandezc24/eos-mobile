@@ -318,7 +318,7 @@ class _ResultInspeccionTile extends StatelessWidget {
               borderRadius  : BorderRadius.only(bottomLeft: Radius.circular(borderRadius), bottomRight: Radius.circular(borderRadius)),
             ),
             child: Center(
-              child: Text(DateFormat('hh:mm a').format(objInspeccion.fechaProgramada), style: $styles.textStyles.bodySmallBold),
+              child: Text('  ${DateFormat('hh:mm a').format(objInspeccion.fechaProgramada)}', style: $styles.textStyles.bodySmallBold, textAlign: TextAlign.center),
             ),
           ),
         ],
